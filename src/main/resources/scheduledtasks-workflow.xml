@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+      <!-- APPOINTMENT -->
+	<bean id="appointmentScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- CANDIDATE -->
+	<bean id="candidateScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+	
+	
+	
+	<!-- CANDIDATE EDUCATION-->
+	<bean id="candidateEducationScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- CANDIDATE REFERENCE -->
+	<bean id="candidateReferenceScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+	
+	
+	<!-- CANDIDATE WORK HISTORY -->
+	<bean id="candidateWorkHistoryScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- CLIENT CONTACT -->
+	<bean id="clientContactScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- CLIENT CORPORATION -->
+	<bean id="clientCorporationScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+	
+	
+	<!-- CORPORATE USER -->
+	<bean id="corporateUserScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- JOB -->
+	<bean id="jobScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- JOB SUBMISSION -->
+	<bean id="jobSubmissionScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- NOTE -->
+	<bean id="noteScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- PLACEMENT -->
+	<bean id="placementScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+	<!-- PLACEMENT CHANGE REQUEST -->
+	<bean id="placementChangeRequestScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+	
+	<!-- PLACEMENT COMMISSION -->
+	<bean id="placementCommissionScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+	
+	<!-- SENDOUT -->
+	<bean id="sendoutScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+	<!-- TASK -->
+	<bean id="taskScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+		<property name="nextNode" ref="saveDtos" />
+	</bean>
+
+
+	<!-- Beans common to all work flows -->
+	<bean id="saveDtos"
+		class="com.client.core.scheduledtasks.workflow.node.task.SaveDtos">
+		<property name="nextNode" ref="endNode_ScheduledTaskWorkFlow" />
+	</bean>
+	<bean id="endNode_ScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.end.EndNode" />
+</beans>

@@ -1,0 +1,27 @@
+package com.client.core.base.tools.web;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
+import com.client.core.base.util.StackTraceUtil;
+
+public class CustomExceptionResolver extends SimpleMappingExceptionResolver {
+
+    private final Logger log = Logger .getLogger(getClass());
+
+	@Override
+	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+		log.error("An Exception has occured in the application", ex);
+		log.error(ex.getMessage());
+
+		response.setStatus(HttpStatus.BAD_REQUEST.value());
+
+		return super.doResolveException(request, response, handler, ex);
+	}
+
+}

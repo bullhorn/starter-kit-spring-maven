@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="mainScheduler" name="mainScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" scope="singleton"
+		lazy-init="false">
+		<property name="autoStartup" value="true" />
+		<property name="overwriteExistingJobs" value="true" />
+		<property name="triggers">
+			<list>
+<!-- 				<bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
+<!-- 					<property name="cronExpression" value="${standardCronExpression}" /> -->
+<!-- 					<property name="jobDetail" ref="standardSubscriptionScheduledEventProcessingJobDetail" /> -->
+<!-- 				</bean> -->
+			</list>
+		</property>
+	</bean>
+
+
+
+	<bean id="standardSubscriptionScheduledEventProcessingJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetBeanName" value="standardSubscriptionScheduledEventProcessing" />
+		<property name="targetMethod" value="run" />
+		<property name="concurrent" value="true" />
+	</bean>
+	
+	<bean id="standardSubscriptionScheduledEventProcessing" class="com.client.core.scheduledtasks.ScheduledEventProcessing">
+		<constructor-arg index="0" value="${standardSubscriptionName}" />
+	</bean>
+
+</beans>

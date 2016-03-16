@@ -1,0 +1,61 @@
+
+package com.bullhorn.apiservice;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
+import com.bullhorn.apiservice.oauth.PartnerSessionRequest;
+
+
+/**
+ * <p>Java class for startPartnerSession complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * <pre>
+ * &lt;complexType name="startPartnerSession">
+ *   &lt;complexContent>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="sessionRequest" type="{http://oauth.apiservice.bullhorn.com/}partnerSessionRequest" minOccurs="0"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
+ *   &lt;/complexContent>
+ * &lt;/complexType>
+ * </pre>
+ * 
+ * 
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "startPartnerSession", propOrder = {
+    "sessionRequest"
+})
+public class StartPartnerSession {
+
+    protected PartnerSessionRequest sessionRequest;
+
+    /**
+     * Gets the value of the sessionRequest property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link PartnerSessionRequest }
+     *     
+     */
+    public PartnerSessionRequest getSessionRequest() {
+        return sessionRequest;
+    }
+
+    /**
+     * Sets the value of the sessionRequest property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link PartnerSessionRequest }
+     *     
+     */
+    public void setSessionRequest(PartnerSessionRequest value) {
+        this.sessionRequest = value;
+    }
+
+}
