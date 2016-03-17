@@ -89,7 +89,7 @@ public abstract class AbstractFormTriggerHelper<T extends AbstractFormDto<E>, E 
             if(newEntity.getId() != null && newEntity.getId() > 0) {
                 Class<E> newEntityClass = (Class<E>) newEntity.getClass();
 
-                this.setNewEntity(this.findEntity(newEntityClass, newEntity.getId()));
+                this.setOldEntity(this.findEntity(newEntityClass, newEntity.getId()));
             }
         }
 
