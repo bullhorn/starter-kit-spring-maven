@@ -29,6 +29,11 @@ public class PlacementFormTriggerHelper extends AbstractFormTriggerHelper<FormPl
 		super(formPlacementDto, updatingUserID, bullhornData);
 	}
 
+    public PlacementFormTriggerHelper(Placement placement, Integer updatingUserID, BullhornData bullhornData) {
+        super(FormPlacementDto.instantiateFromPlacement(placement), updatingUserID, bullhornData);
+        this.newEntity = placement;
+    }
+
 	public JobOrder getJob() {
 		if (job == null) {
 			setJob(findJobOrder(getFormValues().getJobPostingID()));

@@ -72,6 +72,12 @@
 	</bean>
 
 
+    <!-- Opportunity -->
+    <bean id="opportunityScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+        <property name="nextNode" ref="saveDtos" />
+    </bean>
+
+
 	<!-- PLACEMENT -->
 	<bean id="placementScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
 		<property name="nextNode" ref="saveDtos" />

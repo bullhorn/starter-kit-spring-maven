@@ -2465,6 +2465,129 @@ public class FormJobOrderDto extends AbstractFormDto<JobOrder> {
 		return jobOrder;
 	}
 
+    public static FormJobOrderDto instantiateFromJobOrder(JobOrder jobOrder){
+
+        FormJobOrderDto formJobOrderDto = new FormJobOrderDto();
+        formJobOrderDto.setBenefits(jobOrder.getBenefits());
+        formJobOrderDto.setBillRateCategoryID(jobOrder.getBillRateCategoryID());
+        formJobOrderDto.setBonusPackage(jobOrder.getBonusPackage());
+        formJobOrderDto.setBranchCode(jobOrder.getBranchCode());
+        formJobOrderDto.setCertifications(jobOrder.getCertificationList());
+        formJobOrderDto.setClientBillRate(makeString(jobOrder.getClientBillRate()));
+        formJobOrderDto.setClientUserID(jobOrder.getClientContact().getId());
+        formJobOrderDto.setClientCorporationID(jobOrder.getClientCorporation().getId());
+        formJobOrderDto.setCorrelatedCustomDate1(makeString(jobOrder.getCorrelatedCustomDate1()));
+        formJobOrderDto.setCorrelatedCustomDate2(makeString(jobOrder.getCorrelatedCustomDate2()));
+        formJobOrderDto.setCorrelatedCustomDate3(makeString(jobOrder.getCorrelatedCustomDate3()));
+        formJobOrderDto.setCorrelatedCustomFloat1(makeString(jobOrder.getCorrelatedCustomFloat1()));
+        formJobOrderDto.setCorrelatedCustomFloat2(makeString(jobOrder.getCorrelatedCustomFloat2()));
+        formJobOrderDto.setCorrelatedCustomFloat3(makeString(jobOrder.getCorrelatedCustomFloat3()));
+        formJobOrderDto.setCorrelatedCustomInt1(makeString(jobOrder.getCorrelatedCustomInt1()));
+        formJobOrderDto.setCorrelatedCustomInt2(makeString(jobOrder.getCorrelatedCustomInt2()));
+        formJobOrderDto.setCorrelatedCustomInt3(makeString(jobOrder.getCorrelatedCustomInt3()));
+        formJobOrderDto.setCorrelatedCustomText1(jobOrder.getCorrelatedCustomText1());
+        formJobOrderDto.setCorrelatedCustomText10(jobOrder.getCorrelatedCustomText10());
+        formJobOrderDto.setCorrelatedCustomText2(jobOrder.getCorrelatedCustomText2());
+        formJobOrderDto.setCorrelatedCustomText3(jobOrder.getCorrelatedCustomText3());
+        formJobOrderDto.setCorrelatedCustomText4(jobOrder.getCorrelatedCustomText4());
+        formJobOrderDto.setCorrelatedCustomText5(jobOrder.getCorrelatedCustomText5());
+        formJobOrderDto.setCorrelatedCustomText6(jobOrder.getCorrelatedCustomText6());
+        formJobOrderDto.setCorrelatedCustomText7(jobOrder.getCorrelatedCustomText7());
+        formJobOrderDto.setCorrelatedCustomText8(jobOrder.getCorrelatedCustomText8());
+        formJobOrderDto.setCorrelatedCustomText9(jobOrder.getCorrelatedCustomText9());
+        formJobOrderDto.setCorrelatedCustomTextBlock1(jobOrder.getCorrelatedCustomTextBlock1());
+        formJobOrderDto.setCorrelatedCustomTextBlock2(jobOrder.getCorrelatedCustomTextBlock2());
+        formJobOrderDto.setCorrelatedCustomTextBlock3(jobOrder.getCorrelatedCustomTextBlock3());
+        formJobOrderDto.setCostCenter(jobOrder.getCostCenter());
+        formJobOrderDto.setCustomDate1(makeString(jobOrder.getCustomDate1()));
+        formJobOrderDto.setCustomDate2(makeString(jobOrder.getCustomDate2()));
+        formJobOrderDto.setCustomDate3(makeString(jobOrder.getCustomDate3()));
+        formJobOrderDto.setCustomFloat1(makeString(jobOrder.getCustomFloat1()));
+        formJobOrderDto.setCustomFloat2(makeString(jobOrder.getCustomFloat2()));
+        formJobOrderDto.setCustomFloat3(makeString(jobOrder.getCustomFloat3()));
+        formJobOrderDto.setCustomInt1(makeString(jobOrder.getCustomInt1()));
+        formJobOrderDto.setCustomInt2(makeString(jobOrder.getCustomInt2()));
+        formJobOrderDto.setCustomInt3(makeString(jobOrder.getCustomInt3()));
+        formJobOrderDto.setCustomText1(jobOrder.getCustomText1());
+        formJobOrderDto.setCustomText10(jobOrder.getCustomText10());
+        formJobOrderDto.setCustomText11(jobOrder.getCustomText11());
+        formJobOrderDto.setCustomText12(jobOrder.getCustomText12());
+        formJobOrderDto.setCustomText13(jobOrder.getCustomText13());
+        formJobOrderDto.setCustomText14(jobOrder.getCustomText14());
+        formJobOrderDto.setCustomText15(jobOrder.getCustomText15());
+        formJobOrderDto.setCustomText16(jobOrder.getCustomText16());
+        formJobOrderDto.setCustomText17(jobOrder.getCustomText17());
+        formJobOrderDto.setCustomText18(jobOrder.getCustomText18());
+        formJobOrderDto.setCustomText19(jobOrder.getCustomText19());
+        formJobOrderDto.setCustomText2(jobOrder.getCustomText2());
+        formJobOrderDto.setCustomText20(jobOrder.getCustomText20());
+        formJobOrderDto.setCustomText3(jobOrder.getCustomText3());
+        formJobOrderDto.setCustomText4(jobOrder.getCustomText4());
+        formJobOrderDto.setCustomText5(jobOrder.getCustomText5());
+        formJobOrderDto.setCustomText6(jobOrder.getCustomText6());
+        formJobOrderDto.setCustomText7(jobOrder.getCustomText7());
+        formJobOrderDto.setCustomText8(jobOrder.getCustomText8());
+        formJobOrderDto.setCustomText9(jobOrder.getCustomText9());
+        formJobOrderDto.setCustomTextBlock1(jobOrder.getCustomTextBlock1());
+        formJobOrderDto.setCustomTextBlock2(jobOrder.getCustomTextBlock2());
+        formJobOrderDto.setCustomTextBlock3(jobOrder.getCustomTextBlock3());
+        formJobOrderDto.setCustomTextBlock4(jobOrder.getCustomTextBlock4());
+        formJobOrderDto.setCustomTextBlock5(jobOrder.getCustomTextBlock5());
+        formJobOrderDto.setDateEnd(makeString(jobOrder.getDateEnd()));
+        formJobOrderDto.setDegreeList(jobOrder.getDegreeList());
+        formJobOrderDto.setDescription(jobOrder.getDescription());
+        formJobOrderDto.setDurationWeeks(makeString(jobOrder.getDurationWeeks()));
+
+        formJobOrderDto.setEducationDegree(jobOrder.getEducationDegree());
+        formJobOrderDto.setEmploymentType(jobOrder.getEmploymentType());
+        formJobOrderDto.setExternalCategoryID(jobOrder.getExternalCategoryID());
+        formJobOrderDto.setExternalID(jobOrder.getExternalID());
+        formJobOrderDto.setFeeArrangement(makeString(jobOrder.getFeeArrangement()));
+        formJobOrderDto.setHoursOfOperation(jobOrder.getHoursOfOperation());
+        formJobOrderDto.setHoursPerWeek(makeString(jobOrder.getHoursPerWeek()));
+        formJobOrderDto.setIsClientEditable(jobOrder.getIsClientEditable());
+        formJobOrderDto.setIsInterviewRequired(jobOrder.getIsInterviewRequired());
+        formJobOrderDto.setIsOpen(jobOrder.getIsOpen());
+        formJobOrderDto.setIsPublic(makeString(jobOrder.getIsPublic()));
+        formJobOrderDto.setJobBoardList(jobOrder.getJobBoardList());
+        formJobOrderDto.setJobPostingID(jobOrder.getId());
+        formJobOrderDto.setNumOpenings(makeString(jobOrder.getNumOpenings()));
+        formJobOrderDto.setOnSite(jobOrder.getOnSite());
+        formJobOrderDto.setOptionsPackage(jobOrder.getOptionsPackage());
+        formJobOrderDto.setUserID(jobOrder.getOwner().getId());
+        formJobOrderDto.setPayRate(makeString(jobOrder.getPayRate()));
+        formJobOrderDto.setPublicDescription(jobOrder.getPublicDescription());
+        formJobOrderDto.setPublishedZip(jobOrder.getPublishedZip());
+        formJobOrderDto.setReasonClosed(jobOrder.getReasonClosed());
+        formJobOrderDto.setReportTo(jobOrder.getReportTo());
+        formJobOrderDto.setReportToUserID(jobOrder.getReportToClientContact() != null ? jobOrder.getReportToClientContact().getId() : null);
+        formJobOrderDto.setResponseUserID(jobOrder.getResponseUser() != null ? jobOrder.getResponseUser().getId() : null);
+        formJobOrderDto.setSalary(makeString(jobOrder.getSalary()));
+        formJobOrderDto.setSalaryUnit(jobOrder.getSalaryUnit());
+        formJobOrderDto.setSkills(jobOrder.getSkillList());
+        formJobOrderDto.setSource(jobOrder.getSource());
+        formJobOrderDto.setStartDate(makeString(jobOrder.getStartDate()));
+        formJobOrderDto.setStatus(jobOrder.getStatus());
+        formJobOrderDto.setTaxRate(makeString(jobOrder.getTaxRate()));
+        formJobOrderDto.setTaxStatus(jobOrder.getTaxStatus());
+        formJobOrderDto.setTitle(jobOrder.getTitle());
+        formJobOrderDto.setTravelRequirements(jobOrder.getTravelRequirements());
+        formJobOrderDto.setType(jobOrder.getType());
+        formJobOrderDto.setWillRelocate(jobOrder.getWillRelocate() == null ? null : jobOrder.getWillRelocate().toString());
+        formJobOrderDto.setWillSponsor(jobOrder.getWillSponsor() == null ? null : jobOrder.getWillSponsor().toString());
+        formJobOrderDto.setYearsRequired(makeString(jobOrder.getYearsRequired()));
+
+        if(jobOrder.getAddress() != null) {
+            formJobOrderDto.setAddress(jobOrder.getAddress().getAddress1());
+            formJobOrderDto.setCity(jobOrder.getAddress().getCity());
+            formJobOrderDto.setCountryID(jobOrder.getAddress().getCountryID());
+            formJobOrderDto.setState(jobOrder.getAddress().getState());
+            formJobOrderDto.setZip(jobOrder.getAddress().getZip());
+        }
+
+        return formJobOrderDto;
+    }
+
 	/**
 	 * Converts the form values to a SOAP dto.
 	 * 

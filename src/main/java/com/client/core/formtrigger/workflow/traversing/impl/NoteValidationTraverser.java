@@ -14,9 +14,9 @@ import com.client.core.formtrigger.model.form.impl.FormNoteDto;
 
 public class NoteValidationTraverser extends AbstractValidationTraverser<NoteFormTriggerHelper> {
 
-	public NoteValidationTraverser(FormNoteDto formNoteDto, Integer updatingUserID, Integer corporationID, boolean edit,
+	public NoteValidationTraverser(FormNoteDto formNoteDto, Integer updatingUserID, boolean edit,
 			BullhornData bullhornData) {
-		super(new NoteFormTriggerHelper(formNoteDto, updatingUserID, bullhornData), corporationID, edit);
+		super(new NoteFormTriggerHelper(formNoteDto, updatingUserID, bullhornData), edit);
 	}
 
 }

@@ -60,17 +60,17 @@ public class Utility {
 		}
 	}
 
-	public static Integer parseInteger(String strVal) {
-		if(strVal == null || strVal.isEmpty()) {
-			return null;
-		} else {
-			try {
-				return Integer.parseInt(strVal);
-			} catch(NumberFormatException e) {
-				return null;
-			}
-		}
-	}
+    public static Integer parseInteger(Object strVal) {
+        if(strVal == null || strVal.toString().isEmpty()) {
+            return null;
+        } else {
+            try {
+                return Integer.parseInt(strVal.toString());
+            } catch(NumberFormatException e) {
+                return null;
+            }
+        }
+    }
 
 	public static Integer forceParseInteger(String strVal) {
 		if(strVal == null || strVal.isEmpty()) {
@@ -302,6 +302,10 @@ public class Utility {
 		
 		return false;
 	}
+
+    public static String parseString(Object value) {
+        return value == null ? "" : value.toString();
+    }
 	
 	public static DateTime xmlGregorianCalendarToDateTime(XMLGregorianCalendar calendar) {
 		if(calendar == null) {

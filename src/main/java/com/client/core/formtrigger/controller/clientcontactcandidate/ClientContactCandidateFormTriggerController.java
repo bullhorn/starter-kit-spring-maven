@@ -1,8 +1,5 @@
 package com.client.core.formtrigger.controller.clientcontactcandidate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -12,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
@@ -54,19 +51,15 @@ public class ClientContactCandidateFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param corporationID
-	 * @param response
-	 * @param request
 	 * @return the json parsed validation message
 	 */
 	@RequestMapping(value = { "/formtrigger/clientcontact/add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormClientContactDto formClientContactDto, @RequestParam("ft.userId") Integer updatingUserID,
-			@RequestParam("ft.corpId") Integer corporationID, HttpServletResponse response, HttpServletRequest request) {
+	public String addEntity(@ModelAttribute FormClientContactDto formClientContactDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Client Contact Validation Process----------------------------------------");
 
 		ClientContactValidationTraverser traverser = new ClientContactValidationTraverser(formClientContactDto, updatingUserID,
-				corporationID, false, bullhornData);
+				false, bullhornData);
 
 		return handleClientContactRequest(traverser);
 
@@ -81,28 +74,24 @@ public class ClientContactCandidateFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param corporationID
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "/formtrigger/clientcontactcandidate/edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
 	public String editEntity(@ModelAttribute FormClientContactDto formClientContactDto, @ModelAttribute FormCandidateDto formCandidateDto,
-			@RequestParam("ft.userId") Integer updatingUserID, @RequestParam("ft.corpId") Integer corporationID,
-			HttpServletResponse response, HttpServletRequest request) {
+			@RequestParam("ft.userId") Integer updatingUserID) {
 
 		if (isClientContactSave(formClientContactDto)) {
 			log.info("---------------------------- Starting Client Contact Validation Process----------------------------------------");
 			ClientContactValidationTraverser traverser = new ClientContactValidationTraverser(formClientContactDto, updatingUserID,
-					corporationID, true, bullhornData);
+					true, bullhornData);
 
 			return handleClientContactRequest(traverser);
 		}
 
 		if (isCandidateSave(formCandidateDto)) {
 			log.info("---------------------------- Starting Candidate Validation Process----------------------------------------");
-			CandidateValidationTraverser traverser = new CandidateValidationTraverser(formCandidateDto, updatingUserID, corporationID,
+			CandidateValidationTraverser traverser = new CandidateValidationTraverser(formCandidateDto, updatingUserID,
 					true, bullhornData);
 
 			return handleCandidateRequest(traverser);
@@ -118,18 +107,14 @@ public class ClientContactCandidateFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param corporationID
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "/formtrigger/candidate/add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormCandidateDto formCandidateDto, @RequestParam("ft.userId") Integer updatingUserID,
-			@RequestParam("ft.corpId") Integer corporationID, HttpServletResponse response, HttpServletRequest request) {
+	public String addEntity(@ModelAttribute FormCandidateDto formCandidateDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Candidate Validation Process----------------------------------------");
 
-		CandidateValidationTraverser traverser = new CandidateValidationTraverser(formCandidateDto, updatingUserID, corporationID, false,
+		CandidateValidationTraverser traverser = new CandidateValidationTraverser(formCandidateDto, updatingUserID, false,
 				bullhornData);
 
 		return handleCandidateRequest(traverser);

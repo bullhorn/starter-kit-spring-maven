@@ -183,6 +183,14 @@ public abstract class AbstractFormDto<T extends BullhornEntity> implements Custo
 		return StringUtils.isNumeric(value);
 	}
 
+    protected static String makeString(Object value){
+        if(value == null){
+            return null;
+        }else{
+            return value.toString();
+        }
+    }
+
 	private void addValidationMessage(String value, String fieldName) {
 		formPopulationErrors.put(fieldName, value + " is not a valid value for field: " + fieldName);
 	}

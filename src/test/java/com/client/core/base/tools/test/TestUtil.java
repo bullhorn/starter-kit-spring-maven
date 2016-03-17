@@ -141,7 +141,7 @@ public class TestUtil {
 		dto.setUserID(candidateID);
 		dto.setStatus(status);
 		JobSubmissionValidationTraverser traverser = new JobSubmissionValidationTraverser(dto, getTestEntities().getCorporateUserId(),
-				Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				true, bullhornData);
 
 		return traverser;
 	}
@@ -153,7 +153,7 @@ public class TestUtil {
 		dto.setPlacementID(getTestEntities().getPlacementId());
 		dto.setStatus(status);
 		PlacementValidationTraverser traverser = new PlacementValidationTraverser(dto, getTestEntities().getCorporateUserId(),
-				Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				true, bullhornData);
 
 		return traverser;
 	}
@@ -166,7 +166,7 @@ public class TestUtil {
 		dto.setStatus(status);
 
 		PlacementChangeRequestValidationTraverser traverser = new PlacementChangeRequestValidationTraverser(dto, getTestEntities()
-				.getCorporateUserId(), Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				.getCorporateUserId(), true, bullhornData);
 
 		return traverser;
 	}
@@ -179,7 +179,7 @@ public class TestUtil {
 		dto.setUserID(testEntities.getCorporateUserId());
 		
 		JobValidationTraverser traverser = new JobValidationTraverser(dto, getTestEntities().getCorporateUserId(),
-				Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				true, bullhornData);
 
 		return traverser;
 	}
@@ -190,7 +190,7 @@ public class TestUtil {
 		dto.setRecruiterUserID(getTestEntities().getCorporateUserId().toString());
 
 		CandidateValidationTraverser traverser = new CandidateValidationTraverser(dto, getTestEntities().getCorporateUserId(),
-				Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				true, bullhornData);
 		return traverser;
 	}
 
@@ -201,7 +201,7 @@ public class TestUtil {
 		dto.setClientCorporationID(getTestEntities().getClientCorporationId());
 
 		ClientContactValidationTraverser traverser = new ClientContactValidationTraverser(dto, getTestEntities().getCorporateUserId(),
-				Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				true, bullhornData);
 		return traverser;
 	}
 
@@ -210,7 +210,7 @@ public class TestUtil {
 		dto.setClientCorporationID(getTestEntities().getClientCorporationId());
 
 		ClientCorporationValidationTraverser traverser = new ClientCorporationValidationTraverser(dto, getTestEntities()
-				.getCorporateUserId(), Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				.getCorporateUserId(), true, bullhornData);
 		return traverser;
 	}
 
@@ -221,7 +221,7 @@ public class TestUtil {
 		dto.setCommentingUserID(getTestEntities().getCorporateUserId());
 
 		NoteValidationTraverser traverser = new NoteValidationTraverser(dto, getTestEntities().getCorporateUserId(),
-				Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
+				true, bullhornData);
 		return traverser;
 	}
 

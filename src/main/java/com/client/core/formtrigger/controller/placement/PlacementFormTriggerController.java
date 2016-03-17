@@ -1,8 +1,5 @@
 package com.client.core.formtrigger.controller.placement;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -14,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.client.core.formtrigger.controller.AbstractFormTriggerController;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementValidationTraverser;
 import com.client.core.base.tools.web.MediaTypes;
-import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
 import com.client.core.base.workflow.node.Node;
+import com.client.core.formtrigger.controller.AbstractFormTriggerController;
+import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
+import com.client.core.formtrigger.workflow.traversing.impl.PlacementValidationTraverser;
 
 /**
  * Entry point for Placement formtrigger Validations.
@@ -47,18 +44,14 @@ public class PlacementFormTriggerController extends AbstractFormTriggerControlle
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param corporationID
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormPlacementDto formPlacementDto, @RequestParam("ft.userId") Integer updatingUserID,
-			@RequestParam("ft.corpId") Integer corporationID, HttpServletResponse response, HttpServletRequest request) {
+	public String addEntity(@ModelAttribute FormPlacementDto formPlacementDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Placement Validation Add Process----------------------------------------");
 
-		PlacementValidationTraverser traverser = new PlacementValidationTraverser(formPlacementDto, updatingUserID, corporationID, false,
+		PlacementValidationTraverser traverser = new PlacementValidationTraverser(formPlacementDto, updatingUserID, false,
 				bullhornData);
 
 		return handleRequest(traverser);
@@ -71,18 +64,14 @@ public class PlacementFormTriggerController extends AbstractFormTriggerControlle
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param corporationID
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String editEntity(@ModelAttribute FormPlacementDto formPlacementDto, @RequestParam("ft.userId") Integer updatingUserID,
-			@RequestParam("ft.corpId") Integer corporationID, HttpServletResponse response, HttpServletRequest request) {
+	public String editEntity(@ModelAttribute FormPlacementDto formPlacementDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Placement Validation Process----------------------------------------");
 
-		PlacementValidationTraverser traverser = new PlacementValidationTraverser(formPlacementDto, updatingUserID, corporationID, true,
+		PlacementValidationTraverser traverser = new PlacementValidationTraverser(formPlacementDto, updatingUserID, true,
 				bullhornData);
 
 		return handleRequest(traverser);

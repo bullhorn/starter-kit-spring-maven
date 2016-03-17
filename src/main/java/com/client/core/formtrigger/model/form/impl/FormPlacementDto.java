@@ -1140,17 +1140,10 @@ public class FormPlacementDto extends AbstractFormDto<Placement> {
 		this.invoiceGroup = invoiceGroup;
 	}
 
-	/**
-	 * @return the isChangeRequest
-	 */
 	public String getIsChangeRequest() {
 		return isChangeRequest;
 	}
 
-	/**
-	 * @param isChangeRequest
-	 *            the isChangeRequest to set
-	 */
 	public void setIsChangeRequest() {
 		this.isChangeRequest = "false";
 	}
@@ -1510,6 +1503,157 @@ public class FormPlacementDto extends AbstractFormDto<Placement> {
 
 		return entity;
 	}
+
+    public static FormPlacementDto instantiateFromPlacement(Placement placement){
+        FormPlacementDto formPlacementDto = new FormPlacementDto();
+
+        formPlacementDto.setApprovingUserID(placement.getApprovingClientContact() != null ? placement.getApprovingClientContact().getId() : null);
+        formPlacementDto.setBackupApprovingUserID(placement.getBackupApprovingClientContact() != null ? placement.getBackupApprovingClientContact().getId() : null);
+        formPlacementDto.setBillingUserID(placement.getBillingClientContact() != null ? placement.getBillingClientContact().getId() : null);
+        formPlacementDto.setBillingFrequency(placement.getBillingFrequency());
+        formPlacementDto.setBonusPackage(placement.getBonusPackage());
+        formPlacementDto.setUserID(placement.getCandidate() != null ? placement.getCandidate().getId() : null);
+        formPlacementDto.setClientBillRate(makeString(placement.getClientBillRate()));
+        formPlacementDto.setClientOverTimeRate(makeString(placement.getClientOvertimeRate()));
+        formPlacementDto.setComments(placement.getComments());
+        formPlacementDto.setCorrelatedCustomDate1(makeString(placement.getCorrelatedCustomDate1()));
+        formPlacementDto.setCorrelatedCustomDate2(makeString(placement.getCorrelatedCustomDate2()));
+        formPlacementDto.setCorrelatedCustomDate3(makeString(placement.getCorrelatedCustomDate3()));
+        formPlacementDto.setCorrelatedCustomFloat1(makeString(placement.getCorrelatedCustomFloat1()));
+        formPlacementDto.setCorrelatedCustomFloat2(makeString(placement.getCorrelatedCustomFloat2()));
+        formPlacementDto.setCorrelatedCustomFloat3(makeString(placement.getCorrelatedCustomFloat3()));
+        formPlacementDto.setCorrelatedCustomInt1(makeString(placement.getCorrelatedCustomInt1()));
+        formPlacementDto.setCorrelatedCustomInt2(makeString(placement.getCorrelatedCustomInt2()));
+        formPlacementDto.setCorrelatedCustomInt3(makeString(placement.getCorrelatedCustomInt3()));
+        formPlacementDto.setCorrelatedCustomText1(placement.getCorrelatedCustomText1());
+        formPlacementDto.setCorrelatedCustomText10(placement.getCorrelatedCustomText10());
+        formPlacementDto.setCorrelatedCustomText2(placement.getCorrelatedCustomText2());
+        formPlacementDto.setCorrelatedCustomText3(placement.getCorrelatedCustomText3());
+        formPlacementDto.setCorrelatedCustomText4(placement.getCorrelatedCustomText4());
+        formPlacementDto.setCorrelatedCustomText5(placement.getCorrelatedCustomText5());
+        formPlacementDto.setCorrelatedCustomText6(placement.getCorrelatedCustomText6());
+        formPlacementDto.setCorrelatedCustomText7(placement.getCorrelatedCustomText7());
+        formPlacementDto.setCorrelatedCustomText8(placement.getCorrelatedCustomText8());
+        formPlacementDto.setCorrelatedCustomText9(placement.getCorrelatedCustomText9());
+        formPlacementDto.setCorrelatedCustomTextBlock1(placement.getCorrelatedCustomTextBlock1());
+        formPlacementDto.setCorrelatedCustomTextBlock2(placement.getCorrelatedCustomTextBlock2());
+        formPlacementDto.setCorrelatedCustomTextBlock3(placement.getCorrelatedCustomTextBlock3());
+        formPlacementDto.setCostCenter(placement.getCostCenter());
+
+        formPlacementDto.setCustomBillRate1(makeString(placement.getCustomBillRate1()));
+        formPlacementDto.setCustomBillRate2(makeString(placement.getCustomBillRate2()));
+        formPlacementDto.setCustomBillRate3(makeString(placement.getCustomBillRate3()));
+        formPlacementDto.setCustomBillRate4(makeString(placement.getCustomBillRate4()));
+        formPlacementDto.setCustomBillRate5(makeString(placement.getCustomBillRate5()));
+        formPlacementDto.setCustomBillRate6(makeString(placement.getCustomBillRate6()));
+        formPlacementDto.setCustomBillRate7(makeString(placement.getCustomBillRate7()));
+        formPlacementDto.setCustomBillRate8(makeString(placement.getCustomBillRate8()));
+        formPlacementDto.setCustomBillRate9(makeString(placement.getCustomBillRate9()));
+        formPlacementDto.setCustomDate1(makeString(placement.getCustomDate1()));
+        formPlacementDto.setCustomDate2(makeString(placement.getCustomDate2()));
+        formPlacementDto.setCustomDate3(makeString(placement.getCustomDate3()));
+        formPlacementDto.setCustomFloat1(makeString(placement.getCustomFloat1()));
+        formPlacementDto.setCustomFloat2(makeString(placement.getCustomFloat2()));
+        formPlacementDto.setCustomFloat3(makeString(placement.getCustomFloat3()));
+        formPlacementDto.setCustomInt1(makeString(placement.getCustomInt1()));
+        formPlacementDto.setCustomInt2(makeString(placement.getCustomInt2()));
+        formPlacementDto.setCustomInt3(makeString(placement.getCustomInt3()));
+        formPlacementDto.setCustomPayRate1(makeString(placement.getCustomPayRate1()));
+        formPlacementDto.setCustomPayRate2(makeString(placement.getCustomPayRate2()));
+        formPlacementDto.setCustomPayRate3(makeString(placement.getCustomPayRate3()));
+        formPlacementDto.setCustomPayRate4(makeString(placement.getCustomPayRate4()));
+        formPlacementDto.setCustomPayRate5(makeString(placement.getCustomPayRate5()));
+        formPlacementDto.setCustomPayRate6(makeString(placement.getCustomPayRate6()));
+        formPlacementDto.setCustomPayRate7(makeString(placement.getCustomPayRate7()));
+        formPlacementDto.setCustomPayRate8(makeString(placement.getCustomPayRate8()));
+        formPlacementDto.setCustomPayRate9(makeString(placement.getCustomPayRate9()));
+        formPlacementDto.setCustomText1(placement.getCustomText1());
+        formPlacementDto.setCustomText10(placement.getCustomText10());
+        formPlacementDto.setCustomText11(placement.getCustomText11());
+        formPlacementDto.setCustomText12(placement.getCustomText12());
+        formPlacementDto.setCustomText13(placement.getCustomText13());
+        formPlacementDto.setCustomText14(placement.getCustomText14());
+        formPlacementDto.setCustomText15(placement.getCustomText15());
+        formPlacementDto.setCustomText16(placement.getCustomText16());
+        formPlacementDto.setCustomText17(placement.getCustomText17());
+        formPlacementDto.setCustomText18(placement.getCustomText18());
+        formPlacementDto.setCustomText19(placement.getCustomText19());
+        formPlacementDto.setCustomText2(placement.getCustomText2());
+        formPlacementDto.setCustomText20(placement.getCustomText20());
+        formPlacementDto.setCustomText3(placement.getCustomText3());
+        formPlacementDto.setCustomText4(placement.getCustomText4());
+        formPlacementDto.setCustomText5(placement.getCustomText5());
+        formPlacementDto.setCustomText6(placement.getCustomText6());
+        formPlacementDto.setCustomText7(placement.getCustomText7());
+        formPlacementDto.setCustomText8(placement.getCustomText8());
+        formPlacementDto.setCustomText9(placement.getCustomText9());
+        formPlacementDto.setCustomText21(placement.getCustomText21());
+        formPlacementDto.setCustomText22(placement.getCustomText22());
+        formPlacementDto.setCustomText23(placement.getCustomText23());
+        formPlacementDto.setCustomText24(placement.getCustomText24());
+        formPlacementDto.setCustomText25(placement.getCustomText25());
+        formPlacementDto.setCustomText26(placement.getCustomText26());
+        formPlacementDto.setCustomText27(placement.getCustomText27());
+        formPlacementDto.setCustomText28(placement.getCustomText28());
+        formPlacementDto.setCustomText29(placement.getCustomText29());
+        formPlacementDto.setCustomText30(placement.getCustomText30());
+        formPlacementDto.setCustomText31(placement.getCustomText31());
+        formPlacementDto.setCustomText32(placement.getCustomText32());
+        formPlacementDto.setCustomText33(placement.getCustomText33());
+        formPlacementDto.setCustomText34(placement.getCustomText34());
+        formPlacementDto.setCustomText35(placement.getCustomText35());
+        formPlacementDto.setCustomText36(placement.getCustomText36());
+        formPlacementDto.setCustomText37(placement.getCustomText37());
+        formPlacementDto.setCustomText38(placement.getCustomText38());
+        formPlacementDto.setCustomText39(placement.getCustomText39());
+        formPlacementDto.setCustomText40(placement.getCustomText40());
+
+        formPlacementDto.setCustomTextBlock1(placement.getCustomTextBlock1());
+        formPlacementDto.setCustomTextBlock2(placement.getCustomTextBlock2());
+        formPlacementDto.setCustomTextBlock3(placement.getCustomTextBlock3());
+        formPlacementDto.setCustomTextBlock4(placement.getCustomTextBlock4());
+        formPlacementDto.setCustomTextBlock5(placement.getCustomTextBlock5());
+        formPlacementDto.setDateAdded(makeString(placement.getDateAdded()));
+        formPlacementDto.setDateBegin(makeString(placement.getDateBegin()));
+        formPlacementDto.setDateClientEffective(makeString(placement.getDateClientEffective()));
+        formPlacementDto.setDateEffective(makeString(placement.getDateEffective()));
+        formPlacementDto.setDateEnd(makeString(placement.getDateEnd()));
+        formPlacementDto.setDaysGuaranteed(makeString(placement.getDaysGuaranteed()));
+        formPlacementDto.setDaysProRated(makeString(placement.getDaysProRated()));
+        formPlacementDto.setDurationWeeks(makeString(placement.getDurationWeeks()));
+        formPlacementDto.setEmployeeType(placement.getEmployeeType());
+        formPlacementDto.setEmploymentType(placement.getEmploymentType());
+        formPlacementDto.setFee(makeString(placement.getFee()));
+        formPlacementDto.setHoursOfOperation(makeString(placement.getHoursOfOperation()));
+        formPlacementDto.setHoursPerDay(makeString(placement.getHoursPerDay()));
+        formPlacementDto.setHousingManagerID(placement.getHousingManagerID());
+        formPlacementDto.setHousingStatus(placement.getHousingStatus());
+        formPlacementDto.setInvoiceGroup(placement.getInvoiceGroupName());
+        formPlacementDto.setJobPostingID(placement.getJobOrder() != null ? placement.getJobOrder().getId() : null);
+        formPlacementDto.setOtExemption(makeString(placement.getOtExemption()));
+        formPlacementDto.setOtherHourlyFee(makeString(placement.getOtherHourlyFee()));
+        formPlacementDto.setOtherHourlyFeeComments(placement.getOtherHourlyFeeComments());
+        formPlacementDto.setOvertimeRate(makeString(placement.getOvertimeRate()));
+        formPlacementDto.setPayRate(makeString(placement.getPayRate()));
+        formPlacementDto.setPlacementID(placement.getId());
+        formPlacementDto.setRecruitingManagerPercentGrossMargin(makeString(placement.getRecruitingManagerPercentGrossMargin()));
+        formPlacementDto.setReferralFee(makeString(placement.getReferralFee()));
+        formPlacementDto.setReferralFeeType(makeString(placement.getReferralFeeType()));
+        formPlacementDto.setReportTo(placement.getReportTo());
+        formPlacementDto.setReportedMargin(makeString(placement.getReportedMargin()));
+        formPlacementDto.setSalary(makeString(placement.getSalary()));
+        formPlacementDto.setSalaryUnit(placement.getSalaryUnit());
+        formPlacementDto.setSalesManagerPercentGrossMargin(makeString(placement.getSalesManagerPercentGrossMargin()));
+        formPlacementDto.setStatementClientContactID(placement.getStatementClientContact() != null ? placement.getStatementClientContact().getId() : null);
+        formPlacementDto.setStatus(placement.getStatus());
+        formPlacementDto.setTaxRate(makeString(placement.getTaxRate()));
+        formPlacementDto.setTaxState(placement.getTaxState());
+        formPlacementDto.setTerminationReason(placement.getTerminationReason());
+        formPlacementDto.setVendorClientCorporationID(placement.getVendorClientCorporation() != null ? placement.getVendorClientCorporation().getId() : null);
+        formPlacementDto.setWorkWeekStart(makeString(placement.getWorkWeekStart()));
+
+        return formPlacementDto;
+    }
 
 	/**
 	 * Converts the form values to a SOAP dto.

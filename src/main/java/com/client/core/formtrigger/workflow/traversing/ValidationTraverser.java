@@ -10,20 +10,13 @@ import com.client.core.base.workflow.traversing.Traverser;
 public interface ValidationTraverser extends Traverser {
 
     /**
-     * Return the corporationID of the corporation for which an entity is being validated
-     *
-     * @return the corporationID
-     */
-    public Integer getCorporationID();
-
-    /**
      * Returns the response that will be sent back to the bullhorn form.
      *
      * @see #addFormResponse(String, String)
      *
      * @return the formResponse
      */
-    public Map<String, String> getFormResponse();
+    Map<String, String> getFormResponse();
 
     /**
      * Contains the response that will be sent back to the bullhorn form, key:value pairs
@@ -40,13 +33,20 @@ public interface ValidationTraverser extends Traverser {
      * @param key the key of the reponse item
      * @param message the message or value to be returned to the bullhorn form
      */
-    public void addFormResponse(String key, String message);
+    void addFormResponse(String key, String message);
 
     /**
-     * Returns whether or not the form trigger currently being validated is an edit trigger or not.
+     * Returns whether or not the form trigger currently being validated is an edit trigger.
      *
      * @return true if the form trigger is edit, false if it is add
      */
-    public boolean isEdit();
+    boolean isEdit();
+
+    /**
+     * Returns whether or not the trigger currently being validated is a rest trigger.
+     *
+     * @return true if the trigger is being called from a a rest trigger, false if it is a form trigger
+     */
+    boolean getRestTrigger();
 
 }

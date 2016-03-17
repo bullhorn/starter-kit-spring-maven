@@ -3,8 +3,8 @@ package com.client.core.formtrigger.model.helper.impl;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
 import com.client.core.formtrigger.model.form.impl.FormClientContactDto;
+import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
 
 /**
  * Holds and keeps data needed for validations to minimize the number of API calls.
@@ -21,6 +21,11 @@ public class ClientContactFormTriggerHelper extends AbstractFormTriggerHelper<Fo
 	public ClientContactFormTriggerHelper(FormClientContactDto formClientContactDto, Integer updatingUserID, BullhornData bullhornData) {
 		super(formClientContactDto, updatingUserID, bullhornData);
 	}
+
+    public ClientContactFormTriggerHelper(ClientContact clientContact, Integer updatingUserID, BullhornData bullhornData) {
+        super(FormClientContactDto.instantiateFromClientContact(clientContact), updatingUserID, bullhornData);
+        this.newEntity = clientContact;
+    }
 
 	public ClientCorporation getClientCorporation() {
 		if (clientCorporation == null) {

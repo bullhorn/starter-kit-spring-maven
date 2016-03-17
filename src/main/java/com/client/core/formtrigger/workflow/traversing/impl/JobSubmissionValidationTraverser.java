@@ -14,9 +14,9 @@ import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
 
 public class JobSubmissionValidationTraverser extends AbstractValidationTraverser<JobSubmissionFormTriggerHelper> {
 
-	public JobSubmissionValidationTraverser(FormJobSubmissionDto formJobSubmissionDto, Integer updatingUserID, Integer corporationID,
+	public JobSubmissionValidationTraverser(FormJobSubmissionDto formJobSubmissionDto, Integer updatingUserID,
 			boolean edit, BullhornData bullhornData) {
-		super(new JobSubmissionFormTriggerHelper(formJobSubmissionDto, updatingUserID, bullhornData), corporationID, edit);
+		super(new JobSubmissionFormTriggerHelper(formJobSubmissionDto, updatingUserID, bullhornData), edit);
 
 	}
 

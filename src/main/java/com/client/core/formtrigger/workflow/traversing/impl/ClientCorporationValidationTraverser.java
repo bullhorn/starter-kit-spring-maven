@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.workflow.traversing.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.client.core.formtrigger.model.helper.impl.ClientCorporationFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.AbstractValidationTraverser;
 import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
@@ -15,8 +16,14 @@ import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
 public class ClientCorporationValidationTraverser extends AbstractValidationTraverser<ClientCorporationFormTriggerHelper> {
 
 	public ClientCorporationValidationTraverser(FormClientCorporationDto formClientCorporationDto, Integer updatingUserID,
-			Integer corporationID, boolean edit, BullhornData bullhornData) {
-		super(new ClientCorporationFormTriggerHelper(formClientCorporationDto, updatingUserID, bullhornData), corporationID, edit);
+			boolean edit, BullhornData bullhornData) {
+		super(new ClientCorporationFormTriggerHelper(formClientCorporationDto, updatingUserID, bullhornData), edit);
 
 	}
+
+    public ClientCorporationValidationTraverser(ClientCorporation clientCorporation, Integer updatingUserID,
+                                                boolean edit, boolean restTrigger, BullhornData bullhornData) {
+        super(new ClientCorporationFormTriggerHelper(clientCorporation, updatingUserID, bullhornData), edit, restTrigger);
+
+    }
 }

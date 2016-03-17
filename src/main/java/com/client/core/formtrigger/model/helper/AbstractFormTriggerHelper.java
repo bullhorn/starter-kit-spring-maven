@@ -12,7 +12,9 @@ import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
+import com.bullhornsdk.data.model.entity.core.standard.Lead;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
 import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
 import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
@@ -260,6 +262,26 @@ public abstract class AbstractFormTriggerHelper<T extends AbstractFormDto<E>, E 
      */
     public PlacementChangeRequest findPlacementChangeRequest(Integer id) {
         return findEntity(PlacementChangeRequest.class, id);
+    }
+
+    /**
+     * Finds an Opportunity given it's ID
+     *
+     * @param id the primary key id of the Opportunity
+     * @return the Opportunity with the primary key if it exists, a new instance of the class otherwise
+     */
+    public Opportunity findOpportunity(Integer id){
+        return findEntity(Opportunity.class, id);
+    }
+
+    /**
+     * Finds a Lead given it's ID
+     *
+     * @param id the primary key id of the Lead
+     * @return the Lead with the primary key if it exists, a new instance of the class otherwise
+     */
+    public Lead findLead(Integer id){
+        return findEntity(Lead.class, id);
     }
 
     /**

@@ -20,6 +20,7 @@ import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
 import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
 import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
@@ -398,6 +399,34 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 		}
 		return jobOrder;
 	}
+
+    /**
+     * Makes api call to bullhorn.
+     *
+     * throws BullhornApiErrorException if an error occured with the api call or if no entity with passed in id exists.
+     *
+     * @param id
+     * @return the dto
+     */
+    public Opportunity findOpportunity(Integer id) {
+
+        if (id == null) {
+            return handleNullId(Opportunity.class, id);
+        }
+
+        Opportunity opportunity = null;
+
+        try {
+            opportunity = bullhornData.findEntity(Opportunity.class, id);
+        } catch (Exception e) {
+            handleBhApiError("opportunity", id, e);
+        }
+
+        if (opportunity == null) {
+            handleBhApiError("opportunity", id, null);
+        }
+        return opportunity;
+    }
 
 	/**
 	 * Makes api call to bullhorn.

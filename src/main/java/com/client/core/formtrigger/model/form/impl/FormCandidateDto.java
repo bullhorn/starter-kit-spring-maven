@@ -2725,6 +2725,151 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 
 		return candidate;
 	}
+
+    public static FormCandidateDto instantiateFromCandidate(Candidate candidate){
+
+        FormCandidateDto formCandidateDto = new FormCandidateDto();
+
+        Address address = candidate.getAddress();
+
+        if(address != null) {
+            formCandidateDto.setAddress1(address.getAddress1());
+            formCandidateDto.setAddress2(address.getAddress2());
+            formCandidateDto.setCity(address.getCity());
+            formCandidateDto.setCountryID(makeString(address.getCountryID()));
+            formCandidateDto.setState(address.getState());
+            formCandidateDto.setZip(address.getZip());
+        }
+
+        formCandidateDto.setCategoryID(candidate.getCategory() != null ? makeString(candidate.getCategory().getId()) : null);
+        formCandidateDto.setCertifications(candidate.getCertifications());
+        formCandidateDto.setComments(candidate.getComments());
+        formCandidateDto.setCompanyName(candidate.getCompanyName());
+        formCandidateDto.setCompanyURL(candidate.getCompanyURL());
+        formCandidateDto.setCustomDate1(makeString(candidate.getCustomDate1()));
+        formCandidateDto.setCustomDate2(makeString(candidate.getCustomDate2()));
+        formCandidateDto.setCustomDate3(makeString(candidate.getCustomDate3()));
+        formCandidateDto.setCustomFloat1(makeString(candidate.getCustomFloat1()));
+        formCandidateDto.setCustomFloat2(makeString(candidate.getCustomFloat2()));
+        formCandidateDto.setCustomFloat3(makeString(candidate.getCustomFloat3()));
+        formCandidateDto.setCustomInt1(makeString(candidate.getCustomInt1()));
+        formCandidateDto.setCustomInt2(makeString(candidate.getCustomInt2()));
+        formCandidateDto.setCustomInt3(makeString(candidate.getCustomInt3()));
+        formCandidateDto.setCustomText1(candidate.getCustomText1());
+        formCandidateDto.setCustomText10(candidate.getCustomText10());
+        formCandidateDto.setCustomText11(candidate.getCustomText11());
+        formCandidateDto.setCustomText12(candidate.getCustomText12());
+        formCandidateDto.setCustomText13(candidate.getCustomText13());
+        formCandidateDto.setCustomText14(candidate.getCustomText14());
+        formCandidateDto.setCustomText15(candidate.getCustomText15());
+        formCandidateDto.setCustomText16(candidate.getCustomText16());
+        formCandidateDto.setCustomText17(candidate.getCustomText17());
+        formCandidateDto.setCustomText18(candidate.getCustomText18());
+        formCandidateDto.setCustomText19(candidate.getCustomText19());
+        formCandidateDto.setCustomText2(candidate.getCustomText2());
+        formCandidateDto.setCustomText20(candidate.getCustomText20());
+        formCandidateDto.setCustomText3(candidate.getCustomText3());
+        formCandidateDto.setCustomText4(candidate.getCustomText4());
+        formCandidateDto.setCustomText5(candidate.getCustomText5());
+        formCandidateDto.setCustomText6(candidate.getCustomText6());
+        formCandidateDto.setCustomText7(candidate.getCustomText7());
+        formCandidateDto.setCustomText8(candidate.getCustomText8());
+        formCandidateDto.setCustomText9(candidate.getCustomText9());
+        formCandidateDto.setCustomTextBlock1(candidate.getCustomTextBlock1());
+        formCandidateDto.setCustomTextBlock2(candidate.getCustomTextBlock2());
+        formCandidateDto.setCustomTextBlock3(candidate.getCustomTextBlock3());
+        formCandidateDto.setCustomTextBlock4(candidate.getCustomTextBlock4());
+        formCandidateDto.setCustomTextBlock5(candidate.getCustomTextBlock5());
+        formCandidateDto.setDateAdded(makeString(candidate.getDateAdded()));
+        formCandidateDto.setDateI9Expiration(makeString(candidate.getDateI9Expiration()));
+        formCandidateDto.setDateAvailable(makeString(candidate.getDateAvailable()));
+        formCandidateDto.setDateAvailableEnd(makeString(candidate.getDateAvailableEnd()));
+        formCandidateDto.setDateLastComment(makeString(candidate.getDateLastComment()));
+        formCandidateDto.setDateOfBirth(makeString(candidate.getDateOfBirth()));
+        formCandidateDto.setDateNextCall(makeString(candidate.getDateNextCall()));
+        formCandidateDto.setDayRate(makeString(candidate.getDayRate()));
+        formCandidateDto.setDayRateLow(makeString(candidate.getDayRateLow()));
+        formCandidateDto.setDegreeList(candidate.getDegreeList());
+        formCandidateDto.setDescription(candidate.getDescription());
+        formCandidateDto.setDesiredLocations(candidate.getDesiredLocations());
+        formCandidateDto.setDisability(candidate.getDisability());
+        formCandidateDto.setEducationDegree(candidate.getEducationDegree());
+        formCandidateDto.setEmail(candidate.getEmail());
+        formCandidateDto.setEmail2(candidate.getEmail2());
+        formCandidateDto.setEmail3(candidate.getEmail3());
+        formCandidateDto.setEmployeeType(candidate.getEmployeeType());
+        formCandidateDto.setEmploymentPreference(candidate.getEmploymentPreference());
+        formCandidateDto.setEthnicity(candidate.getEthnicity());
+        formCandidateDto.setExperience(makeString(candidate.getExperience()));
+        formCandidateDto.setExternalID(makeString(candidate.getExternalID()));
+        formCandidateDto.setFax(candidate.getFax());
+        formCandidateDto.setFax2(candidate.getFax2());
+        formCandidateDto.setFax3(candidate.getFax3());
+        formCandidateDto.setFederalAddtionalWitholdingsAmount(makeString(candidate.getFederalAddtionalWitholdingsAmount()));
+        formCandidateDto.setFederalExemptions(makeString(candidate.getFederalExemptions()));
+        formCandidateDto.setFederalFilingStatus(candidate.getFederalFilingStatus());
+        formCandidateDto.setFirstName(candidate.getFirstName());
+        formCandidateDto.setGender(candidate.getGender());
+        formCandidateDto.setHourlyRate(makeString(candidate.getHourlyRate()));
+        formCandidateDto.setHourlyRateLow(makeString(candidate.getHourlyRateLow()));
+        formCandidateDto.setIsEditable(makeString(candidate.getIsEditable()));
+        formCandidateDto.setI9OnFile(makeString(candidate.getI9OnFile()));
+        formCandidateDto.setLastName(makeString(candidate.getLastName()));
+        formCandidateDto.setLinkedPersonID(candidate.getLinkedPerson() != null ? makeString(candidate.getLinkedPerson().getId()) : null);
+        formCandidateDto.setLocalAddtionalWitholdingsAmount(makeString(candidate.getLocalAddtionalWitholdingsAmount()));
+        formCandidateDto.setLocalExemptions(makeString(candidate.getLocalExemptions()));
+        formCandidateDto.setLocalFilingStatus(candidate.getLocalFilingStatus());
+        formCandidateDto.setLocalTaxCode(candidate.getLocalTaxCode());
+        formCandidateDto.setMassMailOptOut(makeString(candidate.getMassMailOptOut()));
+        formCandidateDto.setMiddleName(candidate.getMiddleName());
+        formCandidateDto.setMobile(candidate.getMobile());
+        formCandidateDto.setNamePrefix(candidate.getNamePrefix());
+        formCandidateDto.setNameSuffix(candidate.getNameSuffix());
+        formCandidateDto.setNickName(candidate.getNickName());
+        formCandidateDto.setOccupation(candidate.getOccupation());
+        formCandidateDto.setPager(candidate.getPager());
+        formCandidateDto.setPhone(candidate.getPhone());
+        formCandidateDto.setPhone2(candidate.getPhone2());
+        formCandidateDto.setPhone3(candidate.getPhone3());
+        formCandidateDto.setPreferredContact(candidate.getPreferredContact());
+        formCandidateDto.setRecentClientList(candidate.getRecentClientList());
+        formCandidateDto.setRecruiterUserID(candidate.getOwner() != null ? makeString(candidate.getOwner().getId()) : null);
+        formCandidateDto.setReferredBy(candidate.getReferredBy());
+        formCandidateDto.setReferredByUserID(candidate.getReferredByPerson() != null ? makeString(candidate.getReferredByPerson().getId()) : null);
+        formCandidateDto.setSalary(makeString(candidate.getSalary()));
+        formCandidateDto.setSalaryLow(makeString(candidate.getSalaryLow()));
+
+        address = candidate.getSecondaryAddress();
+
+        if(address != null){
+            formCandidateDto.setSecondaryAddress1(address.getAddress1());
+            formCandidateDto.setSecondaryAddress2(address.getAddress2());
+            formCandidateDto.setSecondaryCity(address.getCity());
+            formCandidateDto.setSecondaryCountryID(makeString(address.getCountryID()));
+            formCandidateDto.setSecondaryState(address.getState());
+            formCandidateDto.setSecondaryZip(address.getZip());
+        }
+
+        formCandidateDto.setSkillSet(candidate.getSkillSet());
+        formCandidateDto.setSmsOptIn(makeString(candidate.getSmsOptIn()));
+        formCandidateDto.setSource(candidate.getSource());
+        formCandidateDto.setSsn(candidate.getSsn());
+        formCandidateDto.setStateAddtionalWitholdingsAmount(makeString(candidate.getStateAddtionalWitholdingsAmount()));
+        formCandidateDto.setStateExemptions(makeString(candidate.getStateExemptions()));
+        formCandidateDto.setStateFilingStatus(candidate.getStateFilingStatus());
+        formCandidateDto.setStatus(candidate.getStatus());
+        formCandidateDto.setTaxID(candidate.getTaxID());
+        formCandidateDto.setTaxState(candidate.getTaxState());
+        formCandidateDto.setTravelLimit(makeString(candidate.getTravelLimit()));
+        formCandidateDto.setType(candidate.getType());
+        formCandidateDto.setUserID(makeString(candidate.getId()));
+        formCandidateDto.setVeteran(candidate.getVeteran());
+        formCandidateDto.setWillRelocate(makeString(candidate.getWillRelocate()));
+        formCandidateDto.setWorkAuthorized(makeString(candidate.getWorkAuthorized()));
+        formCandidateDto.setWorkPhone(candidate.getWorkPhone());
+
+        return formCandidateDto;
+    }
 	
 	
 	/**

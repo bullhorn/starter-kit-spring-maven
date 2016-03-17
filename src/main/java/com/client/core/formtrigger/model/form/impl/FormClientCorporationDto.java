@@ -14,9 +14,8 @@ import com.client.core.formtrigger.model.form.AbstractFormDto;
  * 
  * @author magnus.palm
  * 
- * @param <ClientCorporationDto>
+ * @param <ClientCorporation>
  */
-
 public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation> {
 
 	public FormClientCorporationDto() {
@@ -888,6 +887,97 @@ public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation>
 
 		return clientCorporation;
 	}
+
+    public static FormClientCorporationDto instantiateFromClientCorporation(ClientCorporation clientCorporation){
+
+        FormClientCorporationDto formClientCorporationDto = new FormClientCorporationDto();
+        formClientCorporationDto.setAnnualRevenue(makeString(clientCorporation.getAnnualRevenue()));
+        formClientCorporationDto.setBillingContact(clientCorporation.getBillingContact());
+        formClientCorporationDto.setBillingFrequency(clientCorporation.getBillingFrequency());
+        formClientCorporationDto.setBillingPhone(clientCorporation.getBillingPhone());
+        formClientCorporationDto.setBusinessSectorList(clientCorporation.getBusinessSectorList());
+        formClientCorporationDto.setClientCorporationID(clientCorporation.getId());
+        formClientCorporationDto.setCompanyDescription(clientCorporation.getCompanyDescription());
+        formClientCorporationDto.setCompanyURL(clientCorporation.getCompanyURL());
+        formClientCorporationDto.setCompetitors(clientCorporation.getCompetitors());
+        formClientCorporationDto.setCulture(clientCorporation.getCulture());
+        formClientCorporationDto.setCustomDate1(makeString(clientCorporation.getCustomDate1()));
+        formClientCorporationDto.setCustomDate1(makeString(clientCorporation.getCustomDate1()));
+        formClientCorporationDto.setCustomDate2(makeString(clientCorporation.getCustomDate2()));
+        formClientCorporationDto.setCustomDate3(makeString(clientCorporation.getCustomDate3()));
+        formClientCorporationDto.setCustomFloat1(makeString(clientCorporation.getCustomFloat1()));
+        formClientCorporationDto.setCustomFloat2(makeString(clientCorporation.getCustomFloat2()));
+        formClientCorporationDto.setCustomFloat3(makeString(clientCorporation.getCustomFloat3()));
+        formClientCorporationDto.setCustomInt1(clientCorporation.getCustomInt1());
+        formClientCorporationDto.setCustomInt2(clientCorporation.getCustomInt2());
+        formClientCorporationDto.setCustomInt3(clientCorporation.getCustomInt3());
+        formClientCorporationDto.setCustomText1(clientCorporation.getCustomText1());
+        formClientCorporationDto.setCustomText10(clientCorporation.getCustomText10());
+        formClientCorporationDto.setCustomText11(clientCorporation.getCustomText11());
+        formClientCorporationDto.setCustomText12(clientCorporation.getCustomText12());
+        formClientCorporationDto.setCustomText13(clientCorporation.getCustomText13());
+        formClientCorporationDto.setCustomText14(clientCorporation.getCustomText14());
+        formClientCorporationDto.setCustomText15(clientCorporation.getCustomText15());
+        formClientCorporationDto.setCustomText16(clientCorporation.getCustomText16());
+        formClientCorporationDto.setCustomText17(clientCorporation.getCustomText17());
+        formClientCorporationDto.setCustomText18(clientCorporation.getCustomText18());
+        formClientCorporationDto.setCustomText19(clientCorporation.getCustomText19());
+        formClientCorporationDto.setCustomText2(clientCorporation.getCustomText2());
+        formClientCorporationDto.setCustomText20(clientCorporation.getCustomText20());
+        formClientCorporationDto.setCustomText3(clientCorporation.getCustomText3());
+        formClientCorporationDto.setCustomText4(clientCorporation.getCustomText4());
+        formClientCorporationDto.setCustomText5(clientCorporation.getCustomText5());
+        formClientCorporationDto.setCustomText6(clientCorporation.getCustomText6());
+        formClientCorporationDto.setCustomText7(clientCorporation.getCustomText7());
+        formClientCorporationDto.setCustomText8(clientCorporation.getCustomText8());
+        formClientCorporationDto.setCustomText9(clientCorporation.getCustomText9());
+        formClientCorporationDto.setCustomTextBlock1(clientCorporation.getCustomTextBlock1());
+        formClientCorporationDto.setCustomTextBlock2(clientCorporation.getCustomTextBlock2());
+        formClientCorporationDto.setCustomTextBlock3(clientCorporation.getCustomTextBlock3());
+        formClientCorporationDto.setCustomTextBlock4(clientCorporation.getCustomTextBlock4());
+        formClientCorporationDto.setCustomTextBlock5(clientCorporation.getCustomTextBlock5());
+        formClientCorporationDto.setDepartmentID(clientCorporation.getDepartment() != null ? clientCorporation.getDepartment().getId() : null);
+        formClientCorporationDto.setExternalID(clientCorporation.getExternalID());
+        formClientCorporationDto.setFax(clientCorporation.getFax());
+        formClientCorporationDto.setFeeArrangement(makeString(clientCorporation.getFeeArrangement()));
+        formClientCorporationDto.setFunding(clientCorporation.getFunding());
+        formClientCorporationDto.setIndustryList(clientCorporation.getIndustryList());
+        formClientCorporationDto.setInvoiceFormat(clientCorporation.getInvoiceFormat());
+        formClientCorporationDto.setName(clientCorporation.getName());
+        formClientCorporationDto.setNotes(clientCorporation.getNotes());
+        formClientCorporationDto.setNumEmployees(clientCorporation.getNumEmployees());
+        formClientCorporationDto.setNumOffices(clientCorporation.getNumOffices());
+        formClientCorporationDto.setOwnership(clientCorporation.getOwnership());
+        formClientCorporationDto.setParentClientCorporationID(clientCorporation.getParentClientCorporation() != null ? clientCorporation.getParentClientCorporation().getId() : null);
+        formClientCorporationDto.setPhone(clientCorporation.getPhone());
+        formClientCorporationDto.setStatus(clientCorporation.getStatus());
+        formClientCorporationDto.setTaxRate(makeString(clientCorporation.getTaxRate()));
+        formClientCorporationDto.setTickerSymbol(clientCorporation.getTickerSymbol());
+        formClientCorporationDto.setWorkWeekStart(clientCorporation.getWorkWeekStart());
+
+        Address address = clientCorporation.getAddress();
+
+        if(address != null){
+            formClientCorporationDto.setAddress1(address.getAddress1());
+            formClientCorporationDto.setAddress2(address.getAddress2());
+            formClientCorporationDto.setCity(address.getCity());
+            formClientCorporationDto.setState(address.getState());
+            formClientCorporationDto.setZip(address.getZip());
+            formClientCorporationDto.setCountryID(address.getCountryID());
+        }
+
+        address = clientCorporation.getBillingAddress();
+
+        if(address != null){
+            formClientCorporationDto.setBillingAddress1(address.getAddress1());
+            formClientCorporationDto.setBillingAddress2(address.getAddress2());
+            formClientCorporationDto.setBillingCity(address.getCity());
+            formClientCorporationDto.setBillingState(address.getState());
+            formClientCorporationDto.setBillingZip(address.getZip());
+        }
+
+        return formClientCorporationDto;
+    }
 
 	/**
 	 * Converts the form values to a SOAP dto.

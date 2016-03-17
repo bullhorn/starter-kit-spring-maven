@@ -24,6 +24,11 @@ public class JobOrderFormTriggerHelper extends AbstractFormTriggerHelper<FormJob
 		super(formJobOrderDto, updatingUserID, bullhornData);
 	}
 
+    public JobOrderFormTriggerHelper(JobOrder jobOrder, Integer updatingUserID, BullhornData bullhornData) {
+        super(FormJobOrderDto.instantiateFromJobOrder(jobOrder), updatingUserID, bullhornData);
+        this.newEntity = jobOrder;
+    }
+
 	/**
 	 * Gets the owner of the job
 	 * 

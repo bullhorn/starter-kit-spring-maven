@@ -1790,6 +1790,110 @@ public class FormClientContactDto extends AbstractFormDto<ClientContact> {
 
 		return clientContact;
 	}
+
+    public static FormClientContactDto instantiateFromClientContact(ClientContact clientContact){
+
+        FormClientContactDto formClientContactDto = new FormClientContactDto();
+
+        Address address = clientContact.getAddress();
+
+        if(address != null) {
+            formClientContactDto.setAddress1(address.getAddress1());
+            formClientContactDto.setAddress2(address.getAddress2());
+            formClientContactDto.setCity(address.getCity());
+            formClientContactDto.setCountryID(address.getCountryID());
+            formClientContactDto.setState(address.getState());
+            formClientContactDto.setZip(address.getZip());
+        }
+
+        formClientContactDto.setCategoryID(clientContact.getCategory() != null ? makeString(clientContact.getCategory().getId()) : null);
+        formClientContactDto.setCertifications(clientContact.getCertifications());
+        formClientContactDto.setComments(clientContact.getComments());
+        formClientContactDto.setClientCorporationID(clientContact.getClientCorporation() != null ? clientContact.getClientCorporation().getId() : null);
+        formClientContactDto.setCustomDate1(makeString(clientContact.getCustomDate1()));
+        formClientContactDto.setCustomDate2(makeString(clientContact.getCustomDate2()));
+        formClientContactDto.setCustomDate3(makeString(clientContact.getCustomDate3()));
+        formClientContactDto.setCustomFloat1(makeString(clientContact.getCustomFloat1()));
+        formClientContactDto.setCustomFloat2(makeString(clientContact.getCustomFloat2()));
+        formClientContactDto.setCustomFloat3(makeString(clientContact.getCustomFloat3()));
+        formClientContactDto.setCustomInt1(clientContact.getCustomInt1());
+        formClientContactDto.setCustomInt2(clientContact.getCustomInt2());
+        formClientContactDto.setCustomInt3(clientContact.getCustomInt3());
+        formClientContactDto.setCustomText1(clientContact.getCustomText1());
+        formClientContactDto.setCustomText10(clientContact.getCustomText10());
+        formClientContactDto.setCustomText11(clientContact.getCustomText11());
+        formClientContactDto.setCustomText12(clientContact.getCustomText12());
+        formClientContactDto.setCustomText13(clientContact.getCustomText13());
+        formClientContactDto.setCustomText14(clientContact.getCustomText14());
+        formClientContactDto.setCustomText15(clientContact.getCustomText15());
+        formClientContactDto.setCustomText16(clientContact.getCustomText16());
+        formClientContactDto.setCustomText17(clientContact.getCustomText17());
+        formClientContactDto.setCustomText18(clientContact.getCustomText18());
+        formClientContactDto.setCustomText19(clientContact.getCustomText19());
+        formClientContactDto.setCustomText2(clientContact.getCustomText2());
+        formClientContactDto.setCustomText20(clientContact.getCustomText20());
+        formClientContactDto.setCustomText3(clientContact.getCustomText3());
+        formClientContactDto.setCustomText4(clientContact.getCustomText4());
+        formClientContactDto.setCustomText5(clientContact.getCustomText5());
+        formClientContactDto.setCustomText6(clientContact.getCustomText6());
+        formClientContactDto.setCustomText7(clientContact.getCustomText7());
+        formClientContactDto.setCustomText8(clientContact.getCustomText8());
+        formClientContactDto.setCustomText9(clientContact.getCustomText9());
+        formClientContactDto.setCustomTextBlock1(clientContact.getCustomTextBlock1());
+        formClientContactDto.setCustomTextBlock2(clientContact.getCustomTextBlock2());
+        formClientContactDto.setCustomTextBlock3(clientContact.getCustomTextBlock3());
+        formClientContactDto.setCustomTextBlock4(clientContact.getCustomTextBlock4());
+        formClientContactDto.setCustomTextBlock5(clientContact.getCustomTextBlock5());
+        formClientContactDto.setDateLastVisit(makeString(clientContact.getDateLastVisit()));
+        formClientContactDto.setDescription(clientContact.getDescription());
+        formClientContactDto.setDesiredCategories(clientContact.getDesiredCategories());
+        formClientContactDto.setDesiredSkills(clientContact.getDesiredSkills());
+        formClientContactDto.setDesiredSpecialties(clientContact.getDesiredSpecialties());
+        formClientContactDto.setDivision(clientContact.getDivision());
+        formClientContactDto.setEmail(clientContact.getEmail());
+        formClientContactDto.setEmail2(clientContact.getEmail2());
+        formClientContactDto.setEmail3(clientContact.getEmail3());
+        formClientContactDto.setExternalID(clientContact.getExternalID());
+        formClientContactDto.setFax(clientContact.getFax());
+        formClientContactDto.setFax2(clientContact.getFax2());
+        formClientContactDto.setFax3(clientContact.getFax3());
+        formClientContactDto.setFirstName(clientContact.getFirstName());
+        formClientContactDto.setLastName(clientContact.getLastName());
+        formClientContactDto.setMiddleName(clientContact.getMiddleName());
+        formClientContactDto.setMobile(clientContact.getMobile());
+        formClientContactDto.setNamePrefix(clientContact.getNamePrefix());
+        formClientContactDto.setNameSuffix(clientContact.getNameSuffix());
+        formClientContactDto.setNickName(clientContact.getNickName());
+        formClientContactDto.setOccupation(clientContact.getOccupation());
+        formClientContactDto.setOffice(clientContact.getOffice());
+        formClientContactDto.setPager(clientContact.getPager());
+        formClientContactDto.setPhone(clientContact.getPhone());
+        formClientContactDto.setPhone2(clientContact.getPhone2());
+        formClientContactDto.setPhone3(clientContact.getPhone3());
+        formClientContactDto.setPreferredContact(clientContact.getPreferredContact());
+        formClientContactDto.setRecruiterUserID(clientContact.getOwner() != null ? makeString(clientContact.getOwner().getId()) : null);
+        formClientContactDto.setReferredByUserID(clientContact.getReferredByPerson() != null ? clientContact.getReferredByPerson().getId() : null);
+        formClientContactDto.setReportToUserID(clientContact.getReportToPerson() != null ? clientContact.getReportToPerson().getId() : null);
+
+        address = clientContact.getSecondaryAddress();
+
+        if(address != null){
+            formClientContactDto.setSecondaryAddress1(address.getAddress1());
+            formClientContactDto.setSecondaryAddress2(address.getAddress2());
+            formClientContactDto.setSecondaryCity(address.getCity());
+            formClientContactDto.setSecondaryCountryID(address.getCountryID());
+            formClientContactDto.setSecondaryState(address.getState());
+            formClientContactDto.setSecondaryZip(address.getZip());
+        }
+
+        formClientContactDto.setSmsOptIn(clientContact.getSmsOptIn());
+        formClientContactDto.setSource(clientContact.getSource());
+        formClientContactDto.setStatus(clientContact.getStatus());
+        formClientContactDto.setType(clientContact.getType());
+        formClientContactDto.setUserID(clientContact.getId());
+
+        return formClientContactDto;
+    }
 	
 	
 	/**
