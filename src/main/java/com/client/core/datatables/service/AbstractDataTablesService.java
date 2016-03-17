@@ -12,6 +12,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -456,7 +457,10 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 		String quickSearch = param.getsSearch();
 		List<T> filterRows = new ArrayList<T>();
 		boolean searchTextIsEmpty = searchTextIsEmpty(quickSearch);
-		quickSearch = quickSearch.toLowerCase();
+
+        if(StringUtils.isNotBlank(quickSearch)) {
+            quickSearch = quickSearch.toLowerCase();
+        }
 
 		for (T row : allTableRows) {
 			if (searchTextIsEmpty) {
