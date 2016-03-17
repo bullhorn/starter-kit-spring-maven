@@ -673,6 +673,46 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <filters>
+                        <filter>src/main/resources/app-${envTarget}.properties</filter>
+                    </filters>
+                    <webResources>
+                        <webResource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp/javascript/formscript</directory>
+                            <targetPath>javascript/formscript</targetPath>
+                        </webResource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <descriptor>src/assembly/formscript.xml</descriptor>
+                    <finalName>formscripts</finalName>
+                    <filters>
+                        <filter>src/main/resources/app-${envTarget}.properties</filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <reporting>
         <plugins>
