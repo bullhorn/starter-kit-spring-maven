@@ -161,8 +161,10 @@ public class TestUtil {
 	public PlacementChangeRequestValidationTraverser getPlacementChangeRequestValidationTraverser(String status) {
 		FormPlacementChangeRequestDto dto = new FormPlacementChangeRequestDto();
 
+        dto.setPlacementChangeRequestID(getTestEntities().getPlacementChangeRequestId());
 		dto.setPlacementID(getTestEntities().getPlacementId());
 		dto.setStatus(status);
+
 		PlacementChangeRequestValidationTraverser traverser = new PlacementChangeRequestValidationTraverser(dto, getTestEntities()
 				.getCorporateUserId(), Integer.valueOf(appSettings.getCorporationID()), true, bullhornData);
 
@@ -214,6 +216,8 @@ public class TestUtil {
 
 	public NoteValidationTraverser getNoteValidationTraverser() {
 		FormNoteDto dto = new FormNoteDto();
+
+        dto.setUserCommentID(getTestEntities().getNoteId());
 		dto.setCommentingUserID(getTestEntities().getCorporateUserId());
 
 		NoteValidationTraverser traverser = new NoteValidationTraverser(dto, getTestEntities().getCorporateUserId(),
