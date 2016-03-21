@@ -68,6 +68,14 @@
 		<filter-name>CorsFilter</filter-name>
 		<url-pattern>/main/formtrigger/*</url-pattern>
 	</filter-mapping>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/styles/formscript/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/javascript/formscript/*</url-pattern>
+    </filter-mapping>
 
 	<filter>
 		<filter-name>SessionFilter</filter-name>
