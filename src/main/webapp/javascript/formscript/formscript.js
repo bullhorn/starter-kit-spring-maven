@@ -12,7 +12,7 @@ require.config({
         "opportunity": "${applicationRoot}/javascript/formscript/main/opportunity",
         "placement": "${applicationRoot}/javascript/formscript/main/placement",
         "placementchangerequest": "${applicationRoot}/javascript/formscript/main/placementchangerequest",
-        "handlebars": "${applicationRoot}/javascript/library/handlebars/handlebars.amd.min",
+        "swig": "${applicationRoot}/javascript/library/swig/swig.min",
         "text": "${applicationRoot}/javascript/library/require/text"
     },
     config:{
