@@ -5,8 +5,15 @@
 
 
 	<bean id="candidateValidationWorkflow" class="com.client.core.base.workflow.node.start.StartNode">
-		<property name="nextNode" ref="endNode_candidateValidationWorkflow" />
+		<property name="nextNode" ref="isCandidateActive" />
 	</bean>
+    <bean id="isCandidateActive" class="com.client.custom.workflow.node.formtrigger.conditional.candidate.IsCandidateActive">
+        <property name="noNode" ref="endNode_candidateValidationWorkflow" />
+        <property name="yesNode" ref="validateActiveCandidate" />
+    </bean>
+    <bean id="validateActiveCandidate" class="com.client.custom.workflow.node.formtrigger.task.candidate.ValidateActiveCandidate">
+        <property name="nextNode" ref="endNode_candidateValidationWorkflow" />
+    </bean>
 	<bean id="endNode_candidateValidationWorkflow" class="com.client.core.base.workflow.node.end.EndNode" />
 
 
@@ -26,6 +33,13 @@
 
 
     <bean id="placementValidationWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+        <property name="nextNode" ref="isPlacementApproved" />
+    </bean>
+    <bean id="isPlacementApproved" class="com.client.custom.workflow.node.formtrigger.conditional.placement.IsPlacementApproved">
+        <property name="noNode" ref="endNode_placementValidationTaskWorkFlow" />
+        <property name="yesNode" ref="validateApprovedPlacement" />
+    </bean>
+    <bean id="validateApprovedPlacement" class="com.client.custom.workflow.node.formtrigger.task.placement.ValidateApprovedPlacement">
         <property name="nextNode" ref="endNode_placementValidationTaskWorkFlow" />
     </bean>
 	<bean id="endNode_placementValidationTaskWorkFlow" class="com.client.core.base.workflow.node.end.EndNode" />
