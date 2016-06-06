@@ -18,3 +18,5 @@ hs_err_pid*
 
 #javadocs
 javadoc/
+
+src/main/resources/app-engage.properties
