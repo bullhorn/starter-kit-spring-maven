@@ -20,3 +20,4 @@ hs_err_pid*
 javadoc/
 
 src/main/resources/app-engage.properties
+src/main/webapp/.ebextensions/*
