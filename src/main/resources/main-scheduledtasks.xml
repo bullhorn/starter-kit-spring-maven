@@ -9,10 +9,10 @@
 		<property name="overwriteExistingJobs" value="true" />
 		<property name="triggers">
 			<list>
-<!-- 				<bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
-<!-- 					<property name="cronExpression" value="${standardCronExpression}" /> -->
-<!-- 					<property name="jobDetail" ref="standardSubscriptionScheduledEventProcessingJobDetail" /> -->
-<!-- 				</bean> -->
+ 				<bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+ 					<property name="cronExpression" value="${standardCronExpression}" />
+ 					<property name="jobDetail" ref="standardSubscriptionScheduledEventProcessingJobDetail" />
+ 				</bean>
 			</list>
 		</property>
 	</bean>

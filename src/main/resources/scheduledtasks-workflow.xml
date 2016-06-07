@@ -80,8 +80,15 @@
 
 	<!-- PLACEMENT -->
 	<bean id="placementScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
-		<property name="nextNode" ref="saveDtos" />
+		<property name="nextNode" ref="isPlacementCompleted" />
 	</bean>
+    <bean id="isPlacementCompleted" class="com.client.custom.workflow.node.scheduledtask.conditional.IsPlacementCompleted">
+        <property name="noNode" ref="saveDtos" />
+        <property name="yesNode" ref="updateCandidateStatusToActive" />
+    </bean>
+    <bean id="updateCandidateStatusToActive" class="com.client.custom.workflow.node.scheduledtask.task.UpdateCandidateStatusToActive">
+        <property name="nextNode" ref="saveDtos" />
+    </bean>
 
 	<!-- PLACEMENT CHANGE REQUEST -->
 	<bean id="placementChangeRequestScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
