@@ -3,6 +3,8 @@ require.config({
     shim : {
     },
     "paths": {
+        "util": "${applicationRoot}/javascript/formscript/modules/util",
+        "templates": "${applicationRoot}/javascript/formscript/modules/templates",
         "candidate": "${applicationRoot}/javascript/formscript/main/candidate",
         "clientcontact": "${applicationRoot}/javascript/formscript/main/clientcontact",
         "clientcorporation": "${applicationRoot}/javascript/formscript/main/clientcorporation",
