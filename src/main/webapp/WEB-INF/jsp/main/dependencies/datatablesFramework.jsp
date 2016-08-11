@@ -4,9 +4,9 @@
 
 <link rel="stylesheet" type="text/css" href="/styles/dataTables/jquery.dataTables-custom.css">
 
-<link rel="stylesheet" type="text/css" href="/styles/dataTables/jquery.alerts.css" />
-<link rel="stylesheet" type="text/css" href="/styles/dataTables/custom.css" />
-<link rel="stylesheet" type="text/css" href="/styles/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="/styles/library/dataTables/jquery.alerts.css" />
+<link rel="stylesheet" type="text/css" href="/styles/library/dataTables/custom.css" />
+<link rel="stylesheet" type="text/css" href="/styles/library/select2/css/select2.css" />
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
