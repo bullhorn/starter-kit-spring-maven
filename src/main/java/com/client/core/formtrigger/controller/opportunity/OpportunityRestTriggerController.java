@@ -32,7 +32,7 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
     private final Logger log = Logger.getLogger(OpportunityRestTriggerController.class);
 
     @Autowired
-    public OpportunityRestTriggerController(@Qualifier("opportunityValidationWorkflow") Node<OpportunityValidationTraverser> opportunityValidationWorkflow,
+    public OpportunityRestTriggerController(@Qualifier("opportunityRestValidationWorkflow") Node<OpportunityValidationTraverser> opportunityValidationWorkflow,
                                             BullhornData bullhornData, EntityChanger entityChanger) {
         super(bullhornData, Opportunity.class, opportunityValidationWorkflow, entityChanger);
     }

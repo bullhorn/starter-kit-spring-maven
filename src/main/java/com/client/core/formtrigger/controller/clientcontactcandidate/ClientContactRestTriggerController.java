@@ -33,7 +33,7 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
 
     @Autowired
     public ClientContactRestTriggerController(
-            @Qualifier("clientContactValidationWorkflow") Node<ClientContactValidationTraverser> clientContactValidationWorkflow,
+            @Qualifier("clientContactRestValidationWorkflow") Node<ClientContactValidationTraverser> clientContactValidationWorkflow,
             BullhornData bullhornData, EntityChanger entityChanger) {
         super(bullhornData, ClientContact.class, clientContactValidationWorkflow, entityChanger);
 

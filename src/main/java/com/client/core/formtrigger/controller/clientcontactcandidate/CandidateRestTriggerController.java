@@ -33,7 +33,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 
     @Autowired
     public CandidateRestTriggerController(
-            @Qualifier("candidateValidationWorkflow") Node<CandidateValidationTraverser> candidateValidationWorkflow,
+            @Qualifier("candidateRestValidationWorkflow") Node<CandidateValidationTraverser> candidateValidationWorkflow,
             BullhornData bullhornData, EntityChanger entityChanger) {
         super(bullhornData, Candidate.class, candidateValidationWorkflow, entityChanger);
 

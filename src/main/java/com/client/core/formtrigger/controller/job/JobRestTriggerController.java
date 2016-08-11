@@ -34,7 +34,7 @@ public class JobRestTriggerController extends AbstractRestTriggerController<JobO
 
 
     @Autowired
-    public JobRestTriggerController(@Qualifier("jobValidationWorkflow") Node<JobValidationTraverser> jobValidationWorkflow,
+    public JobRestTriggerController(@Qualifier("jobRestValidationWorkflow") Node<JobValidationTraverser> jobValidationWorkflow,
                                     BullhornData bullhornData, EntityChanger entityChanger) {
         super(bullhornData, JobOrder.class, jobValidationWorkflow, entityChanger);
     }

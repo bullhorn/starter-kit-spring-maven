@@ -32,7 +32,7 @@ public class LeadRestTriggerController extends AbstractRestTriggerController<Lea
     private final Logger log = Logger.getLogger(LeadRestTriggerController.class);
 
     @Autowired
-    public LeadRestTriggerController(@Qualifier("leadValidationWorkflow") Node<LeadValidationTraverser> leadValidationWorkflow,
+    public LeadRestTriggerController(@Qualifier("leadRestValidationWorkflow") Node<LeadValidationTraverser> leadValidationWorkflow,
                                      BullhornData bullhornData, EntityChanger entityChanger) {
         super(bullhornData, Lead.class, leadValidationWorkflow, entityChanger);
     }

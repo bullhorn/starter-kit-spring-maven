@@ -33,7 +33,7 @@ public class PlacementRestTriggerController extends AbstractRestTriggerControlle
 
     @Autowired
     public PlacementRestTriggerController(
-            @Qualifier("placementValidationWorkFlow") Node<PlacementValidationTraverser> placementValidationWorkflow,
+            @Qualifier("placementRestValidationWorkFlow") Node<PlacementValidationTraverser> placementValidationWorkflow,
             BullhornData bullhornData, EntityChanger entityChanger) {
         super(bullhornData, Placement.class, placementValidationWorkflow, entityChanger);
 
