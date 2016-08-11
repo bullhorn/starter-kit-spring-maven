@@ -712,6 +712,41 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.7.0.1.1</version>
+                <configuration>
+                    <compress>true</compress>
+                    <includes>
+                        <include>**\*.less</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>lesscss-formscripts</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/webapp/styles/less/formscript</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/webapp/styles/formscript/</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>lesscss-custom</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/webapp/styles/less/custom</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/webapp/styles/custom/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
