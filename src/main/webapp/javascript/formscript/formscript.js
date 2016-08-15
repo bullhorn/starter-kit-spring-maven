@@ -34,7 +34,12 @@ window.requireForPs = function( entity ) {
             success: function (data) {
                 $("head").append("<style>" + data + "</style>");
 
-                require([ entity ]);
+                require([ entity ], function() {
+                    $('#block-form-script').remove();
+                });
+            },
+            error: function() {
+                $('#block-form-script').remove();
             }
         });
     }
