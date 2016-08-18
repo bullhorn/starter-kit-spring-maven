@@ -687,6 +687,11 @@
                             <directory>src/main/webapp/javascript/formscript</directory>
                             <targetPath>javascript/formscript</targetPath>
                         </webResource>
+                        <webResource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp/javascript/custom</directory>
+                            <targetPath>javascript/custom</targetPath>
+                        </webResource>
                     </webResources>
                 </configuration>
             </plugin>
@@ -755,14 +760,15 @@
                         <id>default-minify</id>
                         <configuration>
                             <jsEngine>CLOSURE</jsEngine>
-                            <closureCreateSourceMap>true</closureCreateSourceMap>
                             <closureLanguage>ECMASCRIPT5</closureLanguage>
+                            <closureCreateSourceMap>true</closureCreateSourceMap>
+                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
                             <skipMerge>true</skipMerge>
+                            <jsSourceDir>/javascript/src</jsSourceDir>
+                            <jsTargetDir>/javascript</jsTargetDir>
                             <jsSourceIncludes>
                                 <jsSourceInclude>**/*.js</jsSourceInclude>
                             </jsSourceIncludes>
-                            <jsSourceDir>/javascript/src</jsSourceDir>
-                            <jsTargetDir>/javascript</jsTargetDir>
                         </configuration>
                         <goals>
                             <goal>minify</goal>

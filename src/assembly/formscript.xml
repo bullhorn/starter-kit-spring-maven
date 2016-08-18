@@ -9,7 +9,7 @@
     <fileSets>
         <fileSet>
             <filtered>true</filtered>
-            <directory>src/main/webapp/javascript/formscript/deploy</directory>
+            <directory>src/main/webapp/formscript-deploy</directory>
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>*.html</include>
