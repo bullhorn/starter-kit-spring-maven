@@ -754,8 +754,9 @@
                     <execution>
                         <id>default-minify</id>
                         <configuration>
-                            <!--<closureCreateSourceMap>true</closureCreateSourceMap>-->
-                            <!--<closureLanguage>ECMASCRIPT5</closureLanguage>-->
+                            <jsEngine>CLOSURE</jsEngine>
+                            <closureCreateSourceMap>true</closureCreateSourceMap>
+                            <closureLanguage>ECMASCRIPT5</closureLanguage>
                             <skipMerge>true</skipMerge>
                             <jsSourceIncludes>
                                 <jsSourceInclude>**/*.js</jsSourceInclude>
