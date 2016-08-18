@@ -747,6 +747,29 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <configuration>
+                            <!--<closureCreateSourceMap>true</closureCreateSourceMap>-->
+                            <!--<closureLanguage>ECMASCRIPT5</closureLanguage>-->
+                            <skipMerge>true</skipMerge>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>**/*.js</jsSourceInclude>
+                            </jsSourceIncludes>
+                            <jsSourceDir>/javascript/src</jsSourceDir>
+                            <jsTargetDir>/javascript</jsTargetDir>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
