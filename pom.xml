@@ -687,6 +687,11 @@
                             <directory>src/main/webapp/javascript/formscript</directory>
                             <targetPath>javascript/formscript</targetPath>
                         </webResource>
+                        <webResource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp/javascript/custom</directory>
+                            <targetPath>javascript/custom</targetPath>
+                        </webResource>
                     </webResources>
                 </configuration>
             </plugin>
@@ -743,6 +748,31 @@
                             <sourceDirectory>${project.basedir}/src/main/webapp/styles/less/custom</sourceDirectory>
                             <outputDirectory>${project.basedir}/src/main/webapp/styles/custom/</outputDirectory>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <configuration>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <closureLanguage>ECMASCRIPT5</closureLanguage>
+                            <closureCreateSourceMap>true</closureCreateSourceMap>
+                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
+                            <skipMerge>true</skipMerge>
+                            <jsSourceDir>/javascript/src</jsSourceDir>
+                            <jsTargetDir>/javascript</jsTargetDir>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>**/*.js</jsSourceInclude>
+                            </jsSourceIncludes>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -35,8 +35,8 @@ define([], function() {
             var disabled = $('<input />').prop({
                 name: name+'Disabled',
                 id: name+'Disabled',
-                type: 'text',
-                class: 'EditField'
+                type: "text",
+                class: "EditField"
             }).val(field.val()).prop('disabled', true);
 
             field.after(disabled).hide().siblings('img').hide();
@@ -47,7 +47,7 @@ define([], function() {
             var label = editRow.find('[name="' + name + '_display"]').val();
 
             var newInput = $('<input />').prop({
-                class: 'EditField',
+                class: "EditField",
                 readonly: true,
                 name: name+'Disabled',
                 id: name+'Disabled'
