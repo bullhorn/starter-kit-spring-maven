@@ -138,6 +138,13 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 		return Lists.newArrayList();
     }
 
+
+    protected String getQueryKey() {
+        return "SELECT a FROM.."
+    }
+
+    protected Map<String, Object> getParameters(HttpServletRequest request);
+
 	@Transactional(timeout = 60)
 	@Override
 	public T add(T transientObject) {
