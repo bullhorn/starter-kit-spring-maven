@@ -34,12 +34,24 @@ public class Utility {
 		return theMap;
 	}
 
-	public static BigDecimal parseBigDecimal(String strVal) {
-		if(strVal == null || strVal.isEmpty()) {
+	public static Boolean isPositive(Integer value) {
+	    return value != null && value > 0;
+    }
+
+    public static Boolean isPositive(BigDecimal value) {
+        return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+	public static Boolean isPositive(Object value) {
+        return isPositive(forceParseBigDecimal(value));
+    }
+
+	public static BigDecimal parseBigDecimal(Object value) {
+		if(value == null || value.toString().isEmpty()) {
 			return null;
 		} else {
 			try {
-				Double check = Double.parseDouble(strVal);
+				Double check = Double.parseDouble(value.toString());
 				return new BigDecimal(check);
 			} catch(NumberFormatException e) {
 				return null;
@@ -47,12 +59,12 @@ public class Utility {
 		}
 	}
 
-	public static BigDecimal forceParseBigDecimal(String strVal) {
-		if(strVal == null || strVal.isEmpty()) {
+	public static BigDecimal forceParseBigDecimal(Object value) {
+		if(value == null || value.toString().isEmpty()) {
 			return new BigDecimal(0);
 		} else {
 			try {
-				Double check = Double.parseDouble(strVal);
+				Double check = Double.parseDouble(value.toString());
 				return new BigDecimal(check);
 			} catch(NumberFormatException e) {
 				return new BigDecimal(0);
@@ -60,48 +72,48 @@ public class Utility {
 		}
 	}
 
-    public static Integer parseInteger(Object strVal) {
-        if(strVal == null || strVal.toString().isEmpty()) {
+    public static Integer parseInteger(Object value) {
+        if(value == null || value.toString().isEmpty()) {
             return null;
         } else {
             try {
-                return Integer.parseInt(strVal.toString());
+                return Integer.parseInt(value.toString());
             } catch(NumberFormatException e) {
                 return null;
             }
         }
     }
 
-	public static Integer forceParseInteger(String strVal) {
-		if(strVal == null || strVal.isEmpty()) {
+	public static Integer forceParseInteger(Object value) {
+		if(value == null || value.toString().isEmpty()) {
 			return new Integer(0);
 		} else {
 			try {
-				return Integer.parseInt(strVal);
+				return Integer.parseInt(value.toString());
 			} catch(NumberFormatException e) {
 				return new Integer(0);
 			}
 		}
 	}
 
-	public static Double parseDouble(String strVal) {
-		if(strVal == null || strVal.isEmpty()) {
+	public static Double parseDouble(Object value) {
+		if(value == null || value.toString().isEmpty()) {
 			return null;
 		}else {
 			try {
-				return Double.parseDouble(strVal);
+				return Double.parseDouble(value.toString());
 			} catch(NumberFormatException e) {
 				return null;
 			}
 		}
 	}
 
-	public static Double forceParseDouble(String strVal) {
-		if(strVal == null || strVal.isEmpty()) {
+	public static Double forceParseDouble(Object value) {
+		if(value == null || value.toString().isEmpty()) {
 			return new Double(0);
 		}else {
 			try {
-				return Double.parseDouble(strVal);
+				return Double.parseDouble(value.toString());
 			} catch(NumberFormatException e) {
 				return new Double(0);
 			}
