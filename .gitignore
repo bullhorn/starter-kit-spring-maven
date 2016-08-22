@@ -18,3 +18,9 @@ hs_err_pid*
 
 #javadocs
 javadoc/
+
+#form script compiled files
+src/main/webapp/javascript/formscript/**/*.min.js
+src/main/webapp/javascript/formscript/**/*.min.js.map
+src/main/webapp/javascript/custom/**/*.min.js
+src/main/webapp/javascript/custom/**/*.min.js.map

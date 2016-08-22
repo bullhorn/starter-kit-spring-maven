@@ -1,14 +1,10 @@
-package com.client.core.security;
+package com.client.core;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,9 +13,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
 import com.client.core.security.tools.RC4;
 
 /**
@@ -31,26 +26,24 @@ import com.client.core.security.tools.RC4;
  *     <li>Have an encrypted 'apiKey' in the session.  This essentially means that some previous request had an 'apiKey' url parameter and passed the filter.</li>
  * </ol>
  */
-public class SessionFilter implements Filter {
+public class SessionFilter extends OncePerRequestFilter {
 
 	private final Logger log = Logger.getLogger(getClass());
-
-	private final String apiKey;
 
 	private final String sessionStoredApiKeyName;
 	private final String encryptionKey;
 
-    private ServletContext context;
+    private final String apiKey;
 
-	public SessionFilter() {
+	public SessionFilter(ApplicationSettings appSettings) {
 		super();
-		this.apiKey = AppContext.getApplicationContext().getBean("appSettings", ApplicationSettings.class).getApiKey();
 		this.sessionStoredApiKeyName = RandomStringUtils.randomAlphanumeric(32);
 		this.encryptionKey = RandomStringUtils.randomAlphanumeric(16);
+        this.apiKey = appSettings.getApiKey();
 	}
 
     @Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		final HttpSession session = getSession(request);
 		final String apiKey = getApiKeyFromRequest(request);
 
@@ -74,7 +67,7 @@ public class SessionFilter implements Filter {
 
 			((HttpServletResponse) response).sendError(HttpStatus.UNAUTHORIZED.value());
 		} else {
-			chain.doFilter(request, response);
+            filterChain.doFilter(request, response);
 		}
 	}
 
@@ -141,14 +134,5 @@ public class SessionFilter implements Filter {
     public String getSessionStoredApiKeyName() {
         return sessionStoredApiKeyName;
     }
-
-    @Override
-	public void init(FilterConfig config) throws ServletException {
-		this.context = config.getServletContext();
-	}
-
-    @Override
-	public void destroy() {
-	}
 
 }

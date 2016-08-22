@@ -16,7 +16,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.client.BaseTest;
-import com.client.core.security.SessionFilter;
 
 public class TestSessionFilter extends BaseTest {
 
@@ -32,7 +31,7 @@ public class TestSessionFilter extends BaseTest {
 
 	@Before
 	public void setup() throws IOException, ServletException {
-		this.sessionFilter = new SessionFilter();
+		this.sessionFilter = new SessionFilter(applicationSettings);
 		this.mockChain = new MockFilterChain();
 		this.req = new MockHttpServletRequest();
 		this.rsp = new MockHttpServletResponse();
