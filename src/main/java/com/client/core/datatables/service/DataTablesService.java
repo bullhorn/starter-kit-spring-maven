@@ -17,7 +17,7 @@ import org.springframework.validation.Validator;
 import com.client.core.ApplicationSettings;
 import com.client.core.base.dao.GenericDao;
 import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
-import com.client.core.soap.tools.property.DtoFieldChangeFactory;
+import com.client.core.datatables.tools.JQueryDataTableParamModel;
 
 /**
  * 
@@ -43,7 +43,7 @@ public interface DataTablesService<T, ID> {
      * @return the ColumnConfiguration that the entity was mapped to
      * 
      */
-    public ColumnConfiguration convertEntityToColumns(T entity);
+    ColumnConfiguration convertEntityToColumns(T entity);
 
     /**
      * Takes a ColumnConfiguration and updates the passed in entity with the new values. Columns in convertEntityToColumns and
@@ -54,42 +54,27 @@ public interface DataTablesService<T, ID> {
      *            the entity that will be updated
      * @return the T entity
      */
-    public T convertColumnsToEntity(ColumnConfiguration rowConfig, T oldEntity);
+    T convertColumnsToEntity(ColumnConfiguration rowConfig, T oldEntity);
 
     /**
      * Entry point for getting, filtering, sorting, handle pagination and constructing JSONObject; the JSONObject is then written
      * to the response.
      * 
      * @param request
-     * @param response
      * @throws IOException
      */
-    public JSONObject processRequestForDataTables(HttpServletRequest request);
+    JSONObject processRequestForDataTables(HttpServletRequest request);
 
     /**
      * Retrieves the data. Gets a List<T> of all entities in table
      * 
      * @param tableRows
      *            will be null if List is not in session
-     * @param useCache
-     *            If true data will be cached
-     * @param request
-     *            the HttpServletRequest containing all the information from the request. This can be used when overriding this
-     *            method to retrieve query params etc.
+     * @param param
+     *            params from datatables
      * @return the List<T>
      */
-    public List<T> getData(List<T> tableRows, boolean useCache, HttpServletRequest request);
-
-    /**
-     * Retrieves all the data in the table. Gets a List<T> of all entities in table
-     * 
-     * @param tableRows
-     *            will be null if List is not in session
-     * @param useCache
-     *            If true data will be cached
-     * @return the List<T>
-     */
-    public List<T> findAll(List<T> tableRows, boolean useCache);
+    List<T> getData(JQueryDataTableParamModel param);
 
     /**
      * Updates an object of type T
@@ -98,7 +83,7 @@ public interface DataTablesService<T, ID> {
      *            The object to be added/updated
      * @return the object just added/updated
      */
-    public T update(T transientObject);
+    T update(T transientObject);
 
     /**
      * Updates an object of type T
@@ -107,7 +92,7 @@ public interface DataTablesService<T, ID> {
      *            The object to be added/updated
      * @return the ID of the object just added/updated
      */
-    public ID updateAndReturnID(T transientObject);
+    ID updateAndReturnID(T transientObject);
 
     /**
      * Adds an object of type T
@@ -116,7 +101,7 @@ public interface DataTablesService<T, ID> {
      *            The object to be added/updated
      * @return the object just added/updated
      */
-    public T add(T transientObject);
+    T add(T transientObject);
 
     /**
      * Adds an object of type T
@@ -125,7 +110,7 @@ public interface DataTablesService<T, ID> {
      *            The object to be added/updated
      * @return the ID of the object just added/updated
      */
-    public ID addAndReturnID(T transientObject);
+    ID addAndReturnID(T transientObject);
 
     /**
      * Get a T record using it's id
@@ -136,7 +121,7 @@ public interface DataTablesService<T, ID> {
      * @throws EntityNotFoundException
      *             when no entity with (primary key) ID exists
      */
-    public T find(ID id) throws EntityNotFoundException;
+    T find(ID id) throws EntityNotFoundException;
 
 
     /**
@@ -149,18 +134,18 @@ public interface DataTablesService<T, ID> {
      *            namedParam while the value is the actual value used in the query.
      * @return a List<T> of possible value, and empty List if no values found
      */
-    public List<T> query(String queryString, Map<String, Object> queryParameters);
+    List<T> query(String queryString, Map<String, Object> queryParameters);
 
     /**
      * Deletes entity T from table.
      * 
-     * @param T
+     * @param persistentObject
      *            Entity to delete
      * @throws IllegalArgumentException
      *             if the instance is not an entity or is a detached entity
      * 
      */
-    public void remove(T persistentObject) throws EntityNotFoundException;
+    void remove(T persistentObject) throws EntityNotFoundException;
 
     /**
      * Updates an existing entity of type T, using its primary key, the column position in the datatables of the field being
@@ -177,7 +162,7 @@ public interface DataTablesService<T, ID> {
      * @return potential validation errors
      */
 
-    public String editEntity(ID id, Integer columnPosition, Object value, HttpServletRequest request,
+    String editEntity(ID id, Integer columnPosition, Object value, HttpServletRequest request,
             HttpServletResponse response, Model model);
 
     /**
@@ -195,7 +180,7 @@ public interface DataTablesService<T, ID> {
      * @param response
      * @return The id of updated entity if success, if validations failed then validation messages, if error then error message.
      */
-    public String handleEntityFormEdit(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response);
+    String handleEntityFormEdit(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Deletes an entity using its primary key
@@ -206,7 +191,7 @@ public interface DataTablesService<T, ID> {
      * @throws EntityNotFoundException
      *             if no enity exists with the specified unique identifier
      */
-    public void removeUsingID(ID id) throws EntityNotFoundException;
+    void removeUsingID(ID id) throws EntityNotFoundException;
 
     /**
      * Validates an entity
@@ -217,7 +202,7 @@ public interface DataTablesService<T, ID> {
      * @return A string containing each validation error separated by <br/>
      *         for displaying on the jsp
      */
-    public String validateEntity(T entity);
+    String validateEntity(T entity);
 
     /**
      * Prepares a validation error message using Spring's BindingResult from an entity validation.
@@ -230,7 +215,7 @@ public interface DataTablesService<T, ID> {
      * @return A string containing each validation error separated by <br/>
      *         for displaying on the jsp
      */
-    public String prepareValidationErrorMessage(BindingResult bindingResult, T entity);
+    String prepareValidationErrorMessage(BindingResult bindingResult, T entity);
 
     /**
      * Adjusts the column position to account for hidden column missmatch between datatables columns and datatables-editable
@@ -241,7 +226,7 @@ public interface DataTablesService<T, ID> {
      *            the current column to check
      * @return the new columns position
      */
-    public Integer adjustColumnPositionDueToInvisibleColumns(ColumnConfiguration columnConfiguration, Integer columnPosition);
+    Integer adjustColumnPositionDueToInvisibleColumns(ColumnConfiguration columnConfiguration, Integer columnPosition);
 
     /**
      * Method to handle custom column configurations, such as adding field maps or hiding columns based on user type etc. Modify
@@ -258,18 +243,16 @@ public interface DataTablesService<T, ID> {
      * @param model
      *            the Model
      */
-    public void additionalColumnConfiguration(ColumnConfiguration columnConfiguration, HttpServletRequest request,
+    void additionalColumnConfiguration(ColumnConfiguration columnConfiguration, HttpServletRequest request,
             HttpServletResponse response, Model model);
 
-    public GenericDao<T, ID> getGenericDao();
+    GenericDao<T, ID> getGenericDao();
 
-    public ApplicationSettings getAppSettings();
+    ApplicationSettings getAppSettings();
 
-    public Validator getValidator();
+    Validator getValidator();
 
-    public DtoFieldChangeFactory getDtoFieldChangeFactory();
-
-    public Logger getLog();
+    Logger getLog();
 
     /**
      * Gets a message from a resource bundle.
@@ -278,7 +261,7 @@ public interface DataTablesService<T, ID> {
      *            The key of the message
      * @return The message
      */
-    public String getMessageUsingKey(String key);
+    String getMessageUsingKey(String key);
 
     /**
      * Get a query from the passed in QueryHelper
@@ -286,6 +269,6 @@ public interface DataTablesService<T, ID> {
      * @param key
      * @return
      */
-    public String getQueryUsingKey(String key);
+    String getQueryUsingKey(String key);
 
 }

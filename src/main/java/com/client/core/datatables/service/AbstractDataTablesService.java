@@ -18,8 +18,6 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
@@ -30,12 +28,15 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
-import com.bullhorn.entity.AbstractDto;
 import com.client.core.ApplicationSettings;
 import com.client.core.base.dao.GenericDao;
+import com.client.core.base.tools.query.QueryHelper;
+import com.client.core.base.util.Util;
 import com.client.core.datatables.model.column.Column;
+import com.client.core.datatables.model.column.standard.StandardColumn;
 import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
 import com.client.core.datatables.tools.JQueryDataTableParamModel;
+import com.client.core.datatables.tools.RowComparator;
 import com.client.core.datatables.tools.enumeration.Editable;
 import com.client.core.datatables.tools.enumeration.Entity;
 import com.client.core.datatables.tools.enumeration.FieldType;
@@ -44,12 +45,7 @@ import com.client.core.datatables.tools.enumeration.Searchable;
 import com.client.core.datatables.tools.enumeration.ShowOnForm;
 import com.client.core.datatables.tools.enumeration.Sortable;
 import com.client.core.datatables.tools.enumeration.Visible;
-import com.client.core.datatables.model.column.standard.StandardColumn;
-import com.client.core.datatables.tools.RowComparator;
-import com.client.core.soap.tools.property.DtoFieldChangeFactory;
-import com.client.core.soap.tools.property.setdtofields.DtoFieldSetService;
-import com.client.core.base.tools.query.QueryHelper;
-import com.client.core.base.util.Util;
+import com.google.common.collect.Lists;
 
 /**
  * Extend this class to get data tables editable functionality for free.
@@ -78,10 +74,6 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 	private final MessageSource messageSource;
 
 	private final QueryHelper queryHelper;
-
-	@Autowired
-	@Qualifier("dtoFieldChangeFactory")
-	private DtoFieldChangeFactory dtoFieldChangeFactory;
 
 	public AbstractDataTablesService(GenericDao<T, ID> genericDao, ApplicationSettings appSettings, Validator validator,
 			MessageSource messageSource, QueryHelper queryHelper) {
@@ -112,8 +104,7 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 		@SuppressWarnings("unchecked")
 		List<T> tableRows = (List<T>) request.getSession().getAttribute("tableRows");
 
-		List<T> allTableRows = getData(tableRows, false, request);
-		param.setiTotalRecords(allTableRows.size());
+		List<T> allTableRows = getData(param);
 		// Filter the data
 		List<T> filterRows = filterRows(allTableRows, param);
 		// Sort the data
@@ -121,40 +112,31 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 		// only handle pagination if accessing data from datatables
 
 		param.setiTotalDisplayRecords(filterRows.size());
+
 		if (param.isDataAccessedFromDataTables()) {
 			// Handle pagination
 			filterRows = handlePagination(filterRows, param);
 		}
 
 		JSONObject jsonObject = new JSONObject();
+
 		try {
 			jsonObject = constructJsonObjectResponseFromTableRows(filterRows, param);
 		} catch (JSONException e) {
 			log.error("Error constructing JSONObject", e);
 		}
+
 		return jsonObject;
 
 	}
 
 	@Override
-	public List<T> getData(List<T> tableRows, boolean useCache, HttpServletRequest request) {
-		return findAll(tableRows, useCache);
-	}
+	public List<T> getData(JQueryDataTableParamModel param) {
 
-	/*
-	 * Start of @Transactional methods
-	 */
+        param.setiTotalRecords(2);//ALL RECORDS
 
-	@Transactional(timeout = 60)
-	@Override
-	public List<T> findAll(List<T> tableRows, boolean useCache) {
-		if (useCache && tableRows != null) {
-			return tableRows;
-		} else {
-			return genericDao.findAll();
-		}
-
-	}
+		return Lists.newArrayList();
+    }
 
 	@Transactional(timeout = 60)
 	@Override
@@ -240,24 +222,21 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 	@Transactional(timeout = 60)
 	@Override
 	public String handleEntityFormEdit(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response) {
-
 		try {
-			// Handle bullhorn entities using dtochanger tool
-			if (entity instanceof AbstractDto) {
-				entity = updateExistingEntity(entityID, request, response);
-			}
-
 			String validationErrors = validateEntity(entity);
+
 			if (validationErrors.length() > 0) {
 				response.setStatus(HttpStatus.BAD_REQUEST.value());
+
 				return validationErrors;
 			} else {
 				return updateAndReturnID(entity).toString();
 			}
-
 		} catch (Exception e) {
 			log.error("Error adding record", e);
+
 			response.setStatus(HttpStatus.BAD_REQUEST.value());
+
 			return "Error adding record";
 		}
 
@@ -267,54 +246,35 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 	 * End of @Transactional methods
 	 */
 
-	/**
-	 * Takes an enitityID, finds that entity, updates it with the parametersmap in the request and passes back the updated entity
-	 * 
-	 * @param entityID
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	private <E extends AbstractDto> T updateExistingEntity(ID entityID, HttpServletRequest request, HttpServletResponse response) {
-		E existingEntity = (E) genericDao.find(entityID);
-		Map<String, String> valuesFromPostedForm = Util.convertParameterMap(request);
-		DtoFieldSetService<E> dtoFieldSetService = (DtoFieldSetService<E>) dtoFieldChangeFactory.setServiceByClass(existingEntity
-				.getClass());
-		E updatedEntity = dtoFieldSetService.changeDto(existingEntity, valuesFromPostedForm, this.getAppSettings()
-				.getApplicationDateFormat(), false);
-		return (T) updatedEntity;
-	}
-
 	@Override
 	public Integer adjustColumnPositionDueToInvisibleColumns(ColumnConfiguration columnConfiguration, Integer columnPosition) {
-
 		TreeMap<Integer, Column> columnConfigMap = columnConfiguration.getColumnConfigMap();
+
 		int newColumnPosition = columnPosition;
 
 		// loop over the columns and for each invisible column that is located before the
 		// column to check add one to new column position
 		for (Map.Entry<Integer, Column> entry : columnConfigMap.entrySet()) {
-
 			int columnSettingPosition = entry.getKey();
 			boolean columnIsVisible = entry.getValue().isVisible();
 
 			if (columnIsVisible == false && columnSettingPosition <= newColumnPosition) {
 				newColumnPosition++;
 			}
-
 		}
+
 		return newColumnPosition;
 	}
 
 	@Override
 	public String validateEntity(T entity) {
-
 		DataBinder binder = new DataBinder(entity);
 		binder.setValidator(validator);
 		// validate the target object
 		binder.validate();
 		// get BindingResult that includes any validation errors
 		BindingResult results = binder.getBindingResult();
+
 		return prepareValidationErrorMessage(results, entity);
 	}
 
@@ -333,6 +293,7 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 				result.append(tableConfig.getLabelForFieldName(fieldError.getField()) + ": " + fieldError.getDefaultMessage() + NEW_LINE);
 			}
 		}
+
 		return result.toString();
 	}
 
@@ -557,11 +518,6 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
 	@Override
 	public Validator getValidator() {
 		return validator;
-	}
-
-	@Override
-	public DtoFieldChangeFactory getDtoFieldChangeFactory() {
-		return dtoFieldChangeFactory;
 	}
 
 	@Override
