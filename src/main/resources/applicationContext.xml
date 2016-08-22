@@ -77,6 +77,10 @@
 		<property name="dataSource" ref="dataSourceLog" />
 	</bean>
 
+    <bean id="sessionFilter" class="com.client.core.SessionFilter">
+        <constructor-arg ref="appSettings" />
+    </bean>
+
 	<bean id="appSettings" class="com.client.core.ApplicationSettings">
 		<property name="username" value="${apiusername}" />
 		<property name="password" value="${apipassword}" />

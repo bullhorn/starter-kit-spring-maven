@@ -27,7 +27,7 @@ import com.client.core.base.tools.propertyeditors.CustomBigDecimalEditor;
 import com.client.core.base.tools.propertyeditors.CustomDateTimeEditor;
 import com.client.core.base.tools.propertyeditors.CustomXMLGregorianCalendarEditor;
 
-@ControllerAdvice
+@ControllerAdvice(value = { "com.client.core" })
 public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
 
     private static Log log = LogFactory.getLog(CoreControllerAdvice.class);
