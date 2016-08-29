@@ -1,5 +1,10 @@
 package com.client.core.formtrigger.model.form.impl;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.bullhorn.entity.job.JobSubmissionDto;
@@ -8,6 +13,7 @@ import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
+import com.google.common.collect.Lists;
 
 public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 
@@ -19,7 +25,7 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 	private String comments;
 	private String distributionListID;
 	private String distributionListID_display;
-	private Integer jobPostingID;
+	private String jobPostingID;
 	private Integer jobResponseID;
 	private String notify;
 	private String notify_display;
@@ -28,7 +34,7 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 	private String sendingUserID_display;
 	private String source;
 	private String status;
-	private Integer userID;
+	private String userID;
 	private String payRate;
 	private String billRate;
 	private String salary;
@@ -65,11 +71,11 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 		this.distributionListID_display = distributionListID_display;
 	}
 
-	public Integer getJobPostingID() {
+	public String getJobPostingID() {
 		return jobPostingID;
 	}
 
-	public void setJobPostingID(Integer jobPostingID) {
+	public void setJobPostingID(String jobPostingID) {
 		this.jobPostingID = jobPostingID;
 	}
 
@@ -137,11 +143,11 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 		this.status = status;
 	}
 
-	public Integer getUserID() {
+	public String getUserID() {
 		return userID;
 	}
 
-	public void setUserID(Integer userID) {
+	public void setUserID(String userID) {
 		this.userID = userID;
 	}
 
@@ -195,12 +201,54 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 		this.salary = salary;
 	}
 
+
+    public List<FormJobSubmissionDto> instantiateEntities() {
+        String jobPostingID = StringUtils.defaultIfBlank(this.jobPostingID, "");
+        String candidateID = StringUtils.defaultIfBlank(this.userID, "");
+
+        List<String> jobPostingIDs = Lists.newArrayList(jobPostingID.split(","));
+        List<String> candidateIDs = Lists.newArrayList(candidateID.split(","));
+
+        return jobPostingIDs.parallelStream().map((jobID) -> {
+            return candidateIDs.parallelStream().map( (userID) -> {
+                return instantiateEntity(jobID, userID);
+            }).collect(Collectors.toList());
+        }).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    private FormJobSubmissionDto instantiateEntity(String jobPostingID, String candidateID) {
+        FormJobSubmissionDto jobSubmission = new FormJobSubmissionDto();
+
+        jobSubmission.setCloseOnFinish(this.getCloseOnFinish());
+        jobSubmission.setComments(this.getComments());
+        jobSubmission.setDistributionListID(this.getDistributionListID());
+        jobSubmission.setDistributionListID_display(this.getDistributionListID_display());
+        jobSubmission.setJobPostingID(this.getJobPostingID());
+        jobSubmission.setJobResponseID(this.getJobResponseID());
+        jobSubmission.setNotify(this.getNotify());
+        jobSubmission.setNotify_display(this.getNotify_display());
+        jobSubmission.setSchedule(this.getSchedule());
+        jobSubmission.setSendingUserID(this.getSendingUserID());
+        jobSubmission.setSendingUserID_display(this.getSendingUserID_display());
+        jobSubmission.setSource(this.getSource());
+        jobSubmission.setStatus(this.getStatus());
+        jobSubmission.setUserID(this.getUserID());
+        jobSubmission.setPayRate(this.getPayRate());
+        jobSubmission.setBillRate(this.getBillRate());
+        jobSubmission.setSalary(this.getSalary());
+
+        jobSubmission.setJobPostingID(jobPostingID);
+        jobSubmission.setUserID(candidateID);
+
+        return jobSubmission;
+    }
+
 	@Override
 	public JobSubmission instantiateEntity() {
 		JobSubmission jobSubmission = new JobSubmission();
 
-		jobSubmission.setCandidate(new Candidate(userID));
-		jobSubmission.setJobOrder(new JobOrder(jobPostingID));
+        jobSubmission.setCandidate(new Candidate(getFirstIntegerInCommaSeparatedList(userID)));
+        jobSubmission.setJobOrder(new JobOrder(getFirstIntegerInCommaSeparatedList(jobPostingID)));
 		jobSubmission.setId(jobResponseID);
 		jobSubmission.setSendingUser(new CorporateUser(sendingUserID));
 		jobSubmission.setSource(source);
@@ -219,8 +267,8 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
 	public JobSubmissionDto instantiateBullhornDto() {
 		JobSubmissionDto jobSubmission = new JobSubmissionDto();
 
-		jobSubmission.setCandidateID(userID);
-		jobSubmission.setJobOrderID(jobPostingID);
+		jobSubmission.setCandidateID(getFirstIntegerInCommaSeparatedList(userID));
+		jobSubmission.setJobOrderID(getFirstIntegerInCommaSeparatedList(jobPostingID));
 		jobSubmission.setJobSubmissionID(jobResponseID);
 		jobSubmission.setSendingUserID(sendingUserID);
 		jobSubmission.setSource(source);

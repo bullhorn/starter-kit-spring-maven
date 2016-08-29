@@ -7,7 +7,7 @@ public class TestNoteFormTriggerHelper extends TestFormTriggerHelper<NoteFormTri
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getNoteValidationTraverser().getFormTriggerHelper();
+		this.helper = testUtil.getNoteFormTriggerTraverser().getTriggerHelper();
 	}
 
 }

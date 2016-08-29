@@ -12,11 +12,11 @@ import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.UserType;
 import com.client.BaseTest;
-import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
+import com.client.core.formtrigger.model.helper.FormTriggerHelper;
 import com.google.common.collect.Sets;
 
-public abstract class TestFormTriggerHelper<T extends AbstractFormTriggerHelper<F, R>, F extends AbstractFormDto<R>, R extends BullhornEntity>
+public abstract class TestFormTriggerHelper<T extends FormTriggerHelper<F, R>, F extends AbstractFormDto<R>, R extends BullhornEntity>
 		extends BaseTest {
 
 	public T helper;

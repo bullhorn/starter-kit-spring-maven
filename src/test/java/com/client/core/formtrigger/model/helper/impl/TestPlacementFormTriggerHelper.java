@@ -12,7 +12,7 @@ public class TestPlacementFormTriggerHelper extends TestFormTriggerHelper<Placem
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getPlacementValidationTraverser("Approved").getFormTriggerHelper();
+		this.helper = testUtil.getPlacementFormTriggerTraverser("Approved").getTriggerHelper();
 	}
 
 	@Test

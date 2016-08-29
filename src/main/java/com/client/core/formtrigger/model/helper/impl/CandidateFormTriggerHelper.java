@@ -2,9 +2,9 @@ package com.client.core.formtrigger.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.client.core.base.model.helper.impl.CandidateTriggerHelper;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
-import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
+import com.client.core.formtrigger.model.helper.FormTriggerHelper;
 
 /**
  * Holds and keeps data needed for validations to minimize the number of API calls.
@@ -14,29 +14,27 @@ import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
  * @author magnus.palm
  * 
  */
-public class CandidateFormTriggerHelper extends AbstractFormTriggerHelper<FormCandidateDto, Candidate> {
+public class CandidateFormTriggerHelper extends CandidateTriggerHelper implements FormTriggerHelper<FormCandidateDto, Candidate> {
 
-	private CorporateUser candidateOwner;
+	private final FormCandidateDto formCandidateDto;
 
 	public CandidateFormTriggerHelper(FormCandidateDto formCandidateDto, Integer updatingUserID, BullhornData bullhornData) {
-		super(formCandidateDto, updatingUserID, bullhornData);
+		super(updatingUserID, bullhornData);
+		this.formCandidateDto = formCandidateDto;
 	}
 
-    public CandidateFormTriggerHelper(Candidate candidate, Integer updatingUserID, BullhornData bullhornData) {
-        super(FormCandidateDto.instantiateFromCandidate(candidate), updatingUserID, bullhornData);
-        this.newEntity = candidate;
-    }
-
-	public CorporateUser getCandidateOwner() {
-		if (candidateOwner == null) {
-			setCandidateOwner(findCorporateUser(getNewEntity().getOwner().getId()));
+	@Override
+	public Candidate getNewEntity() {
+		if (newEntity == null) {
+			setNewEntity(formCandidateDto.instantiateEntity());
 		}
 
-		return candidateOwner;
+		return newEntity;
 	}
 
-	public void setCandidateOwner(CorporateUser candidateOwner) {
-		this.candidateOwner = candidateOwner;
+	@Override
+	public FormCandidateDto getFormValues() {
+		return formCandidateDto;
 	}
 
 }
