@@ -12,7 +12,9 @@ import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.base.tools.web.objectmapper.CustomJsonObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
 
 @Service
 public class StandardJsonConverter implements JsonConverter {
@@ -63,20 +65,35 @@ public class StandardJsonConverter implements JsonConverter {
 
 		return entity;
 	}
-	
-	@Override
-	public Map<String, ?> convertJsonStringToMap(String jsonString) {
-		TypeReference<HashMap<String, ?>> typeRef = new TypeReference<HashMap<String, ?>>() {
-		};
 
-		Map<String, ?> returnValues = new HashMap<String,String>();
-		try {
-			returnValues = objectMapperStandard.readValue(jsonString, typeRef);
-		} catch (IOException e) {
-			log.error("Error coverting jsonString to map from jsonString: "+jsonString, e);
-		}
+    @Override
+    public <T, E> T convertJsonStringToEntity(String jsonString, Class<T> parameterizedType, Class<E> parameterType) {
+        T entity = null;
 
-		return returnValues;
-	}
+        try {
+            JavaType type = objectMapperStandard.getTypeFactory().constructParametrizedType(parameterizedType, parameterizedType, parameterType);
+
+            entity = objectMapperStandard.readValue(jsonString, type);
+        } catch (IOException e) {
+            log.error("Error coverting jsonString to entity of type" + parameterizedType.toString() + " from jsonString: ", e);
+        }
+
+        return entity;
+    }
+
+    @Override
+    public Map<String, Object> convertJsonStringToMap(String jsonString) {
+        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
+        };
+
+        Map<String, Object> returnValues = Maps.newLinkedHashMap();
+        try {
+            returnValues = objectMapperStandard.readValue(jsonString, typeRef);
+        } catch (IOException e) {
+            log.error("Error coverting jsonString to map from jsonString: "+jsonString, e);
+        }
+
+        return returnValues;
+    }
 
 }

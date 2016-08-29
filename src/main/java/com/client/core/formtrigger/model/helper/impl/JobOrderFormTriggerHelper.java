@@ -1,11 +1,10 @@
 package com.client.core.formtrigger.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
+import com.client.core.base.model.helper.impl.JobOrderTriggerHelper;
 import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
+import com.client.core.formtrigger.model.helper.FormTriggerHelper;
 
 /**
  * Holds and keeps data needed for validations to minimize the number of API calls.
@@ -15,52 +14,27 @@ import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
  * @author magnus.palm
  * 
  */
-public class JobOrderFormTriggerHelper extends AbstractFormTriggerHelper<FormJobOrderDto, JobOrder> {
+public class JobOrderFormTriggerHelper extends JobOrderTriggerHelper implements FormTriggerHelper<FormJobOrderDto, JobOrder> {
 
-	private CorporateUser jobOwner;
-	private ClientCorporation clientCorpration;
+	private final FormJobOrderDto formJobOrderDto;
 
 	public JobOrderFormTriggerHelper(FormJobOrderDto formJobOrderDto, Integer updatingUserID, BullhornData bullhornData) {
-		super(formJobOrderDto, updatingUserID, bullhornData);
+		super(updatingUserID, bullhornData);
+		this.formJobOrderDto = formJobOrderDto;
 	}
 
-    public JobOrderFormTriggerHelper(JobOrder jobOrder, Integer updatingUserID, BullhornData bullhornData) {
-        super(FormJobOrderDto.instantiateFromJobOrder(jobOrder), updatingUserID, bullhornData);
-        this.newEntity = jobOrder;
-    }
-
-	/**
-	 * Gets the owner of the job
-	 * 
-	 * @return a CorporateUserDto
-	 */
-	public CorporateUser getJobOwner() {
-		if (jobOwner == null) {
-			setJobOwner(findCorporateUser(getFormValues().getUserID()));
+	@Override
+	public JobOrder getNewEntity() {
+		if (newEntity == null) {
+			setNewEntity(formJobOrderDto.instantiateEntity());
 		}
 
-		return jobOwner;
+		return newEntity;
 	}
 
-	public void setJobOwner(CorporateUser jobOwner) {
-		this.jobOwner = jobOwner;
-	}
-
-	/**
-	 * Gets the client corporation connected to the job
-	 * 
-	 * @return a ClientCorporationDto
-	 */
-	public ClientCorporation getClientCorpration() {
-		if (clientCorpration == null) {
-			setClientCorpration(findClientCorporation(getFormValues().getClientCorporationID()));
-		}
-
-		return clientCorpration;
-	}
-
-	public void setClientCorpration(ClientCorporation clientCorpration) {
-		this.clientCorpration = clientCorpration;
+	@Override
+	public FormJobOrderDto getFormValues() {
+		return formJobOrderDto;
 	}
 
 }

@@ -11,7 +11,7 @@ public class TestJobOrderFormTriggerHelper extends TestFormTriggerHelper<JobOrde
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getJobValidationTraverser().getFormTriggerHelper();
+		this.helper = testUtil.getJobFormTriggerTraverser().getTriggerHelper();
 	}
 
 

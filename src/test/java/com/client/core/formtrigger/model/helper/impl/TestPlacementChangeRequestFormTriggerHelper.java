@@ -13,7 +13,7 @@ public class TestPlacementChangeRequestFormTriggerHelper extends
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getPlacementChangeRequestValidationTraverser("Approved").getFormTriggerHelper();
+		this.helper = testUtil.getPlacementChangeRequestFormTriggerTraverser("Approved").getTriggerHelper();
 	}
 
 	

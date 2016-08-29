@@ -11,7 +11,7 @@ public class TestCandidateFormTriggerHelper extends TestFormTriggerHelper<Candid
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getCandidateValidationTraverser().getFormTriggerHelper();
+		this.helper = testUtil.getCandidateFormTriggerTraverser().getTriggerHelper();
 	}
 
 	@Test

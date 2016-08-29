@@ -8,7 +8,7 @@ public class TestClientCorporationFormTriggerHelper extends
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getClientCorporationValidationTraverser().getFormTriggerHelper();
+		this.helper = testUtil.getClientCorporationFormTriggerTraverser().getTriggerHelper();
 	}
 
 }

@@ -30,14 +30,14 @@ import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
 import com.client.core.formtrigger.model.form.impl.FormNoteDto;
 import com.client.core.formtrigger.model.form.impl.FormPlacementChangeRequestDto;
 import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
-import com.client.core.formtrigger.workflow.traversing.impl.CandidateValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientContactValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientCorporationValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.JobSubmissionValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.JobValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.NoteValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementChangeRequestValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementValidationTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.CandidateFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.ClientContactFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.ClientCorporationFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.JobSubmissionFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.JobFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.NoteFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.PlacementChangeRequestFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.PlacementFormTriggerTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.ClientContactEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.JobEventTraverser;
@@ -132,95 +132,95 @@ public class TestUtil {
 		return new JobEventTraverser(event, bullhornData);
 	}
 
-	public JobSubmissionValidationTraverser getJobSubmissionValidationTraverser(String status, int candidateID) {
+	public JobSubmissionFormTriggerTraverser getJobSubmissionFormTriggerTraverser(String status, int candidateID) {
 		FormJobSubmissionDto dto = new FormJobSubmissionDto();
 		dto.setComments("Comments on submission");
-		dto.setJobPostingID(getTestEntities().getJobOrderId());
+		dto.setJobPostingID(getTestEntities().getJobOrderId().toString());
 		dto.setJobResponseID(getTestEntities().getJobSubmissionId());
 		dto.setSendingUserID(2);
-		dto.setUserID(candidateID);
+        dto.setUserID(candidateID+"");
 		dto.setStatus(status);
-		JobSubmissionValidationTraverser traverser = new JobSubmissionValidationTraverser(dto, getTestEntities().getCorporateUserId(),
+		JobSubmissionFormTriggerTraverser traverser = new JobSubmissionFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 
 		return traverser;
 	}
 
-	public PlacementValidationTraverser getPlacementValidationTraverser(String status) {
+	public PlacementFormTriggerTraverser getPlacementFormTriggerTraverser(String status) {
 		FormPlacementDto dto = new FormPlacementDto();
 		dto.setJobPostingID(getTestEntities().getJobOrderId());
 		dto.setUserID(getTestEntities().getCandidateId());
 		dto.setPlacementID(getTestEntities().getPlacementId());
 		dto.setStatus(status);
-		PlacementValidationTraverser traverser = new PlacementValidationTraverser(dto, getTestEntities().getCorporateUserId(),
+		PlacementFormTriggerTraverser traverser = new PlacementFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 
 		return traverser;
 	}
 
-	public PlacementChangeRequestValidationTraverser getPlacementChangeRequestValidationTraverser(String status) {
+	public PlacementChangeRequestFormTriggerTraverser getPlacementChangeRequestFormTriggerTraverser(String status) {
 		FormPlacementChangeRequestDto dto = new FormPlacementChangeRequestDto();
 
         dto.setPlacementChangeRequestID(getTestEntities().getPlacementChangeRequestId());
 		dto.setPlacementID(getTestEntities().getPlacementId());
 		dto.setStatus(status);
 
-		PlacementChangeRequestValidationTraverser traverser = new PlacementChangeRequestValidationTraverser(dto, getTestEntities()
+		PlacementChangeRequestFormTriggerTraverser traverser = new PlacementChangeRequestFormTriggerTraverser(dto, getTestEntities()
 				.getCorporateUserId(), true, bullhornData);
 
 		return traverser;
 	}
 
-	public JobValidationTraverser getJobValidationTraverser() {
+	public JobFormTriggerTraverser getJobFormTriggerTraverser() {
 		FormJobOrderDto dto = new FormJobOrderDto();
 		dto.setJobPostingID(getTestEntities().getJobOrderId());
 		dto.setClientUserID(getTestEntities().getClientContactId());
 		dto.setClientCorporationID(getTestEntities().getClientCorporationId());
 		dto.setUserID(testEntities.getCorporateUserId());
 		
-		JobValidationTraverser traverser = new JobValidationTraverser(dto, getTestEntities().getCorporateUserId(),
+		JobFormTriggerTraverser traverser = new JobFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 
 		return traverser;
 	}
 
-	public CandidateValidationTraverser getCandidateValidationTraverser() {
+	public CandidateFormTriggerTraverser getCandidateFormTriggerTraverser() {
 		FormCandidateDto dto = new FormCandidateDto();
 		dto.setUserID(getTestEntities().getCandidateId().toString());
 		dto.setRecruiterUserID(getTestEntities().getCorporateUserId().toString());
 
-		CandidateValidationTraverser traverser = new CandidateValidationTraverser(dto, getTestEntities().getCorporateUserId(),
+		CandidateFormTriggerTraverser traverser = new CandidateFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 		return traverser;
 	}
 
-	public ClientContactValidationTraverser getClientContactValidationTraverser() {
+	public ClientContactFormTriggerTraverser getClientContactFormTriggerTraverser() {
 		FormClientContactDto dto = new FormClientContactDto();
 		dto.setUserID(getTestEntities().getCandidateId());
 		dto.setRecruiterUserID(getTestEntities().getCorporateUserId().toString());
 		dto.setClientCorporationID(getTestEntities().getClientCorporationId());
 
-		ClientContactValidationTraverser traverser = new ClientContactValidationTraverser(dto, getTestEntities().getCorporateUserId(),
+		ClientContactFormTriggerTraverser traverser = new ClientContactFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 		return traverser;
 	}
 
-	public ClientCorporationValidationTraverser getClientCorporationValidationTraverser() {
+	public ClientCorporationFormTriggerTraverser getClientCorporationFormTriggerTraverser() {
 		FormClientCorporationDto dto = new FormClientCorporationDto();
 		dto.setClientCorporationID(getTestEntities().getClientCorporationId());
 
-		ClientCorporationValidationTraverser traverser = new ClientCorporationValidationTraverser(dto, getTestEntities()
+		ClientCorporationFormTriggerTraverser traverser = new ClientCorporationFormTriggerTraverser(dto, getTestEntities()
 				.getCorporateUserId(), true, bullhornData);
 		return traverser;
 	}
 
-	public NoteValidationTraverser getNoteValidationTraverser() {
+	public NoteFormTriggerTraverser getNoteFormTriggerTraverser() {
 		FormNoteDto dto = new FormNoteDto();
 
         dto.setUserCommentID(getTestEntities().getNoteId());
 		dto.setCommentingUserID(getTestEntities().getCorporateUserId());
 
-		NoteValidationTraverser traverser = new NoteValidationTraverser(dto, getTestEntities().getCorporateUserId(),
+		NoteFormTriggerTraverser traverser = new NoteFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 		return traverser;
 	}

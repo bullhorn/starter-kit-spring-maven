@@ -1,5 +1,9 @@
 package com.client.core.formtrigger.controller.clientcontactcandidate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,15 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
 import com.client.core.formtrigger.model.form.impl.FormClientContactDto;
-import com.client.core.formtrigger.workflow.traversing.impl.CandidateValidationTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientContactValidationTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.CandidateFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.ClientContactFormTriggerTraverser;
 
 /**
  * Entry point for Client Contact and Candidate Validations.
@@ -29,17 +32,17 @@ import com.client.core.formtrigger.workflow.traversing.impl.ClientContactValidat
 
 @Controller
 public class ClientContactCandidateFormTriggerController extends
-        AbstractFormTriggerController<ClientContact, ClientContactValidationTraverser> {
+        AbstractFormTriggerController<ClientContact, ClientContactFormTriggerTraverser> {
 
-	private final Node<ClientContactValidationTraverser> clientContactValidationWorkflow;
-	private final Node<CandidateValidationTraverser> candidateValidationWorkflow;
+	private final Logger log = Logger.getLogger(ClientContactCandidateFormTriggerController.class);
+	private final Node<ClientContactFormTriggerTraverser> clientContactValidationWorkflow;
+	private final Node<CandidateFormTriggerTraverser> candidateValidationWorkflow;
 
 	@Autowired
 	public ClientContactCandidateFormTriggerController(
-			@Qualifier("clientContactValidationWorkflow") Node<ClientContactValidationTraverser> clientContactValidationWorkflow,
-			@Qualifier("candidateValidationWorkflow") Node<CandidateValidationTraverser> candidateValidationWorkflow,
-			BullhornData bullhornData) {
-		super(bullhornData, ClientContact.class, null);
+			@Qualifier("clientContactValidationWorkflow") Node<ClientContactFormTriggerTraverser> clientContactValidationWorkflow,
+			@Qualifier("candidateValidationWorkflow") Node<CandidateFormTriggerTraverser> candidateValidationWorkflow) {
+		super(ClientContact.class, null);
 		this.clientContactValidationWorkflow = clientContactValidationWorkflow;
 		this.candidateValidationWorkflow = candidateValidationWorkflow;
 	}
@@ -51,14 +54,18 @@ public class ClientContactCandidateFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
+	 * @param response
+	 * @param request
 	 * @return the json parsed validation message
 	 */
 	@RequestMapping(value = { "/formtrigger/clientcontact/add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormClientContactDto formClientContactDto, @RequestParam("ft.userId") Integer updatingUserID) {
+	public String addEntity(@ModelAttribute FormClientContactDto formClientContactDto, @RequestParam("ft.userId") Integer updatingUserID,
+                            HttpServletResponse response, HttpServletRequest request) {
+		// Start the validation process.
 		log.info("---------------------------- Starting Client Contact Validation Process----------------------------------------");
 
-		ClientContactValidationTraverser traverser = new ClientContactValidationTraverser(formClientContactDto, updatingUserID,
+		ClientContactFormTriggerTraverser traverser = new ClientContactFormTriggerTraverser(formClientContactDto, updatingUserID,
 				false, bullhornData);
 
 		return handleClientContactRequest(traverser);
@@ -74,30 +81,33 @@ public class ClientContactCandidateFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
+	 * @param response
+	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "/formtrigger/clientcontactcandidate/edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
 	public String editEntity(@ModelAttribute FormClientContactDto formClientContactDto, @ModelAttribute FormCandidateDto formCandidateDto,
-			@RequestParam("ft.userId") Integer updatingUserID) {
+                             @RequestParam("ft.userId") Integer updatingUserID, HttpServletResponse response, HttpServletRequest request) {
+		// Start the validation process.
 
 		if (isClientContactSave(formClientContactDto)) {
 			log.info("---------------------------- Starting Client Contact Validation Process----------------------------------------");
-			ClientContactValidationTraverser traverser = new ClientContactValidationTraverser(formClientContactDto, updatingUserID,
-					true, bullhornData);
+			ClientContactFormTriggerTraverser traverser = new ClientContactFormTriggerTraverser(formClientContactDto, updatingUserID,
+					true,bullhornData);
 
 			return handleClientContactRequest(traverser);
 		}
 
 		if (isCandidateSave(formCandidateDto)) {
 			log.info("---------------------------- Starting Candidate Validation Process----------------------------------------");
-			CandidateValidationTraverser traverser = new CandidateValidationTraverser(formCandidateDto, updatingUserID,
+			CandidateFormTriggerTraverser traverser = new CandidateFormTriggerTraverser(formCandidateDto, updatingUserID,
 					true, bullhornData);
 
 			return handleCandidateRequest(traverser);
 		}
-
 		return "{\"result\":\"false\",\"error\":\"Incorrect form trigger setup.\"}";
+
 	}
 
 	/**
@@ -107,14 +117,18 @@ public class ClientContactCandidateFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
+	 * @param response
+	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "/formtrigger/candidate/add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormCandidateDto formCandidateDto, @RequestParam("ft.userId") Integer updatingUserID) {
+	public String addEntity(@ModelAttribute FormCandidateDto formCandidateDto, @RequestParam("ft.userId") Integer updatingUserID,
+                            HttpServletResponse response, HttpServletRequest request) {
+		// Start the validation process.
 		log.info("---------------------------- Starting Candidate Validation Process----------------------------------------");
 
-		CandidateValidationTraverser traverser = new CandidateValidationTraverser(formCandidateDto, updatingUserID, false,
+		CandidateFormTriggerTraverser traverser = new CandidateFormTriggerTraverser(formCandidateDto, updatingUserID, false,
 				bullhornData);
 
 		return handleCandidateRequest(traverser);
@@ -126,7 +140,8 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @param traverser
 	 * @return the json parsed validation message
 	 */
-	private String handleCandidateRequest(CandidateValidationTraverser traverser) {
+	private String handleCandidateRequest(CandidateFormTriggerTraverser traverser) {
+
 		try {
 			candidateValidationWorkflow.start(traverser);
 		} catch (Exception e) {
@@ -143,7 +158,8 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @param traverser
 	 * @return the json parsed validation message
 	 */
-	private String handleClientContactRequest(ClientContactValidationTraverser traverser) {
+	private String handleClientContactRequest(ClientContactFormTriggerTraverser traverser) {
+
 		try {
 			clientContactValidationWorkflow.start(traverser);
 		} catch (Exception e) {
@@ -162,11 +178,12 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @return true if candidateRestrictionBits != null
 	 */
 	private boolean isClientContactSave(FormClientContactDto formClientContactDto) {
+
 		if (formClientContactDto.getCandidateRestrictionBits() != null) {
 			return true;
 		}
-
 		return false;
+
 	}
 
 	/**
@@ -177,11 +194,12 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @return true if clientRestrictionBits != null
 	 */
 	private boolean isCandidateSave(FormCandidateDto formCandidateDto) {
+
 		if (formCandidateDto.getClientRestrictionBits() != null) {
 			return true;
 		}
-
 		return false;
+
 	}
 
 }
