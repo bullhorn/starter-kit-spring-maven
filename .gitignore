@@ -24,3 +24,7 @@ src/main/webapp/javascript/formscript/**/*.min.js
 src/main/webapp/javascript/formscript/**/*.min.js.map
 src/main/webapp/javascript/custom/**/*.min.js
 src/main/webapp/javascript/custom/**/*.min.js.map
+
+#less compiled files
+src/main/webapp/styles/formscript/**/*.css
+src/main/webapp/styles/custom/**/*.css
