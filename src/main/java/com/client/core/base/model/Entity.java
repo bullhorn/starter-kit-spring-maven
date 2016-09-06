@@ -14,6 +14,6 @@ public interface Entity<ID> {
      * 
      * @return
      */
-    public ID getId();
+    ID getId();
 
 }

@@ -6,6 +6,9 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 
+import com.client.core.base.model.Entity;
+import com.client.core.base.tools.data.QueryResult;
+
 /**
  * Generic data-access-object.  Provides database access for a given entity type, represented by a domain class, typically a POJO
  * 
@@ -14,14 +17,14 @@ import javax.persistence.EntityNotFoundException;
  * @param <T> the entity type
  * @param <ID> the primary key of entity
  */
-public interface GenericDao<T, ID> {
+public interface GenericDao<T extends Entity<ID>, ID> {
 
 	/**
 	 * Adds an object of type T.
 	 * 
 	 * @param transientObject The object to be added
 	 */
-	public void add(T transientObject);
+	void add(T transientObject);
 
 	/**
 	 * Adds or updates an object of type T
@@ -29,7 +32,7 @@ public interface GenericDao<T, ID> {
 	 * @param transientObject The object to be added/updated
 	 * @return the object just added/updated
 	 */
-	public T merge(T transientObject);
+	T merge(T transientObject);
 
 	/**
 	 * Adds or updates an object of type T and returns the ID
@@ -37,7 +40,7 @@ public interface GenericDao<T, ID> {
 	 * @param transientObject The object to be added/updated
 	 * @return the ID of the object just added/updated
 	 */
-	public ID mergeAndReturnID(T transientObject);
+	ID mergeAndReturnID(T transientObject);
 
 	/**
 	 * Get a T record using it's id
@@ -46,14 +49,14 @@ public interface GenericDao<T, ID> {
 	 * @return the entity of type T
 	 * @throws EntityNotFoundException when no entity with unique identifier ID exists
 	 */
-	public T find(ID id) throws EntityNotFoundException;
+	T find(ID id) throws EntityNotFoundException;
 
 	/**
 	 * Gets a List<T> of all entities in table
 	 * 
 	 * @return a List<T>. If no entities exists an empty List<T> will be returned.
 	 */
-	public List<T> findAll();
+	List<T> findAll();
 
 	/**
 	 * Deletes entity T from table.
@@ -61,7 +64,7 @@ public interface GenericDao<T, ID> {
 	 * @param persistentObject Entity to delete
 	 * @throws EntityNotFoundException if the instance is not an entity or is a detached entity
 	 */
-	public void remove(T persistentObject) throws EntityNotFoundException;
+	void remove(T persistentObject) throws EntityNotFoundException;
 
 	/**
 	 * Query using the passed in query, with named parameters contained in the queryParameters. If no queryParams needed pass in null for
@@ -78,7 +81,7 @@ public interface GenericDao<T, ID> {
 	 * @param queryParameters The parameters that will be used for the query. If null then query executes without params.
 	 * @return a List<T> of entities matching the passed in query
 	 */
-	public List<T> query(String queryString, Map<String, Object> queryParameters);
+	List<T> query(String queryString, Map<String, Object> queryParameters);
 
     /**
      * Query using the passed in query, with named parameters contained in the queryParameters. If no queryParams needed pass in null for
@@ -96,7 +99,7 @@ public interface GenericDao<T, ID> {
      * @param limit the maximum number of elements to return
      * @return  a List<T> of entities matching the passed in query, with maximum size equal to the passed in limit
      */
-    public List<T> query(String queryString, Map<String, Object> queryParameters, Integer limit);
+    List<T> query(String queryString, Map<String, Object> queryParameters, Integer limit);
 
     /**
      * Query using the passed in query, with named parameters contained in the queryParameters. If no queryParams needed pass in null for
@@ -116,20 +119,24 @@ public interface GenericDao<T, ID> {
      * @return a List<T> of entities matching the passed in query, with maximum size equal to the passed in limit.  The first element will
      *          be the [start]th element in the overall result set
      */
-    public List<T> query(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit);
+    QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit);
+
+    Long getCount(String queryString, Map<String, Object> queryParameters);
 
 	/**
 	 * Handles batch insert or batch update.
 	 * 
 	 * @param listToMerge the list of elements to merge
 	 */
-	public void batchMerge(List<T> listToMerge);
+	void batchMerge(List<T> listToMerge);
 
 	/**
 	 * Added for testing
 	 * 
 	 * @param entityManager the entityManager to set
 	 */
-	public void setEntityManager(EntityManager entityManager);
+	void setEntityManager(EntityManager entityManager);
+
+    Class<T> getType();
 
 }

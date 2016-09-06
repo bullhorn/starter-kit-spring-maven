@@ -19,32 +19,32 @@ public interface JpaEntity<ID> extends Entity<ID>{
 	 * @return
 	 */
     @Override
-	public ID getId();
+	ID getId();
 
-	public void setId(ID id);
+	void setId(ID id);
 
 	/**
 	 * Returns the date of when the record was added
 	 * 
 	 * @return the dateAdded
 	 */
-	public Date getDateAdded();
+	Date getDateAdded();
 
-	public void setDateAdded(Date dateAdded);
+	void setDateAdded(Date dateAdded);
 
 	/**
 	 * Returns the date when the record was last updated
 	 * 
 	 * @return the dateUpdated
 	 */
-	public Date getDateUpdated();
+	Date getDateUpdated();
 
 	/**
 	 * Does not actually set the dateUpdated, here so that form binding will not fail. To update the dateUpdate use overrideDateUpdate
      *
 	 * @param dateUpdated
 	 */
-	public void setDateUpdated(Date dateUpdated);
+	void setDateUpdated(Date dateUpdated);
 
 	
 }

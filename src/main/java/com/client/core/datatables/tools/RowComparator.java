@@ -24,7 +24,6 @@ public class RowComparator<T> implements Comparator<T> {
 
     @Override
     public int compare(T rowOne, T rowTwo) {
-
         return compareTwoRows(rowOne, rowTwo);
     }
 
