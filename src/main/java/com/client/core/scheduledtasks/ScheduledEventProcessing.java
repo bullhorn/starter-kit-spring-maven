@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import com.client.core.AppContext;
 import com.client.core.ApplicationSettings;
-import com.client.core.base.util.Utility;
 import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.client.core.soap.model.SubscriptionEvent;
@@ -48,7 +47,7 @@ public class ScheduledEventProcessing implements Runnable {
 	@Override
 	public void run() {
 		try {
-			List<SubscriptionEvent> events = bullhornApi.getSubscriptionEvents(100, subscriptionName);
+			List<SubscriptionEvent> events = bullhornApi.getSubscriptionEvents(appSettings.getNumEventsPerBatch(), subscriptionName);
 			List<SubscriptionEvent> filteredEvents = removeEventsThrownByApiUserAndMergeDuplicateEvents(events);
 			
 			log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + events.size()
@@ -62,7 +61,7 @@ public class ScheduledEventProcessing implements Runnable {
 	
 	private void handleEvents(List<SubscriptionEvent> subscriptionEvents) {
 		if (subscriptionEvents.size() > 0) {
-			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.getNumEventThreads()));
+			ExecutorService exec = Executors.newFixedThreadPool(appSettings.getNumEventThreads());
 
 			for (SubscriptionEvent event : subscriptionEvents) {
 				EventProcessing processEvent = EventProcessing.instantiateRunnable(

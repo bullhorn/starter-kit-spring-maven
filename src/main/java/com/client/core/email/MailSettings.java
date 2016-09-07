@@ -1,6 +1,8 @@
 package com.client.core.email;
 
-import com.google.common.base.Objects;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 /**
  * Object used to represent settings used for emailing.  Values should be provided via a properties file and injected
@@ -17,6 +19,9 @@ public class MailSettings {
 
     private String sender;
     private String senderName;
+
+    private Boolean disabled;
+    private List<String> routeToWhenDisabled;
 
     /**
      * Returns the SMTP host used for email authentication
@@ -96,6 +101,22 @@ public class MailSettings {
         this.username = username;
     }
 
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public List<String> getRouteToWhenDisabled() {
+        return routeToWhenDisabled;
+    }
+
+    public void setRouteToWhenDisabled(String[] routeToWhenDisabled) {
+        this.routeToWhenDisabled = Lists.newArrayList(routeToWhenDisabled);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,7 +129,9 @@ public class MailSettings {
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
         if (sender != null ? !sender.equals(that.sender) : that.sender != null) return false;
-        return !(senderName != null ? !senderName.equals(that.senderName) : that.senderName != null);
+        if (senderName != null ? !senderName.equals(that.senderName) : that.senderName != null) return false;
+        if (disabled != null ? !disabled.equals(that.disabled) : that.disabled != null) return false;
+        return routeToWhenDisabled != null ? routeToWhenDisabled.equals(that.routeToWhenDisabled) : that.routeToWhenDisabled == null;
 
     }
 
@@ -120,19 +143,38 @@ public class MailSettings {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (sender != null ? sender.hashCode() : 0);
         result = 31 * result + (senderName != null ? senderName.hashCode() : 0);
+        result = 31 * result + (disabled != null ? disabled.hashCode() : 0);
+        result = 31 * result + (routeToWhenDisabled != null ? routeToWhenDisabled.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("host", host)
-                .add("port", port)
-                .add("username", username)
-                .add("password", password)
-                .add("sender", sender)
-                .add("senderName", senderName)
+        return new StringBuilder("MailSettings {")
+                .append("\n\t\"host\": ")
+                .append("'")
+                .append(host).append('\'')
+                .append(",\n\t\"port\": ")
+                .append("'")
+                .append(port).append('\'')
+                .append(",\n\t\"username\": ")
+                .append("'")
+                .append(username).append('\'')
+                .append(",\n\t\"password\": ")
+                .append("'")
+                .append(password).append('\'')
+                .append(",\n\t\"sender\": ")
+                .append("'")
+                .append(sender).append('\'')
+                .append(",\n\t\"senderName\": ")
+                .append("'")
+                .append(senderName).append('\'')
+                .append(",\n\t\"disabled\": ")
+                .append(disabled)
+                .append(",\n\t\"routeToWhenDisabled\": ")
+                .append("'")
+                .append(routeToWhenDisabled).append('\'')
+                .append('}')
                 .toString();
     }
-
 }

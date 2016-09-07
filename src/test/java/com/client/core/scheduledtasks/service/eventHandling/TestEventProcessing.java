@@ -125,7 +125,7 @@ public class TestEventProcessing extends BaseTest {
 		boolean error = false;
 		// configurable based on # threads to process concurrently
 		// set to 1 in stax-web numEventThreads if single threaded processing is required
-		ExecutorService exec = Executors.newFixedThreadPool(Integer.parseInt(appSettings.getNumEventThreads()));
+		ExecutorService exec = Executors.newFixedThreadPool(appSettings.getNumEventThreads());
 		// loop through each event
 		for (SubscriptionEvent event : subscriptionEvents) {
 			error = false;

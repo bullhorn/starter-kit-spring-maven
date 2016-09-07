@@ -85,6 +85,7 @@
 		<property name="apiUserID" value="${apiUserID}" />
 		<property name="privateLabelID" value="${privateLabelID}" />
 		<property name="numEventThreads" value="${numEventThreads}" />
+        <property name="numEventsPerBatch" value="${numEventsPerBatch}" />
 		<property name="corporationID" value="${corporationID}" />
 		<property name="applicationDateFormat" value="${applicationDateFormat}" />
 		<property name="standardCronExpression" value="${standardCronExpression}" />
