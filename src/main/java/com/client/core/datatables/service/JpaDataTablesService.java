@@ -9,12 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import com.client.core.AppContext;
-import com.client.core.base.dao.GenericDao;
 import com.client.core.base.model.jpa.JpaEntity;
+import com.client.core.base.service.transaction.TransactionService;
 import com.client.core.base.tools.data.QueryResult;
 import com.client.core.base.tools.query.QueryHelper;
 import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
@@ -39,28 +38,28 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
 
 	private final Logger log = Logger.getLogger(getClass());
 
-	private final GenericDao<T, ID> genericDao;
+	private final TransactionService<T, ID> transactionService;
     private final QueryHelper queryHelper;
 
-    public JpaDataTablesService(Validator validator, GenericDao<T, ID> genericDao) {
+    public JpaDataTablesService(Validator validator, TransactionService<T, ID> transactionService) {
         super(validator);
-        this.genericDao = genericDao;
+        this.transactionService = transactionService;
         this.queryHelper = AppContext.getApplicationContext().getBean(QueryHelper.class);
     }
 
-    public JpaDataTablesService(GenericDao<T, ID> genericDao) {
-        this.genericDao = genericDao;
+    public JpaDataTablesService(TransactionService<T, ID> transactionService) {
+        this.transactionService = transactionService;
         this.queryHelper = AppContext.getApplicationContext().getBean(QueryHelper.class);
     }
 
-    public JpaDataTablesService(Validator validator, GenericDao<T, ID> genericDao, QueryHelper queryHelper) {
+    public JpaDataTablesService(Validator validator, TransactionService<T, ID> transactionService, QueryHelper queryHelper) {
         super(validator);
-        this.genericDao = genericDao;
+        this.transactionService = transactionService;
         this.queryHelper = queryHelper;
     }
 
-    public JpaDataTablesService(GenericDao<T, ID> genericDao, QueryHelper queryHelper) {
-        this.genericDao = genericDao;
+    public JpaDataTablesService(TransactionService<T, ID> transactionService, QueryHelper queryHelper) {
+        this.transactionService = transactionService;
         this.queryHelper = queryHelper;
     }
 
@@ -69,43 +68,38 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
     }
 
     protected String getQuery() {
-        return new StringBuilder("SELECT a FROM ").append(genericDao.getType().getSimpleName()).append(" a").toString();
+        return new StringBuilder("SELECT a FROM ").append(transactionService.getType().getSimpleName()).append(" a").toString();
     }
 
     @Override
-    @Transactional(readOnly = true)
     public T find(ID id) throws EntityNotFoundException {
-        return genericDao.find(id);
+        return transactionService.find(id);
     }
 
     @Override
-    @Transactional
     protected T add(T transientObject) {
-        return genericDao.merge(transientObject);
+        return transactionService.merge(transientObject);
     }
 
     @Override
-    @Transactional
     protected T update(T transientObject) {
-        return genericDao.merge(transientObject);
+        return transactionService.merge(transientObject);
     }
 
     @Override
-    @Transactional
     protected void remove(T persistentObject) throws EntityNotFoundException {
-        genericDao.remove(persistentObject);
+        transactionService.remove(persistentObject);
     }
 
     @Override
-    @Transactional(readOnly = true)
     protected List<T> getData(HttpServletRequest request, JQueryDataTableParamModel param) {
-        Long totalRecords = genericDao.getCount(getQuery(), getParameters(request));
+        Long totalRecords = transactionService.getCount(getQuery(), getParameters(request));
 
         param.setiTotalRecords(totalRecords.intValue());
 
         log.info(getQueryWithSortAndFilter(param));
 
-        QueryResult<T> result = genericDao.query(getQueryWithSortAndFilter(param), getParameters(request), param.getiDisplayStart(), param.getiDisplayLength());
+        QueryResult<T> result = transactionService.query(getQueryWithSortAndFilter(param), getParameters(request), param.getiDisplayLength(), param.getiDisplayStart());
 
         param.setiTotalDisplayRecords(result.getTotal().intValue());
 
@@ -160,7 +154,7 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
     private synchronized ColumnConfiguration getStandardColumnConfiguration() {
         if(this.columnConfiguration == null) {
             try {
-                this.columnConfiguration = convertEntityToColumns(genericDao.getType().newInstance());
+                this.columnConfiguration = convertEntityToColumns(transactionService.getType().newInstance());
             } catch(NullPointerException | InstantiationException | IllegalAccessException e) {
                 getLog().error("Error getting a standard instance of ColumnConfiguration.  The convertEntityToColumns method must be able to handle a brand new instance of your table entity.  A default constructor is also required.");
             }

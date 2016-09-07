@@ -3,7 +3,6 @@ package com.client.core.base.dao;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 
 import com.client.core.base.model.Entity;
@@ -129,13 +128,6 @@ public interface GenericDao<T extends Entity<ID>, ID> {
 	 * @param listToMerge the list of elements to merge
 	 */
 	void batchMerge(List<T> listToMerge);
-
-	/**
-	 * Added for testing
-	 * 
-	 * @param entityManager the entityManager to set
-	 */
-	void setEntityManager(EntityManager entityManager);
 
     Class<T> getType();
 

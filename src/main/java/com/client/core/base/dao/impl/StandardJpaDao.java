@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -16,6 +16,7 @@ import org.hibernate.hql.spi.ParameterTranslations;
 import org.hibernate.hql.spi.QueryTranslator;
 import org.hibernate.hql.spi.QueryTranslatorFactory;
 
+import com.client.core.AppContext;
 import com.client.core.base.dao.GenericDao;
 import com.client.core.base.model.jpa.JpaEntity;
 import com.client.core.base.tools.data.QueryResult;
@@ -33,15 +34,25 @@ import com.google.common.collect.Maps;
 public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T, ID> {
 
     private final QueryTranslatorFactory translatorFactory = new ASTQueryTranslatorFactory();
+    private final SessionFactoryImplementor sessionFactory;
+    private final EntityManager entityManager;
 
     private final Class<T> type;
 
     public StandardJpaDao(Class<T> type) {
         this.type = type;
+
+        EntityManagerFactory entityManagerFactory = AppContext.getApplicationContext().getBean("entityManagerFactory", EntityManagerFactory.class);
+
+        this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
-    @PersistenceContext(unitName = "entityManagerFactory")
-    private EntityManager entityManager;
+    public StandardJpaDao(EntityManagerFactory entityManagerFactory, Class<T> type) {
+        this.type = type;
+        this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
+        this.entityManager = entityManagerFactory.createEntityManager();
+    }
 
     /**
      * {@inheritDoc}
@@ -180,7 +191,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
     private Long getTotal(TypedQuery<T> query) {
         String hqlQuery = query.unwrap(org.hibernate.Query.class).getQueryString();
 
-        QueryTranslator translator = translatorFactory.createQueryTranslator(hqlQuery, hqlQuery, EMPTY, (SessionFactoryImplementor) entityManager.unwrap(SessionFactory.class), null);
+        QueryTranslator translator = translatorFactory.createQueryTranslator(hqlQuery, hqlQuery, EMPTY, sessionFactory, null);
 
         translator.compile(EMPTY, false);
 
@@ -213,14 +224,6 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
                 entityManager.merge(entity);
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
     }
 
     @Override

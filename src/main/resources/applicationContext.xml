@@ -68,10 +68,6 @@
 	</bean>
 
 
-	<!-- Needed for EntityManagerFactory -->
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-
-
 	<!-- DAO BEANS -->
 	<bean id="bullhornLogDAO" class="com.client.core.scheduledtasks.dao.impl.BullhornLogDAOImpl">
 		<property name="dataSource" ref="dataSourceLog" />
