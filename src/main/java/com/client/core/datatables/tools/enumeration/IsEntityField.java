@@ -6,14 +6,14 @@ package com.client.core.datatables.tools.enumeration;
  * @author magnus.palm
  * 
  */
-public enum Entity {
+public enum IsEntityField {
 
 	YES(true, "Entity"), NO(false, "Non-Entity");
 
 	private final boolean value;
 	private final String cssClass;
 
-	Entity(boolean value, String cssClass) {
+	IsEntityField(boolean value, String cssClass) {
 		this.value = value;
 		this.cssClass = cssClass;
 	}

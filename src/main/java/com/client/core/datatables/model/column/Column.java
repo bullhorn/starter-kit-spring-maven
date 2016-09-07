@@ -1,6 +1,6 @@
 package com.client.core.datatables.model.column;
 
-import com.client.core.datatables.tools.enumeration.Entity;
+import com.client.core.datatables.tools.enumeration.IsEntityField;
 import com.client.core.datatables.tools.enumeration.FieldType;
 import com.client.core.datatables.tools.enumeration.ShowOnForm;
 
@@ -135,9 +135,9 @@ public interface Column {
      * 
      * @return
      */
-    public Entity getEntity();
+    public IsEntityField getIsEntityField();
 
-    public void setEntity(Entity entity);
+    public void setIsEntityField(IsEntityField isEntityField);
 
     /**
      * turn this value into a link using the url, also used to populate select values

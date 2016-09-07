@@ -19,7 +19,7 @@ import com.client.core.datatables.tools.enumeration.Searchable;
 import com.client.core.datatables.tools.enumeration.ShowOnForm;
 import com.client.core.datatables.tools.enumeration.Sortable;
 import com.client.core.datatables.tools.enumeration.Visible;
-import com.client.core.datatables.tools.enumeration.Entity;
+import com.client.core.datatables.tools.enumeration.IsEntityField;
 import com.client.core.datatables.tools.enumeration.Required;
 import com.client.core.base.util.Util;
 
@@ -41,10 +41,10 @@ public final class StandardColumn extends AbstractColumn {
 		setFieldType(fieldType);
 	}
 
-	public StandardColumn(String fieldName, String fieldLabel, Object value, Object displayValue, FieldType fieldType, Entity entity,
+	public StandardColumn(String fieldName, String fieldLabel, Object value, Object displayValue, FieldType fieldType, IsEntityField isEntityField,
 			Editable editable, Visible visible, Sortable sortable, Searchable searchable, Required required, ShowOnForm showOnForm,
 			String url, String width) {
-		super(fieldName, fieldLabel, value, "", fieldType, entity, editable.getBooleanValue(), visible.getBooleanValue(), sortable
+		super(fieldName, fieldLabel, value, "", fieldType, isEntityField, editable.getBooleanValue(), visible.getBooleanValue(), sortable
 				.getBooleanValue(), searchable.getBooleanValue(), required.getBooleanValue(), showOnForm, url, width);
 		setDisplayValue(prepareDisplayValue(displayValue));
 	}

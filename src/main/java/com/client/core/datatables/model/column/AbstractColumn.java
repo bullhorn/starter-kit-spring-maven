@@ -1,7 +1,7 @@
 package com.client.core.datatables.model.column;
 
 import com.client.core.datatables.tools.enumeration.FieldType;
-import com.client.core.datatables.tools.enumeration.Entity;
+import com.client.core.datatables.tools.enumeration.IsEntityField;
 import com.client.core.datatables.tools.enumeration.ShowOnForm;
 
 public abstract class AbstractColumn implements Column {
@@ -10,7 +10,7 @@ public abstract class AbstractColumn implements Column {
 	private Object value; // the actual value, used for sorting etc
 	private String displayValue; // the value displayed in the data table
 	private FieldType fieldType; // the type of field, Date, Email,Id etc
-	private Entity entity; // is this column part of the jpa entity or not
+	private IsEntityField isEntityField; // is this column part of the jpa entity or not
 	private boolean editable; // can the column be edited
 	private boolean visible; // is the column visable
 	private boolean sortable; // is the column sortable
@@ -23,13 +23,13 @@ public abstract class AbstractColumn implements Column {
 	public AbstractColumn() {
 	}
 
-	public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, Entity entity,
+	public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, IsEntityField isEntityField,
 			boolean editable, boolean visible, boolean sortable, boolean searchable, boolean required, ShowOnForm showOnForm, String url) {
 		this.fieldName = fieldName;
 		this.fieldLabel = fieldLabel;
 		this.value = value;
 		this.fieldType = fieldType;
-		this.entity = entity;
+		this.isEntityField = isEntityField;
 		this.editable = editable;
 		this.visible = visible;
 		this.sortable = sortable;
@@ -40,14 +40,14 @@ public abstract class AbstractColumn implements Column {
 		this.displayValue = displayValue;
 	}
 
-	public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, Entity entity,
+	public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, IsEntityField isEntityField,
 			boolean editable, boolean visible, boolean sortable, boolean searchable, boolean required, ShowOnForm showOnForm, String url,
 			String width) {
 		this.fieldName = fieldName;
 		this.fieldLabel = fieldLabel;
 		this.value = value;
 		this.fieldType = fieldType;
-		this.entity = entity;
+		this.isEntityField = isEntityField;
 		this.editable = editable;
 		this.visible = visible;
 		this.sortable = sortable;
@@ -157,14 +157,12 @@ public abstract class AbstractColumn implements Column {
 		this.fieldType = fieldType;
 	}
 
-	@Override
-	public Entity getEntity() {
-		return entity;
+	public IsEntityField getIsEntityField() {
+		return isEntityField;
 	}
 
-	@Override
-	public void setEntity(Entity entity) {
-		this.entity = entity;
+	public void setIsEntityField(IsEntityField isEntityField) {
+		this.isEntityField = isEntityField;
 	}
 
 	@Override
@@ -256,7 +254,7 @@ public abstract class AbstractColumn implements Column {
 		builder.append("\", \nfieldType\":\"");
 		builder.append(fieldType);
 		builder.append("\", \nentity\":\"");
-		builder.append(entity);
+		builder.append(isEntityField);
 		builder.append("\", \neditable\":\"");
 		builder.append(editable);
 		builder.append("\", \nvisible\":\"");
