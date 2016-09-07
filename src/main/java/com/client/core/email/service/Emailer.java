@@ -20,7 +20,7 @@ public interface Emailer {
      *
      * @throws MessagingException when the email is malformed or SMTP setup is not correct.
      */
-	public void sendEmail(String subject, String mailTo, String message) throws MessagingException;
+	void sendEmail(String subject, String mailTo, String message) throws MessagingException;
 
     /**
      * Sends an email to a collection of email addresses, using the sender from {@link com.client.core.email.MailSettings}
@@ -31,7 +31,7 @@ public interface Emailer {
      *
      * @throws MessagingException when the email is malformed or SMTP setup is not correct.
      */
-	public void sendEmail(String subject, List<String> mailTo, String message) throws MessagingException;
+	void sendEmail(String subject, List<String> mailTo, String message) throws MessagingException;
 
     /**
      * Sends an email to the email addresses provided in the {@link MailInfo}, using the sender from the passed in {@link MailInfo},
@@ -42,6 +42,6 @@ public interface Emailer {
      *
      * @throws MessagingException when the email is malformed or SMTP setup is not correct.
      */
-    public void sendEmail(MailInfo mailInfo) throws MessagingException;
+    void sendEmail(MailInfo mailInfo) throws MessagingException;
 	
 }
