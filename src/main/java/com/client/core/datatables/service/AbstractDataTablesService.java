@@ -22,7 +22,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.Validator;
 
 import com.client.core.AppContext;
-import com.client.core.base.model.Entity;
 import com.client.core.base.util.Util;
 import com.client.core.datatables.model.column.Column;
 import com.client.core.datatables.model.column.standard.StandardColumn;
@@ -51,7 +50,7 @@ import com.client.core.datatables.tools.enumeration.Visible;
  * @param <ID>
  *            the unique identifier of entity T
  */
-public abstract class AbstractDataTablesService<T extends Entity<ID>, ID> implements DataTablesService<T, ID> {
+public abstract class AbstractDataTablesService<T, ID> implements DataTablesService<T, ID> {
 
     private final Logger log = Logger.getLogger(getClass());
 
@@ -81,6 +80,8 @@ public abstract class AbstractDataTablesService<T extends Entity<ID>, ID> implem
 
     protected abstract List<T> getData(HttpServletRequest request, JQueryDataTableParamModel param);
 
+    protected abstract ID getId(T entity);
+
     @Override
     public JSONObject processRequestForDataTables(HttpServletRequest request) {
         JQueryDataTableParamModel param = new JQueryDataTableParamModel(request);
@@ -106,12 +107,12 @@ public abstract class AbstractDataTablesService<T extends Entity<ID>, ID> implem
 
     @Override
     public ID addAndReturnID(T transientObject) {
-        return add(transientObject).getId();
+        return getId(add(transientObject));
     }
 
     @Override
     public ID updateAndReturnID(T transientObject) {
-        return update(transientObject).getId();
+        return getId(update(transientObject));
     }
 
     @Override

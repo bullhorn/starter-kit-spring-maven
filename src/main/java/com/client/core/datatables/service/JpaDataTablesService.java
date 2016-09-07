@@ -106,6 +106,11 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
         return result.getData();
     }
 
+    @Override
+    protected ID getId(T entity) {
+        return entity.getId();
+    }
+
     private String getQueryWithSortAndFilter(JQueryDataTableParamModel param) {
         String query = getQuery();
 
