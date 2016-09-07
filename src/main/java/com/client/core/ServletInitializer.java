@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
@@ -15,6 +16,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class ServletInitializer implements WebApplicationInitializer {
@@ -41,12 +43,16 @@ public class ServletInitializer implements WebApplicationInitializer {
         DispatcherServlet dispatcherServlet = new DispatcherServlet(context);
         dispatcherServlet.setPublishContext(true);
 
+        FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new DelegatingFilterProxy("sessionFilter"));
+
+        sessionFilter.addMappingForUrlPatterns(null, false, "*.jsp");
+
         this.servlets.stream().forEach( servlet -> {
-            addServlet(container, servlet);
+            addServlet(container, sessionFilter, servlet);
         });
     }
 
-    private final void addServlet(ServletContext container, String name) {
+    private final void addServlet(ServletContext container, FilterRegistration.Dynamic sessionFilter, String name) {
         XmlWebApplicationContext context = new XmlWebApplicationContext();
 
         String servletFile = new StringBuilder("classpath:").append(name).append("-servlet.xml").toString();
@@ -58,6 +64,8 @@ public class ServletInitializer implements WebApplicationInitializer {
         ServletRegistration.Dynamic servlet = container.addServlet(name, dispatcherServlet);
 
         String mapping = new StringBuilder("/").append(name).append("/*").toString();
+
+        sessionFilter.addMappingForUrlPatterns(null, false, mapping);
 
         servlet.addMapping(mapping);
         servlet.setLoadOnStartup(1);
