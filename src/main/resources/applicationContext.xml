@@ -110,6 +110,8 @@
         <property name="password" value="${mail.password}" />
         <property name="sender" value="${mail.sender}" />
         <property name="senderName" value="${mail.senderName}" />
+        <property name="disabled" value="${mail.disabled}" />
+        <property name="routeToWhenDisabled" value="${mail.routeToWhenDisabled}" />
     </bean>
 
 	<bean id="bullhornapi" class="com.client.core.soap.service.impl.BullhornAPISoap">
