@@ -8,7 +8,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.validation.Validator;
 
 import com.client.core.AppContext;
@@ -36,20 +35,18 @@ import com.google.common.collect.Maps;
  */
 public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends AbstractDataTablesService<T, ID> {
 
-	private final Logger log = Logger.getLogger(getClass());
-
 	private final TransactionService<T, ID> transactionService;
     private final QueryHelper queryHelper;
 
     public JpaDataTablesService(Validator validator, TransactionService<T, ID> transactionService) {
         super(validator);
         this.transactionService = transactionService;
-        this.queryHelper = AppContext.getApplicationContext().getBean(QueryHelper.class);
+        this.queryHelper = AppContext.getApplicationContext().getBean("queryHelper", QueryHelper.class);
     }
 
     public JpaDataTablesService(TransactionService<T, ID> transactionService) {
         this.transactionService = transactionService;
-        this.queryHelper = AppContext.getApplicationContext().getBean(QueryHelper.class);
+        this.queryHelper = AppContext.getApplicationContext().getBean("queryHelper", QueryHelper.class);
     }
 
     public JpaDataTablesService(Validator validator, TransactionService<T, ID> transactionService, QueryHelper queryHelper) {
@@ -97,7 +94,7 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
 
         param.setiTotalRecords(totalRecords.intValue());
 
-        log.info(getQueryWithSortAndFilter(param));
+        getLog().info(getQueryWithSortAndFilter(param));
 
         QueryResult<T> result = transactionService.query(getQueryWithSortAndFilter(param), getParameters(request), param.getiDisplayLength(), param.getiDisplayStart());
 
@@ -170,6 +167,10 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
 
     protected String getQueryUsingKey(String key) {
         return queryHelper.getQueryUsingKey(key);
+    }
+
+    protected TransactionService<T, ID> getTransactionService() {
+        return transactionService;
     }
 
 }
