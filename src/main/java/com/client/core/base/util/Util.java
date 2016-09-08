@@ -45,6 +45,7 @@ import org.joda.time.DateTimeZone;
 import com.bullhorn.apiservice.ApiService;
 import com.bullhorn.apiservice.result.ApiFindResult;
 import com.bullhorn.entity.user.CorporateUserDto;
+import com.client.core.base.model.jpa.JpaEntity;
 
 public class Util {
 
@@ -367,6 +368,12 @@ public class Util {
 			String returnThis = bigDecimal.toPlainString();
 			return returnThis;
 		}
+
+		if(displayValue instanceof Map) {
+		    Object value = ((Map) displayValue).get("id");
+
+            return value == null ? "" : value.toString();
+        }
 
 		return displayValue.toString();
 	}
