@@ -31,17 +31,16 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.client.core.ApplicationSettings;
+import com.client.core.base.service.concurrency.ConcurrencyService;
+import com.client.core.base.tools.test.TestEntities;
+import com.client.core.base.tools.test.TestUtil;
+import com.client.core.base.tools.web.MediaTypes;
+import com.client.core.base.util.Util;
 import com.client.core.datatables.controller.DataTablesController;
 import com.client.core.datatables.model.column.Column;
 import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
-import com.client.core.base.service.concurrency.ConcurrencyService;
-import com.client.core.base.tools.web.MediaTypes;
-import com.client.core.base.tools.test.TestEntities;
-import com.client.core.base.tools.test.TestUtil;
-import com.client.core.base.util.Util;
 import com.client.core.workers.DataTablesEditWorker;
 import com.google.common.collect.Maps;
 
@@ -127,7 +126,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      * @throws Exception
      */
     @Test
-    @Transactional
     public void testInit() throws Exception {
 
         String additionalParamString = addAdditionalParams();
@@ -145,7 +143,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      *
      * @throws Exception
      */
-    @Transactional
     @Test
     public void testData() throws Exception {
         String additionalParamString = addAdditionalParams();
@@ -163,7 +160,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      *
      * @throws Exception
      */
-    @Transactional
     @Test
     public void testEdit() throws Exception {
         String additionalParamString = addAdditionalParams();
@@ -224,7 +220,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      * @throws Exception
      */
     @Test
-    @Transactional
     public void testPrepareFormEdit() throws Exception {
         String additionalParamString = addAdditionalParams();
         getMockMvc()
@@ -239,7 +234,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      *
      * @throws Exception
      */
-    @Transactional
     @Test
     public void testFormEdit() throws Exception {
         String additionalParamString = addAdditionalParams();
@@ -257,7 +251,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      *
      * @throws Exception
      */
-    @Transactional
     @Test
     public void testDelete() throws Exception {
         String additionalParamString = addAdditionalParams();
@@ -277,7 +270,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      *
      * @throws Exception
      */
-    @Transactional
     @Test
     public void testInsert() throws Exception {
         String additionalParamString = addAdditionalParams();
@@ -295,7 +287,6 @@ public abstract class DataTablesWebBaseTest<T, ID> extends WebBaseTest {
      *
      * @throws Exception
      */
-    @Transactional
     @Test
     public void testUpdate() throws Exception {
         String additionalParamString = addAdditionalParams();
