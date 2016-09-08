@@ -206,7 +206,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
             String name = parameter.getName();
 
             for(int position : parameterTranslations.getNamedParameterSqlLocations(name)) {
-                countQuery.setParameter(position, query.getParameterValue(name));
+                countQuery.setParameter(position+1, query.getParameterValue(name));
             };
         });
 
