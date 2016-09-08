@@ -30,7 +30,7 @@ public interface DataTablesController<T, ID> {
      * 
      * @param tableConfig
      */
-    public void configureTable(TableConfiguration<T, ID> tableConfig);
+    void configureTable(TableConfiguration<T, ID> tableConfig);
 
     /**
      * Adds a new instance of T to the model to be used when adding a new entity T
@@ -39,7 +39,7 @@ public interface DataTablesController<T, ID> {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public void populateFormWithNewEntity(HttpServletRequest request, Model model) throws InstantiationException,
+    void populateFormWithNewEntity(HttpServletRequest request, Model model) throws InstantiationException,
             IllegalAccessException;
 
     /**
@@ -50,7 +50,7 @@ public interface DataTablesController<T, ID> {
      * 
      * @return the view
      */
-    public String init(HttpServletRequest request, HttpServletResponse response, Model model);
+    String init(HttpServletRequest request, HttpServletResponse response, Model model);
 
     /**
      * Helper method to populate the transaction dashboard. Called by the datatables in the dashboardMain.jsp
@@ -59,7 +59,7 @@ public interface DataTablesController<T, ID> {
      * @param response
      * @throws IOException
      */
-    public String dashboardData(HttpServletRequest request, HttpServletResponse response);
+    String dashboardData(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Handles editing of records using the primary key, column position and new value for that column.
@@ -76,7 +76,7 @@ public interface DataTablesController<T, ID> {
      * @param model
      * @return the new value if successful edit, otherwise an error message
      */
-    public String editRecord(ID id, Integer columnPosition, String value, HttpServletRequest request,
+    String editRecord(ID id, Integer columnPosition, String value, HttpServletRequest request,
             HttpServletResponse response, Model model);
 
     /**
@@ -89,7 +89,7 @@ public interface DataTablesController<T, ID> {
      * 
      * @return the primary key of the new record if successful insert, otherwise validation or error messages.
      */
-    public String prepareFormForEditEntity(ID entityID, HttpServletRequest request, HttpServletResponse response, Model model);
+    String prepareFormForEditEntity(ID entityID, HttpServletRequest request, HttpServletResponse response, Model model);
 
     /**
      * Requests from the edit form will hit this method.
@@ -103,8 +103,7 @@ public interface DataTablesController<T, ID> {
      * 
      * @return the primary key of the new record if successful insert, otherwise validation or error messages.
      */
-
-    public String editEntityUsingForm(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response);
+    String editEntityUsingForm(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Deletes the record with unique identifier (such as primary key) id
@@ -114,7 +113,7 @@ public interface DataTablesController<T, ID> {
      * 
      * @return a blank String if success, otherwise an error message.
      */
-    public String deleteRecord(ID id);
+    String deleteRecord(ID id);
 
     /**
      * Validates an entity and if validation passes adds that record.
@@ -127,7 +126,7 @@ public interface DataTablesController<T, ID> {
      * @return the primary key of the new record if successful insert, otherwise validation or error messages.
      */
 
-    public String addRecord(T entity, BindingResult validationResult, HttpServletRequest request, HttpServletResponse response);
+    String addRecord(T entity, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Validates an entity and if validation passes updates that record.
@@ -140,20 +139,20 @@ public interface DataTablesController<T, ID> {
      * @return the primary key of the new record if successful insert, otherwise validation or error messages.
      */
 
-    public String updateRecord(T entity, BindingResult validationResult, HttpServletRequest request, HttpServletResponse response);
+    String updateRecord(T entity, HttpServletRequest request, HttpServletResponse response);
 
-    public DataTablesService<T, ID> getDataTablesService();
+    DataTablesService<T, ID> getDataTablesService();
 
-    public Logger getLog();
+    Logger getLog();
 
-    public T getEntity();
+    T getEntity();
 
-    public String getViewName();
+    String getViewName();
 
-    public String getCustomUrl();
+    String getCustomUrl();
 
-    public ApplicationSettings getAppSettings();
+    ApplicationSettings getAppSettings();
 
-    public Class<T> getType();
+    Class<T> getType();
 
 }
