@@ -61,7 +61,7 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
     }
 
     public AbstractDataTablesService() {
-        this.validator = AppContext.getApplicationContext().getBean(Validator.class);
+        this.validator = AppContext.getApplicationContext().getBean("validator", Validator.class);
     }
 
     @Override
