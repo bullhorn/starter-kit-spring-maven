@@ -19,7 +19,6 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,14 +28,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.client.core.ApplicationSettings;
-import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
-import com.client.core.datatables.model.configuration.table.TableConfiguration;
-import com.client.core.datatables.service.DataTablesService;
 import com.client.core.base.tools.enums.YesNo;
 import com.client.core.base.tools.propertyeditors.CustomDateTimeEditor;
 import com.client.core.base.tools.propertyeditors.CustomObjectEditor;
 import com.client.core.base.tools.propertyeditors.CustomXMLGregorianCalendarEditor;
 import com.client.core.base.util.Util;
+import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
+import com.client.core.datatables.model.configuration.table.TableConfiguration;
+import com.client.core.datatables.service.DataTablesService;
 
 /**
  * Generic controller for all datatables handling. This class should be extended by your specific type T.
@@ -128,7 +127,7 @@ public abstract class AbstractDataTablesController<T, ID> implements DataTablesC
      * Gets a value from the dropDownFiller map using the key passed in, the return will be used to populate the drop down menu
      * when editing a value in the data tables that is of drop down type.
      * 
-     * @param key
+     * @param values
      * @return
      */
     protected String getJsonFormattedDropDownValues(Map<String, String> values) {
@@ -256,7 +255,7 @@ public abstract class AbstractDataTablesController<T, ID> implements DataTablesC
     /**
      * Validates an entity and if validation passes adds that record.
      * 
-     * @param entity
+     * @param entityID
      *            The entity to add and validate
      * 
      * @param response
@@ -366,7 +365,7 @@ public abstract class AbstractDataTablesController<T, ID> implements DataTablesC
     @Override
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = JSON)
     @ResponseBody
-    public String addRecord(@ModelAttribute("newEntity") T entity, BindingResult validationResult, HttpServletRequest request,
+    public String addRecord(@ModelAttribute("newEntity") T entity, HttpServletRequest request,
             HttpServletResponse response) {
 
         String validationErrors = dataTablesService.validateEntity(entity);
@@ -399,7 +398,7 @@ public abstract class AbstractDataTablesController<T, ID> implements DataTablesC
     @Override
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = JSON)
     @ResponseBody
-    public String updateRecord(@ModelAttribute("newEntity") T entity, BindingResult validationResult, HttpServletRequest request,
+    public String updateRecord(@ModelAttribute("newEntity") T entity, HttpServletRequest request,
             HttpServletResponse response) {
 
         String validationErrors = dataTablesService.validateEntity(entity);
