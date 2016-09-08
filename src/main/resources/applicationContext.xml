@@ -78,6 +78,7 @@
     </bean>
 
 	<bean id="appSettings" class="com.client.core.ApplicationSettings">
+        <property name="profileName" value="${profilename}" />
 		<property name="username" value="${apiusername}" />
 		<property name="password" value="${apipassword}" />
 		<property name="apiKey" value="${apikey}" />
