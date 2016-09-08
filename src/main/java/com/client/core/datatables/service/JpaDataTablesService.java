@@ -116,7 +116,7 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
 
     private String getSort(JQueryDataTableParamModel param) {
         Integer sortIndex = param.getiSortColumnIndex();
-        String sortDirection = param.getsSortDirection().equals("asc") ? "ASC" : "DESC";
+        String sortDirection = param.getsSortDirection() == null || param.getsSortDirection().equals("asc") ? "ASC" : "DESC";
 
         String field = getStandardColumnConfiguration().getColumn(sortIndex).getFieldName();
 
