@@ -1,5 +1,6 @@
 package com.client.core.formtrigger.model.form.impl;
 
+import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import org.apache.log4j.Logger;
 
 import com.bullhorn.entity.job.PlacementChangeRequestDto;
@@ -2036,7 +2037,7 @@ public class FormPlacementChangeRequestDto extends AbstractFormDto<PlacementChan
 		entity.setRequestCustomTextBlock5(requestCustomTextBlock5);
 		entity.setRequestStatus(requestStatus);
 		entity.setRequestType(requestType);
-		entity.setRequestingUser(new LinkedId(requestingUserID));
+		entity.setRequestingUser(new CorporateUser(requestingUserID));
 		entity.setSalary(toBigDecimal(salary, "salary"));
 		entity.setSalaryUnit(salaryUnit);
 		entity.setSalesManagerPercentGrossMargin(toBigDecimal(salesManagerPercentGrossMargin, "salesManagerPercentGrossMargin"));

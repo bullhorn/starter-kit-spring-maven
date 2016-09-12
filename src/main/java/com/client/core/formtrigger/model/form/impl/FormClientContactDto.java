@@ -1,16 +1,15 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.client.ClientContactDto;
 import com.bullhornsdk.data.model.entity.core.standard.Category;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.bullhornsdk.data.model.entity.embedded.LinkedPerson;
-import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.client.core.base.util.Util;
+import com.client.core.formtrigger.model.form.AbstractFormDto;
+import org.apache.log4j.Logger;
 
 /**
  * Maps a client contact form in BH to a ClientContactDto
@@ -1770,8 +1769,8 @@ public class FormClientContactDto extends AbstractFormDto<ClientContact> {
 			clientContact.setOwner(new CorporateUser(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0));
 		}
 
-		clientContact.setReferredByPerson(new LinkedPerson(referredByUserID));
-		clientContact.setReportToPerson(new LinkedPerson(reportToUserID));
+		clientContact.setReferredByPerson(new Person(referredByUserID));
+		clientContact.setReportToPerson(new Person(reportToUserID));
 
 		Address secondaryAddress = new Address();
 		secondaryAddress.setAddress1(secondaryAddress1);

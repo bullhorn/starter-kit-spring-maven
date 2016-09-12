@@ -1,19 +1,18 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import org.apache.log4j.Logger;
-
 import com.bullhornsdk.data.model.entity.core.standard.Category;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.Lead;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.bullhornsdk.data.model.entity.core.standard.Skill;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.bullhornsdk.data.model.entity.embedded.LinkedPerson;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.base.util.Utility;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 
 /**
  * Created by hiqbal on 12/22/2015.
@@ -1294,8 +1293,8 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         lead.setPrimarySkills(primarySkills);
 
         lead.setPriority(priority);
-        lead.setReferredByPerson(new LinkedPerson(Utility.parseInteger(referredByPersonID)));
-        lead.setReportToPerson(new LinkedPerson(Utility.parseInteger(reportToPersonID)));
+        lead.setReferredByPerson(new Person(Utility.parseInteger(referredByPersonID)));
+        lead.setReportToPerson(new Person(Utility.parseInteger(reportToPersonID)));
         lead.setRole(role);
         lead.setSalary(Utility.parseBigDecimal(salary));
         lead.setSalaryLow(Utility.parseBigDecimal(salaryLow));

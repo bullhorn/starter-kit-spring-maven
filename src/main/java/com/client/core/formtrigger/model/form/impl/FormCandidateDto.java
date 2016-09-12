@@ -1,16 +1,15 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.candidate.CandidateDto;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.Category;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.bullhornsdk.data.model.entity.embedded.LinkedPerson;
-import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.client.core.base.util.Util;
+import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.base.Strings;
+import org.apache.log4j.Logger;
 
 /**
  * Maps a candidate form in BH to a CandidateDto
@@ -2664,7 +2663,7 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 		candidate.setIsEditable(toBoolean(isEditable, "isEditable"));
 		candidate.setI9OnFile(toInteger(i9OnFile, "i9OnFile"));
 		candidate.setLastName(lastName);
-		candidate.setLinkedPerson(new LinkedPerson(toInteger(linkedPersonID, "linkedPerson.id")));
+		candidate.setLinkedPerson(new Person(toInteger(linkedPersonID, "linkedPerson.id")));
 		candidate.setLocalAddtionalWitholdingsAmount(toBigDecimal(localAddtionalWitholdingsAmount, "localAddtionalWitholdingsAmount"));
 		candidate.setLocalExemptions(toInteger(localExemptions, "localExemptions"));
 		candidate.setLocalFilingStatus(localFilingStatus);
@@ -2692,7 +2691,7 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 		}
 
 		candidate.setReferredBy(referredBy);
-		candidate.setReferredByPerson(new LinkedPerson(toInteger(referredByUserID, "referredByUserID")));
+		candidate.setReferredByPerson(new Person(toInteger(referredByUserID, "referredByUserID")));
 		candidate.setSalary(toBigDecimal(salary, "salary"));
 		candidate.setSalaryLow(toBigDecimal(salaryLow, "salaryLow"));
 

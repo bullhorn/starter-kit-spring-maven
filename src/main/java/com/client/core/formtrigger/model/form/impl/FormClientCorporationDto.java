@@ -1,5 +1,6 @@
 package com.client.core.formtrigger.model.form.impl;
 
+import com.bullhornsdk.data.model.entity.core.standard.CorporationDepartment;
 import org.apache.log4j.Logger;
 
 import com.bullhorn.entity.client.ClientCorporationDto;
@@ -848,7 +849,11 @@ public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation>
 		clientCorporation.setCustomTextBlock5(customTextBlock5);
 		clientCorporation.setDateAdded(null);
 		clientCorporation.setDateFounded(null);
-		clientCorporation.setDepartment(new LinkedId(departmentID));
+
+		CorporationDepartment department = new CorporationDepartment();
+		department.setId(departmentID);
+
+		clientCorporation.setDepartment(department);
 		clientCorporation.setExternalID(externalID);
 		clientCorporation.setFax(fax);
 		clientCorporation.setFeeArrangement(toBigDecimal(feeArrangement, "feeArrangement"));
