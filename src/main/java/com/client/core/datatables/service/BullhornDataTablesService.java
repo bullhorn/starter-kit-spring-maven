@@ -243,7 +243,6 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
         params.setStart(start);
         params.setCount(count);
         params.setSort(sort);
-//        params.setShowTotalMatched(true);
 
         return (ListWrapper<T>) bullhornData.search((Class<SearchEntity>) type, query, fields, params);
     }
