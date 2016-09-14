@@ -94,8 +94,6 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
 
         param.setiTotalRecords(totalRecords.intValue());
 
-        getLog().info(getQueryWithSortAndFilter(param));
-
         QueryResult<T> result = transactionService.query(getQueryWithSortAndFilter(param), getParameters(request), param.getiDisplayLength(), param.getiDisplayStart());
 
         param.setiTotalDisplayRecords(result.getTotal().intValue());
