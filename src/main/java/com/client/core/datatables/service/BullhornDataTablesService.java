@@ -1,6 +1,7 @@
 package com.client.core.datatables.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import com.bullhornsdk.data.model.parameter.SearchParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
 import com.bullhornsdk.data.model.response.list.ListWrapper;
 import com.client.core.AppContext;
+import com.client.core.datatables.model.column.Column;
 import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
 import com.client.core.datatables.tools.JQueryDataTableParamModel;
 import com.google.common.collect.Sets;
@@ -96,8 +98,6 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
         this.fields = fields;
         this.type = type;
     }
-
-    protected abstract Set<String> searchFields();
 
     protected String getQuery(HttpServletRequest request) {
         if(SearchEntity.class.isAssignableFrom(type)) {
@@ -246,6 +246,11 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
 //        params.setShowTotalMatched(true);
 
         return (ListWrapper<T>) bullhornData.search((Class<SearchEntity>) type, query, fields, params);
+    }
+
+    private Set<String> searchFields() {
+        return getStandardColumnConfiguration().getColumnConfigMap().entrySet().parallelStream().map(Map.Entry::getValue)
+                .filter(Column::isSearchable).map(Column::getFieldName).collect(Collectors.toSet());
     }
 
     @Override
