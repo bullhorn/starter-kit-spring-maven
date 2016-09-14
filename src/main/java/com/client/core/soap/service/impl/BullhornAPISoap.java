@@ -525,9 +525,7 @@ public class BullhornAPISoap implements BullhornAPI {
     
     @Override
 	public String assembleOpenWindowLink(ApiEntityName entity, Integer id) {
-		String hostName = this.getService().getApplicationServerHost(appSettings.getUsername(), "");
-
-		hostName = org.apache.commons.lang3.StringUtils.substringBefore(hostName, "|");
+		String hostName = this.getHostName();
 		
 		return assembleOpenWindowLink(hostName, entity, id);
 	}
