@@ -9,7 +9,6 @@ import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.AppContext;
 import com.client.core.base.controller.AbstractTriggerController;
-import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.base.workflow.node.Node;
@@ -29,7 +28,6 @@ public class AbstractRestTriggerController<T extends BullhornEntity, TR extends 
     protected final BullhornData bullhornData;
 
     private final JsonConverter jsonConverter;
-	private final EntityChanger entityChanger;
 
     private static Logger log = Logger.getLogger(AbstractRestTriggerController.class);
 
@@ -39,7 +37,6 @@ public class AbstractRestTriggerController<T extends BullhornEntity, TR extends 
         this.validationWorkflow = validationWorkflow;
         this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
         this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
-	    this.entityChanger = AppContext.getApplicationContext().getBean(EntityChanger.class);
     }
 
     protected RestTriggerRequest<T> convertToObject(String value) {
