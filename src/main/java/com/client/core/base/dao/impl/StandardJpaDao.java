@@ -34,6 +34,7 @@ import com.google.common.collect.Maps;
 public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T, ID> {
 
     private final QueryTranslatorFactory translatorFactory = new ASTQueryTranslatorFactory();
+
     private final SessionFactoryImplementor sessionFactory;
     private final EntityManager entityManager;
 
@@ -45,7 +46,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
         EntityManagerFactory entityManagerFactory = AppContext.getApplicationContext().getBean("entityManagerFactory", EntityManagerFactory.class);
 
         this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
-        this.entityManager = entityManagerFactory.createEntityManager();
+        this.entityManager = AppContext.getApplicationContext().getBean("entityManager", EntityManager.class);
     }
 
     public StandardJpaDao(EntityManagerFactory entityManagerFactory, Class<T> type) {
