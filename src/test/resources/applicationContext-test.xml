@@ -165,6 +165,10 @@
 			<property name="dataSource" ref="dataSource" />
 
 		</bean>
+
+        <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+            <property name="entityManagerFactory" ref="entityManagerFactory" />
+        </bean>
 		
 
 		<bean id="jpaVendorAdapterHsql"
