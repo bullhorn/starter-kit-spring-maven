@@ -49,10 +49,10 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
         this.entityManager = AppContext.getApplicationContext().getBean("entityManager", EntityManager.class);
     }
 
-    public StandardJpaDao(EntityManagerFactory entityManagerFactory, Class<T> type) {
+    public StandardJpaDao(EntityManagerFactory entityManagerFactory, EntityManager entityManager, Class<T> type) {
         this.type = type;
         this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
-        this.entityManager = entityManagerFactory.createEntityManager();
+        this.entityManager = entityManager;
     }
 
     /**
