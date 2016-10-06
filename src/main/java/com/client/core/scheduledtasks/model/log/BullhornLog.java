@@ -1,8 +1,8 @@
 package com.client.core.scheduledtasks.model.log;
 
-import java.sql.Date;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-import com.client.core.soap.model.SubscriptionEvent;
+import java.sql.Date;
 
 public class BullhornLog {
 
@@ -20,19 +20,19 @@ public class BullhornLog {
 	private String[] updatedProperties;
 	private Date eventTimeStamp;
 
-	public static BullhornLog instantiateLog(SubscriptionEvent event, int corporationID) {
+	public static BullhornLog instantiateLog(CustomSubscriptionEvent event, int corporationID) {
 		BullhornLog bhlog = new BullhornLog();
 		bhlog.setCorporationID(corporationID);
-		bhlog.setEntity(event.getEntityType());
-		bhlog.setEntityID(event.getEntityID());
-		bhlog.setRequestID(event.getRequestID());
-		bhlog.setEventID(event.getEventID());
+		bhlog.setEntity(event.getEntityName());
+		bhlog.setEntityID(event.getEntityId());
+		bhlog.setRequestID(event.getRequestId().toString());
+		bhlog.setEventID(event.getEventId());
 		bhlog.setSubscriptionID(event.getSubscriptionName());
 		bhlog.setEventType(event.getEventType());
 		bhlog.setStatus("success");
 		bhlog.setError("");
-		bhlog.setUpdatedProperties(event.getUpdatedProperties());
-		bhlog.setEventTimeStamp(event.getEventTimeStamp());
+		bhlog.setUpdatedProperties(event.getUpdatedProperties().toArray(new String[0]));
+		bhlog.setEventTimeStamp(new Date(event.getEventTimestamp().getMillis()));
 		return bhlog;
 
 	}

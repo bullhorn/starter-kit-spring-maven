@@ -1,10 +1,9 @@
 package com.client.core.scheduledtasks.model.helper;
 
-import java.util.Map;
-
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
-import com.client.core.soap.model.SubscriptionEvent;
+
+import java.util.Map;
 
 public interface ScheduledTaskHelper {
 
@@ -14,7 +13,7 @@ public interface ScheduledTaskHelper {
 	 * 
 	 * @return
 	 */
-	public SubscriptionEvent getEvent();
+	public CustomSubscriptionEvent getEvent();
 
 	/**
 	 * Returns true if any of the field names passed in is part of the subscriptionEvent.updatedProperties

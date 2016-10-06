@@ -1,10 +1,10 @@
 package com.client.core.scheduledtasks.workflow.traversing.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.client.core.soap.model.SubscriptionEvent;
-import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
-import com.client.core.scheduledtasks.tools.enumeration.EventType;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.impl.PlacementScheduledTaskHelper;
+import com.client.core.scheduledtasks.tools.enumeration.EventType;
+import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
 
 /**
  * A Traverser is passed through a Node work flow and it's instance variables are set for future Event handling.
@@ -15,12 +15,12 @@ import com.client.core.scheduledtasks.model.helper.impl.PlacementScheduledTaskHe
 
 public class PlacementEventTraverser extends AbstractScheduledTasksTraverser<PlacementScheduledTaskHelper> {
 
-	public PlacementEventTraverser(SubscriptionEvent event) {
+	public PlacementEventTraverser(CustomSubscriptionEvent event) {
 		super(new PlacementScheduledTaskHelper(event), EventType.getType(event.getEventType()));
 
 	}
 
-	public PlacementEventTraverser(SubscriptionEvent event, BullhornData bullhornData) {
+	public PlacementEventTraverser(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		super(new PlacementScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEventType()));
 	}
 }

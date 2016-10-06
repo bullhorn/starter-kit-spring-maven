@@ -1,15 +1,5 @@
 package com.client.core.base.tools.test;
 
-import java.text.DateFormat;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import com.bullhorn.apiservice.query.DtoQuery;
 import com.bullhorn.entity.AbstractDto;
 import com.bullhorn.entity.ApiEntityName;
@@ -19,36 +9,23 @@ import com.bullhorn.entity.candidate.CandidateWorkHistoryDto;
 import com.bullhorn.entity.job.JobOrderDto;
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.core.ApplicationSettings;
-import com.client.core.soap.service.BullhornAPI;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.client.core.formtrigger.model.form.impl.*;
+import com.client.core.formtrigger.workflow.traversing.impl.*;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
-import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
-import com.client.core.formtrigger.model.form.impl.FormClientContactDto;
-import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
-import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
-import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
-import com.client.core.formtrigger.model.form.impl.FormNoteDto;
-import com.client.core.formtrigger.model.form.impl.FormPlacementChangeRequestDto;
-import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
-import com.client.core.formtrigger.workflow.traversing.impl.CandidateFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientContactFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientCorporationFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.JobSubmissionFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.JobFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.NoteFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementChangeRequestFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementFormTriggerTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.ClientContactEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.JobEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.JobSubmissionEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementChangeRequestEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.SendoutEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.*;
+import com.client.core.soap.service.BullhornAPI;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.text.DateFormat;
+import java.util.*;
 
 public class TestUtil {
 
@@ -69,66 +46,66 @@ public class TestUtil {
 		super();
 	}
 
-	public static SubscriptionEvent event(Integer entityID, ApiEntityName entityName, EventType eventType, String[] updatedProperties,
-			Integer updatingUserID) {
-		SubscriptionEvent event = new SubscriptionEvent();
-		event.setEntityID(entityID);
-		event.setEntityType(entityName.value());
+	public static CustomSubscriptionEvent event(Integer entityID, ApiEntityName entityName, EventType eventType, String[] updatedProperties,
+												Integer updatingUserID) {
+		CustomSubscriptionEvent event = new CustomSubscriptionEvent();
+		event.setEntityId(entityID);
+		event.setEntityName(entityName.value());
 		event.setEventType(eventType.value());
-		event.setUpdatedProperties(updatedProperties);
-		event.setUpdatingUserID(updatingUserID);
+		event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+		event.setUpdatingUserId(updatingUserID);
 		return event;
 	}
 
 	public JobSubmissionEventTraverser jobSubmissionEventTraverser(EventType eventType, String[] updatedProperties) {
-		SubscriptionEvent event = TestUtil.event(getTestEntities().getJobSubmissionId(), ApiEntityName.JOB_SUBMISSION, eventType,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobSubmissionId(), ApiEntityName.JOB_SUBMISSION, eventType,
 				updatedProperties, getTestEntities().getCorporateUserId());
 		return jobSubmissionEventTraverser(event);
 	}
 
 	public SendoutEventTraverser sendoutEventTraverser(EventType eventType, String[] updatedProperties) {
-		SubscriptionEvent event = TestUtil.event(getTestEntities().getSendoutId(), ApiEntityName.SENDOUT, eventType, updatedProperties,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getSendoutId(), ApiEntityName.SENDOUT, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return sendoutEventTraverser(event);
 	}
 
 	public PlacementEventTraverser placementEventTraverser(EventType eventType, String[] updatedProperties) {
-		SubscriptionEvent event = TestUtil.event(getTestEntities().getPlacementId(), ApiEntityName.PLACEMENT, eventType, updatedProperties,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getPlacementId(), ApiEntityName.PLACEMENT, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return placementEventTraverser(event);
 	}
 
 	public JobEventTraverser jobEventTraverser(EventType eventType, String[] updatedProperties) {
-		SubscriptionEvent event = TestUtil.event(getTestEntities().getJobOrderId(), ApiEntityName.JOB_ORDER, eventType, updatedProperties,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobOrderId(), ApiEntityName.JOB_ORDER, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return jobEventTraverser(event);
 	}
 
-	public JobSubmissionEventTraverser jobSubmissionEventTraverser(SubscriptionEvent event) {
+	public JobSubmissionEventTraverser jobSubmissionEventTraverser(CustomSubscriptionEvent event) {
 		return new JobSubmissionEventTraverser(event, bullhornData);
 	}
 
-	public PlacementEventTraverser placementEventTraverser(SubscriptionEvent event) {
+	public PlacementEventTraverser placementEventTraverser(CustomSubscriptionEvent event) {
 		return new PlacementEventTraverser(event, bullhornData);
 	}
 
-	public PlacementChangeRequestEventTraverser placementChangeRequestEventTraverser(SubscriptionEvent event) {
+	public PlacementChangeRequestEventTraverser placementChangeRequestEventTraverser(CustomSubscriptionEvent event) {
 		return new PlacementChangeRequestEventTraverser(event, bullhornData);
 	}
 
-	public CandidateEventTraverser candidateEventTraverser(SubscriptionEvent event) {
+	public CandidateEventTraverser candidateEventTraverser(CustomSubscriptionEvent event) {
 		return new CandidateEventTraverser(event, bullhornData);
 	}
 
-	public ClientContactEventTraverser clientContactEventTraverser(SubscriptionEvent event) {
+	public ClientContactEventTraverser clientContactEventTraverser(CustomSubscriptionEvent event) {
 		return new ClientContactEventTraverser(event, bullhornData);
 	}
 
-	public SendoutEventTraverser sendoutEventTraverser(SubscriptionEvent event) {
+	public SendoutEventTraverser sendoutEventTraverser(CustomSubscriptionEvent event) {
 		return new SendoutEventTraverser(event, bullhornData);
 	}
 
-	public JobEventTraverser jobEventTraverser(SubscriptionEvent event) {
+	public JobEventTraverser jobEventTraverser(CustomSubscriptionEvent event) {
 		return new JobEventTraverser(event, bullhornData);
 	}
 

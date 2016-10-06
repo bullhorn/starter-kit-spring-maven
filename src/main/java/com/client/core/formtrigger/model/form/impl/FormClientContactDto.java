@@ -1,11 +1,7 @@
 package com.client.core.formtrigger.model.form.impl;
 
 import com.bullhorn.entity.client.ClientContactDto;
-import com.bullhornsdk.data.model.entity.core.standard.Category;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.Person;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.util.Util;
 import com.client.core.formtrigger.model.form.AbstractFormDto;

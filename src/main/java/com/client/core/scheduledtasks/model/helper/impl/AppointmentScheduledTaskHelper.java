@@ -6,7 +6,7 @@ import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 
 /**
@@ -22,8 +22,7 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * the same dto.
  * 
  * @author magnus.palm
- * 
- * @param <T>
+ *
  */
 public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -34,7 +33,7 @@ public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper 
 	private CorporateUser appointmentOwner;
 	private Placement placement;
 
-	public AppointmentScheduledTaskHelper(SubscriptionEvent event) {
+	public AppointmentScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
@@ -47,7 +46,7 @@ public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper 
 	 */
 	public Appointment getAppointment() {
 		if (appointment == null) {
-			setAppointment(findAppointment(getEvent().getEntityID()));
+			setAppointment(findAppointment(getEvent().getEntityId()));
 		}
 		return appointment;
 	}

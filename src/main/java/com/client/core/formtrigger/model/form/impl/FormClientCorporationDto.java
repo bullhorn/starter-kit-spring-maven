@@ -1,21 +1,18 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.CorporationDepartment;
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.client.ClientCorporationDto;
 import com.bullhorn.entity.emb.AddressWithoutCountry;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.bullhornsdk.data.model.entity.core.standard.CorporationDepartment;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.bullhornsdk.data.model.entity.embedded.LinkedId;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
+import org.apache.log4j.Logger;
 
 /**
  * Used to get values from bullhorn client corporation form and convert these to the regular ClientCorporationDto
  * 
  * @author magnus.palm
  * 
- * @param <ClientCorporation>
  */
 public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation> {
 
@@ -850,10 +847,11 @@ public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation>
 		clientCorporation.setDateAdded(null);
 		clientCorporation.setDateFounded(null);
 
-		CorporationDepartment department = new CorporationDepartment();
-		department.setId(departmentID);
+		CorporationDepartment corporationDepartment = new CorporationDepartment();
+		corporationDepartment.setId(departmentID);
 
-		clientCorporation.setDepartment(department);
+		clientCorporation.setDepartment(corporationDepartment);
+
 		clientCorporation.setExternalID(externalID);
 		clientCorporation.setFax(fax);
 		clientCorporation.setFeeArrangement(toBigDecimal(feeArrangement, "feeArrangement"));

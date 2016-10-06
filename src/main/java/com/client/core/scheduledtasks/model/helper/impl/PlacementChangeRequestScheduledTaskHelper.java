@@ -1,15 +1,9 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a has been fetched using the BH api it will be stored in this
@@ -35,12 +29,12 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 	private ClientContact clientContact;
 	private CorporateUser candidateOwner;
 
-	public PlacementChangeRequestScheduledTaskHelper(SubscriptionEvent event) {
+	public PlacementChangeRequestScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
 
-	public PlacementChangeRequestScheduledTaskHelper(SubscriptionEvent event, BullhornData bullhornData) {
+	public PlacementChangeRequestScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		super(event,bullhornData);
 	}
 
@@ -52,7 +46,7 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 	 */
 	public PlacementChangeRequest getPlacementChangeRequest() {
 		if (placementChangeRequest == null) {
-			setPlacementChangeRequest(findPlacementChangeRequest(getEvent().getEntityID()));
+			setPlacementChangeRequest(findPlacementChangeRequest(getEvent().getEntityId()));
 		}
 		return placementChangeRequest;
 	}

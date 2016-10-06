@@ -1,14 +1,8 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.Task;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -24,7 +18,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -36,14 +29,14 @@ public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private CorporateUser taskOwner;
 	private ClientContact clientContact;
 
-	public TaskScheduledTaskHelper(SubscriptionEvent event) {
+	public TaskScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
 
 	public Task getTask() {
 		if (task == null) {
-			setTask(findTask(getEvent().getEntityID()));
+			setTask(findTask(getEvent().getEntityId()));
 		}
 		return task;
 	}

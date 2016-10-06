@@ -1,8 +1,8 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it will be
@@ -23,14 +23,14 @@ public class CorporateUserScheduledTaskHelper extends AbstractScheduledTaskHelpe
 
 	private CorporateUser corporateUser;
 
-	public CorporateUserScheduledTaskHelper(SubscriptionEvent event) {
+	public CorporateUserScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
 
 	public CorporateUser getCorporateUser() {
 		if (corporateUser == null) {
-			setCorporateUser(findCorporateUser(getEvent().getEntityID()));
+			setCorporateUser(findCorporateUser(getEvent().getEntityId()));
 		}
 		return corporateUser;
 	}

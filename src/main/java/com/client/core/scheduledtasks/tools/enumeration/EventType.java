@@ -8,14 +8,17 @@ public enum EventType {
      * An insert event
      */
 	INSERT("INSERT"),
+	INSERTED("INSERTED"),
     /**
      * An update event
      */
     UPDATE("UPDATE"),
+	UPDATED("UPDATED"),
     /**
      * A delete event
      */
-    DELETE("DELETE");
+    DELETE("DELETE"),
+	DELETED("DELETED");
 
 	private final String value;
 

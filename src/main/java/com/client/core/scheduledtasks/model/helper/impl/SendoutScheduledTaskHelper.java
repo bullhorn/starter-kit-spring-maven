@@ -1,14 +1,9 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.Sendout;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it will be
@@ -23,7 +18,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author johnsully
  * 
- * @param <T>
  */
 public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	
@@ -34,11 +28,11 @@ public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private JobOrder jobOrder;
 	private CorporateUser sendingUser;
 
-	public SendoutScheduledTaskHelper(SubscriptionEvent event) {
+	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 	}
 
-	public SendoutScheduledTaskHelper(SubscriptionEvent event, BullhornData bullhornData) {
+	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		super(event,bullhornData);
 	}
 
@@ -50,7 +44,7 @@ public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	 */
 	public Sendout getSendout() {
 		if (sendout == null) {
-			setSendout(findSendout(getEvent().getEntityID()));
+			setSendout(findSendout(getEvent().getEntityId()));
 		}
 		return sendout;
 	}

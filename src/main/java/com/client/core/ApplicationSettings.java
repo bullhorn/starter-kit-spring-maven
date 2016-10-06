@@ -17,7 +17,7 @@ public class ApplicationSettings {
 
 	private int apiUserID;
 
-    private String corporationID;
+    private Integer corporationID;
 
 	private String privateLabelID;
 
@@ -69,11 +69,11 @@ public class ApplicationSettings {
         this.applicationDateFormat = applicationDateFormat;
     }
 
-    public String getCorporationID() {
+    public Integer getCorporationID() {
         return corporationID;
     }
 
-    public void setCorporationID(String corporationID) {
+    public void setCorporationID(Integer corporationID) {
         this.corporationID = corporationID;
     }
 

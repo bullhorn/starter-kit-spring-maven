@@ -3,8 +3,8 @@ package com.client.core.scheduledtasks.model.helper.impl;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -20,7 +20,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -28,14 +27,14 @@ public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private JobOrder job;
 	private CorporateUser commentingUser;
 
-	public NoteScheduledTaskHelper(SubscriptionEvent event) {
+	public NoteScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
 
 	public Note getNote() {
 		if (note == null) {
-			setNote(findNote(getEvent().getEntityID()));
+			setNote(findNote(getEvent().getEntityId()));
 		}
 		return note;
 	}

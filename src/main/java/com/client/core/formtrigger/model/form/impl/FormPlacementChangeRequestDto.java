@@ -1,15 +1,10 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import org.apache.log4j.Logger;
 
 import com.bullhorn.entity.job.PlacementChangeRequestDto;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
-import com.bullhornsdk.data.model.entity.embedded.LinkedId;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
+import org.apache.log4j.Logger;
 
 public class FormPlacementChangeRequestDto extends AbstractFormDto<PlacementChangeRequest> {
 	private Integer billingUserID;

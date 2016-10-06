@@ -1,7 +1,19 @@
 package com.client.core.scheduledtasks.service.eventHandling;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.client.BaseTest;
+import com.client.core.ApplicationSettings;
+import com.client.core.scheduledtasks.dao.BullhornLogDAO;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
+import com.client.core.scheduledtasks.tools.enumeration.EventType;
+import com.client.core.scheduledtasks.workers.EventProcessing;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,18 +22,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-
-import com.client.BaseTest;
-import com.client.core.ApplicationSettings;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
-import com.client.core.scheduledtasks.tools.enumeration.EventType;
-import com.client.core.scheduledtasks.workers.EventProcessing;
-import com.client.core.soap.model.SubscriptionEvent;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
 public class TestEventProcessing extends BaseTest {
@@ -33,7 +35,7 @@ public class TestEventProcessing extends BaseTest {
 	@Autowired
 	private BullhornLogDAO bullhornLogDAO;
 
-	private List<SubscriptionEvent> subscriptionEvents;
+	private List<CustomSubscriptionEvent> subscriptionEvents;
 	private String subscriptionName;
 	private int updatingUserID;
 	private int corporationID;
@@ -51,7 +53,7 @@ public class TestEventProcessing extends BaseTest {
 
 		List<String> eventTypes = createEventTypes();
 		Map<String, Integer>  entityTypes = createEntityTypes();
-		subscriptionEvents = new ArrayList<SubscriptionEvent>();
+		subscriptionEvents = new ArrayList<CustomSubscriptionEvent>();
 
 		int eventID = 1;
 		int requestID = 1;
@@ -60,7 +62,7 @@ public class TestEventProcessing extends BaseTest {
 			for (String eventType : eventTypes) {
 				eventID++;
 				requestID++;
-				SubscriptionEvent event = instantiateTestEvent(eventType, entity.getKey(), entity.getValue(), null, "" + eventID, ""
+				CustomSubscriptionEvent event = instantiateTestEvent(eventType, entity.getKey(), entity.getValue(), null, "" + eventID, ""
 						+ requestID);
 				subscriptionEvents.add(event);
 			}
@@ -97,19 +99,19 @@ public class TestEventProcessing extends BaseTest {
 		return eventTypes;
 	}
 
-	private SubscriptionEvent instantiateTestEvent(String eventType, String entityType, int entityID, String[] updatedProperties,
-			String eventId, String requestID) {
-		SubscriptionEvent se = new SubscriptionEvent();
+	private CustomSubscriptionEvent instantiateTestEvent(String eventType, String entityType, int entityID, String[] updatedProperties,
+														 String eventId, String requestID) {
+		CustomSubscriptionEvent se = new CustomSubscriptionEvent();
 		se.setEventType(eventType);
-		se.setEventID(eventId);
-		se.setRequestID(requestID);
-		se.setEntityType(entityType);
-		se.setEntityID(entityID);
-		se.setUpdatedProperties(updatedProperties);
-		se.setEventTimeStamp(new java.util.Date().getTime());
+		se.setEventId(eventId);
+		se.setRequestId(Integer.parseInt(requestID));
+		se.setEntityName(entityType);
+		se.setEntityId(entityID);
+		se.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+		se.setEventTimestamp(DateTime.now());
 		se.setSubscriptionName(subscriptionName);
 		se.setError(false);
-		se.setUpdatingUserID(updatingUserID);
+		se.setUpdatingUserId(updatingUserID);
 
 		return se;
 	}
@@ -127,7 +129,7 @@ public class TestEventProcessing extends BaseTest {
 		// set to 1 in stax-web numEventThreads if single threaded processing is required
 		ExecutorService exec = Executors.newFixedThreadPool(appSettings.getNumEventThreads());
 		// loop through each event
-		for (SubscriptionEvent event : subscriptionEvents) {
+		for (CustomSubscriptionEvent event : subscriptionEvents) {
 			error = false;
             EventProcessing processEvent = EventProcessing.instantiateRunnable(corporationID, bullhornLogDAO, event);
 			// send to exec service
@@ -138,7 +140,7 @@ public class TestEventProcessing extends BaseTest {
 
 			}
 
-			assertFalse("Error with entity: " + event.getEntityType() + ", event type: " + event.getEventType(), error);
+			assertFalse("Error with entity: " + event.getEntityName() + ", event type: " + event.getEventType(), error);
 		}
 
 		// shutdown pool, wait until it's done
