@@ -35,12 +35,14 @@ public class CustomSubscriptionEvent{
         customSubscriptionEvent.setEntityName(event.getEntityName());
         customSubscriptionEvent.setEntityEventType(event.getEntityEventType());
         customSubscriptionEvent.setEventTimestamp(event.getEventTimestamp());
-        customSubscriptionEvent.setUpdatedProperties(Sets.newHashSet(event.getUpdatedProperties()));
         customSubscriptionEvent.setEventMetadata(event.getEventMetadata());
-
         customSubscriptionEvent.setSubscriptionName(subscriptionName);
         customSubscriptionEvent.setRequestId(requestId);
         customSubscriptionEvent.setError(isError);
+
+        if(event.getUpdatedProperties() != null) {
+            customSubscriptionEvent.setUpdatedProperties(Sets.newHashSet(event.getUpdatedProperties()));
+        }
 
         if(event.getEventMetadata().containsKey("PERSON_ID")){
             customSubscriptionEvent.setUpdatingUserId(Integer.parseInt(event.getEventMetadata().get("PERSON_ID")));
