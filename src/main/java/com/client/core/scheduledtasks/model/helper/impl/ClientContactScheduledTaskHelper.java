@@ -5,7 +5,7 @@ import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -28,12 +28,12 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	private ClientContact clientContact;
 	private CorporateUser clientContactOwner;
 
-	public ClientContactScheduledTaskHelper(StandardEvent event) {
+	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
 	
-	public ClientContactScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
+	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		super(event);
 
 	}

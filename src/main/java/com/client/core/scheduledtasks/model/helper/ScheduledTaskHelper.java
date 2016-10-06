@@ -13,7 +13,7 @@ public interface ScheduledTaskHelper {
 	 * 
 	 * @return
 	 */
-	public StandardEvent getEvent();
+	public CustomSubscriptionEvent getEvent();
 
 	/**
 	 * Returns true if any of the field names passed in is part of the subscriptionEvent.updatedProperties

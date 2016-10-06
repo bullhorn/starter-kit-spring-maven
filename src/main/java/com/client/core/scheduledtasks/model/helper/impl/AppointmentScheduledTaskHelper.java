@@ -6,8 +6,7 @@ import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 
 /**
@@ -34,7 +33,7 @@ public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper 
 	private CorporateUser appointmentOwner;
 	private Placement placement;
 
-	public AppointmentScheduledTaskHelper(StandardEvent event) {
+	public AppointmentScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}

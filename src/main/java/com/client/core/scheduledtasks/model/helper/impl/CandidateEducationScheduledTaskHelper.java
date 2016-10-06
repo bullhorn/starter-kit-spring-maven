@@ -4,7 +4,7 @@ import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a Dto has been fetched using the BH api it will be
@@ -26,7 +26,7 @@ public class CandidateEducationScheduledTaskHelper extends AbstractScheduledTask
 	private Candidate candidate;
 	private CorporateUser candidateOwner;
 
-	public CandidateEducationScheduledTaskHelper(StandardEvent event) {
+	public CandidateEducationScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 	}
 

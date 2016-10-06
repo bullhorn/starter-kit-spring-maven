@@ -6,7 +6,6 @@ import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
 import com.client.core.AppContext;
 import com.client.core.base.tools.copy.KryoObjectCopyHelper;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.soap.service.BullhornAPI;
 import com.google.common.collect.Sets;
 import org.apache.log4j.Logger;
@@ -17,13 +16,13 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 
 	private final BullhornData bullhornData;
 	private final BullhornAPI bullhornApiSoap;
-	private final StandardEvent event;
+	private final CustomSubscriptionEvent event;
 	private final Map<String, UpdateEntity> allEntitiesToSaveBackToBH;
 
 	private CorporateUser updatingUser;
 	private final Logger log = Logger.getLogger(AbstractScheduledTaskHelper.class);
 
-	public AbstractScheduledTaskHelper(StandardEvent event) {
+	public AbstractScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super();
 		this.bullhornData = AppContext.getApplicationContext().getBean("bullhornData", BullhornData.class);
 		this.bullhornApiSoap = AppContext.getApplicationContext().getBean("bullhornapi", BullhornAPI.class);
@@ -31,7 +30,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 		this.allEntitiesToSaveBackToBH = new HashMap<String, UpdateEntity>();
 	}
 
-	public AbstractScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
+	public AbstractScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		this.bullhornData = bullhornData;
 		this.bullhornApiSoap = AppContext.getApplicationContext().getBean("bullhornapi", BullhornAPI.class);
 		this.event = event;
@@ -56,7 +55,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 
 	@Override
 	public boolean fieldWasUpdated(String... fieldsToCheck) {
-		List<String> updatedProperties = event.getUpdatedProperties();
+		Set<String> updatedProperties = event.getUpdatedProperties();
 
 		if (updatedProperties == null || updatedProperties.size() < 1) {
 			return false;
@@ -66,10 +65,8 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 			return false;
 		}
 
-		Set<String> updatedPropertiesAsSet = Sets.newHashSet(updatedProperties);
-
 		for (String field : Arrays.asList(fieldsToCheck)) {
-			if (updatedPropertiesAsSet.contains(field)) {
+			if (updatedProperties.contains(field)) {
 				return true;
 			}
 		}
@@ -86,7 +83,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 	 */
 	public CorporateUser getUpdatingUser() {
 		if (updatingUser == null) {
-			setUpdatingUser(findCorporateUser(Integer.parseInt(event.getEventMetadata().get("userID"))));
+			setUpdatingUser(findCorporateUser(event.getUpdatingUserId()));
 		}
 		return updatingUser;
 	}
@@ -105,7 +102,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 	}
 
 	@Override
-	public StandardEvent getEvent() {
+	public CustomSubscriptionEvent getEvent() {
 		return event;
 	}
 

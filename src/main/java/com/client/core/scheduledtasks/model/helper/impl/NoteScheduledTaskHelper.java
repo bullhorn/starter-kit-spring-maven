@@ -4,7 +4,7 @@ import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -27,7 +27,7 @@ public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private JobOrder job;
 	private CorporateUser commentingUser;
 
-	public NoteScheduledTaskHelper(StandardEvent event) {
+	public NoteScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}

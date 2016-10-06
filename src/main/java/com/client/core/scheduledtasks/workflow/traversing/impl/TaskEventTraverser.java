@@ -1,6 +1,6 @@
 package com.client.core.scheduledtasks.workflow.traversing.impl;
 
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.impl.TaskScheduledTaskHelper;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
@@ -14,7 +14,7 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 
 public class TaskEventTraverser extends AbstractScheduledTasksTraverser<TaskScheduledTaskHelper> {
 
-	public TaskEventTraverser(StandardEvent event) {
+	public TaskEventTraverser(CustomSubscriptionEvent event) {
 		super(new TaskScheduledTaskHelper(event), EventType.getType(event.getEventType()));
 	}
 

@@ -3,7 +3,7 @@ package com.client.core.scheduledtasks.model.helper.impl;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -29,12 +29,12 @@ public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private ClientContact clientContact;
 	private CorporateUser candidateOwner;
 
-	public PlacementScheduledTaskHelper(StandardEvent event) {
+	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}
 
-	public PlacementScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
+	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		super(event,bullhornData);
 	}
 

@@ -1,7 +1,7 @@
 package com.client.core.scheduledtasks.workflow.traversing.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.impl.PlacementScheduledTaskHelper;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
@@ -15,12 +15,12 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 
 public class PlacementEventTraverser extends AbstractScheduledTasksTraverser<PlacementScheduledTaskHelper> {
 
-	public PlacementEventTraverser(StandardEvent event) {
+	public PlacementEventTraverser(CustomSubscriptionEvent event) {
 		super(new PlacementScheduledTaskHelper(event), EventType.getType(event.getEventType()));
 
 	}
 
-	public PlacementEventTraverser(StandardEvent event, BullhornData bullhornData) {
+	public PlacementEventTraverser(CustomSubscriptionEvent event, BullhornData bullhornData) {
 		super(new PlacementScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEventType()));
 	}
 }

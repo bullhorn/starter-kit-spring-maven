@@ -11,7 +11,7 @@ import com.bullhornsdk.data.api.BullhornData;
 import com.client.core.ApplicationSettings;
 import com.client.core.formtrigger.model.form.impl.*;
 import com.client.core.formtrigger.workflow.traversing.impl.*;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workflow.traversing.impl.*;
 import com.client.core.soap.service.BullhornAPI;
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -45,66 +46,66 @@ public class TestUtil {
 		super();
 	}
 
-	public static StandardEvent event(Integer entityID, ApiEntityName entityName, EventType eventType, String[] updatedProperties,
-									  Integer updatingUserID) {
-		StandardEvent event = new StandardEvent();
+	public static CustomSubscriptionEvent event(Integer entityID, ApiEntityName entityName, EventType eventType, String[] updatedProperties,
+												Integer updatingUserID) {
+		CustomSubscriptionEvent event = new CustomSubscriptionEvent();
 		event.setEntityId(entityID);
 		event.setEntityName(entityName.value());
 		event.setEventType(eventType.value());
-		event.setUpdatedProperties(Lists.newArrayList(updatedProperties));
+		event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
 		event.setUpdatingUserId(updatingUserID);
 		return event;
 	}
 
 	public JobSubmissionEventTraverser jobSubmissionEventTraverser(EventType eventType, String[] updatedProperties) {
-		StandardEvent event = TestUtil.event(getTestEntities().getJobSubmissionId(), ApiEntityName.JOB_SUBMISSION, eventType,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobSubmissionId(), ApiEntityName.JOB_SUBMISSION, eventType,
 				updatedProperties, getTestEntities().getCorporateUserId());
 		return jobSubmissionEventTraverser(event);
 	}
 
 	public SendoutEventTraverser sendoutEventTraverser(EventType eventType, String[] updatedProperties) {
-		StandardEvent event = TestUtil.event(getTestEntities().getSendoutId(), ApiEntityName.SENDOUT, eventType, updatedProperties,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getSendoutId(), ApiEntityName.SENDOUT, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return sendoutEventTraverser(event);
 	}
 
 	public PlacementEventTraverser placementEventTraverser(EventType eventType, String[] updatedProperties) {
-		StandardEvent event = TestUtil.event(getTestEntities().getPlacementId(), ApiEntityName.PLACEMENT, eventType, updatedProperties,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getPlacementId(), ApiEntityName.PLACEMENT, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return placementEventTraverser(event);
 	}
 
 	public JobEventTraverser jobEventTraverser(EventType eventType, String[] updatedProperties) {
-		StandardEvent event = TestUtil.event(getTestEntities().getJobOrderId(), ApiEntityName.JOB_ORDER, eventType, updatedProperties,
+		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobOrderId(), ApiEntityName.JOB_ORDER, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return jobEventTraverser(event);
 	}
 
-	public JobSubmissionEventTraverser jobSubmissionEventTraverser(StandardEvent event) {
+	public JobSubmissionEventTraverser jobSubmissionEventTraverser(CustomSubscriptionEvent event) {
 		return new JobSubmissionEventTraverser(event, bullhornData);
 	}
 
-	public PlacementEventTraverser placementEventTraverser(StandardEvent event) {
+	public PlacementEventTraverser placementEventTraverser(CustomSubscriptionEvent event) {
 		return new PlacementEventTraverser(event, bullhornData);
 	}
 
-	public PlacementChangeRequestEventTraverser placementChangeRequestEventTraverser(StandardEvent event) {
+	public PlacementChangeRequestEventTraverser placementChangeRequestEventTraverser(CustomSubscriptionEvent event) {
 		return new PlacementChangeRequestEventTraverser(event, bullhornData);
 	}
 
-	public CandidateEventTraverser candidateEventTraverser(StandardEvent event) {
+	public CandidateEventTraverser candidateEventTraverser(CustomSubscriptionEvent event) {
 		return new CandidateEventTraverser(event, bullhornData);
 	}
 
-	public ClientContactEventTraverser clientContactEventTraverser(StandardEvent event) {
+	public ClientContactEventTraverser clientContactEventTraverser(CustomSubscriptionEvent event) {
 		return new ClientContactEventTraverser(event, bullhornData);
 	}
 
-	public SendoutEventTraverser sendoutEventTraverser(StandardEvent event) {
+	public SendoutEventTraverser sendoutEventTraverser(CustomSubscriptionEvent event) {
 		return new SendoutEventTraverser(event, bullhornData);
 	}
 
-	public JobEventTraverser jobEventTraverser(StandardEvent event) {
+	public JobEventTraverser jobEventTraverser(CustomSubscriptionEvent event) {
 		return new JobEventTraverser(event, bullhornData);
 	}
 

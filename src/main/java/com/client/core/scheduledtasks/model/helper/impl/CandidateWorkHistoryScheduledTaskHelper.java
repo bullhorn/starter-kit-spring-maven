@@ -4,7 +4,7 @@ import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateWorkHistory;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it will be
@@ -26,7 +26,7 @@ public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTa
 	private Candidate candidate;
 	private CorporateUser candidateOwner;
 
-	public CandidateWorkHistoryScheduledTaskHelper(StandardEvent event) {
+	public CandidateWorkHistoryScheduledTaskHelper(CustomSubscriptionEvent event) {
 		super(event);
 
 	}

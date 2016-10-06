@@ -2,7 +2,7 @@ package com.client.core.scheduledtasks.workers;
 
 import java.util.List;
 
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
@@ -39,11 +39,11 @@ public class EventProcessing implements Runnable {
 	private final Logger log = Logger.getLogger(getClass());
 	
 	private final BullhornLogDAO bullhornLogDAO;
-	private final StandardEvent event;
+	private final CustomSubscriptionEvent event;
 	private final Integer corporationID;
 	private final ApplicationContext appContext;
 	
-	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, StandardEvent event) {
+	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event) {
 		super();
 		this.corporationID = corporationID;
 		this.bullhornLogDAO = bullhornLogDAO;
@@ -51,7 +51,7 @@ public class EventProcessing implements Runnable {
 		this.appContext = AppContext.getApplicationContext();
 	}
 
-	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, StandardEvent event) {
+	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event) {
 		return new EventProcessing(corporationID, bullhornLogDAO, event);
 	}
 

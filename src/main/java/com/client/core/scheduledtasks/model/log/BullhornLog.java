@@ -1,6 +1,6 @@
 package com.client.core.scheduledtasks.model.log;
 
-import com.client.core.scheduledtasks.model.helper.StandardEvent;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
 import java.sql.Date;
 
@@ -20,7 +20,7 @@ public class BullhornLog {
 	private String[] updatedProperties;
 	private Date eventTimeStamp;
 
-	public static BullhornLog instantiateLog(StandardEvent event, int corporationID) {
+	public static BullhornLog instantiateLog(CustomSubscriptionEvent event, int corporationID) {
 		BullhornLog bhlog = new BullhornLog();
 		bhlog.setCorporationID(corporationID);
 		bhlog.setEntity(event.getEntityName());
