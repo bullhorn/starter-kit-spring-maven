@@ -59,7 +59,11 @@ public class TestAbstractScheduledTaskHelper extends BaseTest {
 		event.setEntityEventType("CANDIDATE");
 		event.setEventId("123");
 		event.setError(false);
-		event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+
+		if(updatedProperties != null) {
+			event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+		}
+
 		event.setUpdatingUserId(1);
 		return event;
 	}

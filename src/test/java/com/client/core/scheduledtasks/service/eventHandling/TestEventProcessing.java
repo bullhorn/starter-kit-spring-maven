@@ -107,7 +107,11 @@ public class TestEventProcessing extends BaseTest {
 		se.setRequestId(Integer.parseInt(requestID));
 		se.setEntityName(entityType);
 		se.setEntityId(entityID);
-		se.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+
+		if(updatedProperties != null) {
+			se.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+		}
+
 		se.setEventTimestamp(DateTime.now());
 		se.setSubscriptionName(subscriptionName);
 		se.setError(false);
