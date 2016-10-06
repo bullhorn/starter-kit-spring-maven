@@ -21,7 +21,9 @@ public class ApplicationSettings {
 
 	private String privateLabelID;
 
-    private String numEventThreads;
+    private Integer numEventThreads;
+
+    private Integer numEventsPerBatch;
 
 	private String standardSubscriptionName;
 
@@ -75,12 +77,20 @@ public class ApplicationSettings {
         this.corporationID = corporationID;
     }
 
-    public String getNumEventThreads() {
+    public Integer getNumEventThreads() {
         return numEventThreads;
     }
 
-    public void setNumEventThreads(String numEventThreads) {
+    public void setNumEventThreads(Integer numEventThreads) {
         this.numEventThreads = numEventThreads;
+    }
+
+    public Integer getNumEventsPerBatch() {
+        return numEventsPerBatch;
+    }
+
+    public void setNumEventsPerBatch(Integer numEventsPerBatch) {
+        this.numEventsPerBatch = numEventsPerBatch;
     }
 
     public String getPassword() {

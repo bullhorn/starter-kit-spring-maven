@@ -61,15 +61,16 @@
 				<property name="generateDdl" value="${hibernate.generateDdl}" />
 			</bean>
 		</property>
+        <property name="persistenceUnitName" value="mainPersistenceUnit" />
 	</bean>
+
+    <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-
-
-	<!-- Needed for EntityManagerFactory -->
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
 
 	<!-- DAO BEANS -->
@@ -82,6 +83,7 @@
     </bean>
 
 	<bean id="appSettings" class="com.client.core.ApplicationSettings">
+        <property name="profileName" value="${profilename}" />
 		<property name="username" value="${apiusername}" />
 		<property name="password" value="${apipassword}" />
 		<property name="apiKey" value="${apikey}" />
@@ -89,6 +91,7 @@
 		<property name="apiUserID" value="${apiUserID}" />
 		<property name="privateLabelID" value="${privateLabelID}" />
 		<property name="numEventThreads" value="${numEventThreads}" />
+        <property name="numEventsPerBatch" value="${numEventsPerBatch}" />
 		<property name="corporationID" value="${corporationID}" />
 		<property name="applicationDateFormat" value="${applicationDateFormat}" />
 		<property name="standardCronExpression" value="${standardCronExpression}" />
@@ -113,6 +116,8 @@
         <property name="password" value="${mail.password}" />
         <property name="sender" value="${mail.sender}" />
         <property name="senderName" value="${mail.senderName}" />
+        <property name="disabled" value="${mail.disabled}" />
+        <property name="routeToWhenDisabled" value="${mail.routeToWhenDisabled}" />
     </bean>
 
 	<bean id="bullhornapi" class="com.client.core.soap.service.impl.BullhornAPISoap">

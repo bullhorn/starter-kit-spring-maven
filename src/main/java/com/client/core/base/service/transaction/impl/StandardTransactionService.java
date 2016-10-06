@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.client.core.base.dao.GenericDao;
 import com.client.core.base.model.jpa.JpaEntity;
 import com.client.core.base.service.transaction.TransactionService;
+import com.client.core.base.tools.data.QueryResult;
 
 /**
  * Service used to wrap DAO calls with @{@link org.springframework.transaction.annotation.Transactional} annotations
@@ -85,6 +86,23 @@ public class StandardTransactionService<T extends JpaEntity<PK>, PK> implements 
 		return genericDao.query(queryString, queryParameters);
 	}
 
+    @Override
+    public List<T> query(String queryString, Map<String, Object> queryParameters, Integer limit) {
+        return genericDao.query(queryString, queryParameters, limit);
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer limit, Integer start) {
+        return genericDao.query(queryString, queryParameters, limit, start);
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public Long getCount(String queryString, Map<String, Object> queryParameters) {
+        return genericDao.getCount(queryString, queryParameters);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -100,4 +118,8 @@ public class StandardTransactionService<T extends JpaEntity<PK>, PK> implements 
 		return updatedEntities;
 	}
 
+    @Override
+    public Class<T> getType() {
+        return genericDao.getType();
+    }
 }

@@ -1,5 +1,6 @@
 package com.client.core.formtrigger.model.form.impl;
 
+
 import com.bullhorn.entity.job.PlacementChangeRequestDto;
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.formtrigger.model.form.AbstractFormDto;

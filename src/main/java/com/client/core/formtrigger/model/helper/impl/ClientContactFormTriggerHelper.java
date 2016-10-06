@@ -2,9 +2,9 @@ package com.client.core.formtrigger.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.client.core.base.model.helper.impl.ClientContactTriggerHelper;
 import com.client.core.formtrigger.model.form.impl.FormClientContactDto;
-import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
+import com.client.core.formtrigger.model.helper.FormTriggerHelper;
 
 /**
  * Holds and keeps data needed for validations to minimize the number of API calls.
@@ -14,28 +14,27 @@ import com.client.core.formtrigger.model.helper.AbstractFormTriggerHelper;
  * @author magnus.palm
  * 
  */
-public class ClientContactFormTriggerHelper extends AbstractFormTriggerHelper<FormClientContactDto, ClientContact> {
+public class ClientContactFormTriggerHelper extends ClientContactTriggerHelper implements FormTriggerHelper<FormClientContactDto, ClientContact> {
 
-	private ClientCorporation clientCorporation;
+	private final FormClientContactDto formClientContactDto;
 
 	public ClientContactFormTriggerHelper(FormClientContactDto formClientContactDto, Integer updatingUserID, BullhornData bullhornData) {
-		super(formClientContactDto, updatingUserID, bullhornData);
+		super(updatingUserID, bullhornData);
+		this.formClientContactDto = formClientContactDto;
 	}
 
-    public ClientContactFormTriggerHelper(ClientContact clientContact, Integer updatingUserID, BullhornData bullhornData) {
-        super(FormClientContactDto.instantiateFromClientContact(clientContact), updatingUserID, bullhornData);
-        this.newEntity = clientContact;
-    }
-
-	public ClientCorporation getClientCorporation() {
-		if (clientCorporation == null) {
-			setClientCorporation(findClientCorporation(getFormValues().getClient_clientCorporationID()));
+	@Override
+	public ClientContact getNewEntity() {
+		if (newEntity == null) {
+			setNewEntity(formClientContactDto.instantiateEntity());
 		}
-		return clientCorporation;
+
+		return newEntity;
 	}
 
-	public void setClientCorporation(ClientCorporation clientCorporation) {
-		this.clientCorporation = clientCorporation;
+	@Override
+	public FormClientContactDto getFormValues() {
+		return formClientContactDto;
 	}
 
 }

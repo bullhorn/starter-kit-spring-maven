@@ -10,27 +10,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Lead;
 import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormLeadDto;
-import com.client.core.formtrigger.workflow.traversing.impl.LeadValidationTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.LeadFormTriggerTraverser;
 
 /**
  * Created by hiqbal on 12/23/2015.
  */
 @Controller
 @RequestMapping("/formtrigger/lead/*")
-public class LeadFormTriggerController extends AbstractFormTriggerController<Lead, LeadValidationTraverser> {
+public class LeadFormTriggerController extends AbstractFormTriggerController<Lead, LeadFormTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(LeadFormTriggerController.class);
 
     @Autowired
-    public LeadFormTriggerController(@Qualifier("leadValidationWorkflow") Node<LeadValidationTraverser> leadValidationWorkflow,
-                                     BullhornData bullhornData) {
-        super(bullhornData, Lead.class, leadValidationWorkflow);
+    public LeadFormTriggerController(@Qualifier("leadValidationWorkflow") Node<LeadFormTriggerTraverser> leadValidationWorkflow) {
+        super(Lead.class, leadValidationWorkflow);
     }
 
     /**
@@ -47,7 +45,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
     public String addEntity(@ModelAttribute FormLeadDto formLeadDto, @RequestParam("ft.userId") Integer updatingUserID) {
         log.info("---------------------------- Starting Lead Validation Process----------------------------------------");
 
-        LeadValidationTraverser traverser = new LeadValidationTraverser(formLeadDto, updatingUserID, false, bullhornData);
+        LeadFormTriggerTraverser traverser = new LeadFormTriggerTraverser(formLeadDto, updatingUserID, false, bullhornData);
 
         return handleRequest(traverser);
 
@@ -68,7 +66,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
 
         log.info("---------------------------- Starting Lead Validation Process----------------------------------------");
 
-        LeadValidationTraverser traverser = new LeadValidationTraverser(formLeadDto, updatingUserID, true, bullhornData);
+        LeadFormTriggerTraverser traverser = new LeadFormTriggerTraverser(formLeadDto, updatingUserID, true, bullhornData);
 
         return handleRequest(traverser);
     }

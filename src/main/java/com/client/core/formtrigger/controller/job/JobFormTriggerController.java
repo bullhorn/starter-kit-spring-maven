@@ -1,5 +1,9 @@
 package com.client.core.formtrigger.controller.job;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
-import com.client.core.formtrigger.workflow.traversing.impl.JobValidationTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.JobFormTriggerTraverser;
 
 /**
  * Entry point for Job Validations.
@@ -27,12 +30,13 @@ import com.client.core.formtrigger.workflow.traversing.impl.JobValidationTravers
 
 @Controller
 @RequestMapping("/formtrigger/job/*")
-public class JobFormTriggerController extends AbstractFormTriggerController<JobOrder, JobValidationTraverser> {
+public class JobFormTriggerController extends AbstractFormTriggerController<JobOrder, JobFormTriggerTraverser> {
+
+	private final Logger log = Logger.getLogger(JobFormTriggerController.class);
 
 	@Autowired
-	public JobFormTriggerController(@Qualifier("jobValidationWorkflow") Node<JobValidationTraverser> jobValidationWorkflow,
-			BullhornData bullhornData) {
-		super(bullhornData, JobOrder.class, jobValidationWorkflow);
+	public JobFormTriggerController(@Qualifier("jobValidationWorkflow") Node<JobFormTriggerTraverser> jobValidationWorkflow) {
+		super(JobOrder.class, jobValidationWorkflow);
 	}
 
 	/**
@@ -42,16 +46,20 @@ public class JobFormTriggerController extends AbstractFormTriggerController<JobO
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
+	 * @param response
+	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormJobOrderDto formJobOrderDto, @RequestParam("ft.userId") Integer updatingUserID) {
+	public String addEntity(@ModelAttribute FormJobOrderDto formJobOrderDto, @RequestParam("ft.userId") Integer updatingUserID,
+                            HttpServletResponse response, HttpServletRequest request) {
 		log.info("---------------------------- Starting Job Validation Process----------------------------------------");
 
-		JobValidationTraverser traverser = new JobValidationTraverser(formJobOrderDto, updatingUserID, false, bullhornData);
+		JobFormTriggerTraverser traverser = new JobFormTriggerTraverser(formJobOrderDto, updatingUserID, false,bullhornData);
 
 		return handleRequest(traverser);
+
 	}
 
 	/**
@@ -61,14 +69,18 @@ public class JobFormTriggerController extends AbstractFormTriggerController<JobO
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
+	 * @param response
+	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String editEntity(@ModelAttribute FormJobOrderDto formJobOrderDto, @RequestParam("ft.userId") Integer updatingUserID) {
-        log.info("---------------------------- Starting Job Validation Process----------------------------------------");
+	public String editEntity(@ModelAttribute FormJobOrderDto formJobOrderDto, @RequestParam("ft.userId") Integer updatingUserID,
+                             HttpServletResponse response, HttpServletRequest request) {
 
-		JobValidationTraverser traverser = new JobValidationTraverser(formJobOrderDto, updatingUserID, true,bullhornData);
+		log.info("---------------------------- Starting Client Corporation Validation Process----------------------------------------");
+
+		JobFormTriggerTraverser traverser = new JobFormTriggerTraverser(formJobOrderDto, updatingUserID, true,bullhornData);
 
 		return handleRequest(traverser);
 	}

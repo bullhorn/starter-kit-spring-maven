@@ -1,5 +1,9 @@
 package com.client.core.formtrigger.controller.note;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
 import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormNoteDto;
-import com.client.core.formtrigger.workflow.traversing.impl.NoteValidationTraverser;
+import com.client.core.formtrigger.workflow.traversing.impl.NoteFormTriggerTraverser;
 
 /**
  * Entry point for Job submission Validations.
@@ -27,12 +30,14 @@ import com.client.core.formtrigger.workflow.traversing.impl.NoteValidationTraver
 
 @Controller
 @RequestMapping("/formtrigger/note/*")
-public class NoteFormTriggerController extends AbstractFormTriggerController<Note, NoteValidationTraverser> {
+public class NoteFormTriggerController extends AbstractFormTriggerController<Note, NoteFormTriggerTraverser> {
+
+	private final Logger log = Logger.getLogger(NoteFormTriggerController.class);
 
 	@Autowired
-	public NoteFormTriggerController(@Qualifier("noteValidationWorkflow") Node<NoteValidationTraverser> noteValidationWorkflow,
-			BullhornData bullhornData) {
-		super(bullhornData, Note.class, noteValidationWorkflow);
+	public NoteFormTriggerController(@Qualifier("noteValidationWorkflow") Node<NoteFormTriggerTraverser> noteValidationWorkflow) {
+		super(Note.class, noteValidationWorkflow);
+
 	}
 
 	/**
@@ -42,14 +47,17 @@ public class NoteFormTriggerController extends AbstractFormTriggerController<Not
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
+	 * @param response
+	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormNoteDto formNoteDto, @RequestParam("ft.userId") Integer updatingUserID) {
+	public String addEntity(@ModelAttribute FormNoteDto formNoteDto, @RequestParam("ft.userId") Integer updatingUserID,
+                            HttpServletResponse response, HttpServletRequest request) {
 		log.info("---------------------------- Starting Note Validation Process----------------------------------------");
 
-		NoteValidationTraverser traverser = new NoteValidationTraverser(formNoteDto, updatingUserID, isEdit(formNoteDto),
+		NoteFormTriggerTraverser traverser = new NoteFormTriggerTraverser(formNoteDto, updatingUserID, isEdit(formNoteDto),
 				bullhornData);
 
 		return handleRequest(traverser);
@@ -64,11 +72,9 @@ public class NoteFormTriggerController extends AbstractFormTriggerController<Not
 	 */
 	private boolean isEdit(FormNoteDto formNoteDto) {
 		Integer userCommentID = formNoteDto.getUserCommentID();
-
 		if (userCommentID == null || userCommentID == -1) {
 			return false;
 		}
-
 		return true;
 	}
 

@@ -49,7 +49,7 @@ public class ScheduledEventProcessing implements Runnable {
 	public void run() {
 		try {
 
-			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, 100);
+			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.getNumEventsPerBatch());
 
 			if(eventResponse != null){
 				List<Event> events = eventResponse.getEvents();
@@ -63,7 +63,6 @@ public class ScheduledEventProcessing implements Runnable {
 				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + 0
 						+ " filteredEvents = " + 0);
 			}
-
 		} catch(RuntimeException e) {
 			log.error("Unknown error occurred during " + subscriptionName + "event handling.", e);
 		}
@@ -73,6 +72,7 @@ public class ScheduledEventProcessing implements Runnable {
 		if (subscriptionEvents.size() > 0) {
 
 			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.getNumEventThreads()));
+
 
 			for (StandardEvent event : subscriptionEvents) {
 				EventProcessing processEvent = EventProcessing.instantiateRunnable(

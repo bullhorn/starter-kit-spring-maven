@@ -12,7 +12,7 @@ public class TestJobSubmissionFormTriggerHelper extends
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getJobSubmissionValidationTraverser("Submitted", testEntities.getCandidateId()).getFormTriggerHelper();
+		this.helper = testUtil.getJobSubmissionFormTriggerTraverser("Submitted", testEntities.getCandidateId()).getTriggerHelper();
 	}
 
 	@Test

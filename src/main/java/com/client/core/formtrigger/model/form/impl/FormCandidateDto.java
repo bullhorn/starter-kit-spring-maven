@@ -1,16 +1,15 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.Person;
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.candidate.CandidateDto;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.Category;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.client.core.base.util.Util;
+import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.base.Strings;
+import org.apache.log4j.Logger;
 
 /**
  * Maps a candidate form in BH to a CandidateDto

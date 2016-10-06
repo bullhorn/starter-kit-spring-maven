@@ -1,23 +1,16 @@
 package com.client.core.datatables.service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import com.client.core.ApplicationSettings;
-import com.client.core.base.dao.GenericDao;
 import com.client.core.datatables.model.configuration.column.ColumnConfiguration;
-import com.client.core.soap.tools.property.DtoFieldChangeFactory;
 
 /**
  * 
@@ -43,62 +36,16 @@ public interface DataTablesService<T, ID> {
      * @return the ColumnConfiguration that the entity was mapped to
      * 
      */
-    public ColumnConfiguration convertEntityToColumns(T entity);
-
-    /**
-     * Takes a ColumnConfiguration and updates the passed in entity with the new values. Columns in convertEntityToColumns and
-     * convertColumnsToEntity have to correspond.
-     * 
-     * @param rowConfig
-     * @param oldEntity
-     *            the entity that will be updated
-     * @return the T entity
-     */
-    public T convertColumnsToEntity(ColumnConfiguration rowConfig, T oldEntity);
+    ColumnConfiguration convertEntityToColumns(T entity);
 
     /**
      * Entry point for getting, filtering, sorting, handle pagination and constructing JSONObject; the JSONObject is then written
      * to the response.
      * 
      * @param request
-     * @param response
      * @throws IOException
      */
-    public JSONObject processRequestForDataTables(HttpServletRequest request);
-
-    /**
-     * Retrieves the data. Gets a List<T> of all entities in table
-     * 
-     * @param tableRows
-     *            will be null if List is not in session
-     * @param useCache
-     *            If true data will be cached
-     * @param request
-     *            the HttpServletRequest containing all the information from the request. This can be used when overriding this
-     *            method to retrieve query params etc.
-     * @return the List<T>
-     */
-    public List<T> getData(List<T> tableRows, boolean useCache, HttpServletRequest request);
-
-    /**
-     * Retrieves all the data in the table. Gets a List<T> of all entities in table
-     * 
-     * @param tableRows
-     *            will be null if List is not in session
-     * @param useCache
-     *            If true data will be cached
-     * @return the List<T>
-     */
-    public List<T> findAll(List<T> tableRows, boolean useCache);
-
-    /**
-     * Updates an object of type T
-     * 
-     * @param transientObject
-     *            The object to be added/updated
-     * @return the object just added/updated
-     */
-    public T update(T transientObject);
+    JSONObject processRequestForDataTables(HttpServletRequest request);
 
     /**
      * Updates an object of type T
@@ -107,16 +54,7 @@ public interface DataTablesService<T, ID> {
      *            The object to be added/updated
      * @return the ID of the object just added/updated
      */
-    public ID updateAndReturnID(T transientObject);
-
-    /**
-     * Adds an object of type T
-     * 
-     * @param transientObject
-     *            The object to be added/updated
-     * @return the object just added/updated
-     */
-    public T add(T transientObject);
+    ID updateAndReturnID(T transientObject);
 
     /**
      * Adds an object of type T
@@ -125,7 +63,7 @@ public interface DataTablesService<T, ID> {
      *            The object to be added/updated
      * @return the ID of the object just added/updated
      */
-    public ID addAndReturnID(T transientObject);
+    ID addAndReturnID(T transientObject);
 
     /**
      * Get a T record using it's id
@@ -136,31 +74,7 @@ public interface DataTablesService<T, ID> {
      * @throws EntityNotFoundException
      *             when no entity with (primary key) ID exists
      */
-    public T find(ID id) throws EntityNotFoundException;
-
-
-    /**
-     * Method for custom query.
-     * 
-     * @param queryString
-     *            the query String with named parameters: Select a FROM TableName a WHERE a.field = :namedParam
-     * @param queryParameters
-     *            the named parameters corresponding to the :namedParam in the queryString. The key of the map need correspond to
-     *            namedParam while the value is the actual value used in the query.
-     * @return a List<T> of possible value, and empty List if no values found
-     */
-    public List<T> query(String queryString, Map<String, Object> queryParameters);
-
-    /**
-     * Deletes entity T from table.
-     * 
-     * @param T
-     *            Entity to delete
-     * @throws IllegalArgumentException
-     *             if the instance is not an entity or is a detached entity
-     * 
-     */
-    public void remove(T persistentObject) throws EntityNotFoundException;
+    T find(ID id) throws EntityNotFoundException;
 
     /**
      * Updates an existing entity of type T, using its primary key, the column position in the datatables of the field being
@@ -177,7 +91,7 @@ public interface DataTablesService<T, ID> {
      * @return potential validation errors
      */
 
-    public String editEntity(ID id, Integer columnPosition, Object value, HttpServletRequest request,
+    String editEntity(ID id, Integer columnPosition, Object value, HttpServletRequest request,
             HttpServletResponse response, Model model);
 
     /**
@@ -195,7 +109,7 @@ public interface DataTablesService<T, ID> {
      * @param response
      * @return The id of updated entity if success, if validations failed then validation messages, if error then error message.
      */
-    public String handleEntityFormEdit(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response);
+    String handleEntityFormEdit(T entity, ID entityID, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Deletes an entity using its primary key
@@ -206,7 +120,7 @@ public interface DataTablesService<T, ID> {
      * @throws EntityNotFoundException
      *             if no enity exists with the specified unique identifier
      */
-    public void removeUsingID(ID id) throws EntityNotFoundException;
+    void removeUsingID(ID id) throws EntityNotFoundException;
 
     /**
      * Validates an entity
@@ -217,31 +131,7 @@ public interface DataTablesService<T, ID> {
      * @return A string containing each validation error separated by <br/>
      *         for displaying on the jsp
      */
-    public String validateEntity(T entity);
-
-    /**
-     * Prepares a validation error message using Spring's BindingResult from an entity validation.
-     * 
-     * @param bindingResult
-     *            the validation result from an entity
-     * @param entity
-     *            the entity that was just validated, used to find the labels of particular fields to create prettier error
-     *            messages.
-     * @return A string containing each validation error separated by <br/>
-     *         for displaying on the jsp
-     */
-    public String prepareValidationErrorMessage(BindingResult bindingResult, T entity);
-
-    /**
-     * Adjusts the column position to account for hidden column missmatch between datatables columns and datatables-editable
-     * columns.
-     * 
-     * @param columnConfiguration
-     * @param columnPosition
-     *            the current column to check
-     * @return the new columns position
-     */
-    public Integer adjustColumnPositionDueToInvisibleColumns(ColumnConfiguration columnConfiguration, Integer columnPosition);
+    String validateEntity(T entity);
 
     /**
      * Method to handle custom column configurations, such as adding field maps or hiding columns based on user type etc. Modify
@@ -258,34 +148,8 @@ public interface DataTablesService<T, ID> {
      * @param model
      *            the Model
      */
-    public void additionalColumnConfiguration(ColumnConfiguration columnConfiguration, HttpServletRequest request,
-            HttpServletResponse response, Model model);
+    void additionalColumnConfiguration(ColumnConfiguration columnConfiguration, HttpServletRequest request, HttpServletResponse response, Model model);
 
-    public GenericDao<T, ID> getGenericDao();
-
-    public ApplicationSettings getAppSettings();
-
-    public Validator getValidator();
-
-    public DtoFieldChangeFactory getDtoFieldChangeFactory();
-
-    public Logger getLog();
-
-    /**
-     * Gets a message from a resource bundle.
-     * 
-     * @param key
-     *            The key of the message
-     * @return The message
-     */
-    public String getMessageUsingKey(String key);
-
-    /**
-     * Get a query from the passed in QueryHelper
-     * 
-     * @param key
-     * @return
-     */
-    public String getQueryUsingKey(String key);
+    Validator getValidator();
 
 }

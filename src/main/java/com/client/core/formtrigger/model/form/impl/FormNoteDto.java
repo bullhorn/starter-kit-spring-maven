@@ -1,13 +1,12 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.Person;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.note.NoteDto;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 public class FormNoteDto extends AbstractFormDto<Note> {
 

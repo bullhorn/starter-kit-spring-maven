@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -48,7 +47,7 @@ public class SessionFilter extends OncePerRequestFilter {
 		final String apiKey = getApiKeyFromRequest(request);
 
 		final String previouslyAuthorizedApiKeyEncrypted = getApiKeyFromSession(session);
-		final String url = ((HttpServletRequest) request).getRequestURL().toString();
+		final String url = request.getRequestURL().toString();
 
 		boolean allowIn = false;
 
@@ -65,7 +64,7 @@ public class SessionFilter extends OncePerRequestFilter {
 		if (allowIn == false) {
 			log.info("Attempt to get to page: " + url + " was blocked in the SessionFilter. Returning 401 unauthorized response.");
 
-			((HttpServletResponse) response).sendError(HttpStatus.UNAUTHORIZED.value());
+			response.sendError(HttpStatus.UNAUTHORIZED.value());
 		} else {
             filterChain.doFilter(request, response);
 		}
@@ -95,16 +94,16 @@ public class SessionFilter extends OncePerRequestFilter {
         return RC4.decodeAndDecrypt(previouslyAuthorizedApiKeyEncrypted, encryptionKey);
     }
 
-	private HttpSession getSession(ServletRequest request) {
-		return ((HttpServletRequest) request).getSession();
+	private HttpSession getSession(HttpServletRequest request) {
+		return request.getSession();
 	}
 
     private String getApiKeyFromSession(HttpSession session) {
         return (String) session.getAttribute(sessionStoredApiKeyName);
     }
 
-	private String getApiKeyFromRequest(ServletRequest request) {
-		String apiKey = ((HttpServletRequest) request).getParameter("apiKey");
+	private String getApiKeyFromRequest(HttpServletRequest request) {
+		String apiKey = request.getParameter("apiKey");
 
 		if (apiKey == null) {
 			apiKey = "";

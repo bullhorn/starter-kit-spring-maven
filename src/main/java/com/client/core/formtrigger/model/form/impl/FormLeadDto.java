@@ -1,13 +1,12 @@
 package com.client.core.formtrigger.model.form.impl;
 
 import com.bullhornsdk.data.model.entity.core.standard.*;
-import org.apache.log4j.Logger;
-
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.base.util.Utility;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 
 /**
  * Created by hiqbal on 12/22/2015.

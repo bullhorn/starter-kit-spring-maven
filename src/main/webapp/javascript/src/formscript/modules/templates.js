@@ -17,7 +17,7 @@ define(['swig', 'text!${applicationRoot}/templates/example.html'], function(swig
     var templates = {};
 
     $.each(configMap, function(name, html) {
-        templates[name] = swig.compileFile(html);
+        templates[name] = swig.compile(html);
     });
 
     return templates;

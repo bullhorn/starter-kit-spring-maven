@@ -1,12 +1,11 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.*;
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.client.ClientContactDto;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.client.core.base.util.Util;
+import com.client.core.formtrigger.model.form.AbstractFormDto;
+import org.apache.log4j.Logger;
 
 /**
  * Maps a client contact form in BH to a ClientContactDto

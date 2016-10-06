@@ -12,7 +12,7 @@ public class TestClientContactFormTriggerHelper extends
 
 	@Override
 	public void scaffoldThis() {
-		this.helper = testUtil.getClientContactValidationTraverser().getFormTriggerHelper();
+		this.helper = testUtil.getClientContactFormTriggerTraverser().getTriggerHelper();
 	}
 
 	@Test

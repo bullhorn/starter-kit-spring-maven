@@ -3,6 +3,7 @@ package com.client.core.email.service.impl;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -22,15 +23,14 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import com.client.core.email.MailSettings;
 import com.client.core.email.model.MailAttachment;
 import com.client.core.email.model.MailInfo;
-import com.client.core.email.MailSettings;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Lists;
 
@@ -44,7 +44,6 @@ public class StandardEmailer implements Emailer {
     private final Logger log = Logger.getLogger(StandardEmailer.class);
 
     private final MailSettings mailSettings;
-    private final EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Autowired
     public StandardEmailer(MailSettings mailSettings) {
@@ -84,6 +83,16 @@ public class StandardEmailer implements Emailer {
     }
 
     public void send(MailInfo mail) throws MessagingException {
+        if(mailSettings.getDisabled()) {
+            if(mailSettings.getRouteToWhenDisabled() != null && !mailSettings.getRouteToWhenDisabled().isEmpty()) {
+                mail.setTo(mailSettings.getRouteToWhenDisabled());
+                mail.setCc(Collections.emptyList());
+                mail.setBcc(Collections.emptyList());
+            } else {
+                return;
+            }
+        }
+
         MimeMessage message = new MimeMessage(getSession());
 
         message.setSentDate(new Date());
