@@ -52,8 +52,12 @@ public class TestUtil {
 		event.setEntityId(entityID);
 		event.setEntityName(entityName.value());
 		event.setEventType(eventType.value());
-		event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
 		event.setUpdatingUserId(updatingUserID);
+
+		if(updatedProperties != null) {
+			event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
+		}
+
 		return event;
 	}
 
