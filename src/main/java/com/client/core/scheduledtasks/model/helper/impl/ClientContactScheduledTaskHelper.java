@@ -4,8 +4,8 @@ import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -21,7 +21,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -29,12 +28,12 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	private ClientContact clientContact;
 	private CorporateUser clientContactOwner;
 
-	public ClientContactScheduledTaskHelper(SubscriptionEvent event) {
+	public ClientContactScheduledTaskHelper(StandardEvent event) {
 		super(event);
 
 	}
 	
-	public ClientContactScheduledTaskHelper(SubscriptionEvent event, BullhornData bullhornData) {
+	public ClientContactScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
 		super(event);
 
 	}
@@ -64,7 +63,7 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	 */
 	public ClientContact getClientContact() {
 		if (clientContact == null) {
-			setClientContact(findClientContact(getEvent().getEntityID()));
+			setClientContact(findClientContact(getEvent().getEntityId()));
 		}
 		return clientContact;
 	}

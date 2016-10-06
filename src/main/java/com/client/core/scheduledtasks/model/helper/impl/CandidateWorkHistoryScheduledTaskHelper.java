@@ -3,8 +3,8 @@ package com.client.core.scheduledtasks.model.helper.impl;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateWorkHistory;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it will be
@@ -19,7 +19,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -27,7 +26,7 @@ public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTa
 	private Candidate candidate;
 	private CorporateUser candidateOwner;
 
-	public CandidateWorkHistoryScheduledTaskHelper(SubscriptionEvent event) {
+	public CandidateWorkHistoryScheduledTaskHelper(StandardEvent event) {
 		super(event);
 
 	}
@@ -40,7 +39,7 @@ public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTa
 	 */
 	public CandidateWorkHistory getCandidateWorkHistory() {
 		if (candidateWorkHistory == null) {
-			setCandidateWorkHistory(findCandidateWorkHistory(getEvent().getEntityID()));
+			setCandidateWorkHistory(findCandidateWorkHistory(getEvent().getEntityId()));
 		}
 		return candidateWorkHistory;
 	}

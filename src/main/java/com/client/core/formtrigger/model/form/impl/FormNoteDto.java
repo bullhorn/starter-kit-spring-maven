@@ -1,12 +1,12 @@
 package com.client.core.formtrigger.model.form.impl;
 
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.bullhorn.entity.note.NoteDto;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.bullhornsdk.data.model.entity.embedded.LinkedPerson;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 
 public class FormNoteDto extends AbstractFormDto<Note> {
@@ -177,7 +177,7 @@ public class FormNoteDto extends AbstractFormDto<Note> {
 		Note note = new Note();
 
 		note.setAction(action);
-		note.setCommentingPerson(new LinkedPerson(commentingUserID));
+		note.setCommentingPerson(new Person(commentingUserID));
 		note.setComments(comments);
 		note.setDateAdded(stringToDateTime(dateAdded));
 
@@ -186,7 +186,7 @@ public class FormNoteDto extends AbstractFormDto<Note> {
 			note.setJobOrder(new JobOrder(jobId));
 		}
 		note.setId(userCommentID);
-		note.setPersonReference(new LinkedPerson(userID));
+		note.setPersonReference(new Person(userID));
 
 		return note;
 	}

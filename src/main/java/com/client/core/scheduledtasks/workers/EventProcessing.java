@@ -2,6 +2,7 @@ package com.client.core.scheduledtasks.workers;
 
 import java.util.List;
 
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
@@ -38,13 +39,11 @@ public class EventProcessing implements Runnable {
 	private final Logger log = Logger.getLogger(getClass());
 	
 	private final BullhornLogDAO bullhornLogDAO;
-	private final SubscriptionEvent event;
-	
+	private final StandardEvent event;
 	private final Integer corporationID;
-	
 	private final ApplicationContext appContext;
 	
-	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, SubscriptionEvent event) {
+	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, StandardEvent event) {
 		super();
 		this.corporationID = corporationID;
 		this.bullhornLogDAO = bullhornLogDAO;
@@ -52,13 +51,13 @@ public class EventProcessing implements Runnable {
 		this.appContext = AppContext.getApplicationContext();
 	}
 
-	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, SubscriptionEvent event) {
+	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, StandardEvent event) {
 		return new EventProcessing(corporationID, bullhornLogDAO, event);
 	}
 
     /**
      * Performs the actual handling of a single event by parsing out the kind of event from the {@link SubscriptionEvent} provided via
-     * the {@link EventProcessing#EventProcessing(Integer, BullhornLogDAO, SubscriptionEvent)} constructor and handing the event off
+     * the {@link EventProcessing#(Integer, BullhornLogDAO, SubscriptionEvent)} constructor and handing the event off
      * to the proper workflow.
      */
 	@Override
@@ -76,8 +75,7 @@ public class EventProcessing implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Event " + event.getEventID() + " resulted in error:" + e.getMessage(), e);
-
+			log.error("Event " + event.getEventId() + " resulted in error:" + e.getMessage(), e);
 			logError(bhlog, e);
 		}
 	}
@@ -279,7 +277,6 @@ public class EventProcessing implements Runnable {
 	 * 
 	 * Actual logic is handled in Service class (see Service folder).
 	 * 
-	 * @param event
 	 */
 	private void handlePlacementChangeRequestEvent() {
 		@SuppressWarnings("unchecked")
@@ -300,7 +297,6 @@ public class EventProcessing implements Runnable {
 	 * 
 	 * Actual logic is handled in Service class (see Service folder).
 	 * 
-	 * @param event
 	 */
 	private void handlePlacementCommissionEvent() {
 		@SuppressWarnings("unchecked")
@@ -321,7 +317,6 @@ public class EventProcessing implements Runnable {
 	 * 
 	 * Actual logic is handled in Service class (see Service folder).
 	 * 
-	 * @param event
 	 */
 	private void handleSendoutEvent() {
 		@SuppressWarnings("unchecked")
@@ -341,7 +336,6 @@ public class EventProcessing implements Runnable {
 	 * 
 	 * Actual logic is handled in Service class (see Service folder).
 	 * 
-	 * @param event
 	 */
 	private void handleTaskEvent() {
 		@SuppressWarnings("unchecked")
@@ -356,7 +350,7 @@ public class EventProcessing implements Runnable {
 	}
 
 	private boolean entityIsOfType(String entityTypeToCheck) {
-		String entityType = event.getEntityType();
+		String entityType = event.getEntityName();
 		
 		if (entityTypeToCheck.equalsIgnoreCase(entityType)) {
 			return true;

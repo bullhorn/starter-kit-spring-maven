@@ -1,9 +1,9 @@
 package com.client.core.scheduledtasks.workflow.traversing.impl;
 
-import com.client.core.soap.model.SubscriptionEvent;
-import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
-import com.client.core.scheduledtasks.tools.enumeration.EventType;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 import com.client.core.scheduledtasks.model.helper.impl.ClientCorporationScheduledTaskHelper;
+import com.client.core.scheduledtasks.tools.enumeration.EventType;
+import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
 
 /**
  * A Traverser is passed through a Node work flow and it's instance variables are set for future Event handling.
@@ -15,7 +15,7 @@ import com.client.core.scheduledtasks.model.helper.impl.ClientCorporationSchedul
 public class ClientCorporationEventTraverser extends
         AbstractScheduledTasksTraverser<ClientCorporationScheduledTaskHelper> {
 
-	public ClientCorporationEventTraverser(SubscriptionEvent event ) {
+	public ClientCorporationEventTraverser(StandardEvent event ) {
 		super(new ClientCorporationScheduledTaskHelper(event),EventType.getType(event.getEventType()));
 
 	}

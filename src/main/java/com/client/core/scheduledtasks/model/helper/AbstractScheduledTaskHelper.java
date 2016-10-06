@@ -1,49 +1,29 @@
 package com.client.core.scheduledtasks.model.helper;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.user.UserTypeDto;
 import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.Appointment;
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateReference;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateWorkHistory;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
-import com.bullhornsdk.data.model.entity.core.standard.Sendout;
-import com.bullhornsdk.data.model.entity.core.standard.Task;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
 import com.client.core.AppContext;
 import com.client.core.base.tools.copy.KryoObjectCopyHelper;
 import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.soap.service.BullhornAPI;
 import com.google.common.collect.Sets;
+import org.apache.log4j.Logger;
+
+import java.util.*;
 
 public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper {
 
 	private final BullhornData bullhornData;
 	private final BullhornAPI bullhornApiSoap;
-	private final SubscriptionEvent event;
+	private final StandardEvent event;
 	private final Map<String, UpdateEntity> allEntitiesToSaveBackToBH;
 
 	private CorporateUser updatingUser;
 	private final Logger log = Logger.getLogger(AbstractScheduledTaskHelper.class);
 
-	public AbstractScheduledTaskHelper(SubscriptionEvent event) {
+	public AbstractScheduledTaskHelper(StandardEvent event) {
 		super();
 		this.bullhornData = AppContext.getApplicationContext().getBean("bullhornData", BullhornData.class);
 		this.bullhornApiSoap = AppContext.getApplicationContext().getBean("bullhornapi", BullhornAPI.class);
@@ -51,7 +31,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 		this.allEntitiesToSaveBackToBH = new HashMap<String, UpdateEntity>();
 	}
 
-	public AbstractScheduledTaskHelper(SubscriptionEvent event, BullhornData bullhornData) {
+	public AbstractScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
 		this.bullhornData = bullhornData;
 		this.bullhornApiSoap = AppContext.getApplicationContext().getBean("bullhornapi", BullhornAPI.class);
 		this.event = event;
@@ -76,9 +56,9 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 
 	@Override
 	public boolean fieldWasUpdated(String... fieldsToCheck) {
-		String[] updatedProperties = event.getUpdatedProperties();
+		List<String> updatedProperties = event.getUpdatedProperties();
 
-		if (updatedProperties == null || updatedProperties.length < 1) {
+		if (updatedProperties == null || updatedProperties.size() < 1) {
 			return false;
 		}
 
@@ -106,7 +86,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 	 */
 	public CorporateUser getUpdatingUser() {
 		if (updatingUser == null) {
-			setUpdatingUser(findCorporateUser(event.getUpdatingUserID()));
+			setUpdatingUser(findCorporateUser(Integer.parseInt(event.getEventMetadata().get("userID"))));
 		}
 		return updatingUser;
 	}
@@ -125,7 +105,7 @@ public abstract class AbstractScheduledTaskHelper implements ScheduledTaskHelper
 	}
 
 	@Override
-	public SubscriptionEvent getEvent() {
+	public StandardEvent getEvent() {
 		return event;
 	}
 

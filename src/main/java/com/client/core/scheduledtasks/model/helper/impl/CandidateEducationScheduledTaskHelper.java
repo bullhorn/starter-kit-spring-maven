@@ -3,8 +3,8 @@ package com.client.core.scheduledtasks.model.helper.impl;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a Dto has been fetched using the BH api it will be
@@ -19,7 +19,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class CandidateEducationScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -27,7 +26,7 @@ public class CandidateEducationScheduledTaskHelper extends AbstractScheduledTask
 	private Candidate candidate;
 	private CorporateUser candidateOwner;
 
-	public CandidateEducationScheduledTaskHelper(SubscriptionEvent event) {
+	public CandidateEducationScheduledTaskHelper(StandardEvent event) {
 		super(event);
 	}
 
@@ -39,7 +38,7 @@ public class CandidateEducationScheduledTaskHelper extends AbstractScheduledTask
 	 */
 	public CandidateEducation getCandidateEducation() {
 		if (candidateEducation == null) {
-			setCandidateEducation(findCandidateEducation(getEvent().getEntityID()));
+			setCandidateEducation(findCandidateEducation(getEvent().getEntityId()));
 		}
 		return candidateEducation;
 	}

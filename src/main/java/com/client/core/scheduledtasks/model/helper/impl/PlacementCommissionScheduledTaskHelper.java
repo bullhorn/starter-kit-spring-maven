@@ -1,14 +1,8 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it will be
@@ -23,7 +17,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class PlacementCommissionScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -35,14 +28,14 @@ public class PlacementCommissionScheduledTaskHelper extends AbstractScheduledTas
 	private ClientContact clientContact;
 	private CorporateUser candidateOwner;
 
-	public PlacementCommissionScheduledTaskHelper(SubscriptionEvent event) {
+	public PlacementCommissionScheduledTaskHelper(StandardEvent event) {
 		super(event);
 
 	}
 
 	public PlacementCommission getPlacementCommission() {
 		if (placementCommission == null) {
-			setPlacementCommission(findPlacementCommission(getEvent().getEntityID()));
+			setPlacementCommission(findPlacementCommission(getEvent().getEntityId()));
 		}
 		return placementCommission;
 	}

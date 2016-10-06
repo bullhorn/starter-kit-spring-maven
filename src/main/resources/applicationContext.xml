@@ -95,7 +95,7 @@
 		<property name="standardSubscriptionName" value="${standardSubscriptionName}" />
 	</bean>
 
-	<bean id="bullhornRestCredentials" class="com.bullhornsdk.data.api.RestApiSettings">
+	<bean id="bullhornRestCredentials" class="com.bullhornsdk.data.api.BullhornRestCredentials">
 		<property name="username" value="${apiusername}" />
 		<property name="password" value="${apipassword}" />
 		<property name="restTokenUrl" value="${rest.tokenUrl}" />

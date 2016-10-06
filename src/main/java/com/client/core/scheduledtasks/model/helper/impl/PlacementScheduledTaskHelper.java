@@ -1,14 +1,9 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.client.core.soap.model.SubscriptionEvent;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 
 /**
  * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
@@ -24,7 +19,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -35,12 +29,12 @@ public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private ClientContact clientContact;
 	private CorporateUser candidateOwner;
 
-	public PlacementScheduledTaskHelper(SubscriptionEvent event) {
+	public PlacementScheduledTaskHelper(StandardEvent event) {
 		super(event);
 
 	}
 
-	public PlacementScheduledTaskHelper(SubscriptionEvent event, BullhornData bullhornData) {
+	public PlacementScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
 		super(event,bullhornData);
 	}
 
@@ -52,7 +46,7 @@ public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	 */
 	public Placement getPlacement() {
 		if (placement == null) {
-			setPlacement(findPlacement(getEvent().getEntityID()));
+			setPlacement(findPlacement(getEvent().getEntityId()));
 		}
 		return placement;
 	}

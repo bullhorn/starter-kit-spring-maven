@@ -7,6 +7,7 @@ import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
+import com.client.core.scheduledtasks.model.helper.StandardEvent;
 import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 
@@ -24,7 +25,6 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * 
  * @author magnus.palm
  * 
- * @param <T>
  */
 public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
@@ -35,12 +35,12 @@ public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	private ClientContact clientContact;
 	private CorporateUser candidateOwner;
 
-	public JobSubmissionScheduledTaskHelper(SubscriptionEvent event) {
+	public JobSubmissionScheduledTaskHelper(StandardEvent event) {
 		super(event);
 
 	}
 
-	public JobSubmissionScheduledTaskHelper(SubscriptionEvent event, BullhornData bullhornData) {
+	public JobSubmissionScheduledTaskHelper(StandardEvent event, BullhornData bullhornData) {
 		super(event,bullhornData);
 	}
 
@@ -52,7 +52,7 @@ public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	 */
 	public JobSubmission getJobSubmission() {
 		if (jobSubmission == null) {
-			setJobSubmission(findJobSubmission(getEvent().getEntityID()));
+			setJobSubmission(findJobSubmission(getEvent().getEntityId()));
 		}
 		return jobSubmission;
 	}
