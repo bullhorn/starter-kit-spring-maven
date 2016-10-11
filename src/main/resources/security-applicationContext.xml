@@ -13,6 +13,9 @@
 		
 	<!-- Default authentication manager -->
 	<http auto-config="true">
+        <csrf disabled="true"/>
+        <headers disabled="true" />
+
 		<intercept-url pattern="/services/*"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<session-management>
