@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
@@ -58,7 +58,7 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @param request
 	 * @return the json parsed validation message
 	 */
-	@RequestMapping(value = { "/formtrigger/clientcontact/add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+	@RequestMapping(value = { "/formtrigger/clientcontact/add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
 	public String addEntity(@ModelAttribute FormClientContactDto formClientContactDto, @RequestParam("ft.userId") Integer updatingUserID,
                             HttpServletResponse response, HttpServletRequest request) {
@@ -85,7 +85,7 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @param request
 	 * @return the json parsed form response message
 	 */
-	@RequestMapping(value = { "/formtrigger/clientcontactcandidate/edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+	@RequestMapping(value = { "/formtrigger/clientcontactcandidate/edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
 	public String editEntity(@ModelAttribute FormClientContactDto formClientContactDto, @ModelAttribute FormCandidateDto formCandidateDto,
                              @RequestParam("ft.userId") Integer updatingUserID, HttpServletResponse response, HttpServletRequest request) {
@@ -121,7 +121,7 @@ public class ClientContactCandidateFormTriggerController extends
 	 * @param request
 	 * @return the json parsed form response message
 	 */
-	@RequestMapping(value = { "/formtrigger/candidate/add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+	@RequestMapping(value = { "/formtrigger/candidate/add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
 	public String addEntity(@ModelAttribute FormCandidateDto formCandidateDto, @RequestParam("ft.userId") Integer updatingUserID,
                             HttpServletResponse response, HttpServletRequest request) {

@@ -3,6 +3,7 @@ package com.client.core.formtrigger.controller.lead;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.Lead;
-import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormLeadDto;
@@ -40,7 +40,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
      *            id of corporate user who saved the form
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     @ResponseBody
     public String addEntity(@ModelAttribute FormLeadDto formLeadDto, @RequestParam("ft.userId") Integer updatingUserID) {
         log.info("---------------------------- Starting Lead Validation Process----------------------------------------");
@@ -60,7 +60,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
      *            id of corporate user who saved the form
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     @ResponseBody
     public String editEntity(@ModelAttribute FormLeadDto formLeadDto, @RequestParam("ft.userId") Integer updatingUserID) {
 

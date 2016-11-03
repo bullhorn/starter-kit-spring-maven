@@ -18,7 +18,7 @@ public interface ConcurrencyService {
      * @param <T> result of Callable being passed
      * @param task the task to run
      */
-    public <T, C extends Callable<T>> void spinOneThreadAndDoNotWaitForResult(C task);
+    <T, C extends Callable<T>> void spinOneThreadAndDoNotWaitForResult(C task);
 
     /**
      * Handles the passed in taskList concurrently, and returns the result.
@@ -28,7 +28,7 @@ public interface ConcurrencyService {
      * @param taskList list of tasks to run
      * @return result of running taskList
      */
-    public <T, C extends Callable<T>> List<T> spinThreadsAndWaitForResult(List<C> taskList);
+    <T, C extends Callable<T>> List<T> spinThreadsAndWaitForResult(List<C> taskList);
 
     /**
      * Handles the passed in taskList concurrently. There is not guarantee this method will execute before subsequent client code.
@@ -38,7 +38,7 @@ public interface ConcurrencyService {
      * @param <T> result of Callable being passed
      * @param taskList list of tasks to run
      */
-    public <T, C extends Callable<T>> void spinThreadsAndDoNotWaitForResult(List<C> taskList);
+    <T, C extends Callable<T>> void spinThreadsAndDoNotWaitForResult(List<C> taskList);
 
     /**
      * Handles the passed in {@link java.lang.Runnable} concurrently. There is no guarantee this method will execute before subsequent client code.
@@ -47,7 +47,7 @@ public interface ConcurrencyService {
      * @param <R> type of Runnable being called
      * @param task the task to run
      */
-    public <R extends Runnable> void spinOneThreadAndDoNotWaitForCompletion(R task);
+    <R extends Runnable> void spinOneThreadAndDoNotWaitForCompletion(R task);
 
     /**
      * Handles the passed in {@link java.util.List}<{@link java.lang.Runnable}> concurrently. There is no guarantee this method will execute before
@@ -56,7 +56,7 @@ public interface ConcurrencyService {
      * @param <R> type of Runnable being called
      * @param taskList the list of tasks to run
      */
-    public <R extends Runnable> void spinThreadsAndWaitForCompletion(List<R> taskList);
+    <R extends Runnable> void spinThreadsAndWaitForCompletion(List<R> taskList);
 
     /**
      * Handles the passed in {@link java.util.List}<{@link java.lang.Runnable}> concurrently. There is no guarantee this method will execute before
@@ -65,6 +65,6 @@ public interface ConcurrencyService {
      * @param <R> type of Runnable being called
      * @param taskList the list of tasks to run
      */
-    public <R extends Runnable> void spinThreadsAndDoNotWaitForCompletion(List<R> taskList);
+    <R extends Runnable> void spinThreadsAndDoNotWaitForCompletion(List<R> taskList);
 
 }
