@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
@@ -55,7 +55,7 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 	 * @param request
 	 * @return the json parsed form response message
 	 */
-	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
 	public String addEntity(@ModelAttribute FormJobSubmissionDto formJobSubmissionDto, @RequestParam("ft.userId") Integer updatingUserID,
                             HttpServletResponse response, HttpServletRequest request) {
@@ -78,7 +78,7 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 	 * @param request
 	 * @return the json parsed form response message
 	 */
-	@RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+	@RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
 	public String editEntity(@ModelAttribute FormJobSubmissionDto formJobSubmissionDto, @RequestParam("ft.userId") Integer updatingUserID,
                              HttpServletResponse response, HttpServletRequest request) {

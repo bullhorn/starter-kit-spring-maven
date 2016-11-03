@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.client.core.base.tools.web.MediaTypes;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
@@ -40,7 +40,7 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     @ResponseBody
     public RestTriggerResponse addEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Client Contact Add Validation Process From Rest Trigger ----------------------------------------");
@@ -64,7 +64,7 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaTypes.JSON })
+    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
     @ResponseBody
     public RestTriggerResponse editEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Client Contact Edit Validation Process From Rest Trigger ----------------------------------------");
