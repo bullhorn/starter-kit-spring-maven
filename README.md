@@ -205,6 +205,23 @@ Most of the functionality provided by the ScheduledTasksTraversers and associate
 ```
 That should be used to perform updates on entities in a scheduled tasks workflow.  You pass in the entity  you are about to make modifications to, which the helper object then makes a deep copy of using [Kryo](https://github.com/EsotericSoftware/kryo) and holds onto in a Map, returning the deep copy.  Then, at the end of every scheduled tasks workflow, there is a predefined Node, ``com.client.core.scheduledtasks.workflow.node.task.SaveDtos`` which loops through this map and performs an update call on each entity in it.  This allows you to make modifications to the same entity in different nodes without making multiple API calls.  After calling ``getOneEntityToSave``, any modifications made to the object returned will in turn be made to the copy being held by the helper object.
 
+## Form Scripts
+Form scripts allow you to customize the page that loads when you view an entity.  As its name implies, a form script consists of a block of Javascript (technically HTML, typically only JS) which is entirely custom and which can perform whatever actions on the page the programmer chooses.  Configuring a form script consists of manually copying and pasting a block of HTML into Bullhorn which then is dropped onto the corresponding entity's page when it loads.  Of note is the fact that a form script run on *all* tabs of the entity it's configured for, so the script typically starts with a check to determine which tab it's on.  A very simple example candidate form script is below:
+
+```html
+<script type="text/javascript">
+    var tab = $('a.SubTierNavSelected').text();
+
+    if(tab == 'Edit') {
+    	$('[name="candidate_ssn"]').prop('readonly', true);
+    }
+</script>
+```
+This script detects the currently active tab and disables the SSN field if we are on the Edit tab.
+
+One way you could deploy such a script would be by copying and pasting the exact HTML above into Bullhorn for the Candidate Form Script.  However in order to maintain versioning as well as ensure that our scripts don't affect the core BH ones very much, the Starter Kit provides a mechanism utilizing [RequireJS](http://requirejs.org/) that allows us to deploy our form scripts with the rest of our application.
+
+
 ## Custom tabs
 In Bullhorn, Custom Tabs are what they sound like...they allow you to add custom content onto a tab of any of the main types of entities.  Configuration typically only consists of providing a URL endpoint that you wish to be iframed in the aforementioned tab, and consequently this allows for essentially any type of customization.  An additional parameter with the name ``displayHeight`` can be appended to the configured URL to determine the height of the iframe in the tab (see [SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for more information).  Of note are the context variables provided by Bullhorn, always appended to the request URL as form-encoded parameters (case-sensitive):
   - EntityID - The ID of the entity being saved
