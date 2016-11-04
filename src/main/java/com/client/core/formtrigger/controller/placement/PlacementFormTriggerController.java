@@ -18,7 +18,7 @@ import com.bullhornsdk.data.model.entity.core.standard.Placement;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.PlacementFormTriggerTraverser;
 
 /**
  * Entry point for Placement formtrigger Validations.

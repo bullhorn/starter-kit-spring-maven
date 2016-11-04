@@ -1,12 +1,12 @@
 package com.client.core.formtrigger.workflow.node.conditional;
 
-import com.client.core.formtrigger.workflow.traversing.ValidationTraverser;
 import com.client.core.base.workflow.node.conditional.Conditional;
+import com.client.core.base.workflow.traversing.TriggerTraverser;
 
 /**
  * Created by john.sullivan on 2/11/2015.
  */
-public class IsEdit<T extends ValidationTraverser> extends Conditional<T> {
+public class IsEdit<T extends TriggerTraverser> extends Conditional<T> {
 
     @Override
     public void evaluate(T tasks) {

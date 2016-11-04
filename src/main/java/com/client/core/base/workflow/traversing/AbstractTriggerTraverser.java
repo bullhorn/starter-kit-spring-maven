@@ -7,13 +7,13 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.util.TriggerUtil;
 
-public class AbstractTriggerTraverser<E extends BullhornEntity, T extends TriggerHelper<E>> implements Traverser {
+public class AbstractTriggerTraverser<E extends BullhornEntity, H extends TriggerHelper<E>> implements TriggerTraverser<E, H> {
 
-	private final T formTriggerHelper;
+	private final H formTriggerHelper;
 	private final Map<String, Object> formResponse;
 	private final boolean edit;
 
-    public AbstractTriggerTraverser(T formTriggerHelper, boolean edit) {
+    public AbstractTriggerTraverser(H formTriggerHelper, boolean edit) {
         super();
         this.formTriggerHelper = formTriggerHelper;
         this.formResponse = new LinkedHashMap<>();
@@ -35,22 +35,27 @@ public class AbstractTriggerTraverser<E extends BullhornEntity, T extends Trigge
 	 * @param key
 	 * @param message
 	 */
+	@Override
 	public void addFormResponse(String key, String message) {
 		this.formResponse.put(key, message);
 	}
 
-	public T getTriggerHelper() {
+    @Override
+	public H getTriggerHelper() {
 		return formTriggerHelper;
 	}
 
+    @Override
 	public Map<String, Object> getFormResponse() {
 		return formResponse;
 	}
 
+    @Override
 	public boolean isEdit() {
 		return edit;
 	}
 
+    @Override
 	public boolean hasErrors() {
 		return getFormResponse().entrySet().parallelStream().anyMatch( entry -> {
 			return TriggerUtil.isError(entry.getKey());

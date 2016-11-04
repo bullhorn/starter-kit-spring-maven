@@ -19,8 +19,8 @@ import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
 import com.client.core.formtrigger.model.form.impl.FormClientContactDto;
-import com.client.core.formtrigger.workflow.traversing.impl.CandidateFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientContactFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.CandidateFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.ClientContactFormTriggerTraverser;
 
 /**
  * Entry point for Client Contact and Candidate Validations.

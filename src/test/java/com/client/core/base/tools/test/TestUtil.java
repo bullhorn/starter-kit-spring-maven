@@ -1,5 +1,15 @@
 package com.client.core.base.tools.test;
 
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.bullhorn.apiservice.query.DtoQuery;
 import com.bullhorn.entity.AbstractDto;
 import com.bullhorn.entity.ApiEntityName;
@@ -9,23 +19,37 @@ import com.bullhorn.entity.candidate.CandidateWorkHistoryDto;
 import com.bullhorn.entity.job.JobOrderDto;
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.core.ApplicationSettings;
-import com.client.core.formtrigger.model.form.impl.*;
-import com.client.core.formtrigger.workflow.traversing.impl.*;
+import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
+import com.client.core.formtrigger.model.form.impl.FormClientContactDto;
+import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
+import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
+import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
+import com.client.core.formtrigger.model.form.impl.FormNoteDto;
+import com.client.core.formtrigger.model.form.impl.FormPlacementChangeRequestDto;
+import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
+import com.client.core.formtrigger.workflow.traversing.CandidateFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.ClientContactFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.ClientCorporationFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.JobFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.JobSubmissionFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.NoteFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.PlacementFormTriggerTraverser;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
-import com.client.core.scheduledtasks.workflow.traversing.impl.*;
+import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.ClientContactEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.JobEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.JobSubmissionEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementChangeRequestEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.SendoutEventTraverser;
 import com.client.core.soap.service.BullhornAPI;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.text.DateFormat;
-import java.util.*;
 
 public class TestUtil {
 

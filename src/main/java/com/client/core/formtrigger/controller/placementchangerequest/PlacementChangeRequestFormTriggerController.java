@@ -18,7 +18,7 @@ import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormPlacementChangeRequestDto;
-import com.client.core.formtrigger.workflow.traversing.impl.PlacementChangeRequestFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFormTriggerTraverser;
 
 /**
  * Entry point for Placement change request formtrigger Validations.

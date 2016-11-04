@@ -18,7 +18,7 @@ import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
-import com.client.core.formtrigger.workflow.traversing.impl.ClientCorporationFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.ClientCorporationFormTriggerTraverser;
 
 /**
  * Entry point for Client Corporation Validations.

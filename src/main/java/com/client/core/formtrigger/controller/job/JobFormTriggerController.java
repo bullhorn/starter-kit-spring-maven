@@ -18,7 +18,7 @@ import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
-import com.client.core.formtrigger.workflow.traversing.impl.JobFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.JobFormTriggerTraverser;
 
 /**
  * Entry point for Job Validations.
