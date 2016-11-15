@@ -120,6 +120,13 @@ public interface GenericDao<T extends Entity<ID>, ID> {
      */
     QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit);
 
+    /**
+     * Returns the total number of records matching the query and parameters passed in
+     *
+     * @param queryString the query to get the total number of records for
+     * @param queryParameters the named parameters that will be injected into the query
+     * @return the total number of records matching the query
+     */
     Long getCount(String queryString, Map<String, Object> queryParameters);
 
 	/**

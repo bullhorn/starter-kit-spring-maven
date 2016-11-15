@@ -15,9 +15,9 @@ import com.client.core.base.tools.data.QueryResult;
  * a database transaction or seswsion.
  *
  * @param <T> the type of the entity with which we will be interacting with the database
- * @param <PK> the id of the entity with which we will be interacting with the database
+ * @param <ID> the id of the entity with which we will be interacting with the database
  */
-public interface TransactionService<T extends JpaEntity<PK>, PK> {
+public interface TransactionService<T extends JpaEntity<ID>, ID> {
 
 	/**
 	 * Adds an object of type T.
@@ -38,9 +38,9 @@ public interface TransactionService<T extends JpaEntity<PK>, PK> {
 	 * Get a T record using it's id
 	 * @param id the primary key of the entity
 	 * @return the entity of type T
-	 * @throws EntityNotFoundException when no entity with primary key PK exists
+	 * @throws EntityNotFoundException when no entity with primary key ID exists
 	 */
-	T find(PK id) throws EntityNotFoundException;
+	T find(ID id) throws EntityNotFoundException;
 
 	/**
 	 * Gets a List<T> of all entities in table
@@ -56,6 +56,14 @@ public interface TransactionService<T extends JpaEntity<PK>, PK> {
 	 * @throws EntityNotFoundException if the instance is not an entity or is a detached entity
 	 */
 	void remove(T persistentObject) throws EntityNotFoundException;
+
+    /**
+     * Deletes entity T with ID id from table.
+     *
+     * @param id id of entity to delete
+     * @throws EntityNotFoundException if the instance is not an entity or is a detached entity
+     */
+    void remove(ID id) throws EntityNotFoundException;
 	
 	
 	/**
@@ -103,8 +111,15 @@ public interface TransactionService<T extends JpaEntity<PK>, PK> {
      * @return a List<T> of entities matching the passed in query, with maximum size equal to the passed in limit.  The first element will
      *          be the [start]th element in the overall result set
      */
-    QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer limit, Integer start);
+    QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit);
 
+    /**
+     * Returns the total number of records matching the query and parameters passed in
+     *
+     * @param queryString the query to get the total number of records for
+     * @param queryParameters the named parameters that will be injected into the query
+     * @return the total number of records matching the query
+     */
     Long getCount(String queryString, Map<String, Object> queryParameters);
 
 

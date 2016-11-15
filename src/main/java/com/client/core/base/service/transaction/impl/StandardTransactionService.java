@@ -21,13 +21,13 @@ import com.client.core.base.tools.data.QueryResult;
  * the database.
  *
  * @param <T> the type of entity which we will be interacting with the DAO with
- * @param <PK> the id of the entity which we will be interacting with the DAO with
+ * @param <ID> the id of the entity which we will be interacting with the DAO with
  */
-public class StandardTransactionService<T extends JpaEntity<PK>, PK> implements TransactionService<T, PK> {
+public class StandardTransactionService<T extends JpaEntity<ID>, ID> implements TransactionService<T, ID> {
 
-	private final GenericDao<T, PK> genericDao;
+	private final GenericDao<T, ID> genericDao;
 	
-	public StandardTransactionService(GenericDao<T, PK> genericDao) {
+	public StandardTransactionService(GenericDao<T, ID> genericDao) {
 		super();
 		this.genericDao=genericDao;
 	}
@@ -55,7 +55,7 @@ public class StandardTransactionService<T extends JpaEntity<PK>, PK> implements 
      */
 	@Override
 	@Transactional(readOnly=true)
-	public T find(PK id) throws EntityNotFoundException {
+	public T find(ID id) throws EntityNotFoundException {
 		return genericDao.find(id);
 	}
 
@@ -80,12 +80,25 @@ public class StandardTransactionService<T extends JpaEntity<PK>, PK> implements 
     /**
      * {@inheritDoc}
      */
+    @Override
+    public void remove(ID id) throws EntityNotFoundException {
+        T entity = genericDao.find(id);
+
+        genericDao.remove(entity);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	@Transactional(readOnly=true)
 	public List<T> query(String queryString, Map<String, Object> queryParameters) {
 		return genericDao.query(queryString, queryParameters);
 	}
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<T> query(String queryString, Map<String, Object> queryParameters, Integer limit) {
         return genericDao.query(queryString, queryParameters, limit);
@@ -93,10 +106,13 @@ public class StandardTransactionService<T extends JpaEntity<PK>, PK> implements 
 
     @Override
     @Transactional(readOnly=true)
-    public QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer limit, Integer start) {
-        return genericDao.query(queryString, queryParameters, limit, start);
+    public QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit) {
+        return genericDao.query(queryString, queryParameters, start, limit);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly=true)
     public Long getCount(String queryString, Map<String, Object> queryParameters) {

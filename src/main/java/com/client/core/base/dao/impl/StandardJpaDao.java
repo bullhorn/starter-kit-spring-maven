@@ -129,10 +129,10 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
      */
     @Override
     public List<T> query(String queryString, Map<String, Object> queryParameters, Integer limit) {
-        return this.queryForList(queryString, queryParameters, limit, null);
+        return this.queryForList(queryString, queryParameters, null, limit);
     }
 
-    private List<T> queryForList(String queryString, Map<String, Object> queryParameters, Integer limit, Integer start) {
+    private List<T> queryForList(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit) {
         TypedQuery<T> query = entityManager.createQuery(queryString, type);
 
         if (queryParameters != null) {
@@ -141,14 +141,14 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
             }
         }
 
-        return getData(query, limit, start);
+        return getData(query, start, limit);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer limit, Integer start) {
+    public QueryResult<T> query(String queryString, Map<String, Object> queryParameters, Integer start, Integer limit) {
         TypedQuery<T> query = entityManager.createQuery(queryString, type);
 
         if (queryParameters != null) {
@@ -157,9 +157,12 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
             }
         }
 
-        return new QueryResult<>(getData(query, limit, start), getTotal(query));
+        return new QueryResult<>(getData(query, start, limit), getTotal(query));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long getCount(String queryString, Map<String, Object> queryParameters) {
         TypedQuery<T> query = entityManager.createQuery(queryString, type);
@@ -173,7 +176,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
         return getTotal(query);
     }
 
-    private List<T> getData(TypedQuery<T> query, Integer limit, Integer start) {
+    private List<T> getData(TypedQuery<T> query, Integer start, Integer limit) {
         if(limit != null && limit > 0) {
             query.setMaxResults(limit);
         }

@@ -74,6 +74,11 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
     }
 
     @Override
+    public void removeUsingID(ID id) {
+        transactionService.remove(id);
+    }
+
+    @Override
     protected T add(T transientObject) {
         return transactionService.merge(transientObject);
     }
@@ -84,17 +89,12 @@ public abstract class JpaDataTablesService<T extends JpaEntity<ID>, ID> extends 
     }
 
     @Override
-    protected void remove(T persistentObject) throws EntityNotFoundException {
-        transactionService.remove(persistentObject);
-    }
-
-    @Override
     protected List<T> getData(HttpServletRequest request, JQueryDataTableParamModel param) {
         Long totalRecords = transactionService.getCount(getQuery(), getParameters(request));
 
         param.setiTotalRecords(totalRecords.intValue());
 
-        QueryResult<T> result = transactionService.query(getQueryWithSortAndFilter(param), getParameters(request), param.getiDisplayLength(), param.getiDisplayStart());
+        QueryResult<T> result = transactionService.query(getQueryWithSortAndFilter(param), getParameters(request), param.getiDisplayStart(), param.getiDisplayLength());
 
         param.setiTotalDisplayRecords(result.getTotal().intValue());
 
