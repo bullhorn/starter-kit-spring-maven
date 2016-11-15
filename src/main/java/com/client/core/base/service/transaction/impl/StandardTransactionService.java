@@ -81,6 +81,7 @@ public class StandardTransactionService<T extends JpaEntity<ID>, ID> implements 
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly=false)
     public void remove(ID id) throws EntityNotFoundException {
         T entity = genericDao.find(id);
 
