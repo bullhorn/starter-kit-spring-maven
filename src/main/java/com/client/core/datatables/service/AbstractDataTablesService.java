@@ -72,11 +72,12 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
     @Override
     public abstract T find(ID id) throws EntityNotFoundException;
 
+    @Override
+    public abstract void removeUsingID(ID id);
+
     protected abstract T add(T transientObject);
 
     protected abstract T update(T transientObject);
-
-    protected abstract void remove(T persistentObject) throws EntityNotFoundException;
 
     protected abstract List<T> getData(HttpServletRequest request, JQueryDataTableParamModel param);
 
@@ -113,13 +114,6 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
     @Override
     public ID updateAndReturnID(T transientObject) {
         return getId(update(transientObject));
-    }
-
-    @Override
-    public void removeUsingID(ID id) throws EntityNotFoundException {
-        T persistentObject = find(id);
-
-        this.remove(persistentObject);
     }
 
     @Override

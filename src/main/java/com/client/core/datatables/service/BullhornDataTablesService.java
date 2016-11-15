@@ -115,6 +115,17 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
     }
 
     @Override
+    public void removeUsingID(Integer id) {
+        T entity = bullhornData.findEntity(type, id);
+
+        if(entity instanceof DeleteEntity) {
+            bullhornData.deleteEntity((Class<DeleteEntity>) type, entity.getId());
+        } else {
+            throw new IllegalArgumentException(type.toString()+" is not a DeleteEntity, but add was called.");
+        }
+    }
+
+    @Override
     protected T add(T transientObject) {
         if(transientObject instanceof CreateEntity) {
             return bullhornData.insertEntity((CreateEntity) transientObject);
@@ -129,15 +140,6 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
             return bullhornData.updateEntity((UpdateEntity) transientObject);
         } else {
             throw new IllegalArgumentException(type.toString()+" is not an UpdateEntity, but add was called.");
-        }
-    }
-
-    @Override
-    protected void remove(T persistentObject) throws EntityNotFoundException {
-        if(persistentObject instanceof DeleteEntity) {
-            bullhornData.deleteEntity((Class<DeleteEntity>) type, persistentObject.getId());
-        } else {
-            throw new IllegalArgumentException(type.toString()+" is not a DeleteEntity, but add was called.");
         }
     }
 

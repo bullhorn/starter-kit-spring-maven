@@ -6,14 +6,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -119,32 +117,6 @@ public class Utility {
 			}
 		}
 	}
-
-	public static Map<String, String> getRequestParameterMap(HttpServletRequest req) {
-		Map<String, String> parameters = new LinkedHashMap<String, String>();
-
-		Enumeration<?> e = req.getParameterNames();
-		while(e.hasMoreElements()) {
-			String name = e.nextElement().toString();
-			String value = req.getParameter(name);
-			parameters.put(name, value);
-		}
-
-		return parameters;
-	}
-
-	public static void printParameters(HttpServletRequest req) {
-		@SuppressWarnings("unchecked")
-		Enumeration<String> enumeration = req.getParameterNames();
-
-		while (enumeration.hasMoreElements()) {
-			String paramName = enumeration.nextElement().toString();
-			String paramValue = req.getParameter(paramName);
-			System.out.println("Element : " + paramName + " ------ value : " + paramValue);
-		}
-		System.out.println(" ------\n ");
-	}
-
 
 	public static  Date parseStringToDate(String dateStr, String dateFormat) {
 		if(dateStr == null || dateStr.isEmpty() || dateFormat == null || dateFormat.isEmpty()) {
@@ -355,9 +327,21 @@ public class Utility {
 		
 		return builder.subSequence(0, builder.length()-1).toString()+")";
 	}
-	
-	public static Integer nullCheck(Integer value) {
-		return value == null ? 0 : value;
-	}
+
+    public static Integer nullCheck(Integer value) {
+        return nullCheck(value, 0);
+    }
+
+    public static <T> T nullCheck(T value, T defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
+    public static BigDecimal nullCheck(BigDecimal value) {
+        return nullCheck(value, BigDecimal.ZERO);
+    }
+
+    public static String nullCheck(String value) {
+        return nullCheck(value, "");
+    }
 
 }
