@@ -16,7 +16,6 @@ public class CandidateEducationEventTraverser extends AbstractScheduledTasksTrav
 
 	public CandidateEducationEventTraverser(CustomSubscriptionEvent event) {
 		super(new CandidateEducationScheduledTaskHelper(event),EventType.getType(event.getEventType()));
-	
 	}
 
 }

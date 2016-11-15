@@ -18,7 +18,7 @@ import com.bullhornsdk.data.model.entity.core.standard.Note;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormNoteDto;
-import com.client.core.formtrigger.workflow.traversing.impl.NoteFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.NoteFormTriggerTraverser;
 
 /**
  * Entry point for Job submission Validations.

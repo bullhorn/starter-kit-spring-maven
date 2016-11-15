@@ -1,4 +1,4 @@
-package com.client.core.formtrigger.workflow.traversing.impl;
+package com.client.core.formtrigger.workflow.traversing;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;

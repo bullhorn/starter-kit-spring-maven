@@ -39,15 +39,22 @@
 
 
 
+    <bean id="noteRestValidationWorkflow" class="com.client.core.base.workflow.node.start.StartNode">
+        <property name="nextNode" ref="endNode_noteRestValidationWorkflow" />
+    </bean>
+    <bean id="endNode_noteRestValidationWorkflow" class="com.client.core.base.workflow.node.end.EndNode" />
+
+
+
     <bean id="opportunityRestValidationWorkflow" class="com.client.core.base.workflow.node.start.StartNode">
-        <property name="nextNode" ref="endNode_candidateRestValidationWorkflow" />
+        <property name="nextNode" ref="endNode_opportunityValidationWorkflow" />
     </bean>
     <bean id="endNode_opportunityValidationWorkflow" class="com.client.core.base.workflow.node.end.EndNode" />
 
 
 
     <bean id="leadRestValidationWorkflow" class="com.client.core.base.workflow.node.start.StartNode">
-        <property name="nextNode" ref="endNode_candidateRestValidationWorkflow" />
+        <property name="nextNode" ref="endNode_leadRestValidationWorkflow" />
     </bean>
     <bean id="endNode_leadRestValidationWorkflow" class="com.client.core.base.workflow.node.end.EndNode" />
 

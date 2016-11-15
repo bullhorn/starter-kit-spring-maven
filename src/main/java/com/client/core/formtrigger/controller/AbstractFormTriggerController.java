@@ -8,9 +8,9 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.base.controller.AbstractTriggerController;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.base.workflow.node.Node;
-import com.client.core.base.workflow.traversing.AbstractTriggerTraverser;
+import com.client.core.base.workflow.traversing.TriggerTraverser;
 
-public class AbstractFormTriggerController<T extends BullhornEntity, TR extends AbstractTriggerTraverser<T, ?>> extends AbstractTriggerController<T, TR> {
+public class AbstractFormTriggerController<T extends BullhornEntity, TR extends TriggerTraverser<T, ?>> extends AbstractTriggerController<T, TR> {
 
     protected final static String SUCCESSFUL_SAVE_JSON_RESPONSE_NO_PARAMS = "({\"result\":\"true\"})";
 

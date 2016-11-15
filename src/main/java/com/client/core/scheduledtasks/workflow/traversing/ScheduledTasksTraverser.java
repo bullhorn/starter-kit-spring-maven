@@ -9,8 +9,8 @@ import com.client.core.scheduledtasks.tools.enumeration.EventType;
  */
 public interface ScheduledTasksTraverser<T extends ScheduledTaskHelper> extends Traverser {
 
-    public T getScheduledTaskHelper();
+    T getScheduledTaskHelper();
 
-    public EventType getEventType();
+    EventType getEventType();
 
 }

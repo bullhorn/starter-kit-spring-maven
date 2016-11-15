@@ -13,13 +13,13 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.AppContext;
 import com.client.core.base.tools.propertyeditors.CustomObjectEditor;
 import com.client.core.base.tools.propertyeditors.MyCustomNumberEditor;
-import com.client.core.base.workflow.traversing.AbstractTriggerTraverser;
+import com.client.core.base.workflow.traversing.TriggerTraverser;
 
 /**
  * Created by hiqbal on 12/15/2015.
  */
 
-public abstract class AbstractTriggerController<T extends BullhornEntity, TR extends AbstractTriggerTraverser<T, ?>>{
+public abstract class AbstractTriggerController<T extends BullhornEntity, TR extends TriggerTraverser<T, ?>>{
 
     protected final BullhornData bullhornData;
 

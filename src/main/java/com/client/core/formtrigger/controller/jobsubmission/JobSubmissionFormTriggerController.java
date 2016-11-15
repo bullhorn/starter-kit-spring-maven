@@ -22,7 +22,7 @@ import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
 import com.client.core.base.workflow.node.Node;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
-import com.client.core.formtrigger.workflow.traversing.impl.JobSubmissionFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.JobSubmissionFormTriggerTraverser;
 import com.google.common.collect.Maps;
 
 /**
