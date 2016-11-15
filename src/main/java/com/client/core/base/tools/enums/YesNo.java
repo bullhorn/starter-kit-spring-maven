@@ -3,6 +3,7 @@ package com.client.core.base.tools.enums;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,8 +12,8 @@ import org.json.JSONObject;
  * 
  */
 public enum YesNo {
-    NO(0, "0", "No", false),
-    YES(1, "1", "Yes", true);
+    NO(0, "0", "No", false, "N"),
+    YES(1, "1", "Yes", true, "Y");
 
     private final Integer integerValue;
 
@@ -22,11 +23,14 @@ public enum YesNo {
 
     private final Boolean booleanValue;
 
-    YesNo(Integer integerValue, String value, String displayValue, Boolean booleanValue) {
+    private final String characterValue;
+
+    YesNo(Integer integerValue, String value, String displayValue, Boolean booleanValue, String characterValue) {
         this.integerValue = integerValue;
         this.value = value;
         this.displayValue = displayValue;
         this.booleanValue = booleanValue;
+        this.characterValue = characterValue;
     }
 
     public Integer integerValue() {
@@ -43,6 +47,10 @@ public enum YesNo {
 
     public Boolean booleanValue() {
         return booleanValue;
+    }
+
+    public String characterValue() {
+        return characterValue;
     }
 
     public static YesNo fromValue(String value) {
@@ -84,13 +92,7 @@ public enum YesNo {
     }
 
     public static String json() throws JSONException {
-        JSONObject values = new JSONObject();
-
-        for (YesNo yesNo : YesNo.values()) {
-            values.put(yesNo.value, yesNo.displayValue);
-        }
-
-        return values.toString();
+        return new JSONObject(map()).toString();
     }
 
     public static Map<String, String> map() {
@@ -104,11 +106,27 @@ public enum YesNo {
     }
 
     public static boolean isNo(String value) {
-        return NO.value.equals(value);
+        if(StringUtils.isBlank(value)) {
+            return false;
+        }
+
+        String toCheck = value.trim();
+
+        return NO.value.equals(toCheck)
+        || NO.displayValue.equalsIgnoreCase(toCheck)
+        || NO.characterValue.equalsIgnoreCase(toCheck);
     }
 
     public static boolean isYes(String value) {
-        return YES.value.equals(value);
+        if(StringUtils.isBlank(value)) {
+            return false;
+        }
+
+        String toCheck = value.trim();
+
+        return YES.value.equals(toCheck)
+            || YES.displayValue.equalsIgnoreCase(toCheck)
+            || YES.characterValue.equalsIgnoreCase(toCheck);
     }
 
     public boolean isNo() {
