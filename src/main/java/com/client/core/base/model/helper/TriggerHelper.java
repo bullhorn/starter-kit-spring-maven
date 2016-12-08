@@ -78,9 +78,6 @@ public interface TriggerHelper<E extends BullhornEntity> {
 	 */
 	<U extends UpdateEntity> void saveDto(U entity);
 
-
-	UserType findUserType();
-
 	CorporateUser findCorporateUser(Integer id);
 
 	<RE extends BullhornEntity> RE findEntity(Class<RE> type, Integer id);

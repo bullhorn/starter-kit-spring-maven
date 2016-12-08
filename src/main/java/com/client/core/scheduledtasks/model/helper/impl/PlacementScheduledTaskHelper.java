@@ -20,9 +20,8 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper<Placement> {
 
-	private Placement placement;
 	private JobOrder job;
 	private Candidate candidate;
 	private ClientCorporation clientCorporation;
@@ -30,12 +29,11 @@ public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private CorporateUser candidateOwner;
 
 	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, Placement.class);
 	}
 
 	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+		super(event, Placement.class, bullhornData);
 	}
 
 	/**
@@ -45,15 +43,8 @@ public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	 * @return the Placement
 	 */
 	public Placement getPlacement() {
-		if (placement == null) {
-			setPlacement(findPlacement(getEvent().getEntityId()));
-		}
-		return placement;
-	}
-
-	public void setPlacement(Placement placement) {
-		this.placement = placement;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the JoOrder for the Placement, if job == null then makes api call, otherwise returns job instance
@@ -138,21 +129,6 @@ public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper {
 
 	public void setCandidateOwner(CorporateUser candidateOwner) {
 		this.candidateOwner = candidateOwner;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" placement: " + placement + NEW_LINE);
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
 	}
 
 }

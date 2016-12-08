@@ -20,15 +20,13 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTaskHelper<CandidateWorkHistory> {
 
-	private CandidateWorkHistory candidateWorkHistory;
 	private Candidate candidate;
 	private CorporateUser candidateOwner;
 
 	public CandidateWorkHistoryScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, CandidateWorkHistory.class);
 	}
 
 	/**
@@ -38,15 +36,8 @@ public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTa
 	 * @return the CandidateWorkHistory connected to the event
 	 */
 	public CandidateWorkHistory getCandidateWorkHistory() {
-		if (candidateWorkHistory == null) {
-			setCandidateWorkHistory(findCandidateWorkHistory(getEvent().getEntityId()));
-		}
-		return candidateWorkHistory;
-	}
-
-	public void setCandidateWorkHistory(CandidateWorkHistory candidateWorkHistory) {
-		this.candidateWorkHistory = candidateWorkHistory;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the Candidate  for the Candidate work history , if candidate == null then makes api call, otherwise
@@ -82,16 +73,14 @@ public class CandidateWorkHistoryScheduledTaskHelper extends AbstractScheduledTa
 		this.candidateOwner = candidateOwner;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" candidateOwner: " + candidateOwner + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("CandidateWorkHistoryScheduledTaskHelper {")
+                .append("\n\t\"candidate\": ")
+                .append(candidate)
+                .append(",\n\t\"candidateOwner\": ")
+                .append(candidateOwner)
+                .append('}')
+                .toString();
+    }
 }

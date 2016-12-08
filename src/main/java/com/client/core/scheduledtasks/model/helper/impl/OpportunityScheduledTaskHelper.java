@@ -20,22 +20,18 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * the same dto.
  * 
  * @author magnus.palm
- * 
- * @param <T>
  */
-public class OpportunityScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class OpportunityScheduledTaskHelper extends AbstractScheduledTaskHelper<Opportunity> {
 
-	private Opportunity opportunity;
 	private ClientCorporation clientCorporation;
 	private ClientContact clientContact;
 
 	public OpportunityScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, Opportunity.class);
 	}
 
 	public OpportunityScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+		super(event, Opportunity.class, bullhornData);
 	}
 
 	/**
@@ -45,15 +41,8 @@ public class OpportunityScheduledTaskHelper extends AbstractScheduledTaskHelper 
 	 * @return the JobOrder connected to the event
 	 */
 	public Opportunity getOpportunity() {
-		if (opportunity == null) {
-			setOpportunity(findOpportunity(getEvent().getEntityId()));
-		}
-		return opportunity;
-	}
-
-	public void setOpportunity(Opportunity opportunity) {
-		this.opportunity = opportunity;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the ClientCorporation for the job, if ClientCorporation == null then makes api call, otherwise
@@ -89,17 +78,14 @@ public class OpportunityScheduledTaskHelper extends AbstractScheduledTaskHelper 
 		this.clientContact = clientContact;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" opportunity: " + opportunity + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("OpportunityScheduledTaskHelper {")
+                .append("\n\t\"clientCorporation\": ")
+                .append(clientCorporation)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append('}')
+                .toString();
+    }
 }

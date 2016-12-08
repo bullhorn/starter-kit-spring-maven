@@ -1,11 +1,19 @@
 package com.client.core.scheduledtasks.model.helper;
 
+import java.util.Map;
+
+import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
 
-import java.util.Map;
+public interface ScheduledTaskHelper<E extends BullhornEntity> {
 
-public interface ScheduledTaskHelper {
+    /**
+     * Returns the entity the subscription event occurred for
+     *
+     * @return
+     */
+    E getEntity();
 
 	
 	/**
@@ -13,7 +21,7 @@ public interface ScheduledTaskHelper {
 	 * 
 	 * @return
 	 */
-	public CustomSubscriptionEvent getEvent();
+	CustomSubscriptionEvent getEvent();
 
 	/**
 	 * Returns true if any of the field names passed in is part of the subscriptionEvent.updatedProperties
@@ -22,10 +30,10 @@ public interface ScheduledTaskHelper {
 	 * @return true if a field was updated, false otherwise
 	 */
 
-	public boolean fieldWasUpdated(String... fieldsToCheck);
+	boolean fieldWasUpdated(String... fieldsToCheck);
 	
 	
-	public <T extends BullhornEntity> Map<String, T> getAllEntitiesToSave();
+	<T extends BullhornEntity> Map<String, T> getAllEntitiesToSave();
 
 	/**
 	 * Returns a deep copy of the passed in entity, if a entity of type T already exists in allEntitiesToSaveBackToBH that entity will be
@@ -39,6 +47,8 @@ public interface ScheduledTaskHelper {
 	 * 
 	 * @return A deep copy of the passed in T entity.
 	 */
-	public <T extends UpdateEntity> T getOneEntityToSave(T entity);
+	<T extends UpdateEntity> T getOneEntityToSave(T entity);
+
+    BullhornData getBullhornData();
 
 }

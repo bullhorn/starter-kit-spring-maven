@@ -1,9 +1,9 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Lead;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
@@ -22,17 +22,17 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelper<ClientContact> {
+public class LeadScheduledTaskHelper extends AbstractScheduledTaskHelper<Lead> {
 
 	private ClientCorporation clientCorporation;
 	private CorporateUser clientContactOwner;
 
-	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, ClientContact.class);
+	public LeadScheduledTaskHelper(CustomSubscriptionEvent event) {
+		super(event, Lead.class);
 	}
-	
-	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event, ClientContact.class, bullhornData);
+
+	public LeadScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
+		super(event, Lead.class, bullhornData);
 	}
 
     /**
@@ -41,7 +41,7 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
      *
      * @return the ClientContact connected to the job connected to the placement
      */
-    public ClientContact getClientContact() {
+    public Lead getLead() {
         return getEntity();
     }
 
@@ -53,7 +53,7 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	 */
 	public ClientCorporation getClientCorporation() {
 		if (clientCorporation == null) {
-			setClientCorporation(findClientCorporation(getClientContact().getClientCorporation().getId()));
+			setClientCorporation(findClientCorporation(getLead().getClientCorporation().getId()));
 		}
 		return clientCorporation;
 	}
@@ -68,10 +68,11 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	 * 
 	 * @return the CorporateUser connected to the client contact
 	 */
-	public CorporateUser getClientContactOwner() {
+	public CorporateUser getLeadOwner() {
 		if (clientContactOwner == null) {
-			setClientContactOwner(findCorporateUser(getClientContact().getOwner().getId()));
+			setClientContactOwner(findCorporateUser(getLead().getOwner().getId()));
 		}
+
 		return clientContactOwner;
 	}
 
@@ -81,7 +82,7 @@ public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelpe
 
     @Override
     public String toString() {
-        return new StringBuilder("ClientContactScheduledTaskHelper {")
+        return new StringBuilder("LeadScheduledTaskHelper {")
                 .append("\n\t\"clientCorporation\": ")
                 .append(clientCorporation)
                 .append(",\n\t\"clientContactOwner\": ")

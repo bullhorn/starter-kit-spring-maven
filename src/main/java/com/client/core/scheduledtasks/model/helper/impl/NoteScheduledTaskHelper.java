@@ -21,27 +21,18 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper<Note> {
 
-	private Note note;
 	private JobOrder job;
 	private CorporateUser commentingUser;
 
 	public NoteScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, Note.class);
 	}
 
 	public Note getNote() {
-		if (note == null) {
-			setNote(findNote(getEvent().getEntityId()));
-		}
-		return note;
-	}
-
-	public void setNote(Note note) {
-		this.note = note;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the JoOrder for the note, if job == null then makes api call, otherwise returns job instance
@@ -77,17 +68,14 @@ public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper {
 		this.commentingUser = commentingUser;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" note: " + note + NEW_LINE);
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" commentingUser: " + commentingUser + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("NoteScheduledTaskHelper {")
+                .append("\n\t\"job\": ")
+                .append(job)
+                .append(",\n\t\"commentingUser\": ")
+                .append(commentingUser)
+                .append('}')
+                .toString();
+    }
 }
