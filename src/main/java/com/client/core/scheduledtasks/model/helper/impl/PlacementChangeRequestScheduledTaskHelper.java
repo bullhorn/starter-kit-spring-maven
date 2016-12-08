@@ -16,12 +16,9 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * by saving each dto only once, even though multiple tasks might have updated different fields on the same dto.
  * 
  * @author magnus.palm
- * 
- * @param <T>
  */
-public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduledTaskHelper<PlacementChangeRequest> {
 
-	private PlacementChangeRequest placementChangeRequest;
 	private Placement placement;
 	private JobOrder job;
 	private Candidate candidate;
@@ -30,12 +27,11 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 	private CorporateUser candidateOwner;
 
 	public PlacementChangeRequestScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, PlacementChangeRequest.class);
 	}
 
 	public PlacementChangeRequestScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+		super(event, PlacementChangeRequest.class, bullhornData);
 	}
 
 	/**
@@ -45,15 +41,8 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 	 * @return the PlacementChangeRequest
 	 */
 	public PlacementChangeRequest getPlacementChangeRequest() {
-		if (placementChangeRequest == null) {
-			setPlacementChangeRequest(findPlacementChangeRequest(getEvent().getEntityId()));
-		}
-		return placementChangeRequest;
-	}
-
-	public void setPlacementChangeRequest(PlacementChangeRequest placementChangeRequest) {
-		this.placementChangeRequest = placementChangeRequest;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the Placement based on the PlacementChangeRequest.placementID, if placement == null then makes api call, otherwise returns
@@ -155,20 +144,22 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 		this.candidateOwner = candidateOwner;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" placementChangeRequest: " + placementChangeRequest + NEW_LINE);
-		result.append(" placement: " + placement + NEW_LINE);
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("PlacementChangeRequestScheduledTaskHelper {")
+                .append("\n\t\"placement\": ")
+                .append(placement)
+                .append(",\n\t\"job\": ")
+                .append(job)
+                .append(",\n\t\"candidate\": ")
+                .append(candidate)
+                .append(",\n\t\"clientCorporation\": ")
+                .append(clientCorporation)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append(",\n\t\"candidateOwner\": ")
+                .append(candidateOwner)
+                .append('}')
+                .toString();
+    }
 }

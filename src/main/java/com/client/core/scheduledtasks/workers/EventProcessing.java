@@ -2,17 +2,16 @@ package com.client.core.scheduledtasks.workers;
 
 import java.util.List;
 
-import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import com.bullhorn.entity.ApiEntityName;
 import com.client.core.AppContext;
-import com.client.core.soap.model.SubscriptionEvent;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
-import com.client.core.scheduledtasks.model.log.BullhornLog;
 import com.client.core.base.util.StackTraceUtil;
 import com.client.core.base.workflow.node.Node;
+import com.client.core.scheduledtasks.dao.BullhornLogDAO;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
+import com.client.core.scheduledtasks.model.log.BullhornLog;
 import com.client.core.scheduledtasks.workflow.traversing.impl.AppointmentEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEducationEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
@@ -23,12 +22,15 @@ import com.client.core.scheduledtasks.workflow.traversing.impl.ClientCorporation
 import com.client.core.scheduledtasks.workflow.traversing.impl.CorporateUserEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.JobEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.JobSubmissionEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.LeadEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.NoteEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.OpportunityEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementChangeRequestEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementCommissionEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.SendoutEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.TaskEventTraverser;
+import com.client.core.soap.model.SubscriptionEvent;
 
 /**
  * Handles one subscription event by passing it through the proper workflow for the entity that had an event thrown. Also
@@ -101,9 +103,13 @@ public class EventProcessing implements Runnable {
 			handleJobEvent();
 		} else if (isJobSubmissionEvent()) {
 			handleJobSubmissionEvent();
-		} else if (isNoteEvent()) {
+		} else if (isLeadEvent()) {
+            handleLeadEvent();
+        } else if (isNoteEvent()) {
 			handleNoteEvent();
-		} else if (isPlacementEvent()) {
+		} else if (isOpportunityEvent()) {
+            handleOpportunityEvent();
+        } else if (isPlacementEvent()) {
 			handlePlacementEvent();
 		} else if (isPlacementChangeRequestEvent()) {
 			handlePlacementChangeRequestEvent();
@@ -246,6 +252,19 @@ public class EventProcessing implements Runnable {
 		return entityIsOfType(ApiEntityName.JOB_SUBMISSION.value());
 	}
 
+    private void handleLeadEvent() {
+        @SuppressWarnings("unchecked")
+        Node<LeadEventTraverser> leadScheduledTaskWorkFlow = (Node<LeadEventTraverser>) appContext
+                .getBean("leadScheduledTaskWorkFlow");
+
+        LeadEventTraverser leadEventTraverser = new LeadEventTraverser(event);
+        leadScheduledTaskWorkFlow.start(leadEventTraverser);
+    }
+
+    private boolean isLeadEvent() {
+        return entityIsOfType("Lead");
+    }
+
 	private void handleNoteEvent() {
 		@SuppressWarnings("unchecked")
 		Node<NoteEventTraverser> noteScheduledTaskWorkFlow = (Node<NoteEventTraverser>) appContext.getBean("noteScheduledTaskWorkFlow");
@@ -270,6 +289,19 @@ public class EventProcessing implements Runnable {
 	private boolean isPlacementEvent() {
 		return entityIsOfType(ApiEntityName.PLACEMENT.value());
 	}
+
+    private void handleOpportunityEvent() {
+        @SuppressWarnings("unchecked")
+        Node<OpportunityEventTraverser> opportunityScheduledTaskWorkFlow = (Node<OpportunityEventTraverser>) appContext
+                .getBean("opportunityScheduledTaskWorkFlow");
+
+        OpportunityEventTraverser opportunityEventTraverser = new OpportunityEventTraverser(event);
+        opportunityScheduledTaskWorkFlow.start(opportunityEventTraverser);
+    }
+
+    private boolean isOpportunityEvent() {
+        return entityIsOfType(ApiEntityName.PLACEMENT.value());
+    }
 
 	/**
 	 * Passes the PlacementChangeRequestEventTraverser through the placementChangeRequestScheduledTaskWorkFlow, see

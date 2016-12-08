@@ -25,9 +25,8 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * @author magnus.palm
  * 
  */
-public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelper<JobSubmission> {
 
-	private JobSubmission jobSubmission;
 	private JobOrder job;
 	private Candidate candidate;
 	private ClientCorporation clientCorporation;
@@ -35,12 +34,11 @@ public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	private CorporateUser candidateOwner;
 
 	public JobSubmissionScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, JobSubmission.class);
 	}
 
 	public JobSubmissionScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+		super(event, JobSubmission.class, bullhornData);
 	}
 
 	/**
@@ -50,14 +48,7 @@ public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelpe
 	 * @return the JobSubmission connected to the event
 	 */
 	public JobSubmission getJobSubmission() {
-		if (jobSubmission == null) {
-			setJobSubmission(findJobSubmission(getEvent().getEntityId()));
-		}
-		return jobSubmission;
-	}
-
-	public void setJobSubmission(JobSubmission jobSubmission) {
-		this.jobSubmission = jobSubmission;
+		return getEntity();
 	}
 
 	/**
@@ -145,19 +136,20 @@ public class JobSubmissionScheduledTaskHelper extends AbstractScheduledTaskHelpe
 		this.candidateOwner = candidateOwner;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("JobSubmissionScheduledTaskHelper {")
+                .append("\n\t\"job\": ")
+                .append(job)
+                .append(",\n\t\"candidate\": ")
+                .append(candidate)
+                .append(",\n\t\"clientCorporation\": ")
+                .append(clientCorporation)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append(",\n\t\"candidateOwner\": ")
+                .append(candidateOwner)
+                .append('}')
+                .toString();
+    }
 }

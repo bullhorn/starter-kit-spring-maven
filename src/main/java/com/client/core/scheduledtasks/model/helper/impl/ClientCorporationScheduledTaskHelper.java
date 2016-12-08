@@ -19,13 +19,10 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class ClientCorporationScheduledTaskHelper extends AbstractScheduledTaskHelper {
-
-	private ClientCorporation clientCorporation;
+public class ClientCorporationScheduledTaskHelper extends AbstractScheduledTaskHelper<ClientCorporation> {
 
 	public ClientCorporationScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, ClientCorporation.class);
 	}
 
 	/**
@@ -35,25 +32,7 @@ public class ClientCorporationScheduledTaskHelper extends AbstractScheduledTaskH
 	 * @return the ClientCorporation connected to the event
 	 */
 	public ClientCorporation getClientCorporation() {
-		if (clientCorporation == null) {
-			setClientCorporation(findClientCorporation(getEvent().getEntityId()));
-		}
-		return clientCorporation;
-	}
-
-	public void setClientCorporation(ClientCorporation clientCorporation) {
-		this.clientCorporation = clientCorporation;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
+        return getEntity();
+    }
 
 }

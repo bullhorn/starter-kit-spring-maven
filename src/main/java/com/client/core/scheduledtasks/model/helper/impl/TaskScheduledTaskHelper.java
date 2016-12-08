@@ -19,9 +19,8 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper<Task> {
 
-	private Task task;
 	private Placement placement;
 	private JobOrder job;
 	private JobSubmission jobSubmission;
@@ -30,20 +29,12 @@ public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private ClientContact clientContact;
 
 	public TaskScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, Task.class);
 	}
 
 	public Task getTask() {
-		if (task == null) {
-			setTask(findTask(getEvent().getEntityId()));
-		}
-		return task;
-	}
-
-	public void setTask(Task task) {
-		this.task = task;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the JoOrder for the task, if job == null then makes api call, otherwise returns job instance
@@ -119,21 +110,22 @@ public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper {
 		this.clientContact = clientContact;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" task: " + task + NEW_LINE);
-		result.append(" placement: " + placement + NEW_LINE);
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" jobSubmission: " + jobSubmission + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" taskOwner: " + taskOwner + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("TaskScheduledTaskHelper {")
+                .append("\n\t\"placement\": ")
+                .append(placement)
+                .append(",\n\t\"job\": ")
+                .append(job)
+                .append(",\n\t\"jobSubmission\": ")
+                .append(jobSubmission)
+                .append(",\n\t\"candidate\": ")
+                .append(candidate)
+                .append(",\n\t\"taskOwner\": ")
+                .append(taskOwner)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append('}')
+                .toString();
+    }
 }

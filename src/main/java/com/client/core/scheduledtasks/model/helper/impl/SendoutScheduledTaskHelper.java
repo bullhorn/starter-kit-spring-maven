@@ -19,9 +19,8 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author johnsully
  * 
  */
-public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
-	
-	private Sendout sendout;
+public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper<Sendout> {
+
 	private Candidate candidate;
 	private ClientContact clientContact;
 	private ClientCorporation clientCorporation;
@@ -29,11 +28,11 @@ public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	private CorporateUser sendingUser;
 
 	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
+		super(event, Sendout.class);
 	}
 
 	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+		super(event, Sendout.class, bullhornData);
 	}
 
 	/**
@@ -43,15 +42,8 @@ public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	 * @return the Sendout connected to the event
 	 */
 	public Sendout getSendout() {
-		if (sendout == null) {
-			setSendout(findSendout(getEvent().getEntityId()));
-		}
-		return sendout;
-	}
-
-	public void setSendout(Sendout sendout) {
-		this.sendout = sendout;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the Candidate  for the sendout, if candidate == null then makes api call, otherwise
@@ -138,20 +130,20 @@ public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper {
 		this.sendingUser = sendingUser;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" sendout: " + sendout + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append(" jobOrder: " + jobOrder + NEW_LINE);
-		result.append(" sendingUser: " + sendingUser + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("SendoutScheduledTaskHelper {")
+                .append("\n\t\"candidate\": ")
+                .append(candidate)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append(",\n\t\"clientCorporation\": ")
+                .append(clientCorporation)
+                .append(",\n\t\"jobOrder\": ")
+                .append(jobOrder)
+                .append(",\n\t\"sendingUser\": ")
+                .append(sendingUser)
+                .append('}')
+                .toString();
+    }
 }

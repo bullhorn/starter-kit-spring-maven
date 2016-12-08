@@ -22,19 +22,17 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class JobScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class JobOrderScheduledTaskHelper extends AbstractScheduledTaskHelper<JobOrder> {
 
-	private JobOrder job;
 	private ClientCorporation clientCorporation;
 	private ClientContact clientContact;
 
-	public JobScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+	public JobOrderScheduledTaskHelper(CustomSubscriptionEvent event) {
+		super(event, JobOrder.class);
 	}
 
-	public JobScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+	public JobOrderScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
+		super(event, JobOrder.class, bullhornData);
 	}
 
 	/**
@@ -44,15 +42,8 @@ public class JobScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	 * @return the JobOrder connected to the event
 	 */
 	public JobOrder getJob() {
-		if (job == null) {
-			setJob(findJobOrder(getEvent().getEntityId()));
-		}
-		return job;
-	}
-
-	public void setJob(JobOrder job) {
-		this.job = job;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the ClientCorporation for the job, if ClientCorporation == null then makes api call, otherwise
@@ -88,17 +79,14 @@ public class JobScheduledTaskHelper extends AbstractScheduledTaskHelper {
 		this.clientContact = clientContact;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" clientCorporation: " + clientCorporation + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("JobOrderScheduledTaskHelper {")
+                .append("\n\t\"clientCorporation\": ")
+                .append(clientCorporation)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append('}')
+                .toString();
+    }
 }

@@ -66,6 +66,12 @@
 	</bean>
 
 
+    <!-- NOTE -->
+    <bean id="leadScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
+        <property name="nextNode" ref="saveDtos" />
+    </bean>
+
+
 	<!-- NOTE -->
 	<bean id="noteScheduledTaskWorkFlow" class="com.client.core.base.workflow.node.start.StartNode">
 		<property name="nextNode" ref="saveDtos" />

@@ -21,18 +21,16 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
  * @author magnus.palm
  * 
  */
-public class CandidateScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class CandidateScheduledTaskHelper extends AbstractScheduledTaskHelper<Candidate> {
 
-	private Candidate candidate;
 	private CorporateUser candidateOwner;
 
 	public CandidateScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, Candidate.class);
 	}
 
 	public CandidateScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event,bullhornData);
+		super(event, Candidate.class, bullhornData);
 	}
 
 	/**
@@ -42,15 +40,8 @@ public class CandidateScheduledTaskHelper extends AbstractScheduledTaskHelper {
 	 * @return the Candidate connected to the event
 	 */
 	public Candidate getCandidate() {
-		if (candidate == null) {
-			setCandidate(findCandidate(getEvent().getEntityId()));
-		}
-		return candidate;
-	}
-
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
+        return getEntity();
+    }
 
 	/**
 	 * Gets the CorporateUser candidate owner for the Candidate , if candidateOwner == null then makes api call,
@@ -69,16 +60,12 @@ public class CandidateScheduledTaskHelper extends AbstractScheduledTaskHelper {
 		this.candidateOwner = candidateOwner;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" candidateOwner: " + candidateOwner + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("CandidateScheduledTaskHelper {")
+                .append("\n\t\"candidateOwner\": ")
+                .append(candidateOwner)
+                .append('}')
+                .toString();
+    }
 }

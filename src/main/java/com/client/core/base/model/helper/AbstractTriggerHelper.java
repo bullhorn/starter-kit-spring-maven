@@ -24,7 +24,6 @@ import com.bullhornsdk.data.model.entity.embedded.UserType;
 import com.bullhornsdk.data.model.parameter.QueryParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
 import com.bullhornsdk.data.model.response.crud.CrudResponse;
-import com.google.common.collect.Sets;
 
 public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements TriggerHelper<E> {
 
@@ -64,6 +63,7 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 		if (updatingUser == null) {
 			setUpdatingUser(findCorporateUser(updatingUserID));
 		}
+
 		return updatingUser;
 	}
 
@@ -72,14 +72,14 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 		this.updatingUser = updatingUser;
 	}
 
-	private final Set<String> userTypeFields = Sets.newHashSet("id","userType(id,name,description,enabled,isHidden,dateAdded)");
-
 	@Override
 	public UserType getUpdatingUserUserType() {
 		if (updatingUserUserType == null) {
-			CorporateUser withUserType = findEntity(CorporateUser.class, getUpdatingUserID(), userTypeFields);
-			setUpdatingUserUserType(withUserType.getUserType());
+			UserType userType = findEntity(UserType.class, getUpdatingUser().getUserType().getId());
+
+			setUpdatingUserUserType(userType);
 		}
+
 		return updatingUserUserType;
 	}
 
@@ -102,11 +102,6 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 	}
 
 	@Override
-	public UserType findUserType() {
-		return getUpdatingUser().getUserType();
-	}
-
-	@Override
 	public CorporateUser findCorporateUser(Integer id) {
 		return findEntity(CorporateUser.class, id);
 	}
@@ -119,26 +114,10 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 	@Override
 	public <RE extends BullhornEntity> RE findEntity(Class<RE> type, Integer id, Set<String> fields) {
 		if (id == null || id <= 0) {
-			return getBlankEntity(type);
+            throw new IllegalArgumentException("Must pass in a non-null id to findEntity");
 		}
 
-		RE entity = bullhornData.findEntity(type, id, fields);
-
-		if (entity == null) {
-			log.error("Error making BH api call. Error getting " + type.getSimpleName() + " with id : " + id);
-			return getBlankEntity(type);
-		}
-		return entity;
-	}
-
-	private <RE extends BullhornEntity> RE getBlankEntity(Class<RE> type) {
-		try {
-			return type.newInstance();
-		} catch (Exception e) {
-			log.error("Error instantiating entity of type: " + type, e);
-			throw new IllegalStateException(e);
-		}
-
+		return bullhornData.findEntity(type, id, fields);
 	}
 
 	@Override
@@ -199,13 +178,10 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 	 */
 	@Override
 	public List<PlacementCommission> getCommissions(Integer placementID) {
-
 		QueryParams params = ParamFactory.queryParams();
 		params.setCount(50);
-		;
-		return bullhornData.queryForList(PlacementCommission.class, "placement.id=" + placementID + " AND user.id IS NOT NULL", null,
-				params);
 
+		return bullhornData.queryForList(PlacementCommission.class, "placement.id=" + placementID + " AND user.id IS NOT NULL", null, params);
 	}
 
 	@Override

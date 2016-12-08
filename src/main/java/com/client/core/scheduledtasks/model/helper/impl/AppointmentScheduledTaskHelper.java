@@ -24,9 +24,8 @@ import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
  * @author magnus.palm
  *
  */
-public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper {
+public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper<Appointment> {
 
-	private Appointment appointment;
 	private Candidate candidate;
 	private JobOrder job;
 	private ClientContact clientContact;
@@ -34,8 +33,7 @@ public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper 
 	private Placement placement;
 
 	public AppointmentScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event);
-
+		super(event, Appointment.class);
 	}
 
 	/**
@@ -45,17 +43,8 @@ public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper 
 	 * @return the Candidate connected to the event
 	 */
 	public Appointment getAppointment() {
-		if (appointment == null) {
-			setAppointment(findAppointment(getEvent().getEntityId()));
-		}
-		return appointment;
-	}
-
-	public void setAppointment(Appointment appointment) {
-		this.appointment = appointment;
-	}
-
-
+        return getEntity();
+    }
 
 	public Candidate getCandidate() {
 		if (candidate == null) {
@@ -112,21 +101,20 @@ public class AppointmentScheduledTaskHelper extends AbstractScheduledTaskHelper 
 		this.placement = placement;
 	}
 
-
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		String NEW_LINE = System.getProperty("line.separator");
-		result.append(this.getClass().getName() + " Object {" + NEW_LINE);
-		result.append(" appointment: " + appointment + NEW_LINE);
-		result.append(" candidate: " + candidate + NEW_LINE);
-		result.append(" job: " + job + NEW_LINE);
-		result.append(" clientContact: " + clientContact + NEW_LINE);
-		result.append(" appointmentOwner: " + appointmentOwner + NEW_LINE);
-		result.append(" placement: " + placement + NEW_LINE);
-		result.append("}");
-		return result.toString();
-
-	}
-
+    @Override
+    public String toString() {
+        return new StringBuilder("AppointmentScheduledTaskHelper {")
+                .append("\n\t\"candidate\": ")
+                .append(candidate)
+                .append(",\n\t\"job\": ")
+                .append(job)
+                .append(",\n\t\"clientContact\": ")
+                .append(clientContact)
+                .append(",\n\t\"appointmentOwner\": ")
+                .append(appointmentOwner)
+                .append(",\n\t\"placement\": ")
+                .append(placement)
+                .append('}')
+                .toString();
+    }
 }
