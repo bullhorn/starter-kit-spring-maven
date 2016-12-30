@@ -16,6 +16,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -342,6 +343,12 @@ public class Utility {
 
     public static String nullCheck(String value) {
         return nullCheck(value, "");
+    }
+
+    public static String longDateFormatToShort(String applicationDateFormat) {
+        String shortDateFormat = StringUtils.defaultIfBlank(applicationDateFormat, "").replaceAll("MM", "M").replaceAll("dd", "d").replaceAll("yyyy", "yy");
+
+        return new StringBuilder(shortDateFormat).append(" h:mm a").toString();
     }
 
 }
