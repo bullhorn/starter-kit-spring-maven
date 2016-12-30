@@ -19,19 +19,18 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.core.AppContext;
+import com.client.core.ApplicationSettings;
 import com.client.core.base.util.Util;
 import com.client.core.base.util.Utility;
 
 public abstract class AbstractFormDto<T extends BullhornEntity> implements CustomDto<T> {
 
-	private final DateTimeFormatter dateFormatStandardUS = DateTimeFormat.forPattern("MM/dd/yyyy").withZoneUTC();
-	private final DateTimeFormatter dateTimeShortPattern = DateTimeFormat.forPattern("M/d/yy h:mm a").withZoneUTC();
 	private final DateTimeFormatter dateFormatYyyyMmDd1 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSSZ").withZoneUTC();
 	private final DateTimeFormatter dateFormatYyyyMmDd2 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS").withZoneUTC();
 	private final DateTimeFormatter dateFormatYyyyMmDd3 = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SS").withZoneUTC();
 
-	private List<DateTimeFormatter> dateFormats = Arrays.asList(dateFormatStandardUS, dateTimeShortPattern, dateFormatYyyyMmDd1,
-			dateFormatYyyyMmDd2, dateFormatYyyyMmDd3);
+	private final List<DateTimeFormatter> dateFormats;
 
 	private final Map<String, Boolean> stringToBooleanMapping;
 
@@ -43,6 +42,17 @@ public abstract class AbstractFormDto<T extends BullhornEntity> implements Custo
 		this.log = log;
 		this.formPopulationErrors = new ConcurrentHashMap<String, String>();
 		this.stringToBooleanMapping = populateStringToBooleanMap();
+
+        ApplicationSettings appSettings = AppContext.getApplicationContext().getBean(ApplicationSettings.class);
+
+        String applicationDateFormat = appSettings.getApplicationDateFormat();
+        String applicationShortFormat = Utility.longDateFormatToShort(applicationDateFormat);
+
+        this.dateFormats  = Arrays.asList(
+            DateTimeFormat.forPattern(applicationDateFormat).withZoneUTC(),
+            DateTimeFormat.forPattern(applicationShortFormat).withZoneUTC(),
+            dateFormatYyyyMmDd1, dateFormatYyyyMmDd2, dateFormatYyyyMmDd3
+        );
 	}
 
 	/**

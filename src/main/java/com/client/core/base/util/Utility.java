@@ -16,6 +16,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -148,24 +149,24 @@ public class Utility {
 	}
 
 	public static DateTime parseStringToDateTime(String dateStr, String dateFormat) {
-	
-	    
+
+
 	    Date date = parseStringToDate(dateStr, dateFormat);
-	    
+
 	    if(date == null){
 	        return null;
 	    }
-		
+
 		DateTime now = Util.nowUsingTimeZone(null);
-		
+
 		DateTime theCorrectDate = new DateTime(date,DateTimeZone.UTC);
 		theCorrectDate = theCorrectDate.plusHours(now.getHourOfDay());
 		theCorrectDate = theCorrectDate.plusMinutes(now.getMinuteOfHour());
 		return theCorrectDate;
 	}
-	
 
-	
+
+
 	public static DateTime forceParseStringToDateTime(String dateStr, String dateFormat) {
 		return new DateTime(forceParseStringToDate(dateStr, dateFormat));
 	}
@@ -180,18 +181,18 @@ public class Utility {
 		}
 
 		TimeZone timeZone = TimeZone.getTimeZone("America/Detroit");
-		
+
 		DateFormat dateFormat = new SimpleDateFormat(format);
 		dateFormat.setLenient(false);
 		dateFormat.setTimeZone(timeZone);
 		return dateFormat.format(date);
 	}
-	
+
 	public static String formatDateTime(DateTime date, String format) {
 		if(date == null) {
 			return "";
 		}
-		
+
 		return formatDate(date.toDate(), format);
 	}
 
@@ -199,9 +200,9 @@ public class Utility {
 		if(date == null) {
 			return  null;
 		}
-		
+
 		TimeZone timeZone = TimeZone.getTimeZone("America/Detroit");
-		
+
 		GregorianCalendar gregorianCal = new GregorianCalendar(timeZone);
 		gregorianCal.setTime(date);
 
@@ -216,11 +217,11 @@ public class Utility {
 		if(date == null) {
 			return  null;
 		}
-		
+
 		DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(timezone);
-		
+
 		DateTime datetime = new DateTime(date.getTime(), dateTimeZone);
-		
+
 		return dateTimeToXmlGregorianCalendar(datetime);
 	}
 
@@ -235,31 +236,31 @@ public class Utility {
 		if(toCheckIn == null || toCheckFor == null || toCheckFor.isEmpty()) {
 			return false;
 		}
-		
+
 		if(toCheckIn.isEmpty()) {
 			return true;
 		}
-	
+
 		List<String> valuesForCheck = Arrays.asList(toCheckIn.split(","));
 		for(String value : valuesForCheck) {
 			if(value.trim().equalsIgnoreCase(toCheckFor.trim())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public static Boolean listContains(List<String> toCheckIn, String toCheckFor) {
 		for(String object : toCheckIn) {
 			if(object.equalsIgnoreCase(toCheckFor)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public static String arrayToString(String[] a, String separator) {
 		StringBuilder result = new StringBuilder();
 		if (a == null) {
@@ -271,7 +272,7 @@ public class Utility {
 				result.append(a[i]);
 			}
 		}
-		
+
 		return result.toString();
 	}
 
@@ -279,35 +280,35 @@ public class Utility {
 		if(bool == null || bool.isEmpty()) {
 			return false;
 		}
-		
+
 		if(bool.equalsIgnoreCase(Boolean.TRUE.toString())) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
     public static String parseString(Object value) {
         return value == null ? "" : value.toString();
     }
-	
+
 	public static DateTime xmlGregorianCalendarToDateTime(XMLGregorianCalendar calendar) {
 		if(calendar == null) {
 			return  null;
 		}
-		
+
 		DateTimeZone timeZone = DateTimeZone.forTimeZone(calendar.getTimeZone(0));
-		
+
 		DateTime dateTime = new DateTime(calendar.toGregorianCalendar().getTime(), timeZone);
-		
+
 		return dateTime;
 	}
-	
+
 	public static XMLGregorianCalendar dateTimeToXmlGregorianCalendar(DateTime dateTime) {
 		if(dateTime == null) {
 			return  null;
 		}
-		
+
 		GregorianCalendar gregorianCalendar = new GregorianCalendar();
 		gregorianCalendar.setTimeInMillis(dateTime.toLocalDateTime().toDate().getTime());
 
@@ -317,14 +318,14 @@ public class Utility {
 			return null;
 		}
 	}
-	
+
 	public static String createEntireInStatement(List<String> values) {
 		StringBuilder builder = new StringBuilder(" IN (");
-		
+
 		for(String value : values) {
 			builder.append("'"+value + "',");
 		}
-		
+
 		return builder.subSequence(0, builder.length()-1).toString()+")";
 	}
 
@@ -342,6 +343,12 @@ public class Utility {
 
     public static String nullCheck(String value) {
         return nullCheck(value, "");
+    }
+
+    public static String longDateFormatToShort(String applicationDateFormat) {
+        String shortDateFormat = StringUtils.defaultIfBlank(applicationDateFormat, "").replaceAll("MM", "M").replaceAll("dd", "d").replaceAll("yyyy", "yy");
+
+        return new StringBuilder(shortDateFormat).append(" h:mm a").toString();
     }
 
 }
