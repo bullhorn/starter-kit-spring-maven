@@ -35,7 +35,7 @@ public class MailInfo implements Serializable {
     private String mimeType;
 
     public MailInfo(){
-    	this.mimeType = MediaType.TEXT_HTML.getType();
+    	this.mimeType = MediaType.TEXT_HTML.toString();
     }
 
     /**
