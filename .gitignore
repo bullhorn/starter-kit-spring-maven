@@ -28,3 +28,9 @@ src/main/webapp/javascript/custom/**/*.min.js.map
 #less compiled files
 src/main/webapp/styles/formscript/**/*.css
 src/main/webapp/styles/custom/**/*.css
+
+#eclipse files
+.project
+.springBeans
+.classpath
+.settings/
