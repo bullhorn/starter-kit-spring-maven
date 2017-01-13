@@ -1,19 +1,7 @@
 package com.client.core.scheduledtasks.service.eventHandling;
 
-import com.client.BaseTest;
-import com.client.core.ApplicationSettings;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
-import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
-import com.client.core.scheduledtasks.tools.enumeration.EventType;
-import com.client.core.scheduledtasks.workers.EventProcessing;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,8 +10,20 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+
+import com.client.BaseTest;
+import com.client.core.ApplicationSettings;
+import com.client.core.scheduledtasks.dao.BullhornLogDAO;
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
+import com.client.core.scheduledtasks.tools.enumeration.EventType;
+import com.client.core.scheduledtasks.workers.EventProcessing;
+import com.google.common.collect.Sets;
 
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
 public class TestEventProcessing extends BaseTest {
@@ -93,9 +93,9 @@ public class TestEventProcessing extends BaseTest {
 
 	private List<String> createEventTypes() {
 		List<String> eventTypes = new ArrayList<String>();
-		eventTypes.add(EventType.DELETE.value());
-		eventTypes.add(EventType.INSERT.value());
-		eventTypes.add(EventType.UPDATE.value());
+        eventTypes.add(EventType.DELETED.value());
+        eventTypes.add(EventType.INSERTED.value());
+        eventTypes.add(EventType.UPDATED.value());
 		return eventTypes;
 	}
 
@@ -144,7 +144,7 @@ public class TestEventProcessing extends BaseTest {
 
 			}
 
-			assertFalse("Error with entity: " + event.getEntityName() + ", event type: " + event.getEventType(), error);
+			assertFalse("Error with entity: " + event.getEntityName() + ", event type: " + event.getEntityEventType(), error);
 		}
 
 		// shutdown pool, wait until it's done

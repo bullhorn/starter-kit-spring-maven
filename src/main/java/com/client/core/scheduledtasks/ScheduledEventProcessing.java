@@ -82,7 +82,7 @@ public class ScheduledEventProcessing implements Runnable {
 					exec.execute(processEvent);
 				} catch (RuntimeException e) {
 					log.error("Error occurred for entity " + event.getEntityName() + " #" +
-							+event.getEntityId() + " " + event.getEventType(), e);
+							+event.getEntityId() + " " + event.getEntityEventType(), e);
 				}
 			}
 
@@ -106,7 +106,7 @@ public class ScheduledEventProcessing implements Runnable {
 
 			if (customSubscriptionEvent.getUpdatingUserId() != null && !apiUserID.equalsIgnoreCase(customSubscriptionEvent.getUpdatingUserId().toString())) {
 
-				String eventKey = customSubscriptionEvent.getEntityName() + customSubscriptionEvent.getEntityId() + customSubscriptionEvent.getEventType() + customSubscriptionEvent.getUpdatingUserId();
+				String eventKey = customSubscriptionEvent.getEntityName() + customSubscriptionEvent.getEntityId() + customSubscriptionEvent.getEntityEventType() + customSubscriptionEvent.getUpdatingUserId();
 				CustomSubscriptionEvent existingEvent = eventMap.get(eventKey);
 
 				try {

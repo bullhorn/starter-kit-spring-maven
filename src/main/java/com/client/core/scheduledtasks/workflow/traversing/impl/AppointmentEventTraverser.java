@@ -15,7 +15,7 @@ import com.client.core.scheduledtasks.model.helper.impl.AppointmentScheduledTask
 public class AppointmentEventTraverser extends AbstractScheduledTasksTraverser<AppointmentScheduledTaskHelper> {
 
 	public AppointmentEventTraverser(CustomSubscriptionEvent event) {
-		super(new AppointmentScheduledTaskHelper(event),EventType.getType(event.getEventType()));
+		super(new AppointmentScheduledTaskHelper(event),EventType.getType(event.getEntityEventType()));
 	}
 
 }

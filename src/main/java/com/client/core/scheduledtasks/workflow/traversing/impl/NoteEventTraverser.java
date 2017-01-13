@@ -15,7 +15,7 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class NoteEventTraverser extends AbstractScheduledTasksTraverser<NoteScheduledTaskHelper> {
 
 	public NoteEventTraverser(CustomSubscriptionEvent event) {
-		super(new NoteScheduledTaskHelper(event), EventType.getType(event.getEventType()));
+		super(new NoteScheduledTaskHelper(event), EventType.getType(event.getEntityEventType()));
 
 	}
 

@@ -28,7 +28,7 @@ public class BullhornLog {
 		bhlog.setRequestID(event.getRequestId().toString());
 		bhlog.setEventID(event.getEventId());
 		bhlog.setSubscriptionID(event.getSubscriptionName());
-		bhlog.setEventType(event.getEventType());
+		bhlog.setEventType(event.getEntityEventType());
 		bhlog.setStatus("success");
 		bhlog.setError("");
 		bhlog.setUpdatedProperties(event.getUpdatedProperties().toArray(new String[0]));

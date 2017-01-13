@@ -16,12 +16,12 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class ClientContactEventTraverser extends AbstractScheduledTasksTraverser<ClientContactScheduledTaskHelper> {
 
 	public ClientContactEventTraverser(CustomSubscriptionEvent event) {
-		super(new ClientContactScheduledTaskHelper(event),EventType.getType(event.getEventType()));
+		super(new ClientContactScheduledTaskHelper(event),EventType.getType(event.getEntityEventType()));
 		
 	}
 	
 	public ClientContactEventTraverser(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(new ClientContactScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEventType()));
+		super(new ClientContactScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEntityEventType()));
 	}
 
 }

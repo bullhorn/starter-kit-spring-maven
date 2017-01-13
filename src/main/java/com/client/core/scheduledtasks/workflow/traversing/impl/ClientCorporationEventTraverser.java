@@ -16,7 +16,7 @@ public class ClientCorporationEventTraverser extends
         AbstractScheduledTasksTraverser<ClientCorporationScheduledTaskHelper> {
 
 	public ClientCorporationEventTraverser(CustomSubscriptionEvent event ) {
-		super(new ClientCorporationScheduledTaskHelper(event),EventType.getType(event.getEventType()));
+		super(new ClientCorporationScheduledTaskHelper(event),EventType.getType(event.getEntityEventType()));
 
 	}
 
