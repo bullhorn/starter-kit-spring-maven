@@ -40,16 +40,6 @@ public class TestBullhornAPISoap extends BaseTest {
 	}
 
 	@Test
-	public void testGetSubscriptionEvents() {
-
-		List<SubscriptionEvent> subscriptionEvents = bullhornAPI.getSubscriptionEvents(100,
-				applicationSettings.getStandardSubscriptionName());
-
-		assertNotNull(subscriptionEvents);
-
-	}
-
-	@Test
 	public void testFindEntity() {
 		CandidateDto candidate = bullhornAPI.findEntity(ApiEntityName.CANDIDATE.value(), getTestEntities()
 				.getCandidateId());
