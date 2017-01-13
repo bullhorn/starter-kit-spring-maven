@@ -16,12 +16,12 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class OpportunityEventTraverser extends AbstractScheduledTasksTraverser<OpportunityScheduledTaskHelper> {
 
 	public OpportunityEventTraverser(CustomSubscriptionEvent event) {
-		super(new OpportunityScheduledTaskHelper(event), EventType.getType(event.getEventType()));
+		super(new OpportunityScheduledTaskHelper(event), EventType.getType(event.getEntityEventType()));
 
 	}
 
 	public OpportunityEventTraverser(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(new OpportunityScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEventType()));
+		super(new OpportunityScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEntityEventType()));
 	}
 
 }

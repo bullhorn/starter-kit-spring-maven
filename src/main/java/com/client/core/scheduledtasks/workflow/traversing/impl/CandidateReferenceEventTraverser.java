@@ -15,7 +15,7 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class CandidateReferenceEventTraverser extends AbstractScheduledTasksTraverser<CandidateReferenceScheduledTaskHelper> {
 
 	public CandidateReferenceEventTraverser(CustomSubscriptionEvent event) {
-		super(new CandidateReferenceScheduledTaskHelper(event),EventType.getType(event.getEventType()));
+		super(new CandidateReferenceScheduledTaskHelper(event),EventType.getType(event.getEntityEventType()));
 	
 	}
 

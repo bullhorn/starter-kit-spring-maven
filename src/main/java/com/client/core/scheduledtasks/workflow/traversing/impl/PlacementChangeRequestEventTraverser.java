@@ -16,12 +16,12 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class PlacementChangeRequestEventTraverser extends AbstractScheduledTasksTraverser<PlacementChangeRequestScheduledTaskHelper> {
 
 	public PlacementChangeRequestEventTraverser(CustomSubscriptionEvent event) {
-		super(new PlacementChangeRequestScheduledTaskHelper(event),EventType.getType(event.getEventType()));
+		super(new PlacementChangeRequestScheduledTaskHelper(event),EventType.getType(event.getEntityEventType()));
 		
 	}
 
 	public PlacementChangeRequestEventTraverser(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(new PlacementChangeRequestScheduledTaskHelper(event,bullhornData),EventType.getType(event.getEventType()));
+		super(new PlacementChangeRequestScheduledTaskHelper(event,bullhornData),EventType.getType(event.getEntityEventType()));
 	}
 
 }

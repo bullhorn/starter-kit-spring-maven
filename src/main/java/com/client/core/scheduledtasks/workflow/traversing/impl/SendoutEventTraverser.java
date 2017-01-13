@@ -16,11 +16,11 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class SendoutEventTraverser extends AbstractScheduledTasksTraverser<SendoutScheduledTaskHelper> {
 
 	public SendoutEventTraverser(CustomSubscriptionEvent event) {
-		super(new SendoutScheduledTaskHelper(event), EventType.getType(event.getEventType()));
+		super(new SendoutScheduledTaskHelper(event), EventType.getType(event.getEntityEventType()));
 	}
 
 	public SendoutEventTraverser(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(new SendoutScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEventType()));
+		super(new SendoutScheduledTaskHelper(event,bullhornData), EventType.getType(event.getEntityEventType()));
 	}
 	
 }

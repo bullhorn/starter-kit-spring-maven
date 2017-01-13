@@ -6,7 +6,6 @@ import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workers.EventProcessing;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -144,7 +143,7 @@ public class TestEventProcessing extends BaseTest {
 
 			}
 
-			assertFalse("Error with entity: " + event.getEntityName() + ", event type: " + event.getEventType(), error);
+			assertFalse("Error with entity: " + event.getEntityName() + ", event type: " + event.getEntityEventType(), error);
 		}
 
 		// shutdown pool, wait until it's done

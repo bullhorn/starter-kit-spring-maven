@@ -15,7 +15,7 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 public class CorporateUserEventTraverser extends AbstractScheduledTasksTraverser<CorporateUserScheduledTaskHelper> {
 
 	public CorporateUserEventTraverser(CustomSubscriptionEvent event) {
-		super(new CorporateUserScheduledTaskHelper(event),EventType.getType(event.getEventType()));
+		super(new CorporateUserScheduledTaskHelper(event),EventType.getType(event.getEntityEventType()));
 		
 	}
 

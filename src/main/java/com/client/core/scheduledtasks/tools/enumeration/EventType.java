@@ -4,20 +4,8 @@ package com.client.core.scheduledtasks.tools.enumeration;
  * The type of event that occurred.
  */
 public enum EventType {
-    /**
-     * An insert event
-     */
-	INSERT("INSERT"),
 	INSERTED("INSERTED"),
-    /**
-     * An update event
-     */
-    UPDATE("UPDATE"),
 	UPDATED("UPDATED"),
-    /**
-     * A delete event
-     */
-    DELETE("DELETE"),
 	DELETED("DELETED");
 
 	private final String value;
