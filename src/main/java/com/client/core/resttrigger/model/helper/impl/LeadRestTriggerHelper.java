@@ -31,7 +31,7 @@ public class LeadRestTriggerHelper extends LeadTriggerHelper implements RestTrig
 	@Override
 	public Lead getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, Lead.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, Lead.class, valuesChanged, Lead::new));
 		}
 
 		return newEntity;

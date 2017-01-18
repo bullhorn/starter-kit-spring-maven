@@ -1,6 +1,8 @@
 package com.client.core.base.util;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
@@ -30,8 +32,12 @@ public class TriggerUtil {
 		return false;
 	}
 
-	public static <E extends BullhornEntity> E populateEntity(Integer entityID, Class<E> type, Map<String, Object> values) {
-		E entity = getBullhornData().findEntity(type, entityID);
+	public static <E extends BullhornEntity> E populateEntity(Integer entityID, Class<E> type, Map<String, Object> values, Supplier<E> constructor) {
+        E entity = Optional.of(entityID).filter(id -> {
+            return id != null && id > 0;
+        }).map( id -> {
+            return getBullhornData().findEntity(type, id);
+        }).orElseGet(constructor);
 
 		EntityChanger entityChanger = getEntityChanger();
 

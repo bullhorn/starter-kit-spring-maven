@@ -31,7 +31,7 @@ public class CandidateRestTriggerHelper extends CandidateTriggerHelper implement
 	@Override
 	public Candidate getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, Candidate.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, Candidate.class, valuesChanged, Candidate::new));
 		}
 
 		return newEntity;

@@ -31,7 +31,7 @@ public class ClientCorporationRestTriggerHelper extends ClientCorporationTrigger
 	@Override
 	public ClientCorporation getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, ClientCorporation.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, ClientCorporation.class, valuesChanged, ClientCorporation::new));
 		}
 
 		return newEntity;

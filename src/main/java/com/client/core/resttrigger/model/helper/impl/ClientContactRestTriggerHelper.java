@@ -31,7 +31,7 @@ public class ClientContactRestTriggerHelper extends ClientContactTriggerHelper i
 	@Override
 	public ClientContact getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, ClientContact.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, ClientContact.class, valuesChanged, ClientContact::new));
 		}
 
 		return newEntity;

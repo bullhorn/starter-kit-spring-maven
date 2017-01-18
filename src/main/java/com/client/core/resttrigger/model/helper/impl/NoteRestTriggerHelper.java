@@ -31,7 +31,7 @@ public class NoteRestTriggerHelper extends NoteTriggerHelper implements RestTrig
 	@Override
 	public Note getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, Note.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, Note.class, valuesChanged, Note::new));
 		}
 
 		return newEntity;
