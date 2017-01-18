@@ -31,7 +31,7 @@ public class OpportunityRestTriggerHelper extends OpportunityTriggerHelper imple
 	@Override
 	public Opportunity getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, Opportunity.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, Opportunity.class, valuesChanged, Opportunity::new));
 		}
 
 		return newEntity;

@@ -31,7 +31,7 @@ public class JobOrderRestTriggerHelper extends JobOrderTriggerHelper implements 
 	@Override
 	public JobOrder getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, JobOrder.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, JobOrder.class, valuesChanged, JobOrder::new));
 		}
 
 		return newEntity;

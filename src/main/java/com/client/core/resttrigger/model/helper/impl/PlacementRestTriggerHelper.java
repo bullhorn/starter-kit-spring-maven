@@ -31,7 +31,7 @@ public class PlacementRestTriggerHelper extends PlacementTriggerHelper implement
 	@Override
 	public Placement getNewEntity() {
 		if(newEntity == null) {
-			setNewEntity(TriggerUtil.populateEntity(entityID, Placement.class, valuesChanged));
+			setNewEntity(TriggerUtil.populateEntity(entityID, Placement.class, valuesChanged, Placement::new));
 		}
 
 		return newEntity;
