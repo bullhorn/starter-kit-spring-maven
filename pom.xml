@@ -692,6 +692,16 @@
                             <directory>src/main/webapp/javascript/custom</directory>
                             <targetPath>javascript/custom</targetPath>
                         </webResource>
+                        <webResource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp/styles/formscript</directory>
+                            <targetPath>styles/formscript</targetPath>
+                        </webResource>
+                        <webResource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp/styles/custom</directory>
+                            <targetPath>styles/custom</targetPath>
+                        </webResource>
                     </webResources>
                 </configuration>
             </plugin>
