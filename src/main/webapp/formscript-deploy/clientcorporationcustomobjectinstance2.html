@@ -1,0 +1,14 @@
+<script type="text/javascript" src="${applicationRoot}/javascript/library/require/require.js" data-main="${applicationRoot}/javascript/formscript/formscript"></script>
+<script type="text/javascript" src="${applicationRoot}/javascript/formscript/load.js"></script>
+
+<script type="text/javascript">
+    var entity = 'clientcorporationcustomobjectinstance2';
+
+    var requireInterval = setInterval(function() {
+        if(typeof requireForPs === 'function') {
+            clearInterval(requireInterval);
+
+            requireForPs(entity);
+        }
+    }, 250);
+</script>
