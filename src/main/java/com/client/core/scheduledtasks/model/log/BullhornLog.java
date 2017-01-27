@@ -1,8 +1,10 @@
 package com.client.core.scheduledtasks.model.log;
 
-import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
-
 import java.sql.Date;
+import java.util.Set;
+
+import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
+import com.google.common.collect.Sets;
 
 public class BullhornLog {
 
@@ -31,7 +33,9 @@ public class BullhornLog {
 		bhlog.setEventType(event.getEntityEventType());
 		bhlog.setStatus("success");
 		bhlog.setError("");
-		bhlog.setUpdatedProperties(event.getUpdatedProperties().toArray(new String[0]));
+        Set<String> updatedProperties = event.getUpdatedProperties() == null ? Sets.newHashSet() : event.getUpdatedProperties();
+
+        bhlog.setUpdatedProperties(updatedProperties.toArray(new String[0]));
 		bhlog.setEventTimeStamp(new Date(event.getEventTimestamp().getMillis()));
 		return bhlog;
 
