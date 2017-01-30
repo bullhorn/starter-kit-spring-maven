@@ -4,7 +4,7 @@ define([], function() {
             return this.getByLabel(label, 'input[type="text"]')
         },
 
-        getByLabel: function(label, inputSelector) {
+        getInputByLabel: function(label, inputSelector) {
             return $('td.EditFieldLabel:contains("'+label+'")').closest('tr').find('td.EditField').find(inputSelector);
         },
 
