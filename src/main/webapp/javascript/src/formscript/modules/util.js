@@ -1,7 +1,7 @@
 define([], function() {
     return {
         getTextInputByLabel: function(label) {
-            return this.getByLabel(label, 'input[type="text"]')
+            return this.getInputByLabel(label, 'input[type="text"]')
         },
 
         getInputByLabel: function(label, inputSelector) {
