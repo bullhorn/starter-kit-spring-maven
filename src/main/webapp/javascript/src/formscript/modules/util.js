@@ -1,5 +1,13 @@
 define([], function() {
     return {
+        getTextInputByLabel: function(label) {
+            return this.getByLabel(label, 'input[type="text"]')
+        },
+
+        getByLabel: function(label, inputSelector) {
+            return $('td.EditFieldLabel:contains("'+label+'")').closest('tr').find('td.EditField').find(inputSelector);
+        },
+
         disableField: function(editRow) {
             if(editRow.length > 0) {
                 if(editRow.find('select').length > 0) {
