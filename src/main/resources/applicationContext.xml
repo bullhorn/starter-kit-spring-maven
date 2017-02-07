@@ -7,7 +7,7 @@
 
 	<bean id="applicationContextProvider" class="com.client.core.ApplicationContextProvider"></bean>
 
-	<context:property-placeholder location="classpath*:*-${envTarget}.properties" />
+	<context:property-placeholder location="classpath*:*-${profile}.properties" />
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.client.core" />

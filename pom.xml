@@ -565,7 +565,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <envTarget>prod</envTarget>
+                <profile>prod</profile>
             </properties>
         </profile>
         <profile>
@@ -578,7 +578,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <envTarget>staging</envTarget>
+                <profile>staging</profile>
             </properties>
         </profile>
         <profile>
@@ -591,11 +591,14 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <envTarget>testing</envTarget>
+                <profile>testing</profile>
             </properties>
         </profile>
     </profiles>
     <build>
+        <filters>
+            <filter>src/main/resources/app-${profile}.properties</filter>
+        </filters>
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
@@ -674,35 +677,25 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <filters>
-                        <filter>src/main/resources/app-${envTarget}.properties</filter>
-                    </filters>
-                    <webResources>
-                        <webResource>
-                            <filtering>true</filtering>
-                            <directory>src/main/webapp/javascript/formscript</directory>
-                            <targetPath>javascript/formscript</targetPath>
-                        </webResource>
-                        <webResource>
-                            <filtering>true</filtering>
-                            <directory>src/main/webapp/javascript/custom</directory>
-                            <targetPath>javascript/custom</targetPath>
-                        </webResource>
-                        <webResource>
-                            <filtering>true</filtering>
-                            <directory>src/main/webapp/styles/formscript</directory>
-                            <targetPath>styles/formscript</targetPath>
-                        </webResource>
-                        <webResource>
-                            <filtering>true</filtering>
-                            <directory>src/main/webapp/styles/custom</directory>
-                            <targetPath>styles/custom</targetPath>
-                        </webResource>
-                    </webResources>
+                    <filesets>
+                        <fileset>
+                            <directory>target-grunt</directory>
+                            <excludes>
+                                <exclude>node_modules/**</exclude>
+                                <exclude>bower_components/**</exclude>
+                            </excludes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <warSourceExcludes>static/**</warSourceExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -713,7 +706,7 @@
                     <descriptor>src/assembly/formscript.xml</descriptor>
                     <finalName>formscripts</finalName>
                     <filters>
-                        <filter>src/main/resources/app-${envTarget}.properties</filter>
+                        <filter>src/main/resources/app-${profile}.properties</filter>
                     </filters>
                 </configuration>
                 <executions>
@@ -722,66 +715,6 @@
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.lesscss</groupId>
-                <artifactId>lesscss-maven-plugin</artifactId>
-                <version>1.7.0.1.1</version>
-                <configuration>
-                    <compress>true</compress>
-                    <includes>
-                        <include>**\*.less</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>lesscss-formscripts</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/webapp/styles/less/formscript</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/webapp/styles/formscript/</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>lesscss-custom</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/webapp/styles/less/custom</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/webapp/styles/custom/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.4</version>
-                <executions>
-                    <execution>
-                        <id>default-minify</id>
-                        <configuration>
-                            <jsEngine>CLOSURE</jsEngine>
-                            <closureLanguage>ECMASCRIPT5</closureLanguage>
-                            <closureCreateSourceMap>true</closureCreateSourceMap>
-                            <webappTargetDir>${basedir}/src/main/webapp</webappTargetDir>
-                            <skipMerge>true</skipMerge>
-                            <jsSourceDir>/javascript/src</jsSourceDir>
-                            <jsTargetDir>/javascript</jsTargetDir>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>**/*.js</jsSourceInclude>
-                            </jsSourceIncludes>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -807,6 +740,32 @@
                                 </copy>
                             </target>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>pl.allegro</groupId>
+                <artifactId>grunt-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                    <gruntOptions>
+                        <gruntOption>--verbose</gruntOption>
+                    </gruntOptions>
+                    <warTargetDirectory>
+                        /
+                    </warTargetDirectory>
+                    <filteredResources>
+                        <filteredResource>maven-properties.json</filteredResource>
+                    </filteredResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create-resources</goal>
+                            <goal>npm</goal>
+                            <goal>bower</goal>
+                            <goal>grunt</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
