@@ -1,4 +1,4 @@
-import TemplatesConfig from 'modules/templatesconfig';
+import TemplatesConfig from 'modules/templatesconfig.min';
 import swig from 'swig';
 
 const TEMPLATE_MAP = (() => {

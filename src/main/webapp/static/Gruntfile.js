@@ -123,7 +123,8 @@ module.exports = function(grunt) {
             options: {
                 warName: mavenProperties.warName,
                 deliverables: [
-                    'javascript/**/*.js',
+                    'javascript/lib/**/*.js',
+                    'javascript/**/*.min.js',
                     'javascript/**/*.min.js.map',
                     'styles/**/*.css',
                     'templates/**/*.html',
