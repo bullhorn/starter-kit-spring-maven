@@ -565,7 +565,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <envTarget>prod</envTarget>
+                <profile>prod</profile>
             </properties>
         </profile>
         <profile>
@@ -578,7 +578,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <envTarget>staging</envTarget>
+                <profile>staging</profile>
             </properties>
         </profile>
         <profile>
@@ -591,11 +591,14 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <envTarget>testing</envTarget>
+                <profile>testing</profile>
             </properties>
         </profile>
     </profiles>
     <build>
+        <filters>
+            <filter>src/main/resources/app-${profile}.properties</filter>
+        </filters>
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
@@ -703,7 +706,7 @@
                     <descriptor>src/assembly/formscript.xml</descriptor>
                     <finalName>formscripts</finalName>
                     <filters>
-                        <filter>src/main/resources/app-${envTarget}.properties</filter>
+                        <filter>src/main/resources/app-${profile}.properties</filter>
                     </filters>
                 </configuration>
                 <executions>
