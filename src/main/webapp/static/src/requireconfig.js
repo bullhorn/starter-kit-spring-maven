@@ -55,7 +55,6 @@ requirejs.config({
 window.requireForFormScript = function( entity ) {
     if(entity && entity.length) {
         require([ entity ], function(formscript) {
-            console.log(formscript);
             new formscript.default().init();
         });
     }
