@@ -1,0 +1,13 @@
+<link rel="stylesheet" type="text/css" href="${applicationRoot}/styles/formscript/clientcorporationcustomobjectinstances/clientcorporationcustomobjectinstance2.min.css" />
+
+<script type="text/javascript" src="${applicationRoot}/javascript/formscript/load.min.js"></script>
+<script type="text/javascript">
+    var waitToLoadFormScript = setInterval(function() {
+        if(typeof requireForFormScript === 'function') {
+            clearInterval(waitToLoadFormScript);
+
+            requireForFormScript('clientcorporationcustomobjectinstance2');
+        }
+    }, 250);
+</script>
+<script type="text/javascript" src="${applicationRoot}/javascript/lib/require/require.js" data-main="${applicationRoot}/javascript/requireconfig.min"></script>
