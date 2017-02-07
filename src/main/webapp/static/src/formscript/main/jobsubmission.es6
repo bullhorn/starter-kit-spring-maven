@@ -1,4 +1,4 @@
-import FormScript from 'formscript';
+import FormScript from 'formscript.min';
 
 export default class JobSubmission extends FormScript {
 
