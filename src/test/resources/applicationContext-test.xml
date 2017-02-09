@@ -5,45 +5,42 @@
     http://www.springframework.org/schema/jdbc 
     http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-
-	<!-- Testing beans -->
-	<bean id="testEntities" class="com.client.core.base.tools.test.TestEntities">
-		<property name="appointmentId" value="3048" />
-		<property name="appointmentAttendeeId" value="59" />
-		<property name="businessSectorId" value="996958" />
-		<property name="candidateId" value="7826" />
-		<property name="candidateEducationId" value="44" />
-		<property name="candidateReferenceId" value="27" />
-		<property name="candidateWorkHistoryId" value="74" />
-		<property name="categoryId" value="402380" />
-		<property name="certificationId" value="3160" />
-		<property name="clientContactId" value="2277" />
-		<property name="clientCorporationId" value="8" />
-		<property name="corporateUserId" value="1" />
-		<property name="corporationDepartmentId" value="8677" />
-		<property name="countryId" value="1" />
-		<property name="housingComplexId" value="1" />
-		<property name="jobOrderId" value="191" />
-		<property name="jobSubmissionId" value="1165" />
-		<property name="jobSubmissionHistoryId" value="1" />
-		<property name="noteId" value="468" />
-		<property name="noteEntityId" value="888" />
-		<property name="placementId" value="1295" />
-		<property name="placementChangeRequestId" value="220" />
-		<property name="placementCommissionId" value="3902" />
-		<property name="sendoutId" value="1014" />
-		<property name="skillId" value="39026" />
-		<property name="specialtyId" value="636182" />
-		<property name="stateId" value="1" />
-		<property name="taskId" value="3049" />
-		<property name="timeUnitId" value="1" />
-	</bean>
-
-
 	<bean id="testUtil" class="com.client.core.base.tools.test.TestUtil">
 		<property name="testEntities" ref="testEntities" />
 		<property name="bullhornApi" ref="bullhornapi" />
 	</bean>
+
+    <bean id="testEntities" class="com.client.core.base.tools.test.TestEntities">
+        <property name="appointmentId" value="1" />
+        <property name="appointmentAttendeeId" value="1" />
+        <property name="businessSectorId" value="1" />
+        <property name="candidateId" value="1" />
+        <property name="candidateEducationId" value="1" />
+        <property name="candidateReferenceId" value="1" />
+        <property name="candidateWorkHistoryId" value="1" />
+        <property name="categoryId" value="1" />
+        <property name="certificationId" value="1" />
+        <property name="clientContactId" value="1" />
+        <property name="clientCorporationId" value="1" />
+        <property name="corporateUserId" value="1" />
+        <property name="corporationDepartmentId" value="1" />
+        <property name="countryId" value="1" />
+        <property name="housingComplexId" value="1" />
+        <property name="jobOrderId" value="1" />
+        <property name="jobSubmissionId" value="1" />
+        <property name="jobSubmissionHistoryId" value="1" />
+        <property name="noteId" value="1" />
+        <property name="noteEntityId" value="1" />
+        <property name="placementId" value="1" />
+        <property name="placementChangeRequestId" value="1" />
+        <property name="placementCommissionId" value="1" />
+        <property name="sendoutId" value="1" />
+        <property name="skillId" value="1" />
+        <property name="specialtyId" value="1" />
+        <property name="stateId" value="1" />
+        <property name="taskId" value="1" />
+        <property name="timeUnitId" value="1" />
+    </bean>
 
 	<beans profile="cloudtesting">
 	
@@ -55,76 +52,10 @@
 		
 		<bean id="bullhornData" class="com.bullhornsdk.data.api.mock.MockBullhornData"/>
 		
-		<bean id="testEntities" class="com.client.core.base.tools.test.TestEntities">
-		<property name="appointmentId" value="1" />
-		<property name="appointmentAttendeeId" value="1" />
-		<property name="businessSectorId" value="1" />
-		<property name="candidateId" value="1" />
-		<property name="candidateEducationId" value="1" />
-		<property name="candidateReferenceId" value="1" />
-		<property name="candidateWorkHistoryId" value="1" />
-		<property name="categoryId" value="1" />
-		<property name="certificationId" value="1" />
-		<property name="clientContactId" value="1" />
-		<property name="clientCorporationId" value="1" />
-		<property name="corporateUserId" value="1" />
-		<property name="corporationDepartmentId" value="1" />
-		<property name="countryId" value="1" />
-		<property name="housingComplexId" value="1" />
-		<property name="jobOrderId" value="1" />
-		<property name="jobSubmissionId" value="1" />
-		<property name="jobSubmissionHistoryId" value="1" />
-		<property name="noteId" value="1" />
-		<property name="noteEntityId" value="1" />
-		<property name="placementId" value="1" />
-		<property name="placementChangeRequestId" value="1" />
-		<property name="placementCommissionId" value="1" />
-		<property name="sendoutId" value="1" />
-		<property name="skillId" value="1" />
-		<property name="specialtyId" value="1" />
-		<property name="stateId" value="1" />
-		<property name="taskId" value="1" />
-		<property name="timeUnitId" value="1" />
-	</bean>
-		
 	</beans>
 
 	<beans profile="localtesting">
-	
-	<bean id="testEntities" class="com.client.core.base.tools.test.TestEntities">
-		<property name="appointmentId" value="1" />
-		<property name="appointmentAttendeeId" value="1" />
-		<property name="businessSectorId" value="1" />
-		<property name="candidateId" value="1" />
-		<property name="candidateEducationId" value="1" />
-		<property name="candidateReferenceId" value="1" />
-		<property name="candidateWorkHistoryId" value="1" />
-		<property name="categoryId" value="1" />
-		<property name="certificationId" value="1" />
-		<property name="clientContactId" value="1" />
-		<property name="clientCorporationId" value="1" />
-		<property name="corporateUserId" value="1" />
-		<property name="corporationDepartmentId" value="1" />
-		<property name="countryId" value="1" />
-		<property name="housingComplexId" value="1" />
-		<property name="jobOrderId" value="1" />
-		<property name="jobSubmissionId" value="1" />
-		<property name="jobSubmissionHistoryId" value="1" />
-		<property name="noteId" value="1" />
-		<property name="noteEntityId" value="1" />
-		<property name="placementId" value="1" />
-		<property name="placementChangeRequestId" value="1" />
-		<property name="placementCommissionId" value="1" />
-		<property name="sendoutId" value="1" />
-		<property name="skillId" value="1" />
-		<property name="specialtyId" value="1" />
-		<property name="stateId" value="1" />
-		<property name="taskId" value="1" />
-		<property name="timeUnitId" value="1" />
-	</bean>
-	
-		<!-- <bean id="bullhornData" class="com.bullhornsdk.data.api.TestBullhornData">
-			</bean> -->
+
 		<bean id="bullhornapi" class="com.client.core.soap.EmbeddedBullhornAPISoap">
 			<constructor-arg ref="appSettings" />
 			<constructor-arg ref="bullhornLogDAO" />
@@ -133,21 +64,15 @@
 		
 		<bean id="bullhornData" class="com.bullhornsdk.data.api.mock.MockBullhornData"/>
 		
-		
-		
 		<!-- Test embedded db setup for the different modules. This entire applicationContext-test.xml 
 			file is using the profile=testing The embedded db is not YET in use -->
-
-		<bean id="abstractEntityFactory" abstract="true"
-			class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-
+		<bean id="abstractEntityFactory" abstract="true" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 			<property name="jpaVendorAdapter" ref="jpaVendorAdapterHsql" />
 			<property name="jpaProperties">
 				<props>
 					<prop key="hibernate.hbm2ddl.auto">create</prop>
 					<prop key="hibernate.show_sql">true</prop>
 					<prop key="hibernate.format_sql">true</prop>
-					<!-- <prop key="hibernate.default_schema">PUBLIC</prop> -->
 				</props>
 			</property>
 		</bean>
@@ -163,7 +88,6 @@
 				</list>
 			</property>
 			<property name="dataSource" ref="dataSource" />
-
 		</bean>
 
         <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
@@ -171,8 +95,7 @@
         </bean>
 		
 
-		<bean id="jpaVendorAdapterHsql"
-			class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<bean id="jpaVendorAdapterHsql" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 			<property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
 			<property name="showSql" value="true" />
 			<property name="generateDdl" value="false" />

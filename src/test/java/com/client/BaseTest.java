@@ -24,7 +24,7 @@ import com.client.core.base.tools.test.TestUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
-		"classpath*:/*-scheduledtasks.xml", "classpath*:/*-applicationContext.xml", "/applicationContext-test.xml" })
+		"classpath*:/*-scheduledtasks.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	private final static Log log = LogFactory.getLog(BaseTest.class);

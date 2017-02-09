@@ -28,7 +28,7 @@ import com.client.matchers.JsonpPathResultMatchers;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
-		"classpath*:/*-servlet.xml", "classpath*:/*-applicationContext.xml", "/applicationContext-test.xml" })
+		"classpath*:/*-servlet.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
 @WebAppConfiguration
 public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
