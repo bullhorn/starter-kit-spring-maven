@@ -741,6 +741,23 @@
                             </target>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>test-resources</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.directory}/test-classes" flatten="true">
+                                    <fileset dir="${basedir}/src/test/java/com/client">
+                                        <include name="**/*.properties"/>
+                                        <include name="**/*.xml"/>
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
