@@ -1,4 +1,4 @@
-import FormScript from 'formscript.min';
+import FormScript from 'formscript';
 
 export default class PersonCustomObjectInstance7 extends FormScript {
 

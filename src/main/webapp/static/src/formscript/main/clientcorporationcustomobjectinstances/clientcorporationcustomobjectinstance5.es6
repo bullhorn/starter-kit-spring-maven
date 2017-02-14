@@ -1,4 +1,4 @@
-import FormScript from 'formscript.min';
+import FormScript from 'formscript';
 
 export default class ClientCorporationCustomObjectInstance5 extends FormScript {
 
