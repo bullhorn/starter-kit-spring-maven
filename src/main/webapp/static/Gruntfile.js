@@ -105,6 +105,12 @@ module.exports = function(grunt) {
                         cwd: 'less',
                         src: 'lib/**/img/*.*',
                         dest: 'styles'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'less',
+                        src: 'lib/**/fonts/*.*',
+                        dest: 'styles'
                     }
                 ]
             }
@@ -134,6 +140,7 @@ module.exports = function(grunt) {
                     'javascript/**/*.min.js.map',
                     'styles/**/*.css',
                     'styles/lib/**/img/*.*',
+                    'styles/lib/**/fonts/*.*',
                     'templates/**/*.html',
                     'images/**/*.*'
                 ]

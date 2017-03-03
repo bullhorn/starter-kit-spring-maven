@@ -70,6 +70,9 @@ class StandardEntityChanger implements EntityChanger {
 
                 if(DateTime.class.equals(property.type)) {
                     target."$finalField" = asType(value, DateTime.class);
+                } else if(BullhornEntity.class.isAssignableFrom(property.type)) {
+                    target."$finalField" = property.type.newInstance();
+                    target."$finalField".id = value;
                 }
             }
         }
@@ -79,7 +82,7 @@ class StandardEntityChanger implements EntityChanger {
 
     private Object getValue(Object entity, String field) {
         return field.tokenize('.').inject(entity, { entityOrField, nextField ->
-            return entityOrField."$nextField";
+            return entityOrField?."$nextField";
         });
     }
 
