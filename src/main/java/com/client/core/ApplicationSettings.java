@@ -1,7 +1,5 @@
 package com.client.core;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 /**
  * Contains application wide settings. These are specified in the pom.xml
  */
@@ -30,6 +28,8 @@ public class ApplicationSettings {
 	private String standardCronExpression;
 
     private String applicationDateFormat;
+
+    private String applicationTimeFormat;
 
     private String profileName;
 
@@ -67,6 +67,14 @@ public class ApplicationSettings {
 
     public void setApplicationDateFormat(String applicationDateFormat) {
         this.applicationDateFormat = applicationDateFormat;
+    }
+
+    public String getApplicationTimeFormat() {
+        return applicationTimeFormat;
+    }
+
+    public void setApplicationTimeFormat(String applicationTimeFormat) {
+        this.applicationTimeFormat = applicationTimeFormat;
     }
 
     public Integer getCorporationID() {
@@ -159,14 +167,17 @@ public class ApplicationSettings {
             return false;
         if (numEventThreads != null ? !numEventThreads.equals(that.numEventThreads) : that.numEventThreads != null)
             return false;
+        if (numEventsPerBatch != null ? !numEventsPerBatch.equals(that.numEventsPerBatch) : that.numEventsPerBatch != null)
+            return false;
         if (standardSubscriptionName != null ? !standardSubscriptionName.equals(that.standardSubscriptionName) : that.standardSubscriptionName != null)
             return false;
         if (standardCronExpression != null ? !standardCronExpression.equals(that.standardCronExpression) : that.standardCronExpression != null)
             return false;
         if (applicationDateFormat != null ? !applicationDateFormat.equals(that.applicationDateFormat) : that.applicationDateFormat != null)
             return false;
-        return !(profileName != null ? !profileName.equals(that.profileName) : that.profileName != null);
-
+        if (applicationTimeFormat != null ? !applicationTimeFormat.equals(that.applicationTimeFormat) : that.applicationTimeFormat != null)
+            return false;
+        return profileName != null ? profileName.equals(that.profileName) : that.profileName == null;
     }
 
     @Override
@@ -179,28 +190,57 @@ public class ApplicationSettings {
         result = 31 * result + (corporationID != null ? corporationID.hashCode() : 0);
         result = 31 * result + (privateLabelID != null ? privateLabelID.hashCode() : 0);
         result = 31 * result + (numEventThreads != null ? numEventThreads.hashCode() : 0);
+        result = 31 * result + (numEventsPerBatch != null ? numEventsPerBatch.hashCode() : 0);
         result = 31 * result + (standardSubscriptionName != null ? standardSubscriptionName.hashCode() : 0);
         result = 31 * result + (standardCronExpression != null ? standardCronExpression.hashCode() : 0);
         result = 31 * result + (applicationDateFormat != null ? applicationDateFormat.hashCode() : 0);
+        result = 31 * result + (applicationTimeFormat != null ? applicationTimeFormat.hashCode() : 0);
         result = 31 * result + (profileName != null ? profileName.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("apiKey", apiKey)
-                .append("apiUrl", apiUrl)
-                .append("username", username)
-                .append("password", password)
-                .append("apiUserID", apiUserID)
-                .append("corporationID", corporationID)
-                .append("privateLabelID", privateLabelID)
-                .append("numEventThreads", numEventThreads)
-                .append("standardSubscriptionName", standardSubscriptionName)
-                .append("standardCronExpression", standardCronExpression)
-                .append("applicationDateFormat", applicationDateFormat)
-                .append("profileName", profileName)
+        return new StringBuilder("ApplicationSettings {")
+                .append("\n\t\"apiUrl\": ")
+                .append("'")
+                .append(apiUrl).append('\'')
+                .append(",\n\t\"username\": ")
+                .append("'")
+                .append(username).append('\'')
+                .append(",\n\t\"password\": ")
+                .append("'")
+                .append(password).append('\'')
+                .append(",\n\t\"apiKey\": ")
+                .append("'")
+                .append(apiKey).append('\'')
+                .append(",\n\t\"apiUserID\": ")
+                .append(apiUserID)
+                .append(",\n\t\"corporationID\": ")
+                .append(corporationID)
+                .append(",\n\t\"privateLabelID\": ")
+                .append("'")
+                .append(privateLabelID).append('\'')
+                .append(",\n\t\"numEventThreads\": ")
+                .append(numEventThreads)
+                .append(",\n\t\"numEventsPerBatch\": ")
+                .append(numEventsPerBatch)
+                .append(",\n\t\"standardSubscriptionName\": ")
+                .append("'")
+                .append(standardSubscriptionName).append('\'')
+                .append(",\n\t\"standardCronExpression\": ")
+                .append("'")
+                .append(standardCronExpression).append('\'')
+                .append(",\n\t\"applicationDateFormat\": ")
+                .append("'")
+                .append(applicationDateFormat).append('\'')
+                .append(",\n\t\"applicationTimeFormat\": ")
+                .append("'")
+                .append(applicationTimeFormat).append('\'')
+                .append(",\n\t\"profileName\": ")
+                .append("'")
+                .append(profileName).append('\'')
+                .append('}')
                 .toString();
     }
 }

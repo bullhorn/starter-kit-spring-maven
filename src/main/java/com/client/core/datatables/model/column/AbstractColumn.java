@@ -19,45 +19,30 @@ public abstract class AbstractColumn implements Column {
 	private ShowOnForm showOnForm; // is the column/field visible for input on the add form
 	private String url; // turn this value into a link using the url, also used to populate select values
 	private String width;// sets the width of the data tables column using the sWidth option from the datatables api
+    private boolean isListInput;
 
 	public AbstractColumn() {
 	}
 
-	public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, IsEntityField isEntityField,
-			boolean editable, boolean visible, boolean sortable, boolean searchable, boolean required, ShowOnForm showOnForm, String url) {
-		this.fieldName = fieldName;
-		this.fieldLabel = fieldLabel;
-		this.value = value;
-		this.fieldType = fieldType;
-		this.isEntityField = isEntityField;
-		this.editable = editable;
-		this.visible = visible;
-		this.sortable = sortable;
-		this.searchable = searchable;
-		this.required = required;
-		this.showOnForm = showOnForm;
-		this.url = url;
-		this.displayValue = displayValue;
-	}
-
-	public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, IsEntityField isEntityField,
-			boolean editable, boolean visible, boolean sortable, boolean searchable, boolean required, ShowOnForm showOnForm, String url,
-			String width) {
-		this.fieldName = fieldName;
-		this.fieldLabel = fieldLabel;
-		this.value = value;
-		this.fieldType = fieldType;
-		this.isEntityField = isEntityField;
-		this.editable = editable;
-		this.visible = visible;
-		this.sortable = sortable;
-		this.searchable = searchable;
-		this.required = required;
-		this.showOnForm = showOnForm;
-		this.url = url;
-		this.displayValue = displayValue;
-		this.width = width != null ? "'" + width + "'" : width;
-	}
+    public AbstractColumn(String fieldName, String fieldLabel, Object value, String displayValue, FieldType fieldType, IsEntityField isEntityField,
+                          boolean editable, boolean visible, boolean sortable, boolean searchable, boolean required, ShowOnForm showOnForm, String url,
+                          String width, boolean isListInput) {
+        this.fieldName = fieldName;
+        this.fieldLabel = fieldLabel;
+        this.value = value;
+        this.fieldType = fieldType;
+        this.isEntityField = isEntityField;
+        this.editable = editable;
+        this.visible = visible;
+        this.sortable = sortable;
+        this.searchable = searchable;
+        this.required = required;
+        this.showOnForm = showOnForm;
+        this.url = url;
+        this.displayValue = displayValue;
+        this.width = width != null ? "'" + width + "'" : width;
+        this.isListInput = isListInput;
+    }
 
 	/**
 	 * Creates the configuration used in the javascript setup for dataTables.
@@ -240,39 +225,55 @@ public abstract class AbstractColumn implements Column {
 		this.url = url;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(" {\n\"fieldName\":\"");
-		builder.append(fieldName);
-		builder.append("\", \nfieldLabel\":\"");
-		builder.append(fieldLabel);
-		builder.append("\", \nvalue\":\"");
-		builder.append(value);
-		builder.append("\", \ndisplayValue\":\"");
-		builder.append(displayValue);
-		builder.append("\", \nfieldType\":\"");
-		builder.append(fieldType);
-		builder.append("\", \nentity\":\"");
-		builder.append(isEntityField);
-		builder.append("\", \neditable\":\"");
-		builder.append(editable);
-		builder.append("\", \nvisible\":\"");
-		builder.append(visible);
-		builder.append("\", \nsortable\":\"");
-		builder.append(sortable);
-		builder.append("\", \nsearchable\":\"");
-		builder.append(searchable);
-		builder.append("\", \nrequired\":\"");
-		builder.append(required);
-		builder.append("\", \nshowOnForm\":\"");
-		builder.append(showOnForm);
-		builder.append("\", \nurl\":\"");
-		builder.append(url);
-		builder.append("\", \nwidth\":\"");
-		builder.append(width);
-		builder.append("\n}");
-		return builder.toString();
-	}
+    @Override
+    public boolean getIsListInput() {
+        return isListInput;
+    }
 
+    @Override
+    public void setIsListInput(boolean listInput) {
+        isListInput = listInput;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("AbstractColumn {")
+                .append("\n\t\"fieldName\": ")
+                .append("'")
+                .append(fieldName).append('\'')
+                .append(",\n\t\"fieldLabel\": ")
+                .append("'")
+                .append(fieldLabel).append('\'')
+                .append(",\n\t\"value\": ")
+                .append(value)
+                .append(",\n\t\"displayValue\": ")
+                .append("'")
+                .append(displayValue).append('\'')
+                .append(",\n\t\"fieldType\": ")
+                .append(fieldType)
+                .append(",\n\t\"isEntityField\": ")
+                .append(isEntityField)
+                .append(",\n\t\"editable\": ")
+                .append(editable)
+                .append(",\n\t\"visible\": ")
+                .append(visible)
+                .append(",\n\t\"sortable\": ")
+                .append(sortable)
+                .append(",\n\t\"searchable\": ")
+                .append(searchable)
+                .append(",\n\t\"required\": ")
+                .append(required)
+                .append(",\n\t\"showOnForm\": ")
+                .append(showOnForm)
+                .append(",\n\t\"url\": ")
+                .append("'")
+                .append(url).append('\'')
+                .append(",\n\t\"width\": ")
+                .append("'")
+                .append(width).append('\'')
+                .append(",\n\t\"isListInput\": ")
+                .append(isListInput)
+                .append('}')
+                .toString();
+    }
 }

@@ -94,6 +94,7 @@
         <property name="numEventsPerBatch" value="${numEventsPerBatch}" />
 		<property name="corporationID" value="${corporationID}" />
 		<property name="applicationDateFormat" value="${applicationDateFormat}" />
+        <property name="applicationTimeFormat" value="${applicationTimeFormat}" />
 		<property name="standardCronExpression" value="${standardCronExpression}" />
 		<property name="standardSubscriptionName" value="${standardSubscriptionName}" />
 	</bean>

@@ -41,13 +41,13 @@ public final class StandardColumn extends AbstractColumn {
 		setFieldType(fieldType);
 	}
 
-	public StandardColumn(String fieldName, String fieldLabel, Object value, Object displayValue, FieldType fieldType, IsEntityField isEntityField,
-			Editable editable, Visible visible, Sortable sortable, Searchable searchable, Required required, ShowOnForm showOnForm,
-			String url, String width) {
-		super(fieldName, fieldLabel, value, "", fieldType, isEntityField, editable.getBooleanValue(), visible.getBooleanValue(), sortable
-				.getBooleanValue(), searchable.getBooleanValue(), required.getBooleanValue(), showOnForm, url, width);
-		setDisplayValue(prepareDisplayValue(displayValue));
-	}
+    public StandardColumn(String fieldName, String fieldLabel, Object value, Object displayValue, FieldType fieldType, IsEntityField isEntityField,
+                          Editable editable, Visible visible, Sortable sortable, Searchable searchable, Required required, ShowOnForm showOnForm,
+                          String url, String width, Boolean isListInput) {
+        super(fieldName, fieldLabel, value, "", fieldType, isEntityField, editable.getBooleanValue(), visible.getBooleanValue(), sortable
+                .getBooleanValue(), searchable.getBooleanValue(), required.getBooleanValue(), showOnForm, url, width, isListInput);
+        setDisplayValue(prepareDisplayValue(displayValue));
+    }
 
 	@Override
 	public String getValueForDisplayOnEditForm() {
@@ -133,66 +133,61 @@ public final class StandardColumn extends AbstractColumn {
 		super.setDisplayValue(displayValue);
 	}
 
-	private String prepareDisplayValue(Object displayValue) {
-		if (displayValue == null) {
-			return "";
-		}
-		if (displayValue instanceof Date) {
-			return prepareDateDisplayValue(displayValue);
+    private String prepareDisplayValue(Object displayValue) {
+        if (getFieldType() == FieldType.BUTTON) {
+            return "<a href='"
+                    + getUrl()
+                    + "' role='button' class='button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class='ui-button-text'>"
+                    + displayValue.toString() + "</span></a>";
+        }
 
-		}
+        if (getFieldType() == FieldType.BUTTONONCLICK) {
+            return "<button type='button' onclick='" + getUrl() + "' class='btn btn-primary'>" + displayValue.toString() + "</button>";
+        }
 
-		if (displayValue instanceof DateTime) {
-			return prepareDateDisplayValue(displayValue);
-
-		}
-
-		if (displayValue instanceof BigDecimal) {
-			return prepareDateDisplayValue(displayValue);
-
-		}
-
-		if (displayValue instanceof XMLGregorianCalendar) {
-			XMLGregorianCalendar xmlGregorianCalendar = (XMLGregorianCalendar) displayValue;
-			return prepareDateDisplayValue(Util.xmlGregorianCalToDate(xmlGregorianCalendar));
-		}
-
-		if (getFieldType() == FieldType.BUTTON) {
-			return "<a href='"
-					+ getUrl()
-					+ "' role='button' class='button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'><span class='ui-button-text'>"
-					+ displayValue.toString() + "</span></a>";
-		}
-
-		if (getFieldType() == FieldType.BUTTONONCLICK) {
-			return "<button type='button' onclick='" + getUrl() + "' class='btn btn-default' data-toggle='modal' data-target='#submissionDialog'>" + displayValue.toString() + "</button>";
-		}
-
-		if (getFieldType() == FieldType.DELETEROWBUTTON) {
+        if (getFieldType() == FieldType.DELETEROWBUTTON) {
 //			return "<a class='table-action-deletelink ui-icon ui-icon-trash'>Delete</a>";
-			return "<a href='#' class='table-action-deletelink'><i class='icon-trash'></i> Delete</a>";
-		}
+            return "<a href='#' class='table-action-deletelink'><i class='icon-trash'></i> Delete</a>";
+        }
 
-		if (getFieldType() == FieldType.EDITROWBUTTON) {
+        if (getFieldType() == FieldType.EDITROWBUTTON) {
 //			return "<a class='table-action-EditData ui-icon ui-icon-pencil'>Edit</a>";
-			return "<a class='table-action-EditData'><i class='icon-pencil'></i> Edit</a>";
-		}
+            return "<a class='table-action-EditData'><i class='icon-pencil'></i> Edit</a>";
+        }
 
-		if (getFieldType() == FieldType.DELETEANDEDITROWBUTTON) {
-			return "<a id='" + getValue() + "' class='table-action-deletelink'><i class='icon-trash'></i> Delete</a>"
-					+ "<a id='table-action-EditData' class='table-action-EditData'><i class='icon-pencil'></i> Edit</a>";
-		}
+        if (getFieldType() == FieldType.DELETEANDEDITROWBUTTON) {
+            return "<a id='" + getValue() + "' class='table-action-deletelink'><i class='icon-trash'></i> Delete</a>"
+                    + "<a id='table-action-EditData' class='table-action-EditData'><i class='icon-pencil'></i> Edit</a>";
+        }
 
-		if (getFieldType() == FieldType.SELECT) {
-			return displayValue.toString();
-		}
+        if (getUrl() != null && !getUrl().isEmpty() && getFieldType() != FieldType.SELECT) {
+            return "<a href='" + getUrl() + "' target='_blank'>" + displayValue.toString() + "</a>";
+        }
 
-		if (getUrl() != null && !getUrl().isEmpty()) {
-			return "<a href='" + getUrl() + "' target='_blank'>" + displayValue.toString() + "</a>";
-		}
+        String result;
 
-		return displayValue.toString();
-	}
+        if (displayValue == null) {
+            result = "";
+        } else if (displayValue instanceof Date) {
+            result = prepareDateDisplayValue(displayValue);
+        } else if (displayValue instanceof DateTime) {
+            result = prepareDateDisplayValue(displayValue);
+        } else if (displayValue instanceof BigDecimal) {
+            result = prepareDateDisplayValue(displayValue);
+        } else if (displayValue instanceof XMLGregorianCalendar) {
+            XMLGregorianCalendar xmlGregorianCalendar = (XMLGregorianCalendar) displayValue;
+            result = prepareDateDisplayValue(Util.xmlGregorianCalToDate(xmlGregorianCalendar));
+        } else {
+            result = displayValue.toString();
+        }
+
+        if(this.getIsListInput()) {
+            return new StringBuilder("<input type=\"hidden\" name=\"").append(getFieldName())
+                    .append("\" id=\"").append(getFieldName()).append("\" value=\"").append(result).append("\" />").toString();
+        }
+
+        return result;
+    }
 
 	private String prepareDateDisplayValue(Object date) {
 		return Util.prepareDisplayValue(date, dateFormat);
