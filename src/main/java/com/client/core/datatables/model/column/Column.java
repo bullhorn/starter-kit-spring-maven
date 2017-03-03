@@ -148,4 +148,13 @@ public interface Column {
 
     public void setUrl(String url);
 
+    /**
+     * Makes this column appear as a hidden input in the list
+     *
+     * @return
+     */
+    boolean getIsListInput();
+
+    void setIsListInput(boolean isListInput);
+
 }

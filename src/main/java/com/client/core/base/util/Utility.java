@@ -351,4 +351,12 @@ public class Utility {
         return new StringBuilder(shortDateFormat).append(" h:mm a").toString();
     }
 
+    public static String javaDateFormatToJavascriptDateFormat(String format) {
+        return StringUtils.defaultIfBlank(format, "").replaceAll("d", "D").replaceAll("y", "Y");
+    }
+
+    public static String getHostFromBullhornUrl(String currentBullhornUrl) {
+        return currentBullhornUrl.substring(0, StringUtils.indexOfIgnoreCase(currentBullhornUrl, "/bullhornstaffing/"));
+    }
+
 }

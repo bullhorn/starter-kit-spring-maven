@@ -166,18 +166,18 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
 
         if(SearchEntity.class.isAssignableFrom(type)) {
             if(StringUtils.isBlank(param.getsSearch())) {
-                result = search(defaultQuery, start, count, sort);
+                result = search(defaultQuery, start, count, sort, this.fields);
                 unfilteredCount = result.getTotal();
             } else {
-                result = searchWithTerm(defaultQuery, start, count, sort, param.getsSearch());
+                result = searchWithTerm(defaultQuery, start, count, sort, param.getsSearch(), this.fields);
                 unfilteredCount = searchForCount(defaultQuery).getTotal();
             }
         } else if(QueryEntity.class.isAssignableFrom(type)) {
             if(StringUtils.isBlank(param.getsSearch())) {
-                result = query(defaultQuery, start, count, sort);
+                result = query(defaultQuery, start, count, sort, this.fields);
                 unfilteredCount = result.getTotal();
             } else {
-                result = queryWithTerm(defaultQuery, start, count, sort, param.getsSearch());
+                result = queryWithTerm(defaultQuery, start, count, sort, param.getsSearch(), this.fields);
                 unfilteredCount = queryForCount(defaultQuery).getTotal();
             }
         } else {
@@ -190,7 +190,9 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
         return result.getData();
     }
 
-    private ListWrapper<T> queryWithTerm(String defaultQuery, Integer start, Integer count, String sort, String term) {
+    private static final Set<String> ID = Sets.newHashSet("id");
+
+    protected ListWrapper<T> queryWithTerm(String defaultQuery, Integer start, Integer count, String sort, String term, Set<String> fields) {
         String query = defaultQuery;
 
         if(StringUtils.isNotBlank(term)) {
@@ -199,27 +201,32 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
             }).collect(Collectors.joining(" OR "));
 
             query = new StringBuilder("(").append(defaultQuery).append(")")
-                .append(" AND (").append(likeClause).append(")").toString();
+                    .append(" AND (").append(likeClause).append(")").toString();
         }
 
-        return query(query, start, count, sort);
+        return query(query, start, count, sort, fields);
     }
 
-    private ListWrapper<T> queryForCount(String query) {
-        return query(query, 0, 1, null);
+    protected ListWrapper<T> queryForCount(String query) {
+        return query(query, 0, 1, null, ID);
     }
 
-    private ListWrapper<T> query(String query, Integer start, Integer count, String sort) {
+    protected ListWrapper<T> query(String query, Integer start, Integer count, String sort, Set<String> fields) {
+        return query(type, query, start, count, sort, fields);
+    }
+
+    protected <E> ListWrapper<E> query(Class<E> type, String query, Integer start, Integer count, String sort, Set<String> fields) {
         QueryParams params = ParamFactory.queryParams();
+
         params.setStart(start);
         params.setCount(count);
         params.setOrderBy(sort);
         params.setShowTotalMatched(true);
 
-        return (ListWrapper<T>) bullhornData.query((Class<QueryEntity>) type, query, fields, params);
+        return (ListWrapper<E>) bullhornData.query((Class<QueryEntity>) type, query, fields, params);
     }
 
-    private ListWrapper<T> searchWithTerm(String defaultQuery, Integer start, Integer count, String sort, String filter) {
+    protected ListWrapper<T> searchWithTerm(String defaultQuery, Integer start, Integer count, String sort, String filter, Set<String> fields) {
         String query = defaultQuery;
 
         if(StringUtils.isNotBlank(filter)) {
@@ -233,20 +240,24 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
                     .append(" AND (").append(likeClause).append(")").toString();
         }
 
-        return search(query, start, count, sort);
+        return search(query, start, count, sort, fields);
     }
 
-    private ListWrapper<T> searchForCount(String query) {
-        return search(query, 0, 1, null);
+    protected ListWrapper<T> searchForCount(String query) {
+        return search(query, 0, 1, null, ID);
     }
 
-    private ListWrapper<T> search(String query, Integer start, Integer count, String sort) {
+    protected ListWrapper<T> search(String query, Integer start, Integer count, String sort, Set<String> fields) {
+        return search(type, query, start, count, sort, fields);
+    }
+
+    protected <E> ListWrapper<E> search(Class<E> type, String query, Integer start, Integer count, String sort, Set<String> fields) {
         SearchParams params = ParamFactory.searchParams();
         params.setStart(start);
         params.setCount(count);
         params.setSort(sort);
 
-        return (ListWrapper<T>) bullhornData.search((Class<SearchEntity>) type, query, fields, params);
+        return (ListWrapper<E>) bullhornData.search((Class<SearchEntity>) type, query, fields, params);
     }
 
     private Set<String> searchFields() {
@@ -261,7 +272,7 @@ public abstract class BullhornDataTablesService<T extends BullhornEntity> extend
 
     private ColumnConfiguration columnConfiguration;
 
-    private synchronized ColumnConfiguration getStandardColumnConfiguration() {
+    protected synchronized ColumnConfiguration getStandardColumnConfiguration() {
         if(this.columnConfiguration == null) {
             try {
                 this.columnConfiguration = convertEntityToColumns(type.newInstance());

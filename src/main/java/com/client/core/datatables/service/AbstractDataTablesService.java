@@ -319,7 +319,7 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
                             Editable editable, Visible visible, Sortable sortable, Searchable searchable, Required required, ShowOnForm showOnForm,
                             String url) {
         return new StandardColumn(fieldName, fieldLabel, value, displayValue, fieldType, isEntityField, editable, visible, sortable, searchable,
-                required, showOnForm, url, null);
+                required, showOnForm, url, null, false);
     }
 
     /**
@@ -360,7 +360,48 @@ public abstract class AbstractDataTablesService<T, ID> implements DataTablesServ
                             Editable editable, Visible visible, Sortable sortable, Searchable searchable, Required required, ShowOnForm showOnForm,
                             String url, String width) {
         return new StandardColumn(fieldName, fieldLabel, value, displayValue, fieldType, isEntityField, editable, visible, sortable, searchable,
-                required, showOnForm, url, width);
+                required, showOnForm, url, width, false);
+    }
+
+    /**
+     * Maps a column in the data tables, with additional width parameter.
+     *
+     * @param fieldName
+     *            Has to be exact match to field on entity
+     * @param fieldLabel
+     *            The column label used in the data tables
+     * @param value
+     *            The actual value as it's own type
+     * @param displayValue
+     *            The display value. This can be the same as value any text
+     * @param fieldType
+     *            Specifies what type of field, such as ID, DATE,BUTTON etc. See FieldType enum for full list.
+     *
+     * @param isEntityField
+     *            Defines if the column is part of the JPA entity
+     * @param editable
+     *            Defines if the column can be edited
+     * @param visible
+     *            Defines if the column is visable
+     * @param sortable
+     *            Defines if the column can be sorted
+     * @param searchable
+     *            Defines if the column will be part of the search
+     * @param showOnForm
+     *            Defines if the column will show up on the add new entity form
+     * @param url
+     *            Defines the url of a link. If the FieldType is a select then this url will be the url that provide the data for the
+     *            select.
+     * @param width
+     *            Defining the width of the column, this parameter may take any CSS value (3em, 20px etc). DataTables applies 'smart' widths
+     *            to columns which have not been given a specific width through this interface ensuring that the table remains readable.
+     * @return The StandardColumn
+     */
+    protected Column column(String fieldName, String fieldLabel, Object value, Object displayValue, FieldType fieldType, IsEntityField isEntityField,
+                            Editable editable, Visible visible, Sortable sortable, Searchable searchable, Required required, ShowOnForm showOnForm,
+                            String url, String width, Boolean isListInput) {
+        return new StandardColumn(fieldName, fieldLabel, value, displayValue, fieldType, isEntityField, editable, visible, sortable, searchable,
+                required, showOnForm, url, width, isListInput);
     }
 
     protected Logger getLog() {
