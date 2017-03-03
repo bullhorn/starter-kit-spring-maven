@@ -9,7 +9,7 @@
 					<thead>
 						<tr>
 							<c:forEach var="entry" items="${columnsMap}">
-								<th><c:out value="${entry.value.fieldLabel}"/></th>
+                                <th>${entry.value.fieldLabel}</th>
 							</c:forEach>
 						</tr>
 					</thead>
