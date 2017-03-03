@@ -1257,7 +1257,7 @@
             }
 
             //Add handler to the inline delete buttons
-            $(".table-action-deletelink", oTable).live("click", _fnOnRowDeleteInline);
+            oTable.on('click', '.table-action-deletelink', _fnOnRowDeleteInline);
 
             if (!properties.bUseKeyTable) {
                 //Set selected class on row that is clicked
@@ -1300,9 +1300,7 @@
                         var oActionFormLink = $(".table-action-" + sAction);
                         if (oActionFormLink.length != 0) {
 
-                            oActionFormLink.live("click", function () {
-
-
+                            oTable.on('click', ".table-action-" + sAction, function() {
                                 var sClass = this.className;
                                 var classList = sClass.split(/\s+/);
                                 var sActionFormId = "";
