@@ -1213,7 +1213,7 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
 
         Lead lead = new Lead();
 
-        lead.setId(Utility.parseInteger(leadID));
+        lead.setId(Utility.parseInteger(userID));
 
         Address address = new Address();
         address.setAddress1(address1);
