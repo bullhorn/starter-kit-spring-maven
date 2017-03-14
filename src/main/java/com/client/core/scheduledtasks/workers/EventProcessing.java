@@ -2,6 +2,7 @@ package com.client.core.scheduledtasks.workers;
 
 import java.util.List;
 
+import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 
@@ -300,7 +301,7 @@ public class EventProcessing implements Runnable {
     }
 
     private boolean isOpportunityEvent() {
-        return entityIsOfType(ApiEntityName.PLACEMENT.value());
+        return entityIsOfType(Opportunity.class.getSimpleName());
     }
 
 	/**
