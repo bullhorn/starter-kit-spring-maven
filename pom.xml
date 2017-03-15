@@ -4,7 +4,7 @@
     <groupId>com.client</groupId>
     <artifactId>starter-kit-spring-maven</artifactId>
     <packaging>war</packaging>
-    <version>2.0.2</version>
+    <version>2.0.3</version>
     <name>BULLHORN Spring-Maven Starter Kit</name>
     <url>http://maven.apache.org</url>
     <properties>
