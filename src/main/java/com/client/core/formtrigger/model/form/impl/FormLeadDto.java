@@ -1,12 +1,19 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.*;
+import org.apache.log4j.Logger;
+
+import com.bullhornsdk.data.model.entity.core.standard.Category;
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
+import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Lead;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
+import com.bullhornsdk.data.model.entity.core.standard.Skill;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.base.util.Utility;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.collect.Lists;
-import org.apache.log4j.Logger;
 
 /**
  * Created by hiqbal on 12/22/2015.
@@ -17,7 +24,6 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         super(Logger.getLogger(FormLeadDto.class));
     }
 
-    private String leadID;
     private String address1;
     private String address2;
     private String city;
@@ -72,6 +78,7 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
     private String preferredContact;
     private String primarySkillID;
     private String priority;
+    private String recruiterUserID;
     private String referredByPersonID;
     private String reportToPersonID;
     private String role;
@@ -87,14 +94,6 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
     private String timeZoneOffsetEST;
     private String type;
     private String willRelocate;
-
-    public String getLeadID() {
-        return leadID;
-    }
-
-    public void setLeadID(String leadID) {
-        this.leadID = leadID;
-    }
 
     public String getAddress1() {
         return address1;
@@ -528,6 +527,14 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         this.priority = priority;
     }
 
+    public String getRecruiterUserID() {
+        return recruiterUserID;
+    }
+
+    public void setRecruiterUserID(String recruiterUserID) {
+        this.recruiterUserID = recruiterUserID;
+    }
+
     public String getReferredByPersonID() {
         return referredByPersonID;
     }
@@ -646,14 +653,6 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
 
     public void setWillRelocate(String willRelocate) {
         this.willRelocate = willRelocate;
-    }
-
-    public String getLead_leadID() {
-        return leadID;
-    }
-
-    public void setLead_leadID(String leadID) {
-        this.leadID = leadID;
     }
 
     public String getLead_address1() {
@@ -1088,6 +1087,14 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         this.priority = priority;
     }
 
+    public String getLead_recruiterUserID() {
+        return recruiterUserID;
+    }
+
+    public void setLead_recruiterUserID(String recruiterUserID) {
+        this.recruiterUserID = recruiterUserID;
+    }
+
     public String getLead_referredByPersonID() {
         return referredByPersonID;
     }
@@ -1272,7 +1279,7 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         lead.setNickName(nickName);
         lead.setNumEmployees(Utility.parseInteger(numEmployees));
         lead.setOccupation(occupation);
-        lead.setOwner(new CorporateUser(Utility.parseInteger(userID)));
+        lead.setOwner(new CorporateUser(Utility.parseInteger(getFirstIntegerInCommaSeparatedList(recruiterUserID))));
         lead.setOwnerCorporation(new ClientCorporation(Utility.parseInteger(ownerCorporationID)));
         lead.setPager(pager);
         lead.setPhone(phone);
@@ -1318,7 +1325,7 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
 
         FormLeadDto formLeadDto = new FormLeadDto();
 
-        formLeadDto.setLeadID(makeString(lead.getId()));
+        formLeadDto.setUserID(makeString(lead.getId()));
 
         Address address = lead.getAddress();
         if(address != null){
@@ -1394,77 +1401,218 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
 
     @Override
     public String toString() {
-        return "FormLeadDto{" +
-                "leadID='" + leadID + '\'' +
-                ", address1='" + address1 + '\'' +
-                ", address2='" + address2 + '\'' +
-                ", city='" + city + '\'' +
-                ", countryID='" + countryID + '\'' +
-                ", state='" + state + '\'' +
-                ", zip='" + zip + '\'' +
-                ", assignedToUserID='" + assignedToUserID + '\'' +
-                ", businessSectorID='" + businessSectorID + '\'' +
-                ", campaignSource='" + campaignSource + '\'' +
-                ", candidateID='" + candidateID + '\'' +
-                ", categoryID='" + categoryID + '\'' +
-                ", clientContactID='" + clientContactID + '\'' +
-                ", clientCorporationID='" + clientCorporationID + '\'' +
-                ", comments='" + comments + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", companyURL='" + companyURL + '\'' +
-                ", conversionSource='" + conversionSource + '\'' +
-                ", dateAdded='" + dateAdded + '\'' +
-                ", dateLastComment='" + dateLastComment + '\'' +
-                ", dateLastModified='" + dateLastModified + '\'' +
-                ", dateLastVisited='" + dateLastVisited + '\'' +
-                ", description='" + description + '\'' +
-                ", distributionListID='" + distributionListID + '\'' +
-                ", division='" + division + '\'' +
-                ", educationDegree='" + educationDegree + '\'' +
-                ", email='" + email + '\'' +
-                ", email2='" + email2 + '\'' +
-                ", email3='" + email3 + '\'' +
-                ", fax='" + fax + '\'' +
-                ", fax2='" + fax2 + '\'' +
-                ", fax3='" + fax3 + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", isDayLightSavingsTime='" + isDayLightSavingsTime + '\'' +
-                ", isDeleted='" + isDeleted + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", leadSource='" + leadSource + '\'' +
-                ", massMailOptOut='" + massMailOptOut + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", name='" + name + '\'' +
-                ", namePrefix='" + namePrefix + '\'' +
-                ", nameSuffix='" + nameSuffix + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", numEmployees='" + numEmployees + '\'' +
-                ", occupation='" + occupation + '\'' +
-                ", userID='" + userID + '\'' +
-                ", ownerCorporationID='" + ownerCorporationID + '\'' +
-                ", pager='" + pager + '\'' +
-                ", phone='" + phone + '\'' +
-                ", phone2='" + phone2 + '\'' +
-                ", phone3='" + phone3 + '\'' +
-                ", preferredContact='" + preferredContact + '\'' +
-                ", primarySkillID='" + primarySkillID + '\'' +
-                ", priority='" + priority + '\'' +
-                ", referredByPersonID='" + referredByPersonID + '\'' +
-                ", reportToPersonID='" + reportToPersonID + '\'' +
-                ", role='" + role + '\'' +
-                ", salary='" + salary + '\'' +
-                ", salaryLow='" + salaryLow + '\'' +
-                ", secondarySkillId='" + secondarySkillId + '\'' +
-                ", skillSet='" + skillSet + '\'' +
-                ", smsOptIn='" + smsOptIn + '\'' +
-                ", source='" + source + '\'' +
-                ", specialties='" + specialties + '\'' +
-                ", status='" + status + '\'' +
-                ", tearsheetsID='" + tearsheetsID + '\'' +
-                ", timeZoneOffsetEST='" + timeZoneOffsetEST + '\'' +
-                ", type='" + type + '\'' +
-                ", willRelocate='" + willRelocate + '\'' +
-                '}';
+        return new StringBuilder("FormLeadDto {")
+                .append("\n\t\"address1\": ")
+                .append("'")
+                .append(address1).append('\'')
+                .append(",\n\t\"address2\": ")
+                .append("'")
+                .append(address2).append('\'')
+                .append(",\n\t\"city\": ")
+                .append("'")
+                .append(city).append('\'')
+                .append(",\n\t\"countryID\": ")
+                .append("'")
+                .append(countryID).append('\'')
+                .append(",\n\t\"state\": ")
+                .append("'")
+                .append(state).append('\'')
+                .append(",\n\t\"zip\": ")
+                .append("'")
+                .append(zip).append('\'')
+                .append(",\n\t\"assignedToUserID\": ")
+                .append("'")
+                .append(assignedToUserID).append('\'')
+                .append(",\n\t\"businessSectorID\": ")
+                .append("'")
+                .append(businessSectorID).append('\'')
+                .append(",\n\t\"campaignSource\": ")
+                .append("'")
+                .append(campaignSource).append('\'')
+                .append(",\n\t\"candidateID\": ")
+                .append("'")
+                .append(candidateID).append('\'')
+                .append(",\n\t\"categoryID\": ")
+                .append("'")
+                .append(categoryID).append('\'')
+                .append(",\n\t\"clientContactID\": ")
+                .append("'")
+                .append(clientContactID).append('\'')
+                .append(",\n\t\"clientCorporationID\": ")
+                .append("'")
+                .append(clientCorporationID).append('\'')
+                .append(",\n\t\"comments\": ")
+                .append("'")
+                .append(comments).append('\'')
+                .append(",\n\t\"companyName\": ")
+                .append("'")
+                .append(companyName).append('\'')
+                .append(",\n\t\"companyURL\": ")
+                .append("'")
+                .append(companyURL).append('\'')
+                .append(",\n\t\"conversionSource\": ")
+                .append("'")
+                .append(conversionSource).append('\'')
+                .append(",\n\t\"dateAdded\": ")
+                .append("'")
+                .append(dateAdded).append('\'')
+                .append(",\n\t\"dateLastComment\": ")
+                .append("'")
+                .append(dateLastComment).append('\'')
+                .append(",\n\t\"dateLastModified\": ")
+                .append("'")
+                .append(dateLastModified).append('\'')
+                .append(",\n\t\"dateLastVisited\": ")
+                .append("'")
+                .append(dateLastVisited).append('\'')
+                .append(",\n\t\"description\": ")
+                .append("'")
+                .append(description).append('\'')
+                .append(",\n\t\"distributionListID\": ")
+                .append("'")
+                .append(distributionListID).append('\'')
+                .append(",\n\t\"division\": ")
+                .append("'")
+                .append(division).append('\'')
+                .append(",\n\t\"educationDegree\": ")
+                .append("'")
+                .append(educationDegree).append('\'')
+                .append(",\n\t\"email\": ")
+                .append("'")
+                .append(email).append('\'')
+                .append(",\n\t\"email2\": ")
+                .append("'")
+                .append(email2).append('\'')
+                .append(",\n\t\"email3\": ")
+                .append("'")
+                .append(email3).append('\'')
+                .append(",\n\t\"fax\": ")
+                .append("'")
+                .append(fax).append('\'')
+                .append(",\n\t\"fax2\": ")
+                .append("'")
+                .append(fax2).append('\'')
+                .append(",\n\t\"fax3\": ")
+                .append("'")
+                .append(fax3).append('\'')
+                .append(",\n\t\"firstName\": ")
+                .append("'")
+                .append(firstName).append('\'')
+                .append(",\n\t\"isDayLightSavingsTime\": ")
+                .append("'")
+                .append(isDayLightSavingsTime).append('\'')
+                .append(",\n\t\"isDeleted\": ")
+                .append("'")
+                .append(isDeleted).append('\'')
+                .append(",\n\t\"lastName\": ")
+                .append("'")
+                .append(lastName).append('\'')
+                .append(",\n\t\"leadSource\": ")
+                .append("'")
+                .append(leadSource).append('\'')
+                .append(",\n\t\"massMailOptOut\": ")
+                .append("'")
+                .append(massMailOptOut).append('\'')
+                .append(",\n\t\"middleName\": ")
+                .append("'")
+                .append(middleName).append('\'')
+                .append(",\n\t\"mobile\": ")
+                .append("'")
+                .append(mobile).append('\'')
+                .append(",\n\t\"name\": ")
+                .append("'")
+                .append(name).append('\'')
+                .append(",\n\t\"namePrefix\": ")
+                .append("'")
+                .append(namePrefix).append('\'')
+                .append(",\n\t\"nameSuffix\": ")
+                .append("'")
+                .append(nameSuffix).append('\'')
+                .append(",\n\t\"nickName\": ")
+                .append("'")
+                .append(nickName).append('\'')
+                .append(",\n\t\"numEmployees\": ")
+                .append("'")
+                .append(numEmployees).append('\'')
+                .append(",\n\t\"occupation\": ")
+                .append("'")
+                .append(occupation).append('\'')
+                .append(",\n\t\"userID\": ")
+                .append("'")
+                .append(userID).append('\'')
+                .append(",\n\t\"ownerCorporationID\": ")
+                .append("'")
+                .append(ownerCorporationID).append('\'')
+                .append(",\n\t\"pager\": ")
+                .append("'")
+                .append(pager).append('\'')
+                .append(",\n\t\"phone\": ")
+                .append("'")
+                .append(phone).append('\'')
+                .append(",\n\t\"phone2\": ")
+                .append("'")
+                .append(phone2).append('\'')
+                .append(",\n\t\"phone3\": ")
+                .append("'")
+                .append(phone3).append('\'')
+                .append(",\n\t\"preferredContact\": ")
+                .append("'")
+                .append(preferredContact).append('\'')
+                .append(",\n\t\"primarySkillID\": ")
+                .append("'")
+                .append(primarySkillID).append('\'')
+                .append(",\n\t\"priority\": ")
+                .append("'")
+                .append(priority).append('\'')
+                .append(",\n\t\"recruiterUserID\": ")
+                .append("'")
+                .append(recruiterUserID).append('\'')
+                .append(",\n\t\"referredByPersonID\": ")
+                .append("'")
+                .append(referredByPersonID).append('\'')
+                .append(",\n\t\"reportToPersonID\": ")
+                .append("'")
+                .append(reportToPersonID).append('\'')
+                .append(",\n\t\"role\": ")
+                .append("'")
+                .append(role).append('\'')
+                .append(",\n\t\"salary\": ")
+                .append("'")
+                .append(salary).append('\'')
+                .append(",\n\t\"salaryLow\": ")
+                .append("'")
+                .append(salaryLow).append('\'')
+                .append(",\n\t\"secondarySkillId\": ")
+                .append("'")
+                .append(secondarySkillId).append('\'')
+                .append(",\n\t\"skillSet\": ")
+                .append("'")
+                .append(skillSet).append('\'')
+                .append(",\n\t\"smsOptIn\": ")
+                .append("'")
+                .append(smsOptIn).append('\'')
+                .append(",\n\t\"source\": ")
+                .append("'")
+                .append(source).append('\'')
+                .append(",\n\t\"specialties\": ")
+                .append("'")
+                .append(specialties).append('\'')
+                .append(",\n\t\"status\": ")
+                .append("'")
+                .append(status).append('\'')
+                .append(",\n\t\"tearsheetsID\": ")
+                .append("'")
+                .append(tearsheetsID).append('\'')
+                .append(",\n\t\"timeZoneOffsetEST\": ")
+                .append("'")
+                .append(timeZoneOffsetEST).append('\'')
+                .append(",\n\t\"type\": ")
+                .append("'")
+                .append(type).append('\'')
+                .append(",\n\t\"willRelocate\": ")
+                .append("'")
+                .append(willRelocate).append('\'')
+                .append('}')
+                .toString();
     }
 }
