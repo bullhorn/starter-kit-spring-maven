@@ -10,10 +10,20 @@ export default class FormScript  {
 
     init() {
         if(this.run) {
-            this.run(this.hideBlockUi);
+            try {
+                this.run(this.hideBlockUi);
+            } catch(error) {
+                this.hideBlockUi();
+
+                console.error('Error running form script: '+error);
+            }
         } else {
             console.error('Error running formscript, no "run" method defined');
         }
+    }
+
+    whenAjaxDone(promises, callback) {
+        $.when.apply($, promises).always(callback);
     }
 
     hideBlockUi() {
