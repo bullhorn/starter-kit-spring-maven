@@ -1,5 +1,6 @@
 package com.client.core.resttrigger.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,9 +10,10 @@ import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.AppContext;
 import com.client.core.base.controller.AbstractTriggerController;
+import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.base.util.TriggerUtil;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.base.workflow.traversing.AbstractTriggerTraverser;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
@@ -20,26 +22,26 @@ import com.client.core.resttrigger.model.api.RestTriggerResponse;
  * Created by hiqbal on 12/15/2015.
  */
 
-public class AbstractRestTriggerController<T extends BullhornEntity, TR extends AbstractTriggerTraverser<T, ?>> extends AbstractTriggerController<T, TR> {
+public class AbstractRestTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends AbstractTriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
 
-    private final Class<T> type;
-    private final Node<TR> validationWorkflow;
+    private static Logger log = Logger.getLogger(AbstractRestTriggerController.class);
+
+    private final Class<E> type;
+    private final List<TriggerValidator<E, H, T>> triggerValidators;
 
     protected final BullhornData bullhornData;
 
     private final JsonConverter jsonConverter;
 
-    private static Logger log = Logger.getLogger(AbstractRestTriggerController.class);
-
-    public AbstractRestTriggerController(Class<T> type, Node<TR> validationWorkflow) {
+    public AbstractRestTriggerController(Class<E> type, List<TriggerValidator<E, H, T>> triggerValidators) {
         super();
         this.type = type;
-        this.validationWorkflow = validationWorkflow;
+        this.triggerValidators = triggerValidators;
         this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
         this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
     }
 
-    protected RestTriggerRequest<T> convertToObject(String value) {
+    protected RestTriggerRequest<E> convertToObject(String value) {
         return jsonConverter.convertJsonStringToEntity(value, RestTriggerRequest.class, type);
     }
 
@@ -53,11 +55,13 @@ public class AbstractRestTriggerController<T extends BullhornEntity, TR extends 
      * @param traverser
      * @return the json parsed validation message
      */
-    protected RestTriggerResponse handleRequest(TR traverser, Map<String, Object> entity) {
+    protected RestTriggerResponse handleRequest(T traverser, Map<String, Object> entity) {
         try {
-            validationWorkflow.start(traverser);
+            triggerValidators.stream().forEach( (triggerValidator) -> {
+                triggerValidator.validate(traverser);
+            });
         } catch (Exception e) {
-            log.error("Error validating Entity", e);
+            log.error("Error validating "+type.getSimpleName(), e);
 
             return prepareErrorReturnValue(entity);
         }
@@ -75,7 +79,7 @@ public class AbstractRestTriggerController<T extends BullhornEntity, TR extends 
         return restTriggerResponse;
     }
 
-	protected RestTriggerResponse prepareReturnValue(TR validationTraverser, Map<String, Object> entity){
+	protected RestTriggerResponse prepareReturnValue(T validationTraverser, Map<String, Object> entity){
 		RestTriggerResponse restTriggerResponse = new RestTriggerResponse();
 
 		StringBuilder error = new StringBuilder();

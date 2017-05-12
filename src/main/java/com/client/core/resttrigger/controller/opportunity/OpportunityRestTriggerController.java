@@ -1,10 +1,10 @@
 package com.client.core.resttrigger.controller.opportunity;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.OpportunityRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.OpportunityRestTriggerTraverser;
 
 /**
@@ -24,13 +25,13 @@ import com.client.core.resttrigger.workflow.traversing.OpportunityRestTriggerTra
  */
 @Controller
 @RequestMapping("/resttrigger/opportunity/*")
-public class OpportunityRestTriggerController extends AbstractRestTriggerController<Opportunity, OpportunityRestTriggerTraverser> {
+public class OpportunityRestTriggerController extends AbstractRestTriggerController<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(OpportunityRestTriggerController.class);
 
-    @Autowired
-    public OpportunityRestTriggerController(@Qualifier("opportunityRestValidationWorkflow") Node<OpportunityRestTriggerTraverser> opportunityValidationWorkflow) {
-        super(Opportunity.class, opportunityValidationWorkflow);
+    @Autowired(required = false)
+    public OpportunityRestTriggerController(List<TriggerValidator<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser>> triggerValidators) {
+        super(Opportunity.class, triggerValidators);
     }
 
     /**

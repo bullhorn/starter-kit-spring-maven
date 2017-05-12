@@ -1,10 +1,10 @@
 package com.client.core.resttrigger.controller.clientcontact;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.ClientContactRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.ClientContactRestTriggerTraverser;
 
 /**
@@ -24,13 +25,13 @@ import com.client.core.resttrigger.workflow.traversing.ClientContactRestTriggerT
  */
 @Controller
 @RequestMapping("/resttrigger/clientcontact/*")
-public class ClientContactRestTriggerController extends AbstractRestTriggerController<ClientContact, ClientContactRestTriggerTraverser> {
+public class ClientContactRestTriggerController extends AbstractRestTriggerController<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(ClientContactRestTriggerController.class);
 
-    @Autowired
-    public ClientContactRestTriggerController(@Qualifier("clientContactRestValidationWorkflow") Node<ClientContactRestTriggerTraverser> clientContactValidationWorkflow) {
-        super(ClientContact.class, clientContactValidationWorkflow);
+    @Autowired(required = false)
+    public ClientContactRestTriggerController(List<TriggerValidator<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser>> triggerValidators) {
+        super(ClientContact.class, triggerValidators);
     }
 
     /**

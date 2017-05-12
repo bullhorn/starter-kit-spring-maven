@@ -4,12 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
+import com.client.core.formtrigger.model.helper.impl.JobSubmissionFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.JobSubmissionFormTriggerTraverser;
 import com.google.common.collect.Maps;
 
@@ -35,14 +32,14 @@ import com.google.common.collect.Maps;
 
 @Controller
 @RequestMapping("/formtrigger/jobsubmission/*")
-public class JobSubmissionFormTriggerController extends AbstractFormTriggerController<JobSubmission, JobSubmissionFormTriggerTraverser> {
+public class JobSubmissionFormTriggerController extends AbstractFormTriggerController<JobSubmission, JobSubmissionFormTriggerHelper, JobSubmissionFormTriggerTraverser> {
 
 	private final Logger log = Logger.getLogger(JobSubmissionFormTriggerController.class);
 
-	@Autowired
-	public JobSubmissionFormTriggerController(@Qualifier("jobSubmissionValidationWorkflow") Node<JobSubmissionFormTriggerTraverser> jobSubmissionValidationWorkflow) {
-		super(JobSubmission.class, jobSubmissionValidationWorkflow);
-	}
+    @Autowired(required = false)
+    public JobSubmissionFormTriggerController(List<TriggerValidator<JobSubmission, JobSubmissionFormTriggerHelper, JobSubmissionFormTriggerTraverser>> triggerValidators) {
+        super(JobSubmission.class, triggerValidators);
+    }
 
 	/**
 	 * Called when job submission is added
@@ -51,15 +48,11 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormJobSubmissionDto formJobSubmissionDto, @RequestParam("ft.userId") Integer updatingUserID,
-                            HttpServletResponse response, HttpServletRequest request) {
-		// Start the validation process.
+	public String addEntity(@ModelAttribute FormJobSubmissionDto formJobSubmissionDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Job Submission Validation Process----------------------------------------");
 
         List<JobSubmissionFormTriggerTraverser> traversers = getTraversers(formJobSubmissionDto, updatingUserID, false);
@@ -74,16 +67,12 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
-	public String editEntity(@ModelAttribute FormJobSubmissionDto formJobSubmissionDto, @RequestParam("ft.userId") Integer updatingUserID,
-                             HttpServletResponse response, HttpServletRequest request) {
-		// Start the validation process.
-		log.info("---------------------------- Starting Client Corporation Validation Process----------------------------------------");
+	public String editEntity(@ModelAttribute FormJobSubmissionDto formJobSubmissionDto, @RequestParam("ft.userId") Integer updatingUserID) {
+		log.info("---------------------------- Starting Job Submission Validation Process----------------------------------------");
 
         List<JobSubmissionFormTriggerTraverser> traversers = getTraversers(formJobSubmissionDto, updatingUserID, true);
 
@@ -108,7 +97,9 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 
     protected Map<String, Object> handleSingleRequest(JobSubmissionFormTriggerTraverser traverser) {
         try {
-            validationWorkflow.start(traverser);
+            getTriggerValidators().stream().forEach( (triggerValidator) -> {
+                triggerValidator.validate(traverser);
+            });
         } catch (Exception e) {
             log.error("Error validating placement", e);
         }

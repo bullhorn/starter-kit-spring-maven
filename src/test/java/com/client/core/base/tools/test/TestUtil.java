@@ -30,7 +30,7 @@ import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
 import com.client.core.formtrigger.workflow.traversing.CandidateFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.ClientContactFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.ClientCorporationFormTriggerTraverser;
-import com.client.core.formtrigger.workflow.traversing.JobFormTriggerTraverser;
+import com.client.core.formtrigger.workflow.traversing.JobOrderFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.JobSubmissionFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.NoteFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFormTriggerTraverser;
@@ -39,7 +39,7 @@ import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.ClientContactEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.JobEventTraverser;
+import com.client.core.scheduledtasks.workflow.traversing.impl.JobOrderEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.JobSubmissionEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementChangeRequestEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTraverser;
@@ -103,7 +103,7 @@ public class TestUtil {
 		return placementEventTraverser(event);
 	}
 
-	public JobEventTraverser jobEventTraverser(EventType eventType, String[] updatedProperties) {
+	public JobOrderEventTraverser jobEventTraverser(EventType eventType, String[] updatedProperties) {
 		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobOrderId(), ApiEntityName.JOB_ORDER, eventType, updatedProperties,
 				getTestEntities().getCorporateUserId());
 		return jobEventTraverser(event);
@@ -133,8 +133,8 @@ public class TestUtil {
 		return new SendoutEventTraverser(event, bullhornData);
 	}
 
-	public JobEventTraverser jobEventTraverser(CustomSubscriptionEvent event) {
-		return new JobEventTraverser(event, bullhornData);
+	public JobOrderEventTraverser jobEventTraverser(CustomSubscriptionEvent event) {
+		return new JobOrderEventTraverser(event, bullhornData);
 	}
 
 	public JobSubmissionFormTriggerTraverser getJobSubmissionFormTriggerTraverser(String status, int candidateID) {
@@ -176,14 +176,14 @@ public class TestUtil {
 		return traverser;
 	}
 
-	public JobFormTriggerTraverser getJobFormTriggerTraverser() {
+	public JobOrderFormTriggerTraverser getJobFormTriggerTraverser() {
 		FormJobOrderDto dto = new FormJobOrderDto();
 		dto.setJobPostingID(getTestEntities().getJobOrderId());
 		dto.setClientUserID(getTestEntities().getClientContactId());
 		dto.setClientCorporationID(getTestEntities().getClientCorporationId());
 		dto.setUserID(testEntities.getCorporateUserId());
 		
-		JobFormTriggerTraverser traverser = new JobFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
+		JobOrderFormTriggerTraverser traverser = new JobOrderFormTriggerTraverser(dto, getTestEntities().getCorporateUserId(),
 				true, bullhornData);
 
 		return traverser;

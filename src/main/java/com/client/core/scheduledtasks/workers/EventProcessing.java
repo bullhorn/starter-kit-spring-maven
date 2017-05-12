@@ -2,35 +2,32 @@ package com.client.core.scheduledtasks.workers;
 
 import java.util.List;
 
-import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
 import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
 
 import com.bullhorn.entity.ApiEntityName;
-import com.client.core.AppContext;
+import com.bullhornsdk.data.model.entity.core.standard.Appointment;
+import com.bullhornsdk.data.model.entity.core.standard.Candidate;
+import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
+import com.bullhornsdk.data.model.entity.core.standard.CandidateReference;
+import com.bullhornsdk.data.model.entity.core.standard.CandidateWorkHistory;
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
+import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
+import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
+import com.bullhornsdk.data.model.entity.core.standard.Lead;
+import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
+import com.bullhornsdk.data.model.entity.core.standard.Placement;
+import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
+import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
+import com.bullhornsdk.data.model.entity.core.standard.Sendout;
+import com.bullhornsdk.data.model.entity.core.standard.Task;
 import com.client.core.base.util.StackTraceUtil;
-import com.client.core.base.workflow.node.Node;
 import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.log.BullhornLog;
-import com.client.core.scheduledtasks.workflow.traversing.impl.AppointmentEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEducationEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateReferenceEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateWorkHistoryEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.ClientContactEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.ClientCorporationEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.CorporateUserEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.JobEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.JobSubmissionEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.LeadEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.NoteEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.OpportunityEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementChangeRequestEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementCommissionEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.SendoutEventTraverser;
-import com.client.core.scheduledtasks.workflow.traversing.impl.TaskEventTraverser;
+import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.soap.model.SubscriptionEvent;
 
 /**
@@ -40,22 +37,22 @@ import com.client.core.soap.model.SubscriptionEvent;
  */
 public class EventProcessing implements Runnable {
 	private final Logger log = Logger.getLogger(getClass());
-	
+
+    private final EventWorkflowFactory eventWorkflowFactory;
 	private final BullhornLogDAO bullhornLogDAO;
 	private final CustomSubscriptionEvent event;
 	private final Integer corporationID;
-	private final ApplicationContext appContext;
 	
-	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event) {
+	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
 		super();
+		this.eventWorkflowFactory = eventWorkflowFactory;
+        this.bullhornLogDAO = bullhornLogDAO;
+        this.event = event;
 		this.corporationID = corporationID;
-		this.bullhornLogDAO = bullhornLogDAO;
-		this.event = event;
-		this.appContext = AppContext.getApplicationContext();
 	}
 
-	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event) {
-		return new EventProcessing(corporationID, bullhornLogDAO, event);
+	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
+		return new EventProcessing(corporationID, bullhornLogDAO, event, eventWorkflowFactory);
 	}
 
     /**
@@ -84,298 +81,111 @@ public class EventProcessing implements Runnable {
 	}
 	
 	private void doAction() throws Exception {
-		if (isAppointmentEvent()) {
-			handleAppointmentEvent();
-		} else if (isCandidateEvent()) {
-			handleCandidateEvent();
-		} else if (isCandidateEducationEvent()) {
-			handleCandidateEducationEvent();
-		} else if (isCandidateWorkHistoryEvent()) {
-			handleCandidateWorkHistoryEvent();
-		} else if (isCandidateReferenceEvent()) {
-			handleCandidateReferenceEvent();
-		} else if (isClientContactEvent()) {
-			handleClientContactEvent();
-		} else if (isClientCorporationEvent()) {
-			handleClientCorporationEvent();
-		} else if (isCorporateUserEvent()) {
-			handleCorporateUserEvent();
-		} else if (isJobEvent()) {
-			handleJobEvent();
-		} else if (isJobSubmissionEvent()) {
-			handleJobSubmissionEvent();
-		} else if (isLeadEvent()) {
-            handleLeadEvent();
+        if (isAppointmentEvent()) {
+            eventWorkflowFactory.execute(Appointment.class, event);
+        } else if (isCandidateEvent()) {
+            eventWorkflowFactory.execute(Candidate.class, event);
+        } else if (isCandidateEducationEvent()) {
+            eventWorkflowFactory.execute(CandidateEducation.class, event);
+        } else if (isCandidateWorkHistoryEvent()) {
+            eventWorkflowFactory.execute(CandidateWorkHistory.class, event);
+        } else if (isCandidateReferenceEvent()) {
+            eventWorkflowFactory.execute(CandidateReference.class, event);
+        } else if (isClientContactEvent()) {
+            eventWorkflowFactory.execute(ClientContact.class, event);
+        } else if (isClientCorporationEvent()) {
+            eventWorkflowFactory.execute(ClientCorporation.class, event);
+        } else if (isCorporateUserEvent()) {
+            eventWorkflowFactory.execute(CorporateUser.class, event);
+        } else if (isJobEvent()) {
+            eventWorkflowFactory.execute(JobOrder.class, event);
+        } else if (isJobSubmissionEvent()) {
+            eventWorkflowFactory.execute(JobSubmission.class, event);
+        } else if (isLeadEvent()) {
+            eventWorkflowFactory.execute(Lead.class, event);
         } else if (isNoteEvent()) {
-			handleNoteEvent();
-		} else if (isOpportunityEvent()) {
-            handleOpportunityEvent();
+            eventWorkflowFactory.execute(Note.class, event);
+        } else if (isOpportunityEvent()) {
+            eventWorkflowFactory.execute(Opportunity.class, event);
         } else if (isPlacementEvent()) {
-			handlePlacementEvent();
-		} else if (isPlacementChangeRequestEvent()) {
-			handlePlacementChangeRequestEvent();
-		} else if (isPlacementCommissionEvent()) {
-			handlePlacementCommissionEvent();
-		} else if (isSendoutEvent()) {
-			handleSendoutEvent();
-		} else if (isTaskEvent()) {
-			handleTaskEvent();
-		}
-	}
-	
-	private void handleAppointmentEvent() {
-		@SuppressWarnings("unchecked")
-		Node<AppointmentEventTraverser> appointmentScheduledTaskWorkFlow = (Node<AppointmentEventTraverser>) appContext
-				.getBean("appointmentScheduledTaskWorkFlow");
-
-		AppointmentEventTraverser traverser = new AppointmentEventTraverser(event);
-		appointmentScheduledTaskWorkFlow.start(traverser);
+            eventWorkflowFactory.execute(Placement.class, event);
+        } else if (isPlacementChangeRequestEvent()) {
+            eventWorkflowFactory.execute(PlacementChangeRequest.class, event);
+        } else if (isPlacementCommissionEvent()) {
+            eventWorkflowFactory.execute(PlacementCommission.class, event);
+        } else if (isSendoutEvent()) {
+            eventWorkflowFactory.execute(Sendout.class, event);
+        } else if (isTaskEvent()) {
+            eventWorkflowFactory.execute(Task.class, event);
+        }
 	}
 
 	private boolean isAppointmentEvent() {
 		return entityIsOfType(ApiEntityName.APPOINTMENT.value());
 	}
 
-	private void handleCandidateEvent() {
-		@SuppressWarnings("unchecked")
-		Node<CandidateEventTraverser> candidateScheduledTaskWorkFlow = (Node<CandidateEventTraverser>) appContext
-				.getBean("candidateScheduledTaskWorkFlow");
-
-		CandidateEventTraverser traverser = new CandidateEventTraverser(event);
-		candidateScheduledTaskWorkFlow.start(traverser);
-	}
-
 	private boolean isCandidateEvent() {
 		return entityIsOfType(ApiEntityName.CANDIDATE.value());
-	}
-
-	private void handleCandidateReferenceEvent() {
-		@SuppressWarnings("unchecked")
-		Node<CandidateReferenceEventTraverser> candidateReferenceScheduledTaskWorkFlow = (Node<CandidateReferenceEventTraverser>) appContext
-				.getBean("candidateReferenceScheduledTaskWorkFlow");
-
-		CandidateReferenceEventTraverser traverser = new CandidateReferenceEventTraverser(event);
-		candidateReferenceScheduledTaskWorkFlow.start(traverser);
 	}
 
 	private boolean isCandidateReferenceEvent() {
 		return entityIsOfType(ApiEntityName.CANDIDATE_REFERENCE.value());
 	}
 
-	private void handleCandidateWorkHistoryEvent() {
-		@SuppressWarnings("unchecked")
-		Node<CandidateWorkHistoryEventTraverser> candidateWorkHistoryScheduledTaskWorkFlow = (Node<CandidateWorkHistoryEventTraverser>) appContext
-				.getBean("candidateWorkHistoryScheduledTaskWorkFlow");
-
-		CandidateWorkHistoryEventTraverser traverser = new CandidateWorkHistoryEventTraverser(event);
-		candidateWorkHistoryScheduledTaskWorkFlow.start(traverser);
-	}
-
 	private boolean isCandidateWorkHistoryEvent() {
 		return entityIsOfType(ApiEntityName.CANDIDATE_WORK_HISTORY.value());
-	}
-
-	private void handleCandidateEducationEvent() {
-		@SuppressWarnings("unchecked")
-		Node<CandidateEducationEventTraverser> candidateEducationScheduledTaskWorkFlow = (Node<CandidateEducationEventTraverser>) appContext
-				.getBean("candidateEducationScheduledTaskWorkFlow");
-
-		CandidateEducationEventTraverser traverser = new CandidateEducationEventTraverser(event);
-		candidateEducationScheduledTaskWorkFlow.start(traverser);
 	}
 
 	private boolean isCandidateEducationEvent() {
 		return entityIsOfType(ApiEntityName.CANDIDATE_EDUCATION.value());
 	}
 
-	private void handleClientContactEvent() {
-		@SuppressWarnings("unchecked")
-		Node<ClientContactEventTraverser> clientContactScheduledTaskWorkFlow = (Node<ClientContactEventTraverser>) appContext
-				.getBean("clientContactScheduledTaskWorkFlow");
-
-		ClientContactEventTraverser traverser = new ClientContactEventTraverser(event);
-		clientContactScheduledTaskWorkFlow.start(traverser);
-	}
-
 	private boolean isClientContactEvent() {
 		return entityIsOfType(ApiEntityName.CLIENT_CONTACT.value());
-	}
-
-	private void handleClientCorporationEvent() {
-		@SuppressWarnings("unchecked")
-		Node<ClientCorporationEventTraverser> clientCorporationScheduledTaskWorkFlow = (Node<ClientCorporationEventTraverser>) appContext
-				.getBean("clientCorporationScheduledTaskWorkFlow");
-
-		ClientCorporationEventTraverser traverser = new ClientCorporationEventTraverser(event);
-		clientCorporationScheduledTaskWorkFlow.start(traverser);
 	}
 
 	private boolean isClientCorporationEvent() {
 		return entityIsOfType(ApiEntityName.CLIENT_CORPORATION.value());
 	}
 
-	private void handleCorporateUserEvent() {
-		@SuppressWarnings("unchecked")
-		Node<CorporateUserEventTraverser> corporateUserScheduledTaskWorkFlow = (Node<CorporateUserEventTraverser>) appContext
-				.getBean("corporateUserScheduledTaskWorkFlow");
-
-		CorporateUserEventTraverser traverser = new CorporateUserEventTraverser(event);
-		corporateUserScheduledTaskWorkFlow.start(traverser);
-
-	}
-
 	private boolean isCorporateUserEvent() {
 		return entityIsOfType(ApiEntityName.CORPORATE_USER.value());
-	}
-
-	private void handleJobEvent() {
-		@SuppressWarnings("unchecked")
-		Node<JobEventTraverser> jobScheduledTaskWorkFlow = (Node<JobEventTraverser>) appContext.getBean("jobScheduledTaskWorkFlow");
-
-		JobEventTraverser traverser = new JobEventTraverser(event);
-		jobScheduledTaskWorkFlow.start(traverser);
 	}
 
 	private boolean isJobEvent() {
 		return entityIsOfType(ApiEntityName.JOB_ORDER.value());
 	}
 
-	private void handleJobSubmissionEvent() {
-		@SuppressWarnings("unchecked")
-		Node<JobSubmissionEventTraverser> jobSubmissionScheduledTaskWorkFlow = (Node<JobSubmissionEventTraverser>) appContext
-				.getBean("jobSubmissionScheduledTaskWorkFlow");
-
-		JobSubmissionEventTraverser jobSubmissionEventTraverser = new JobSubmissionEventTraverser(event);
-		jobSubmissionScheduledTaskWorkFlow.start(jobSubmissionEventTraverser);
-	}
-
 	private boolean isJobSubmissionEvent() {
 		return entityIsOfType(ApiEntityName.JOB_SUBMISSION.value());
 	}
-
-    private void handleLeadEvent() {
-        @SuppressWarnings("unchecked")
-        Node<LeadEventTraverser> leadScheduledTaskWorkFlow = (Node<LeadEventTraverser>) appContext
-                .getBean("leadScheduledTaskWorkFlow");
-
-        LeadEventTraverser leadEventTraverser = new LeadEventTraverser(event);
-        leadScheduledTaskWorkFlow.start(leadEventTraverser);
-    }
 
     private boolean isLeadEvent() {
         return entityIsOfType("Lead");
     }
 
-	private void handleNoteEvent() {
-		@SuppressWarnings("unchecked")
-		Node<NoteEventTraverser> noteScheduledTaskWorkFlow = (Node<NoteEventTraverser>) appContext.getBean("noteScheduledTaskWorkFlow");
-
-		NoteEventTraverser noteEventTraverser = new NoteEventTraverser(event);
-		noteScheduledTaskWorkFlow.start(noteEventTraverser);
-	}
-
 	private boolean isNoteEvent() {
 		return entityIsOfType(ApiEntityName.NOTE.value());
-	}
-
-	private void handlePlacementEvent() {
-		@SuppressWarnings("unchecked")
-		Node<PlacementEventTraverser> placementScheduledTaskWorkFlow = (Node<PlacementEventTraverser>) appContext
-				.getBean("placementScheduledTaskWorkFlow");
-
-		PlacementEventTraverser placementEventTraverser = new PlacementEventTraverser(event);
-		placementScheduledTaskWorkFlow.start(placementEventTraverser);
 	}
 
 	private boolean isPlacementEvent() {
 		return entityIsOfType(ApiEntityName.PLACEMENT.value());
 	}
 
-    private void handleOpportunityEvent() {
-        @SuppressWarnings("unchecked")
-        Node<OpportunityEventTraverser> opportunityScheduledTaskWorkFlow = (Node<OpportunityEventTraverser>) appContext
-                .getBean("opportunityScheduledTaskWorkFlow");
-
-        OpportunityEventTraverser opportunityEventTraverser = new OpportunityEventTraverser(event);
-        opportunityScheduledTaskWorkFlow.start(opportunityEventTraverser);
-    }
-
     private boolean isOpportunityEvent() {
         return entityIsOfType(Opportunity.class.getSimpleName());
     }
 
-	/**
-	 * Passes the PlacementChangeRequestEventTraverser through the placementChangeRequestScheduledTaskWorkFlow, see
-	 * scheduledtasks-workflow.xml for details on work flow. One Traverser instantiated per event.
-	 * 
-	 * Actual logic is handled in Service class (see Service folder).
-	 * 
-	 */
-	private void handlePlacementChangeRequestEvent() {
-		@SuppressWarnings("unchecked")
-		Node<PlacementChangeRequestEventTraverser> placementChangeRequestScheduledTaskWorkFlow = (Node<PlacementChangeRequestEventTraverser>) appContext
-				.getBean("placementChangeRequestScheduledTaskWorkFlow");
-
-		PlacementChangeRequestEventTraverser traverser = new PlacementChangeRequestEventTraverser(event);
-		placementChangeRequestScheduledTaskWorkFlow.start(traverser);
-	}
-
 	private boolean isPlacementChangeRequestEvent() {
 		return entityIsOfType(ApiEntityName.PLACEMENT_CHANGE_REQUEST.value());
-	}
-
-	/**
-	 * Passes the PlacementCommissionEventTraverser through the placementCommissionScheduledTaskWorkFlow, see
-	 * scheduledtasks-workflow.xml for details on work flow. One Traverser instantiated per event.
-	 * 
-	 * Actual logic is handled in Service class (see Service folder).
-	 * 
-	 */
-	private void handlePlacementCommissionEvent() {
-		@SuppressWarnings("unchecked")
-		Node<PlacementCommissionEventTraverser> placementCommissionScheduledTaskWorkFlow = (Node<PlacementCommissionEventTraverser>) appContext
-				.getBean("placementCommissionScheduledTaskWorkFlow");
-
-		PlacementCommissionEventTraverser traverser = new PlacementCommissionEventTraverser(event);
-		placementCommissionScheduledTaskWorkFlow.start(traverser);
 	}
 
 	private boolean isPlacementCommissionEvent() {
 		return entityIsOfType(ApiEntityName.PLACEMENT_COMMISSION.value());
 	}
 
-	/**
-	 * Passes the SendoutEventTraverser through the sendoutScheduledTaskWorkFlow, see scheduledtasks-workflow.xml for details on work
-	 * flow. One Traverser instantiated per event.
-	 * 
-	 * Actual logic is handled in Service class (see Service folder).
-	 * 
-	 */
-	private void handleSendoutEvent() {
-		@SuppressWarnings("unchecked")
-		Node<SendoutEventTraverser> sendoutScheduledTaskWorkFlow = (Node<SendoutEventTraverser>) appContext.getBean("sendoutScheduledTaskWorkFlow");
-
-		SendoutEventTraverser traverser = new SendoutEventTraverser(event);
-		sendoutScheduledTaskWorkFlow.start(traverser);
-	}
-
 	private boolean isSendoutEvent() {
 		return entityIsOfType(ApiEntityName.SENDOUT.value());
-	}
-
-	/**
-	 * Passes the TaskEventTraverser through the taskScheduledTaskWorkFlow, see scheduledtasks-workflow.xml for details on work
-	 * flow. One Traverser instantiated per event.
-	 * 
-	 * Actual logic is handled in Service class (see Service folder).
-	 * 
-	 */
-	private void handleTaskEvent() {
-		@SuppressWarnings("unchecked")
-		Node<TaskEventTraverser> taskScheduledTaskWorkFlow = (Node<TaskEventTraverser>) appContext.getBean("taskScheduledTaskWorkFlow");
-
-		TaskEventTraverser traverser = new TaskEventTraverser(event);
-		taskScheduledTaskWorkFlow.start(traverser);
 	}
 
 	private boolean isTaskEvent() {

@@ -1,11 +1,9 @@
 package com.client.core.formtrigger.controller.placementchangerequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormPlacementChangeRequestDto;
+import com.client.core.formtrigger.model.helper.impl.PlacementChangeRequestFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFormTriggerTraverser;
 
 /**
@@ -30,15 +29,14 @@ import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFor
 
 @Controller
 @RequestMapping("/formtrigger/placementchangerequest/*")
-public class PlacementChangeRequestFormTriggerController extends
-        AbstractFormTriggerController<PlacementChangeRequest, PlacementChangeRequestFormTriggerTraverser> {
+public class PlacementChangeRequestFormTriggerController extends AbstractFormTriggerController<PlacementChangeRequest, PlacementChangeRequestFormTriggerHelper, PlacementChangeRequestFormTriggerTraverser> {
 
 	private final Logger log = Logger.getLogger(PlacementChangeRequestFormTriggerController.class);
 
-	@Autowired
-	public PlacementChangeRequestFormTriggerController(@Qualifier("placementChangeRequestValidationWorkFlow") Node<PlacementChangeRequestFormTriggerTraverser> placementChangeRequestValidationWorkflow) {
-		super(PlacementChangeRequest.class, placementChangeRequestValidationWorkflow);
-	}
+    @Autowired(required = false)
+    public PlacementChangeRequestFormTriggerController(List<TriggerValidator<PlacementChangeRequest, PlacementChangeRequestFormTriggerHelper, PlacementChangeRequestFormTriggerTraverser>> triggerValidators) {
+        super(PlacementChangeRequest.class, triggerValidators);
+    }
 
 	/**
 	 * Same entry point for both add and edit.
@@ -47,18 +45,16 @@ public class PlacementChangeRequestFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormPlacementChangeRequestDto formPlacementChangeRequestDto,
-                            @RequestParam("ft.userId") Integer updatingUserID, HttpServletResponse response, HttpServletRequest request) {
+	public String addEntity(@ModelAttribute FormPlacementChangeRequestDto formPlacementChangeRequestDto, @RequestParam("ft.userId") Integer updatingUserID) {
+		log.info("---------------------------- Starting Placement Change Request Validation Add Process----------------------------------------");
 
-		log.info("---------------------------- Starting Validation Add Process----------------------------------------");
 		PlacementChangeRequestFormTriggerTraverser traverser = new PlacementChangeRequestFormTriggerTraverser(formPlacementChangeRequestDto,
 				updatingUserID, isEdit(formPlacementChangeRequestDto),bullhornData);
+
 		return handleRequest(traverser);
 	}
 
@@ -70,9 +66,11 @@ public class PlacementChangeRequestFormTriggerController extends
 	 */
 	private boolean isEdit(FormPlacementChangeRequestDto formPlacementChangeRequestDto) {
 		Integer placementChangeRequestID = formPlacementChangeRequestDto.getPlacementChangeRequestID();
+
 		if (placementChangeRequestID == null || placementChangeRequestID == -1) {
 			return false;
 		}
+
 		return true;
 	}
 

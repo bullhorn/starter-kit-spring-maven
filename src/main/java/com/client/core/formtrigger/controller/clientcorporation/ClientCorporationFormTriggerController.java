@@ -1,11 +1,9 @@
 package com.client.core.formtrigger.controller.clientcorporation;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
+import com.client.core.formtrigger.model.helper.impl.ClientCorporationFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.ClientCorporationFormTriggerTraverser;
 
 /**
@@ -30,15 +29,13 @@ import com.client.core.formtrigger.workflow.traversing.ClientCorporationFormTrig
 
 @Controller
 @RequestMapping("/formtrigger/clientcorporation/*")
-public class ClientCorporationFormTriggerController extends
-        AbstractFormTriggerController<ClientCorporation, ClientCorporationFormTriggerTraverser> {
+public class ClientCorporationFormTriggerController extends AbstractFormTriggerController<ClientCorporation, ClientCorporationFormTriggerHelper, ClientCorporationFormTriggerTraverser> {
 
 	private final Logger log = Logger.getLogger(ClientCorporationFormTriggerController.class);
 
-	@Autowired
-	public ClientCorporationFormTriggerController(@Qualifier("clientCorporationValidationWorkflow") Node<ClientCorporationFormTriggerTraverser> clientCorporationValidationWorkflow) {
-		super(ClientCorporation.class, clientCorporationValidationWorkflow);
-
+	@Autowired(required = false)
+	public ClientCorporationFormTriggerController(List<TriggerValidator<ClientCorporation, ClientCorporationFormTriggerHelper, ClientCorporationFormTriggerTraverser>> triggerValidators) {
+		super(ClientCorporation.class, triggerValidators);
 	}
 
 	/**
@@ -48,22 +45,17 @@ public class ClientCorporationFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
-	public String addEntity(@ModelAttribute FormClientCorporationDto formClientCorporationDto,
-                            @RequestParam("ft.userId") Integer updatingUserID, HttpServletResponse response, HttpServletRequest request) {
-		// Start the validation process.
+	public String addEntity(@ModelAttribute FormClientCorporationDto formClientCorporationDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Client Corporation Validation Process----------------------------------------");
 
 		ClientCorporationFormTriggerTraverser traverser = new ClientCorporationFormTriggerTraverser(formClientCorporationDto, updatingUserID,
 				false, bullhornData);
 
 		return handleRequest(traverser);
-
 	}
 
 	/**
@@ -73,15 +65,11 @@ public class ClientCorporationFormTriggerController extends
 	 *            contains all the relevant data from the form
 	 * @param updatingUserID
 	 *            id of corporate user who saved the form
-	 * @param response
-	 * @param request
 	 * @return the json parsed form response message
 	 */
 	@RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
 	@ResponseBody
-	public String editEntity(@ModelAttribute FormClientCorporationDto formClientCorporationDto,
-                             @RequestParam("ft.userId") Integer updatingUserID, HttpServletResponse response, HttpServletRequest request) {
-		// Start the validation process.
+	public String editEntity(@ModelAttribute FormClientCorporationDto formClientCorporationDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Client Corporation Validation Process----------------------------------------");
 
 		ClientCorporationFormTriggerTraverser traverser = new ClientCorporationFormTriggerTraverser(formClientCorporationDto, updatingUserID,
