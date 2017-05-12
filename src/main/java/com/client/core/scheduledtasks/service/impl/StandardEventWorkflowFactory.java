@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bullhornsdk.data.model.entity.core.standard.Appointment;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
@@ -71,6 +72,7 @@ import com.google.common.collect.Lists;
 /**
  * Created by john.sullivan on 12/5/2017.
  */
+@Service
 public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
     private final List<EventTask<Appointment, AppointmentScheduledTaskHelper, AppointmentEventTraverser>> appointmentNodes;

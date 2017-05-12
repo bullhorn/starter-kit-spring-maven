@@ -21,6 +21,7 @@ import com.client.BaseTest;
 import com.client.core.ApplicationSettings;
 import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
+import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Sets;
@@ -34,6 +35,9 @@ public class TestEventProcessing extends BaseTest {
 
 	@Autowired
 	private BullhornLogDAO bullhornLogDAO;
+
+	@Autowired
+    private EventWorkflowFactory eventWorkflowFactory;
 
 	private List<CustomSubscriptionEvent> subscriptionEvents;
 	private String subscriptionName;
@@ -135,7 +139,7 @@ public class TestEventProcessing extends BaseTest {
 		// loop through each event
 		for (CustomSubscriptionEvent event : subscriptionEvents) {
 			error = false;
-            EventProcessing processEvent = EventProcessing.instantiateRunnable(corporationID, bullhornLogDAO, event);
+            EventProcessing processEvent = EventProcessing.instantiateRunnable(corporationID, bullhornLogDAO, event, eventWorkflowFactory);
 			// send to exec service
 			try {
 				exec.execute(processEvent);
