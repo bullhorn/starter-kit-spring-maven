@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.controller.note;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class NoteFormTriggerController extends AbstractFormTriggerController<Not
 
 	private final Logger log = Logger.getLogger(NoteFormTriggerController.class);
 
-    @Autowired(required = false)
-    public NoteFormTriggerController(List<TriggerValidator<Note, NoteFormTriggerHelper, NoteFormTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public NoteFormTriggerController(Optional<List<TriggerValidator<Note, NoteFormTriggerHelper, NoteFormTriggerTraverser>>> triggerValidators) {
         super(Note.class, triggerValidators);
     }
 

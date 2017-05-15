@@ -2,6 +2,7 @@ package com.client.core.formtrigger.controller.jobsubmission;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -36,8 +37,8 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 
 	private final Logger log = Logger.getLogger(JobSubmissionFormTriggerController.class);
 
-    @Autowired(required = false)
-    public JobSubmissionFormTriggerController(List<TriggerValidator<JobSubmission, JobSubmissionFormTriggerHelper, JobSubmissionFormTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public JobSubmissionFormTriggerController(Optional<List<TriggerValidator<JobSubmission, JobSubmissionFormTriggerHelper, JobSubmissionFormTriggerTraverser>>> triggerValidators) {
         super(JobSubmission.class, triggerValidators);
     }
 

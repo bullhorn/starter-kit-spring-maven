@@ -11,6 +11,9 @@ import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
+import com.client.core.scheduledtasks.model.helper.ScheduledTaskHelper;
+import com.client.core.scheduledtasks.workflow.node.EventTask;
+import com.client.core.scheduledtasks.workflow.traversing.ScheduledTasksTraverser;
 import com.google.common.collect.Lists;
 
 public class AbstractFormTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
@@ -20,10 +23,10 @@ public class AbstractFormTriggerController<E extends BullhornEntity, H extends T
     private final Class<E> type;
     private final List<TriggerValidator<E, H, T>> triggerValidators;
 
-	public AbstractFormTriggerController(Class<E> type, List<TriggerValidator<E, H, T>> triggerValidators) {
+	public AbstractFormTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators) {
 		super();
 		this.type = type;
-		this.triggerValidators = Optional.of(triggerValidators).orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
+		this.triggerValidators = sort(triggerValidators);
 	}
 
 	/**
@@ -108,4 +111,9 @@ public class AbstractFormTriggerController<E extends BullhornEntity, H extends T
     protected List<TriggerValidator<E, H, T>> getTriggerValidators() {
         return triggerValidators;
     }
+
+	protected <E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> List<TriggerValidator<E, H, T>> sort(Optional<List<TriggerValidator<E, H, T>>> values) {
+		return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
+	}
+
 }

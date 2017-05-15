@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller.job;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class JobOrderRestTriggerController extends AbstractRestTriggerController
 
     private final Logger log = Logger.getLogger(JobOrderRestTriggerController.class);
 
-    @Autowired(required = false)
-    public JobOrderRestTriggerController(List<TriggerValidator<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public JobOrderRestTriggerController(Optional<List<TriggerValidator<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser>>> triggerValidators) {
         super(JobOrder.class, triggerValidators);
     }
 

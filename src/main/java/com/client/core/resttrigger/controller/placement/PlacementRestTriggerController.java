@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller.placement;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class PlacementRestTriggerController extends AbstractRestTriggerControlle
 
     private final Logger log = Logger.getLogger(PlacementRestTriggerController.class);
 
-    @Autowired(required = false)
-    public PlacementRestTriggerController(List<TriggerValidator<Placement, PlacementRestTriggerHelper, PlacementRestTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public PlacementRestTriggerController(Optional<List<TriggerValidator<Placement, PlacementRestTriggerHelper, PlacementRestTriggerTraverser>>> triggerValidators) {
         super(Placement.class, triggerValidators);
     }
 

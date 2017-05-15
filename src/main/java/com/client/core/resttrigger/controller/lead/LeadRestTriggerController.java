@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller.lead;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class LeadRestTriggerController extends AbstractRestTriggerController<Lea
 
     private final Logger log = Logger.getLogger(LeadRestTriggerController.class);
 
-    @Autowired(required = false)
-    public LeadRestTriggerController(List<TriggerValidator<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public LeadRestTriggerController(Optional<List<TriggerValidator<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser>>> triggerValidators) {
         super(Lead.class, triggerValidators);
     }
 

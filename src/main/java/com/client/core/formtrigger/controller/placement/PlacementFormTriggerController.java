@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.controller.placement;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,8 @@ public class PlacementFormTriggerController extends AbstractFormTriggerControlle
 
 	private final Logger log = Logger.getLogger(PlacementFormTriggerController.class);
 
-    @Autowired(required = false)
-    public PlacementFormTriggerController(List<TriggerValidator<Placement, PlacementFormTriggerHelper, PlacementFormTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public PlacementFormTriggerController(Optional<List<TriggerValidator<Placement, PlacementFormTriggerHelper, PlacementFormTriggerTraverser>>> triggerValidators) {
         super(Placement.class, triggerValidators);
     }
 

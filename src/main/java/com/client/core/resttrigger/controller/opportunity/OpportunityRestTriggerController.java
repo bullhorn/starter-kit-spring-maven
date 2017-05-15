@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller.opportunity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
 
     private final Logger log = Logger.getLogger(OpportunityRestTriggerController.class);
 
-    @Autowired(required = false)
-    public OpportunityRestTriggerController(List<TriggerValidator<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public OpportunityRestTriggerController(Optional<List<TriggerValidator<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser>>> triggerValidators) {
         super(Opportunity.class, triggerValidators);
     }
 

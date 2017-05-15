@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.controller.opportunity;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class OpportunityFormTriggerController extends AbstractFormTriggerControl
 
     private final Logger log = Logger.getLogger(OpportunityFormTriggerController.class);
 
-    @Autowired(required = false)
-    public OpportunityFormTriggerController(List<TriggerValidator<Opportunity, OpportunityFormTriggerHelper, OpportunityFormTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public OpportunityFormTriggerController(Optional<List<TriggerValidator<Opportunity, OpportunityFormTriggerHelper, OpportunityFormTriggerTraverser>>> triggerValidators) {
         super(Opportunity.class, triggerValidators);
     }
 

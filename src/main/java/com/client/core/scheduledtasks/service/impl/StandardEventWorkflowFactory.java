@@ -1,12 +1,5 @@
 package com.client.core.scheduledtasks.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.bullhornsdk.data.model.entity.core.standard.Appointment;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
@@ -68,6 +61,12 @@ import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTra
 import com.client.core.scheduledtasks.workflow.traversing.impl.SendoutEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.TaskEventTraverser;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by john.sullivan on 12/5/2017.
@@ -94,26 +93,26 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
     private final List<EventTask<Sendout, SendoutScheduledTaskHelper, SendoutEventTraverser>> sendoutNodes;
     private final List<EventTask<Task, TaskScheduledTaskHelper, TaskEventTraverser>> taskNodes;
 
-    @Autowired(required = false)
-    public StandardEventWorkflowFactory(List<EventTask<Appointment, AppointmentScheduledTaskHelper, AppointmentEventTraverser>> appointmentNodes, List<EventTask<Candidate, CandidateScheduledTaskHelper, CandidateEventTraverser>> candidateNodes, List<EventTask<CandidateEducation, CandidateEducationScheduledTaskHelper, CandidateEducationEventTraverser>> candidateEducationNodes, List<EventTask<CandidateReference, CandidateReferenceScheduledTaskHelper, CandidateReferenceEventTraverser>> candidateReferenceNodes, List<EventTask<CandidateWorkHistory, CandidateWorkHistoryScheduledTaskHelper, CandidateWorkHistoryEventTraverser>> candidateWorkHistoryNodes, List<EventTask<ClientContact, ClientContactScheduledTaskHelper, ClientContactEventTraverser>> clientContactNodes, List<EventTask<ClientCorporation, ClientCorporationScheduledTaskHelper, ClientCorporationEventTraverser>> clientCorporationNodes, List<EventTask<CorporateUser, CorporateUserScheduledTaskHelper, CorporateUserEventTraverser>> corporateUserNodes, List<EventTask<JobOrder, JobOrderScheduledTaskHelper, JobOrderEventTraverser>> jobOrderNodes, List<EventTask<JobSubmission, JobSubmissionScheduledTaskHelper, JobSubmissionEventTraverser>> jobSubmissionNodes, List<EventTask<Lead, LeadScheduledTaskHelper, LeadEventTraverser>> leadNodes, List<EventTask<Note, NoteScheduledTaskHelper, NoteEventTraverser>> noteNodes, List<EventTask<Opportunity, OpportunityScheduledTaskHelper, OpportunityEventTraverser>> opportunityNodes, List<EventTask<PlacementChangeRequest, PlacementChangeRequestScheduledTaskHelper, PlacementChangeRequestEventTraverser>> placementChangeRequestNodes, List<EventTask<PlacementCommission, PlacementCommissionScheduledTaskHelper, PlacementCommissionEventTraverser>> placementCommissionNodes, List<EventTask<Placement, PlacementScheduledTaskHelper, PlacementEventTraverser>> placementNodes, List<EventTask<Sendout, SendoutScheduledTaskHelper, SendoutEventTraverser>> sendoutNodes, List<EventTask<Task, TaskScheduledTaskHelper, TaskEventTraverser>> taskNodes) {
-        this.appointmentNodes = nullCheckAndSort(appointmentNodes);
-        this.candidateNodes = nullCheckAndSort(candidateNodes);
-        this.candidateEducationNodes = nullCheckAndSort(candidateEducationNodes);
-        this.candidateReferenceNodes = nullCheckAndSort(candidateReferenceNodes);
-        this.candidateWorkHistoryNodes = nullCheckAndSort(candidateWorkHistoryNodes);
-        this.clientContactNodes = nullCheckAndSort(clientContactNodes);
-        this.clientCorporationNodes = nullCheckAndSort(clientCorporationNodes);
-        this.corporateUserNodes = nullCheckAndSort(corporateUserNodes);
-        this.jobOrderNodes = nullCheckAndSort(jobOrderNodes);
-        this.jobSubmissionNodes = nullCheckAndSort(jobSubmissionNodes);
-        this.leadNodes = nullCheckAndSort(leadNodes);
-        this.noteNodes = nullCheckAndSort(noteNodes);
-        this.opportunityNodes = nullCheckAndSort(opportunityNodes);
-        this.placementChangeRequestNodes = nullCheckAndSort(placementChangeRequestNodes);
-        this.placementCommissionNodes = nullCheckAndSort(placementCommissionNodes);
-        this.placementNodes = nullCheckAndSort(placementNodes);
-        this.sendoutNodes = nullCheckAndSort(sendoutNodes);
-        this.taskNodes = nullCheckAndSort(taskNodes);
+    @Autowired
+    public StandardEventWorkflowFactory(Optional<List<EventTask<Appointment, AppointmentScheduledTaskHelper, AppointmentEventTraverser>>> appointmentNodes, Optional<List<EventTask<Candidate, CandidateScheduledTaskHelper, CandidateEventTraverser>>> candidateNodes, Optional<List<EventTask<CandidateEducation, CandidateEducationScheduledTaskHelper, CandidateEducationEventTraverser>>> candidateEducationNodes, Optional<List<EventTask<CandidateReference, CandidateReferenceScheduledTaskHelper, CandidateReferenceEventTraverser>>> candidateReferenceNodes, Optional<List<EventTask<CandidateWorkHistory, CandidateWorkHistoryScheduledTaskHelper, CandidateWorkHistoryEventTraverser>>> candidateWorkHistoryNodes, Optional<List<EventTask<ClientContact, ClientContactScheduledTaskHelper, ClientContactEventTraverser>>> clientContactNodes, Optional<List<EventTask<ClientCorporation, ClientCorporationScheduledTaskHelper, ClientCorporationEventTraverser>>> clientCorporationNodes, Optional<List<EventTask<CorporateUser, CorporateUserScheduledTaskHelper, CorporateUserEventTraverser>>> corporateUserNodes, Optional<List<EventTask<JobOrder, JobOrderScheduledTaskHelper, JobOrderEventTraverser>>> jobOrderNodes, Optional<List<EventTask<JobSubmission, JobSubmissionScheduledTaskHelper, JobSubmissionEventTraverser>>> jobSubmissionNodes, Optional<List<EventTask<Lead, LeadScheduledTaskHelper, LeadEventTraverser>>> leadNodes, Optional<List<EventTask<Note, NoteScheduledTaskHelper, NoteEventTraverser>>> noteNodes, Optional<List<EventTask<Opportunity, OpportunityScheduledTaskHelper, OpportunityEventTraverser>>> opportunityNodes, Optional<List<EventTask<PlacementChangeRequest, PlacementChangeRequestScheduledTaskHelper, PlacementChangeRequestEventTraverser>>> placementChangeRequestNodes, Optional<List<EventTask<PlacementCommission, PlacementCommissionScheduledTaskHelper, PlacementCommissionEventTraverser>>> placementCommissionNodes, Optional<List<EventTask<Placement, PlacementScheduledTaskHelper, PlacementEventTraverser>>> placementNodes, Optional<List<EventTask<Sendout, SendoutScheduledTaskHelper, SendoutEventTraverser>>> sendoutNodes, Optional<List<EventTask<Task, TaskScheduledTaskHelper, TaskEventTraverser>>> taskNodes) {
+        this.appointmentNodes = sort(appointmentNodes);
+        this.candidateNodes = sort(candidateNodes);
+        this.candidateEducationNodes = sort(candidateEducationNodes);
+        this.candidateReferenceNodes = sort(candidateReferenceNodes);
+        this.candidateWorkHistoryNodes = sort(candidateWorkHistoryNodes);
+        this.clientContactNodes = sort(clientContactNodes);
+        this.clientCorporationNodes = sort(clientCorporationNodes);
+        this.corporateUserNodes = sort(corporateUserNodes);
+        this.jobOrderNodes = sort(jobOrderNodes);
+        this.jobSubmissionNodes = sort(jobSubmissionNodes);
+        this.leadNodes = sort(leadNodes);
+        this.noteNodes = sort(noteNodes);
+        this.opportunityNodes = sort(opportunityNodes);
+        this.placementChangeRequestNodes = sort(placementChangeRequestNodes);
+        this.placementCommissionNodes = sort(placementCommissionNodes);
+        this.placementNodes = sort(placementNodes);
+        this.sendoutNodes = sort(sendoutNodes);
+        this.taskNodes = sort(taskNodes);
     }
 
     @Override
@@ -229,8 +228,8 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
         }
     }
 
-    private <E extends BullhornEntity, H extends ScheduledTaskHelper<E>, T extends ScheduledTasksTraverser<H>> List<EventTask<E, H, T>> nullCheckAndSort(List<EventTask<E, H, T>> values) {
-        return Optional.of(values).orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
+    private <E extends BullhornEntity, H extends ScheduledTaskHelper<E>, T extends ScheduledTasksTraverser<H>> List<EventTask<E, H, T>> sort(Optional<List<EventTask<E, H, T>>> values) {
+        return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
     }
 
 }

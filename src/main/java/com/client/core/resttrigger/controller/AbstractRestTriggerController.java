@@ -2,7 +2,11 @@ package com.client.core.resttrigger.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.client.core.base.workflow.traversing.TriggerTraverser;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -33,10 +37,10 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
 
     private final JsonConverter jsonConverter;
 
-    public AbstractRestTriggerController(Class<E> type, List<TriggerValidator<E, H, T>> triggerValidators) {
+    public AbstractRestTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators) {
         super();
         this.type = type;
-        this.triggerValidators = triggerValidators;
+        this.triggerValidators = sort(triggerValidators);
         this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
         this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
     }
@@ -110,6 +114,10 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
 		restTriggerResponse.setEntity(entity);
 
 		return restTriggerResponse;
+	}
+
+	protected <E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> List<TriggerValidator<E, H, T>> sort(Optional<List<TriggerValidator<E, H, T>>> values) {
+		return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
 	}
 
 }

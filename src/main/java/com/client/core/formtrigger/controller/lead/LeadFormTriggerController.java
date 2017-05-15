@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.controller.lead;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
 
     private final Logger log = Logger.getLogger(LeadFormTriggerController.class);
 
-    @Autowired(required = false)
-    public LeadFormTriggerController(List<TriggerValidator<Lead, LeadFormTriggerHelper, LeadFormTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public LeadFormTriggerController(Optional<List<TriggerValidator<Lead, LeadFormTriggerHelper, LeadFormTriggerTraverser>>> triggerValidators) {
         super(Lead.class, triggerValidators);
     }
 

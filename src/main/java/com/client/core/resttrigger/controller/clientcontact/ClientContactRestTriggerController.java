@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller.clientcontact;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
 
     private final Logger log = Logger.getLogger(ClientContactRestTriggerController.class);
 
-    @Autowired(required = false)
-    public ClientContactRestTriggerController(List<TriggerValidator<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public ClientContactRestTriggerController(Optional<List<TriggerValidator<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser>>> triggerValidators) {
         super(ClientContact.class, triggerValidators);
     }
 

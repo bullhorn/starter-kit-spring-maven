@@ -1,17 +1,5 @@
 package com.client.core.formtrigger.controller.clientcontactcandidate;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.client.core.base.workflow.node.TriggerValidator;
@@ -22,6 +10,18 @@ import com.client.core.formtrigger.model.helper.impl.CandidateFormTriggerHelper;
 import com.client.core.formtrigger.model.helper.impl.ClientContactFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.CandidateFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.ClientContactFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Entry point for Client Contact and Candidate Validations.
@@ -40,12 +40,12 @@ public class ClientContactCandidateFormTriggerController extends AbstractFormTri
     private final List<TriggerValidator<Candidate, CandidateFormTriggerHelper, CandidateFormTriggerTraverser>> candidateTriggerValidators;
 
 
-    @Autowired(required = false)
-    public ClientContactCandidateFormTriggerController(List<TriggerValidator<ClientContact, ClientContactFormTriggerHelper, ClientContactFormTriggerTraverser>> clientContactTriggerValidators,
-                                                       List<TriggerValidator<Candidate, CandidateFormTriggerHelper, CandidateFormTriggerTraverser>> candidateTriggerValidators) {
-        super(ClientContact.class, null);
-        this.clientContactTriggerValidators = clientContactTriggerValidators;
-        this.candidateTriggerValidators = candidateTriggerValidators;
+    @Autowired
+    public ClientContactCandidateFormTriggerController(Optional<List<TriggerValidator<ClientContact, ClientContactFormTriggerHelper, ClientContactFormTriggerTraverser>>> clientContactTriggerValidators,
+                                                       Optional<List<TriggerValidator<Candidate, CandidateFormTriggerHelper, CandidateFormTriggerTraverser>>> candidateTriggerValidators) {
+        super(ClientContact.class, clientContactTriggerValidators);
+        this.clientContactTriggerValidators = sort(clientContactTriggerValidators);
+        this.candidateTriggerValidators = sort(candidateTriggerValidators);
     }
 
 	/**

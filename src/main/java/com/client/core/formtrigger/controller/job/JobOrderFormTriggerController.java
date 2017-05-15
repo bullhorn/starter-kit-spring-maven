@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.controller.job;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class JobOrderFormTriggerController extends AbstractFormTriggerController
 
 	private final Logger log = Logger.getLogger(JobOrderFormTriggerController.class);
     
-    @Autowired(required = false)
-    public JobOrderFormTriggerController(List<TriggerValidator<JobOrder, JobOrderFormTriggerHelper, JobOrderFormTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public JobOrderFormTriggerController(Optional<List<TriggerValidator<JobOrder, JobOrderFormTriggerHelper, JobOrderFormTriggerTraverser>>> triggerValidators) {
         super(JobOrder.class, triggerValidators);
     }
 

@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller.note;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class NoteRestTriggerController extends AbstractRestTriggerController<Not
 
     private final Logger log = Logger.getLogger(NoteRestTriggerController.class);
 
-    @Autowired(required = false)
-    public NoteRestTriggerController(List<TriggerValidator<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser>> triggerValidators) {
+    @Autowired
+    public NoteRestTriggerController(Optional<List<TriggerValidator<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser>>> triggerValidators) {
         super(Note.class, triggerValidators);
     }
 
