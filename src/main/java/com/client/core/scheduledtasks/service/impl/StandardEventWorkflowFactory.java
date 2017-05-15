@@ -1,5 +1,6 @@
 package com.client.core.scheduledtasks.service.impl;
 
+import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Appointment;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
@@ -19,6 +20,7 @@ import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
 import com.bullhornsdk.data.model.entity.core.standard.Sendout;
 import com.bullhornsdk.data.model.entity.core.standard.Task;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.ScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.impl.AppointmentScheduledTaskHelper;
@@ -65,6 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -92,9 +95,10 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
     private final List<EventTask<Placement, PlacementScheduledTaskHelper, PlacementEventTraverser>> placementNodes;
     private final List<EventTask<Sendout, SendoutScheduledTaskHelper, SendoutEventTraverser>> sendoutNodes;
     private final List<EventTask<Task, TaskScheduledTaskHelper, TaskEventTraverser>> taskNodes;
+	private final BullhornData bullhornData;
 
     @Autowired
-    public StandardEventWorkflowFactory(Optional<List<EventTask<Appointment, AppointmentScheduledTaskHelper, AppointmentEventTraverser>>> appointmentNodes, Optional<List<EventTask<Candidate, CandidateScheduledTaskHelper, CandidateEventTraverser>>> candidateNodes, Optional<List<EventTask<CandidateEducation, CandidateEducationScheduledTaskHelper, CandidateEducationEventTraverser>>> candidateEducationNodes, Optional<List<EventTask<CandidateReference, CandidateReferenceScheduledTaskHelper, CandidateReferenceEventTraverser>>> candidateReferenceNodes, Optional<List<EventTask<CandidateWorkHistory, CandidateWorkHistoryScheduledTaskHelper, CandidateWorkHistoryEventTraverser>>> candidateWorkHistoryNodes, Optional<List<EventTask<ClientContact, ClientContactScheduledTaskHelper, ClientContactEventTraverser>>> clientContactNodes, Optional<List<EventTask<ClientCorporation, ClientCorporationScheduledTaskHelper, ClientCorporationEventTraverser>>> clientCorporationNodes, Optional<List<EventTask<CorporateUser, CorporateUserScheduledTaskHelper, CorporateUserEventTraverser>>> corporateUserNodes, Optional<List<EventTask<JobOrder, JobOrderScheduledTaskHelper, JobOrderEventTraverser>>> jobOrderNodes, Optional<List<EventTask<JobSubmission, JobSubmissionScheduledTaskHelper, JobSubmissionEventTraverser>>> jobSubmissionNodes, Optional<List<EventTask<Lead, LeadScheduledTaskHelper, LeadEventTraverser>>> leadNodes, Optional<List<EventTask<Note, NoteScheduledTaskHelper, NoteEventTraverser>>> noteNodes, Optional<List<EventTask<Opportunity, OpportunityScheduledTaskHelper, OpportunityEventTraverser>>> opportunityNodes, Optional<List<EventTask<PlacementChangeRequest, PlacementChangeRequestScheduledTaskHelper, PlacementChangeRequestEventTraverser>>> placementChangeRequestNodes, Optional<List<EventTask<PlacementCommission, PlacementCommissionScheduledTaskHelper, PlacementCommissionEventTraverser>>> placementCommissionNodes, Optional<List<EventTask<Placement, PlacementScheduledTaskHelper, PlacementEventTraverser>>> placementNodes, Optional<List<EventTask<Sendout, SendoutScheduledTaskHelper, SendoutEventTraverser>>> sendoutNodes, Optional<List<EventTask<Task, TaskScheduledTaskHelper, TaskEventTraverser>>> taskNodes) {
+    public StandardEventWorkflowFactory(Optional<List<EventTask<Appointment, AppointmentScheduledTaskHelper, AppointmentEventTraverser>>> appointmentNodes, Optional<List<EventTask<Candidate, CandidateScheduledTaskHelper, CandidateEventTraverser>>> candidateNodes, Optional<List<EventTask<CandidateEducation, CandidateEducationScheduledTaskHelper, CandidateEducationEventTraverser>>> candidateEducationNodes, Optional<List<EventTask<CandidateReference, CandidateReferenceScheduledTaskHelper, CandidateReferenceEventTraverser>>> candidateReferenceNodes, Optional<List<EventTask<CandidateWorkHistory, CandidateWorkHistoryScheduledTaskHelper, CandidateWorkHistoryEventTraverser>>> candidateWorkHistoryNodes, Optional<List<EventTask<ClientContact, ClientContactScheduledTaskHelper, ClientContactEventTraverser>>> clientContactNodes, Optional<List<EventTask<ClientCorporation, ClientCorporationScheduledTaskHelper, ClientCorporationEventTraverser>>> clientCorporationNodes, Optional<List<EventTask<CorporateUser, CorporateUserScheduledTaskHelper, CorporateUserEventTraverser>>> corporateUserNodes, Optional<List<EventTask<JobOrder, JobOrderScheduledTaskHelper, JobOrderEventTraverser>>> jobOrderNodes, Optional<List<EventTask<JobSubmission, JobSubmissionScheduledTaskHelper, JobSubmissionEventTraverser>>> jobSubmissionNodes, Optional<List<EventTask<Lead, LeadScheduledTaskHelper, LeadEventTraverser>>> leadNodes, Optional<List<EventTask<Note, NoteScheduledTaskHelper, NoteEventTraverser>>> noteNodes, Optional<List<EventTask<Opportunity, OpportunityScheduledTaskHelper, OpportunityEventTraverser>>> opportunityNodes, Optional<List<EventTask<PlacementChangeRequest, PlacementChangeRequestScheduledTaskHelper, PlacementChangeRequestEventTraverser>>> placementChangeRequestNodes, Optional<List<EventTask<PlacementCommission, PlacementCommissionScheduledTaskHelper, PlacementCommissionEventTraverser>>> placementCommissionNodes, Optional<List<EventTask<Placement, PlacementScheduledTaskHelper, PlacementEventTraverser>>> placementNodes, Optional<List<EventTask<Sendout, SendoutScheduledTaskHelper, SendoutEventTraverser>>> sendoutNodes, Optional<List<EventTask<Task, TaskScheduledTaskHelper, TaskEventTraverser>>> taskNodes, BullhornData bullhornData) {
         this.appointmentNodes = sort(appointmentNodes);
         this.candidateNodes = sort(candidateNodes);
         this.candidateEducationNodes = sort(candidateEducationNodes);
@@ -113,6 +117,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
         this.placementNodes = sort(placementNodes);
         this.sendoutNodes = sort(sendoutNodes);
         this.taskNodes = sort(taskNodes);
+        this.bullhornData = bullhornData;
     }
 
     @Override
@@ -123,18 +128,24 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
             appointmentNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+            handleResult(traverser);
         } else if(CandidateEducation.class.equals(type)) {
             CandidateEducationEventTraverser traverser = new CandidateEducationEventTraverser(event);
 
             candidateEducationNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Candidate.class.equals(type)) {
             CandidateEventTraverser traverser = new CandidateEventTraverser(event);
 
             candidateNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(CandidateReference.class.equals(type)) {
             CandidateReferenceEventTraverser traverser = new CandidateReferenceEventTraverser(event);
 
@@ -147,85 +158,121 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
             candidateWorkHistoryNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(ClientContact.class.equals(type)) {
             ClientContactEventTraverser traverser = new ClientContactEventTraverser(event);
 
             clientContactNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(ClientCorporation.class.equals(type)) {
             ClientCorporationEventTraverser traverser = new ClientCorporationEventTraverser(event);
 
             clientCorporationNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(CorporateUser.class.equals(type)) {
             CorporateUserEventTraverser traverser = new CorporateUserEventTraverser(event);
 
             corporateUserNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(JobOrder.class.equals(type)) {
             JobOrderEventTraverser traverser = new JobOrderEventTraverser(event);
 
             jobOrderNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(JobSubmission.class.equals(type)) {
             JobSubmissionEventTraverser traverser = new JobSubmissionEventTraverser(event);
 
             jobSubmissionNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Lead.class.equals(type)) {
             LeadEventTraverser traverser = new LeadEventTraverser(event);
 
             leadNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Note.class.equals(type)) {
             NoteEventTraverser traverser = new NoteEventTraverser(event);
 
             noteNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Opportunity.class.equals(type)) {
             OpportunityEventTraverser traverser = new OpportunityEventTraverser(event);
 
             opportunityNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(PlacementChangeRequest.class.equals(type)) {
             PlacementChangeRequestEventTraverser traverser = new PlacementChangeRequestEventTraverser(event);
 
             placementChangeRequestNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(PlacementCommission.class.equals(type)) {
             PlacementCommissionEventTraverser traverser = new PlacementCommissionEventTraverser(event);
 
             placementCommissionNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Placement.class.equals(type)) {
             PlacementEventTraverser traverser = new PlacementEventTraverser(event);
 
             placementNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Sendout.class.equals(type)) {
             SendoutEventTraverser traverser = new SendoutEventTraverser(event);
 
             sendoutNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         } else if(Task.class.equals(type)) {
             TaskEventTraverser traverser = new TaskEventTraverser(event);
 
             taskNodes.stream().forEach( (eventTask) -> {
                 eventTask.handle(traverser);
             });
+
+	        handleResult(traverser);
         }
+    }
+
+    private <U extends UpdateEntity, E extends BullhornEntity, H extends ScheduledTaskHelper<E>, T extends ScheduledTasksTraverser<H>> void handleResult(T traverser) {
+	    Map<String, U> dtosToSave = traverser.getScheduledTaskHelper().getAllEntitiesToSave();
+
+	    for (Map.Entry<String, U> entry : dtosToSave.entrySet()) {
+		    bullhornData.updateEntity(entry.getValue());
+	    }
     }
 
     private <E extends BullhornEntity, H extends ScheduledTaskHelper<E>, T extends ScheduledTasksTraverser<H>> List<EventTask<E, H, T>> sort(Optional<List<EventTask<E, H, T>>> values) {
