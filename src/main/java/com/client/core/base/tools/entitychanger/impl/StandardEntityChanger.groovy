@@ -68,11 +68,13 @@ class StandardEntityChanger implements EntityChanger {
             } catch(RuntimeException e) {
                 MetaProperty property = target.getMetaClass().getMetaProperty(finalField);
 
-                if(DateTime.class.equals(property.type)) {
-                    target."$finalField" = asType(value, DateTime.class);
-                } else if(BullhornEntity.class.isAssignableFrom(property.type)) {
-                    target."$finalField" = property.type.newInstance();
-                    target."$finalField".id = value;
+                if(property) {
+                    if (DateTime.class.equals(property.type)) {
+                        target."$finalField" = asType(value, DateTime.class);
+                    } else if (BullhornEntity.class.isAssignableFrom(property.type)) {
+                        target."$finalField" = property.type.newInstance();
+                        target."$finalField".id = value;
+                    }
                 }
             }
         }
