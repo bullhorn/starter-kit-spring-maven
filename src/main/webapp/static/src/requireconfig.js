@@ -14,6 +14,7 @@ requirejs.config({
         "opportunity": "${applicationRoot}/javascript/formscript/main/opportunity.min",
         "placement": "${applicationRoot}/javascript/formscript/main/placement.min",
         "placementchangerequest": "${applicationRoot}/javascript/formscript/main/placementchangerequest.min",
+        "sendout": "${applicationRoot}/javascript/formscript/main/sendout.min",
 
         "clientcorporationcustomobjectinstance1": "${applicationRoot}/javascript/formscript/main/clientcorporationcustomobjectinstances/clientcorporationcustomobjectinstance1.min",
         "clientcorporationcustomobjectinstance2": "${applicationRoot}/javascript/formscript/main/clientcorporationcustomobjectinstances/clientcorporationcustomobjectinstance2.min",
