@@ -1,10 +1,11 @@
 package com.client.core.resttrigger.controller.candidate;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.CandidateRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.CandidateRestTriggerTraverser;
 
 /**
@@ -24,13 +26,13 @@ import com.client.core.resttrigger.workflow.traversing.CandidateRestTriggerTrave
  */
 @Controller
 @RequestMapping("/resttrigger/candidate/*")
-public class CandidateRestTriggerController extends AbstractRestTriggerController<Candidate, CandidateRestTriggerTraverser> {
+public class CandidateRestTriggerController extends AbstractRestTriggerController<Candidate, CandidateRestTriggerHelper, CandidateRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(CandidateRestTriggerController.class);
 
     @Autowired
-    public CandidateRestTriggerController(@Qualifier("candidateRestValidationWorkflow") Node<CandidateRestTriggerTraverser> candidateValidationWorkflow) {
-        super(Candidate.class, candidateValidationWorkflow);
+    public CandidateRestTriggerController(Optional<List<TriggerValidator<Candidate, CandidateRestTriggerHelper, CandidateRestTriggerTraverser>>> triggerValidators) {
+        super(Candidate.class, triggerValidators);
     }
 
     /**

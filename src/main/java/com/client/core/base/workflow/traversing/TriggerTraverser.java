@@ -8,9 +8,6 @@ import com.client.core.base.model.helper.TriggerHelper;
 
 public interface TriggerTraverser<E extends BullhornEntity, H extends TriggerHelper<E>> extends Traverser {
 
-    /**
-     * {@inheritDoc}
-     */
     void addFormResponse(String key, String message);
 
     H getTriggerHelper();

@@ -1,10 +1,11 @@
 package com.client.core.resttrigger.controller.clientcorporation;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.ClientCorporationRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.ClientCorporationRestTriggerTraverser;
 
 /**
@@ -24,14 +26,13 @@ import com.client.core.resttrigger.workflow.traversing.ClientCorporationRestTrig
  */
 @Controller
 @RequestMapping("/resttrigger/clientcorporation/*")
-public class ClientCorporationRestTriggerController extends AbstractRestTriggerController<ClientCorporation, ClientCorporationRestTriggerTraverser> {
+public class ClientCorporationRestTriggerController extends AbstractRestTriggerController<ClientCorporation, ClientCorporationRestTriggerHelper, ClientCorporationRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(ClientCorporationRestTriggerController.class);
 
     @Autowired
-    public ClientCorporationRestTriggerController(@Qualifier("clientCorporationRestValidationWorkflow") Node<ClientCorporationRestTriggerTraverser> clientCorporationValidationWorkflow) {
-        super(ClientCorporation.class, clientCorporationValidationWorkflow);
-
+    public ClientCorporationRestTriggerController(Optional<List<TriggerValidator<ClientCorporation, ClientCorporationRestTriggerHelper, ClientCorporationRestTriggerTraverser>>> triggerValidators) {
+        super(ClientCorporation.class, triggerValidators);
     }
 
     /**

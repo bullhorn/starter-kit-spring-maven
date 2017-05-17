@@ -1,10 +1,11 @@
 package com.client.core.resttrigger.controller.note;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.NoteRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.NoteRestTriggerTraverser;
 
 /**
@@ -24,13 +26,13 @@ import com.client.core.resttrigger.workflow.traversing.NoteRestTriggerTraverser;
  */
 @Controller
 @RequestMapping("/resttrigger/note/*")
-public class NoteRestTriggerController extends AbstractRestTriggerController<Note, NoteRestTriggerTraverser> {
+public class NoteRestTriggerController extends AbstractRestTriggerController<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(NoteRestTriggerController.class);
 
     @Autowired
-    public NoteRestTriggerController(@Qualifier("noteRestValidationWorkflow") Node<NoteRestTriggerTraverser> noteRestValidationWorkflow) {
-        super(Note.class, noteRestValidationWorkflow);
+    public NoteRestTriggerController(Optional<List<TriggerValidator<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser>>> triggerValidators) {
+        super(Note.class, triggerValidators);
     }
 
     /**

@@ -1,28 +1,32 @@
 package com.client.core.formtrigger.controller;
 
+import java.util.List;
 import java.util.Map;
-
-import org.joda.time.DateTime;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.base.controller.AbstractTriggerController;
+import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.util.TriggerUtil;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
+import com.client.core.scheduledtasks.model.helper.ScheduledTaskHelper;
+import com.client.core.scheduledtasks.workflow.node.EventTask;
+import com.client.core.scheduledtasks.workflow.traversing.ScheduledTasksTraverser;
+import com.google.common.collect.Lists;
 
-public class AbstractFormTriggerController<T extends BullhornEntity, TR extends TriggerTraverser<T, ?>> extends AbstractTriggerController<T, TR> {
+public class AbstractFormTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
 
-    protected final static String SUCCESSFUL_SAVE_JSON_RESPONSE_NO_PARAMS = "({\"result\":\"true\"})";
+    private final static String SUCCESSFUL_SAVE_JSON_RESPONSE_NO_PARAMS = "({\"result\":\"true\"})";
 
-    protected final Class<T> type;
-    protected final Node<TR> validationWorkflow;
-    protected DateTime timeSinceLastMetaDataUpdate;
+    private final Class<E> type;
+    private final List<TriggerValidator<E, H, T>> triggerValidators;
 
-	public AbstractFormTriggerController(Class<T> type, Node<TR> validationWorkflow) {
+	public AbstractFormTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators) {
 		super();
 		this.type = type;
-		this.validationWorkflow = validationWorkflow;
-		this.timeSinceLastMetaDataUpdate = DateTime.now();
+		this.triggerValidators = sort(triggerValidators);
 	}
 
 	/**
@@ -31,11 +35,13 @@ public class AbstractFormTriggerController<T extends BullhornEntity, TR extends 
 	 * @param traverser
 	 * @return the json parsed validation message
 	 */
-	protected String handleRequest(TR traverser) {
+	protected String handleRequest(T traverser) {
 		try {
-			validationWorkflow.start(traverser);
-		} catch (Exception e) {
-			log.error("Error validating placement", e);
+            triggerValidators.stream().forEach( (triggerValidator) -> {
+                triggerValidator.validate(traverser);
+            });
+		} catch (RuntimeException e) {
+			log.error("Error validating "+type.getSimpleName(), e);
 
 			return prepareErrorReturnValue(type.getSimpleName());
 		}
@@ -96,6 +102,18 @@ public class AbstractFormTriggerController<T extends BullhornEntity, TR extends 
 
 	public String prepareErrorReturnValue(String entityPrettyName) {
 		return "({result:false,error:\"Error Saving " + entityPrettyName + ", please try again\"})";
+	}
+
+    protected Class<E> getType() {
+        return type;
+    }
+
+    protected List<TriggerValidator<E, H, T>> getTriggerValidators() {
+        return triggerValidators;
+    }
+
+	protected <E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> List<TriggerValidator<E, H, T>> sort(Optional<List<TriggerValidator<E, H, T>>> values) {
+		return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
 	}
 
 }

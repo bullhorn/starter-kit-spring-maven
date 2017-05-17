@@ -23,65 +23,26 @@ There are several ways to customize Bullhorn, including:
 
 The Starter Kit includes code for dealing with most of these methods of customization. Each of these is discussed below. One of the main concepts used for form triggers, REST triggers, and subscription-based scheduled tasks is the workflow, which is described first.
 
-## Workflow
-The concept of a workflow is based around the idea of implementing large amounts of custom business logic while maintaining readability and encapsulation. A workflow is typically stored in a *-workflow.xml file in the Spring application context (for example, formtrigger-workflow.xml, resttrigger-workflow.xml, or scheduledtasks-workflow.xml) and consists of a StartNode, and EndNode, and any number of custom Nodes in between. The classes used in the workflows are part of the ``com.client.core.base.workflow`` package, and some special implementations are stored in the ``com.client.core.formtrigger.workflow``, ``com.client.core.resttrigger.workflow``, ``com.client.core.scheduledtasks.workflow`` packages. The most important classes are ``com.client.core.base.workflow.node.Node`` and its implementations, and ``com.client.core.base.workflow.traversing.Traverser`` and its implementations. The traverser classes represent the state of the workflow and contain all pertinent information for the entity being saved. Any implementation of a Node must also be parameterized by the type of Traverser it performs business logic on, as the following example shows:
-
+## Workflows
+The concept of a workflow is based around the idea of implementing large amounts of custom business logic while maintaining readability and encapsulation.  The starter-kit's design for workflows has recently changed; this documentation describes the newer framework.  Workflows are no longer stored in separate XML files, but instead are entirely configured via JAVA code, as is common in more modern JAVA/Spring applications.  The general idea is to add Spring beans to the starter-kit's Application Context, and they will automatically be inserted into the correct workflow.  This is done by extending standard abstract classes and annotating them with `@Service`.  The classes one would extend are specific to the kind of workflow you want to add your business logic to, and themselves all extend from a comman base, the `WorkflowAction` class; for instance to add logic to the Placement Form Trigger, you would extends the `PlacementFormTriggerValidator` as below:
 ```java
-public class ValidateCompanyLevel extends Task<ClientCorporationFormTriggerTraverser>
-```
-This particular Node is a type of Task meant to be used in a Client Corporation Form Trigger, as determined by the ``ClientCorporationFormTriggerTraverser``. When wiring Nodes together, only connect nodes that are parameterized by the same type of Traverser, and that perform  business logic for the same type of action.
-
-### Nodes
-The node classes are all very simple objects that wire together the business logic you wish to implement. Each node should only perform one task and should not necessarily know about the implementation of any of the other nodes. By wiring nodes together, they can be processed in any order desired, with potential boolean logic support. There are two types of nodes that you extend to create a workflow, Conditionals and Tasks.
-
-#### Tasks
-Tasks are the simpler of the two types of nodes. They perform one particular piece of logic. During the addition of a task to a workflow, you should provide a `nextNode` as a property on the task bean, indicating what the next Node in your workflow should be.  When extending a task, you must implement the ``public void handle(T tasks)`` method; T represents the type of Traverser object the task is parameterized by. Typically, logic is not performed in the Task object itself, but rather another Service object is called.
-
-```java
- public class ValidateCompanyRequiredFields extends Task<ClientCorporationFormTriggerTraverser> {
-
-	@Autowired
-	private ClientCorporationValidator clientCorporationValidator;
+@Service
+public class ValidateSalary extends PlacementFormTriggerValidator {
 
 	@Override
-	protected void handle(ClientCorporationFormTriggerTraverser tasks) {
-		clientCorporationValidator.validateRequiredFields(tasks);
+	public void validate(PlacementFormTriggerTraverser traverser) {
+		//business logic
 	}
+	
 }
+
 ```
-#### Conditionals
-Conditionals represent a piece of business boolean logic. During the addition of your conditional to the workflow, you should provide a ``yesNode`` and a ``noNode`` as properties on the conditional object;  both should be other Nodes in the same workflow. When extending a conditional you must implement ``public void evaluate(T tasks)``; T being the parameterized Traverser type for the conditional. You must call either ``protected void yes(T tasks)`` or ``protected void no(T tasks)``.  This provides the ability to execute the logic in either the ``noNode`` or the ``yesNode`` provided during configuration, allowing you to split the workflow in two different directions.  ##### Code example
+By extending one of these classes, you are forced to implement an abstract method specific to the kind of workflow you're adding to (for REST Triggers and Form Triggers the method is `validate`, for Subscription Events the method is `handle`).  This method is where all business logic should be placed; complex logic can be handles through code design and deference to other Service classes.  Of note is an optional constructor present on all of these abstract classes that allows you to set a specific order to your business logic; the construtor accepts an `Integer`, with `-1` being the default (which would imply the code would get executed first).  If you always want a certain piece of logic to go last, simply provide a large number in the constructor and ensure you don't create other `WorkflowAction`s that have a larger order.
 
-```java
- public class IsParentClient extends Conditional<ClientCorporationFormTriggerTraverser> {
-
-	@Autowired
-	private ParentClientValidator parentClientValidator;
-
-	@Override
-	protected void evaluate(ClientCorporationFormTriggerTraverser tasks) {
-		if(parentClientValidator.isParentClient(tasks)) {
-			yes(tasks);
-		} else {
-			no(tasks);
-		}
-	}
-
-}
-```
-This particular piece of code executes the ``yesNode`` provided in the *-workflow.xml file if ``ParentClientValidator.isParentClient(tasks)`` returns true. It executes the ``noNode`` if it returns false.
-Note: It is very easy to accidentally execute both sides of the fork if you leave out the ``else`` as in the followig code:
-```java
- if(parentClientValidator.isParentClient(tasks)) {
-    yes(tasks);
- }
-
- no(tasks);
-```
 ### Traversers
-The various implementations of Traverser perform two main duties, providing an easy way to retrieve all information related to the entity being passed through the workflow, and maintaining state throughout the workflow. The Traverser object is the only thing any given node has access to by default in the workflow (you can use Spring to ``@Autowired`` other service classes into your Nodes), and is passed from Node to Node as the workflow progresses. The implementations of Traverser themselves do not have a great deal of logic in them, but rather defer to a helper, which is a wrapper for the data being passed through the workflow. The Traverser interface itself is empty and serves as a common point of extension for building Node classes. There are two main types of Traversers, classes extending ``com.client.core.base.workflow.traversing.TriggerTraverser`` (for form triggers and REST triggers) and those implementing ``com.client.core.scheduledtasks.workflow.traversing.ScheduledTasksTraverser``  (for subscription-based scheduled tasks).  Details around the implementations are in the Form Triggers and Subscription-Based Scheduled Tasks sections.
+The various implementations of Traverser perform two main duties, providing an easy way to retrieve all information related to the entity being passed through the workflow, and maintaining state throughout the workflow. The Traverser object is the only thing any given `WorkflowAction` has access to by default (you can use Spring to ``@Autowired`` other service classes into your classes), and is passed from Action to Action as the workflow progresses. The implementations of Traverser themselves do not have a great deal of logic in them, but rather defer to a helper, which is a wrapper for the data being passed through the workflow. The Traverser interface itself is empty and serves as a common point of extension for building the various workflow classes. There are two main types of Traversers, classes extending ``com.client.core.base.workflow.traversing.TriggerTraverser`` (for form triggers and REST triggers) and those implementing ``com.client.core.scheduledtasks.workflow.traversing.ScheduledTasksTraverser``  (for subscription-based scheduled tasks).  Details around the implementations are in the Form Triggers and Subscription-Based Scheduled Tasks sections.
 
-Of the two main types of Traversers, there will be an implementation for each entity that is valid for that type of Traverser, and similar implementations for the corresponding helper (e.g. there are TriggerTraversers for each entity that can have a Form Trigger or Rest Trigger applied to it, and ScheduledTasksTraversers for each entity that supports subscriptions).  The entity-specific implementations provide not only the entity being passed through the workflow, but also methods for retrieving each of the main associated entities. For Form Triggers there are methods to retrieve the form data itself, an instance of the entity the form represents populated with that form data, as well as the currently persisted entity. For example, on a PlacementFormTriggerTraverser's helper, you can expect methods like the following:
+Of the two main types of Traversers, there will be an implementation for each entity that is valid for that type of Traverser, and similar implementations for the corresponding helper (i.e. there are TriggerTraversers for each entity that can have a Form Trigger or Rest Trigger applied to it, and ScheduledTasksTraversers for each entity that supports subscriptions).  The entity-specific implementations provide not only the entity being passed through the workflow, but also methods for retrieving each of the main associated entities. For Form Triggers there are methods to retrieve the form data itself, an instance of the entity the form represents populated with that form data, as well as the currently persisted entity. For example, on a PlacementFormTriggerTraverser's helper, you can expect methods like the following:
 ```java
  public Placement getNewEntity();
 
@@ -128,10 +89,10 @@ The Starter Kit handles all form triggers in the same way. The endpoint controll
     - note (only for add, i.e. /note/add)
     - placementchangerequest (/placementchangerequest/add runs for both add and edit)
 
-To implement custom logic, you must utilize the formtrigger-workflow, generally described above.  Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Form Triggers.  Nodes,  both tasks and conditionals, work the same for any workflow.
+To implement custom logic, you must extend one of the various `FormTriggerValidator` classes (a subclass of `WorkflowAction`), generally described above.  There is one abstract `FormTriggerValidator` class for each kind of entity (e.g. `PlacementFormTriggerValidator`).  Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Form Triggers.
 
 ##### ${entityName}FormTriggerTraverser
-The form trigger implementations of ``com.client.core.base.workflow.traversing.TriggerTraverser`` are all essentially the same, the only differences being determined by the type of entity being passed through the workflow (The `TriggerTraverser` class is also used as an extension point for REST triggers).  These differences are described in the general [Traversers](#traversers) section.  The functionality provided by Bullhorn for form triggers is all handled in the ``com.client.core.base.workflow.traversing.AbstractTriggerTraverser`` and will always be the same.  There are two different types of responses we can provide to a form trigger, either an error response or a return values response, and both are handled using the ``Map<String, String> formResponse`` present in all TriggerTraversers.  Such Traversers provide utility methods to send back a response, either with ``public Map<String, String> getFormResponse()`` (and a subsequent `put` call) or ``public void addFormResponse(String key, String message)``.  The ``Map<String, String>`` is maintained throughout the workflow by the ValidationTraverser, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.  All workflows are defined in ``src/main/resources/formtrigger-workflow.xml``.
+The form trigger implementations of ``com.client.core.base.workflow.traversing.TriggerTraverser`` are all essentially the same, the only differences being determined by the type of entity being passed through the workflow (The `TriggerTraverser` class is also used as an extension point for REST triggers).  These differences are described in the general [Traversers](#traversers) section.  The functionality provided by Bullhorn for form triggers is all handled in the ``com.client.core.base.workflow.traversing.AbstractTriggerTraverser`` and will always be the same.  There are two different types of responses we can provide to a form trigger, either an error response or a return values response, and both are handled using the ``Map<String, String> formResponse`` present in all TriggerTraversers.  Such Traversers provide utility methods to send back a response, either with ``public Map<String, String> getFormResponse()`` (and a subsequent `put` call) or ``public void addFormResponse(String key, String message)``.  The ``Map<String, String>`` is maintained throughout the workflow by the ValidationTraverser, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.
 
 In order to add an error to the ``formResponse``, we add a Map Entry consisting of a key in the  form ``error:${someKey}`` and a value consisting of the error message itself, i.e.
 
@@ -173,7 +134,7 @@ The Starter Kit handles all REST Triggers in the same way...the controllers all 
     - lead
     - opportunity
 
-To implement custom logic, you utilize the resttrigger-workflow, described above.  Below are some specific details about the differences between RestTriggerTraversers and FormTriggerTraversers.
+To implement custom logic, you extends one of the `RestTriggerValidator` classes (a subclass of `WorkflowAction`), described above.  There is one abstract `RestTriggerValidator` class for each kind of entity (e.g. `PlacementRestTriggerValidator`).  Below are some specific details about the differences between RestTriggerTraversers and FormTriggerTraversers.
 
 #### ${entityName}RestTriggerTraverser
 The rest trigger implementations of `com.client.core.base.workflow.traversing.TriggerTraverser` are all pretty much the same, and in fact are very similar to the form trigger implementations (thus the common extension point).  Adding a form response is done the same way as you would for a form trigger (see [${entityName}FormTriggerTraverser](#${entityName}FormTriggerTraverser)).  Similarly the helper objects for REST triggers extend the same common entity-specific base that form triggers do, and thus we have one place where all related entity retrievel is done for any kind of trigger.
@@ -195,9 +156,9 @@ The first step in creating a subscription-based task is to subscribe to the type
 
 Once you have successfully created a subscription you should have a name for it which you provided in the ``eventsSubscribe`` call.  In the app, we want to open up ``src/main/resources/main-scheduledtasks.xml``, which contains the configuration for [Quartz](https://quartz-scheduler.org/).  Here we should see a Spring Bean named ``standardSubscriptionScheduledEventProcessing``, which takes a constructor-arg, the value of which is an application parameter, ``standardSubscriptionName``.  Similarly the Quartz configuration takes an app parameter ``standardCronExpression`` (and we want to uncomment the one bean that should be commented by default, in the list of triggers in the Quartz config.  Essentially this comment makes event handling turned off by default).  Both parameters can be found in the ``app-${mavenProfile}`` files (the proper properties file is loaded based on which Maven profile we run with).  We want to change the value of ``standardSubscriptionName`` to the name of the subscription we just created.  The ``standardCronExpression`` determines how often we ping Bullhorn for new events...the default is 5 minutes, but you can generate a new Cron Expression based on your requirements at [cronmaker.com](http://www.cronmaker.com/).
 
-Having completed these steps, you are now ready to run your app and consume Bullhorn events.  Every time the Cron Expression we provided triggers, our application will ping Bullhorn asking for any new events for the subscription we created.  If it finds any, it will loop over them, sending each one through it's appropriate scheduled tasks workflow on a different thread.  All scheduled tasks workflows are defined in ``src/main/resources/scheduledtasks-workflow.xml``.  Similarly as with Form Triggers, any nodes wired into a workflow for which the app receives an event will be called.  For instance, if we receive a 'Candidate UPDATE' event, the ``candidateScheduledTaskWorkFlow`` will be used.
+Having completed these steps, you are now ready to run your app and consume Bullhorn events.  Every time the Cron Expression we provided triggers, our application will ping Bullhorn asking for any new events for the subscription we created.  If it finds any, it will loop over them, sending each one through it's appropriate scheduled tasks workflow on a different thread.  All scheduled tasks are defined by extending the various `EventTask` classes (again a subclass of `WorkflowAction`).  There is one abstract `EventTask` class for each kind of entity (e.g. `PlacementEventTask`).  Similarly as with Form Triggers, any `EventTask` added to the Application Context for which the app receives an event will be called.  For instance, if we receive a 'Candidate UPDATE' event, the application will call all classes extending `CandidateEventTask`.
 
-In order to implement custom logic, you have to utilize the scheduledtasks-workflow, generally described above.  Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Subscription-Based Scheduled Tasks.  Nodes (both Tasks and Conditionals) are the same for any type of workflow.
+Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Subscription-Based Scheduled Tasks.
 
 #### ${entityName}ScheduledTasksTraverser
 The implementations of ``com.client.core.scheduledtasks.workflow.traversing.ScheduledTasksTraverser`` are all essentially the same, the only differences being determined by the type of entity being passed through the workflow.  These differences are described in the general [Traversers](#traversers) section.  The functionality specific to subscription-based scheduled tasks is all handled in the  ``com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser`` and will always be the same.
@@ -206,7 +167,7 @@ Most of the functionality provided by the ScheduledTasksTraversers and associate
 ```java
  public <T extends UpdateEntity> T getOneEntityToSave(T entity);
 ```
-That should be used to perform updates on entities in a scheduled tasks workflow.  You pass in the entity  you are about to make modifications to, which the helper object then makes a deep copy of using [Kryo](https://github.com/EsotericSoftware/kryo) and holds onto in a Map, returning the deep copy.  Then, at the end of every scheduled tasks workflow, there is a predefined Node, ``com.client.core.scheduledtasks.workflow.node.task.SaveDtos`` which loops through this map and performs an update call on each entity in it.  This allows you to make modifications to the same entity in different nodes without making multiple API calls.  After calling ``getOneEntityToSave``, any modifications made to the object returned will in turn be made to the copy being held by the helper object.
+That should be used to perform updates on entities in a scheduled tasks workflow.  You pass in the entity  you are about to make modifications to, which the helper object then makes a deep copy of using [Kryo](https://github.com/EsotericSoftware/kryo) and holds onto in a Map, returning the deep copy.  Then, at the end of every scheduled tasks workflow, the code that executes each of your `EventTask`s will  loop through this map and perform an update call on each entity in it.  This allows you to make modifications to the same entity in different classes without making multiple API calls.  After calling ``getOneEntityToSave``, any modifications made to the object returned will in turn be made to the copy being held by the helper object.
 
 ## Form Scripts
 Form scripts allow you to customize the page that loads when you view an entity.  As its name implies, a form script consists of a block of Javascript (technically HTML, typically onl consisting of JS) which is entirely custom and which can perform whatever actions on the page the programmer chooses.  Configuring a form script consists of manually copying and pasting a block of HTML into Bullhorn which then is dropped onto the corresponding entity's page when it loads.  Of note is the fact that a form script run on *all* tabs of the entity it's configured for, so the script typically starts with a check to determine which tab it's on.  A very simple example candidate form script is below:

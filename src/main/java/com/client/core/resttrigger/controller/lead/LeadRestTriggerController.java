@@ -1,10 +1,11 @@
 package com.client.core.resttrigger.controller.lead;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bullhornsdk.data.model.entity.core.standard.Lead;
-import com.client.core.base.workflow.node.Node;
+import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.LeadRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.LeadRestTriggerTraverser;
 
 /**
@@ -24,13 +26,13 @@ import com.client.core.resttrigger.workflow.traversing.LeadRestTriggerTraverser;
  */
 @Controller
 @RequestMapping("/resttrigger/lead/*")
-public class LeadRestTriggerController extends AbstractRestTriggerController<Lead, LeadRestTriggerTraverser> {
+public class LeadRestTriggerController extends AbstractRestTriggerController<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(LeadRestTriggerController.class);
 
     @Autowired
-    public LeadRestTriggerController(@Qualifier("leadRestValidationWorkflow") Node<LeadRestTriggerTraverser> leadValidationWorkflow) {
-        super(Lead.class, leadValidationWorkflow);
+    public LeadRestTriggerController(Optional<List<TriggerValidator<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser>>> triggerValidators) {
+        super(Lead.class, triggerValidators);
     }
 
     /**
