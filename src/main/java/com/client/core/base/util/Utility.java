@@ -22,6 +22,16 @@ import org.joda.time.DateTimeZone;
 
 public class Utility {
 
+    private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
+
+    public static String formatDateForSearch(DateTime value) {
+        return value.toString(SEARCH_DATE_FORMAT);
+    }
+
+    public static String escapeWhitespaceForSearch(String value) {
+        return value.replaceAll("\\s", "\\\\ ").replaceAll("\\)", "\\\\)").replaceAll("\\(", "\\\\(");
+    }
+
 	public static Map<String, String> commaDelimitedStringToMap(String commaDelimited) {
 		List<String> parsed = Arrays.asList(commaDelimited.split(","));
 		Map<String, String> theMap = new LinkedHashMap<String, String>();
