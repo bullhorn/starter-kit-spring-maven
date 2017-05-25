@@ -9,24 +9,18 @@
 		<property name="overwriteExistingJobs" value="true" />
 		<property name="triggers">
 			<list>
-<!-- 				<bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
-<!-- 					<property name="cronExpression" value="${standardCronExpression}" /> -->
-<!-- 					<property name="jobDetail" ref="standardSubscriptionScheduledEventProcessingJobDetail" /> -->
-<!-- 				</bean> -->
+                <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+                    <property name="cronExpression" value="${jobsubmissionnotecreation.cronexpression}" />
+                    <property name="jobDetail" ref="jobSubmissionNoteCreationEventProcessingJobDetail" />
+                </bean>
 			</list>
 		</property>
 	</bean>
 
-
-
-	<bean id="standardSubscriptionScheduledEventProcessingJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetBeanName" value="standardSubscriptionScheduledEventProcessing" />
-		<property name="targetMethod" value="run" />
-		<property name="concurrent" value="true" />
-	</bean>
-	
-	<bean id="standardSubscriptionScheduledEventProcessing" class="com.client.core.scheduledtasks.ScheduledEventProcessing">
-		<constructor-arg index="0" value="${standardSubscriptionName}" />
-	</bean>
+    <bean id="jobSubmissionNoteCreationEventProcessingJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetBeanName" value="jobSubmissionNoteCreation" />
+        <property name="targetMethod" value="run" />
+        <property name="concurrent" value="true" />
+    </bean>
 
 </beans>

@@ -33,6 +33,16 @@ public class Utility {
 		return theMap;
 	}
 
+    private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
+
+    public static String formatDateForSearch(DateTime value) {
+        return value.toString(SEARCH_DATE_FORMAT);
+    }
+
+    public static String escapeWhitespaceForSearch(String value) {
+        return value.replaceAll("\\s", "\\\\ ").replaceAll("\\)", "\\\\)").replaceAll("\\(", "\\\\(");
+    }
+
 	public static Boolean isPositive(Integer value) {
 	    return value != null && value > 0;
     }

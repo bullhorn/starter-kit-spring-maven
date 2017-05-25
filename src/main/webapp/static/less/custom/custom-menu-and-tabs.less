@@ -1,0 +1,54 @@
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic");
+@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+@import url("/styles/lib/bootstrap/css/bootstrap.min.css");
+
+@grey: #CCC;
+@light-grey: #DDD;
+@very-light-grey: #F9F9F9;
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+
+	section {
+		margin: 0 auto 4em auto;
+
+		table {
+			border: 1px solid @light-grey;
+			font-size: 12px;
+			border-collapse: separate;
+			-webkit-border-radius: 3px;
+			-moz-border-radius: 3px;
+			border-radius: 3px;
+
+			thead {
+				> tr:first-child {
+					border-top: 1px @grey solid;
+
+					th {
+						border-bottom: 0;
+
+						label {
+							font-weight: 600;
+						}
+					}
+				}
+			}
+
+			tbody {
+				tr:last-child {
+					border-bottom: 1px @grey solid;
+				}
+
+				tr:nth-child(odd) {
+					background-color: @very-light-grey;
+				}
+			}
+
+			th, td {
+				width: 11%;
+				vertical-align: middle !important;
+			}
+		}
+	}
+}
