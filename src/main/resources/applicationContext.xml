@@ -137,15 +137,15 @@
 		<property name="cacheSeconds" value="-1" />
 	</bean>
 
-	<bean id="queryMessageSource" class="com.client.core.base.tools.context.CustomReloadableResourceBundleMessageSource">
-		<property name="basenames" value="classpath*:queries*" />
-		<property name="defaultEncoding" value="UTF-8" />
-		<property name="useCodeAsDefaultMessage" value="true" />
-		<property name="cacheSeconds" value="-1" />
-	</bean>
-
 	<bean id="queryHelper" class="com.client.core.base.tools.query.impl.MessageSourceQueryHelper">
-		<constructor-arg index="0" ref="queryMessageSource" />
+		<constructor-arg>
+            <bean class="com.client.core.base.tools.context.CustomReloadableResourceBundleMessageSource">
+                <property name="basenames" value="classpath*:queries*" />
+                <property name="defaultEncoding" value="UTF-8" />
+                <property name="useCodeAsDefaultMessage" value="true" />
+                <property name="cacheSeconds" value="-1" />
+            </bean>
+        </constructor-arg>
 	</bean>
 
 	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">

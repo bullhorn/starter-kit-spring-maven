@@ -3,7 +3,9 @@ import FormScript from 'formscript';
 export default class ClientContact extends FormScript {
 
     run(callback) {
-        callback();
+        let promises = [];
+
+        this.whenAjaxDone(promises, callback);
     }
 
 }
