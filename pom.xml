@@ -594,6 +594,19 @@
             </properties>
         </profile>
         <profile>
+            <id>engage</id>
+            <activation>
+                <property>
+                    <name>environment</name>
+                    <value>engage</value>
+                </property>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <profile>staging</profile>
+            </properties>
+        </profile>
+        <profile>
             <id>testing</id>
             <activation>
                 <property>

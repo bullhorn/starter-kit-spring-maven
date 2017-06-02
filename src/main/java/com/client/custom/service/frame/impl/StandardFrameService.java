@@ -29,8 +29,6 @@ public class StandardFrameService implements FrameService {
 
     @Override
     public FrameData getFrameData(Integer corporateUserID, String entityType, Set<Integer> entityIDs) {
-
-
         return null;
     }
 

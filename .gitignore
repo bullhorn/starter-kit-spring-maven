@@ -28,3 +28,6 @@ javadoc/
 
 #other files
 .stax/
+
+src/main/resources/app-engage.properties
+src/main/webapp/.ebextensions/*
