@@ -25,7 +25,7 @@ public class CustomMenuAndTabController {
         this.frameService = frameService;
     }
 
-    @RequestMapping(value = "init", method = RequestMethod.GET)
+    @RequestMapping(value = "init", method = {RequestMethod.GET, RequestMethod.POST})
     public String init(@RequestParam("UserID") Integer corporateUserID, @RequestParam("EntityType") String entityType,
                        @RequestParam("EntityID") Integer[] entityIDs, Model model) {
         FrameData frameData = frameService.getFrameData(corporateUserID, entityType, Sets.newHashSet(entityIDs));
