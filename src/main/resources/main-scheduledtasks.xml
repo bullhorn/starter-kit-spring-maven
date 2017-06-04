@@ -10,7 +10,7 @@
 		<property name="triggers">
 			<list>
                 <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-                    <property name="cronExpression" value="${jobsubmissionnotecreation.cronexpression}" />
+                    <property name="cronExpression" value="${standardCronExpression}" />
                     <property name="jobDetail" ref="jobSubmissionNoteCreationEventProcessingJobDetail" />
                 </bean>
 			</list>

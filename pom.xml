@@ -603,7 +603,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
-                <profile>staging</profile>
+                <profile>engage</profile>
             </properties>
         </profile>
         <profile>
