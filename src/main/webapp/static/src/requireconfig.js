@@ -42,7 +42,9 @@ requirejs.config({
         "lib": "${applicationRoot}/javascript/lib/",
 
         "swig": "${applicationRoot}/javascript/lib/swig/swig.min",
-        "text": "${applicationRoot}/javascript/lib/require/text"
+        "text": "${applicationRoot}/javascript/lib/require/text",
+        "postRobot": "${applicationRoot}/javascript/lib/postrobot/post-robot.min",
+        "appbridge": "${applicationRoot}/javascript/external/AppBridge.min"
     },
     config: {
         text: {
