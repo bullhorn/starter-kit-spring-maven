@@ -1,6 +1,7 @@
 package com.client.core.base.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,6 +62,7 @@ public class Utility {
 		} else {
 			try {
 				Double check = Double.parseDouble(value.toString());
+
 				return new BigDecimal(check);
 			} catch(NumberFormatException e) {
 				return null;
@@ -70,13 +72,14 @@ public class Utility {
 
 	public static BigDecimal forceParseBigDecimal(Object value) {
 		if(value == null || value.toString().isEmpty()) {
-			return new BigDecimal(0);
+			return BigDecimal.ZERO;
 		} else {
 			try {
 				Double check = Double.parseDouble(value.toString());
+
 				return new BigDecimal(check);
 			} catch(NumberFormatException e) {
-				return new BigDecimal(0);
+				return BigDecimal.ZERO;
 			}
 		}
 	}
@@ -95,12 +98,12 @@ public class Utility {
 
 	public static Integer forceParseInteger(Object value) {
 		if(value == null || value.toString().isEmpty()) {
-			return new Integer(0);
+			return 0;
 		} else {
 			try {
 				return Integer.parseInt(value.toString());
 			} catch(NumberFormatException e) {
-				return new Integer(0);
+				return 0;
 			}
 		}
 	}
@@ -119,12 +122,36 @@ public class Utility {
 
 	public static Double forceParseDouble(Object value) {
 		if(value == null || value.toString().isEmpty()) {
-			return new Double(0);
+			return 0D;
 		}else {
 			try {
 				return Double.parseDouble(value.toString());
 			} catch(NumberFormatException e) {
-				return new Double(0);
+				return 0D;
+			}
+		}
+	}
+
+	public static Long forceParseLong(Object value) {
+		if(value == null || value.toString().isEmpty()) {
+			return 0L;
+		} else {
+			try {
+				return Long.parseLong(value.toString());
+			} catch(NumberFormatException e) {
+				return 0L;
+			}
+		}
+	}
+
+	public static BigInteger forceParseBigInteger(Object value) {
+		if(value == null || value.toString().isEmpty()) {
+			return new BigInteger("0");
+		} else {
+			try {
+				return new BigInteger(value.toString());
+			} catch(NumberFormatException e) {
+				return new BigInteger("0");
 			}
 		}
 	}
