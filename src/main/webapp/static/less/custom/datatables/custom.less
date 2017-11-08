@@ -182,6 +182,10 @@
 		border-radius: 5px;
 		margin-bottom: 5px;
 		margin-top: 5px;
+
+		td, th {
+			text-align: center;
+		}
 	}
 
 	.dataTables_paginate .paginate_button.current, .dataTables_paginate .paginate_button.current:hover {
@@ -252,5 +256,11 @@
 
 	input[type="text"].error {
 		margin-bottom: 0 !important;
+	}
+}
+
+table.table-borderless {
+	> tbody > tr > td {
+		border-top: none;
 	}
 }
