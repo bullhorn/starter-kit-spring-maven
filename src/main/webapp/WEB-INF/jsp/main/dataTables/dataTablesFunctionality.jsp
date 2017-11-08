@@ -124,53 +124,69 @@
 					class: "btn btn-danger disabled"
 				},
 				fnShowError: function (message, action) {
-					switch (action) {
-						case "update":
-							bootbox.dialog(message, [{
-								"label": "OK",
-								"class": "btn-primary",
-								"callback": function () {
-								}
-							}], {
-								header: "Update failed"
-							});
-							break;
-						case "delete":
-							bootbox.dialog(message, [{
-								"label": "OK",
-								"class": "btn-primary",
-								"callback": function () {
-								}
-							}], {
-								header: "Delete failed"
-							});
-							break;
-						case "add":
-							$("#lblAddError").html(message);
-							$("#lblAddError").show();
-							break;
-					}
+                    switch (action) {
+                        case "update":
+                            bootbox.dialog({
+                                title: 'Update failed',
+                                message: message,
+                                buttons: {
+                                    ok: {
+                                        label: "OK",
+                                        className: "btn-primary",
+                                        callback: function () {
+                                        }
+                                    }
+                                }
+                            });
+
+                            break;
+                        case "delete":
+                            bootbox.dialog({
+                                title: 'Delete failed',
+                                message: message,
+                                buttons: {
+                                    ok: {
+                                        label: "OK",
+                                        className: "btn-primary",
+                                        callback: function () {
+                                        }
+                                    }
+                                }
+                            });
+
+                            break;
+                        case "add":
+                            $("#lblAddError").html(message);
+                            $("#lblAddError").show();
+                            $("#" + tableName + "_btnAddNewRowOk").prop('disabled', false);
+                            break;
+                    }
 				},
 				fnOnDeleting: function (tr, id, fnDeleteRow) {
-					if (id) {
-						bootbox.dialog('Please confirm that you want to delete the record', [{
-							"label": "Yes",
-							"class": "btn-primary",
-							"callback": function (r) {
-								if (r) {
-									fnDeleteRow(id);
-									$("#${tableName}_btnDeleteRow").addClass('disabled');
-								}
-							}
-						},{
-							"label": "Cancel",
-							"class": "btn-default",
-							"callback": function () {
-							}
-						}], {
-							header: "Confirm Delete"
-						});
-					}
+                    if (id) {
+                        bootbox.dialog({
+                            title: 'Confirm Delete',
+                            message: 'Please confirm that you want to delete the record',
+                            buttons: {
+                                ok: {
+                                    label: "Yes",
+                                    className: "btn-primary",
+                                    callback: function () {
+                                        fnDeleteRow(id);
+
+                                        $("#${tableName}_btnDeleteRow").addClass('disabled');
+                                    }
+                                },
+
+                                cancel: {
+                                    label: "Cancel",
+                                    className: "btn-default",
+                                    callback: function () {
+                                    }
+                                }
+                            }
+                        });
+                    }
 					return false;
 				},
 				fnStartProcessingMode: function () {
@@ -209,12 +225,8 @@
 			$('.hideOnForm').css('display', 'none');
 
 			//turns date fields into date pickers
-			$('#Date').datepicker({
-				format: '${applicationDateFormat}',
-				showOn: "both",
-				buttonImage: "/images/calendar.gif",
-				buttonImageOnly: true,
-				autoclose: true
+			$('#Date').datetimepicker({
+				format: '${applicationDateFormat}'
 			});
 
 			// make buttons pretty
@@ -266,18 +278,7 @@
 				$("#" + tableName + "_btnAddNewRowOk").show();
 				$("#" + tableName + "_EditRowButton").hide();
 				$("#" + tableName + "_formAddNewRow")[0].reset();
-				$("#" + tableName + "_formAddNewRow").find("select").select2("val", "");
 			});
-
-			//$("#" + tableName + "_formAddNewRow tr:odd").addClass("oddFormRow");
-
-			//make select 2 pickers
-			$("#" + tableName + "_formAddNewRow").find("select:not([readonly])").select2({
-				width: '200px',
-				placeholder: "Please Select",
-				allowClear: true
-			});
-
 		};
 	})(jQuery);
 
@@ -328,13 +329,6 @@
 						}
 
 						$("#" + tableName + "_formAddNewRow").populateForm(data, 'id');
-
-						//renitizalize the select2 pickers
-						$("#" + tableName + "_formAddNewRow").find("select").select2({
-							width: '200px',
-							placeholder: "Please Select",
-							allowClear: true
-						});
 
 						//stuff the entityID in the idHolder in the form for later use
 						$("#idHolder").attr("name", entityID);

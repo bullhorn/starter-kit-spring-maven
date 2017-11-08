@@ -4,7 +4,6 @@
 <link rel="stylesheet" type="text/css" href="/styles/lib/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="/styles/lib/datatables/css/jquery.dataTables-custom.css">
 <link rel="stylesheet" type="text/css" href="/styles/lib/datatables/css/jquery.alerts.css" />
-<link rel="stylesheet" type="text/css" href="/styles/lib/select2/css/select2.css" />
 
 <link rel="stylesheet" type="text/css" href="/styles/custom/datatables/custom.min.css" />
 
@@ -12,10 +11,11 @@
 <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
 <script type="text/javascript" src="/javascript/lib/jquery/jquery.browser.js"></script>
+<script type="text/javascript" src="/javascript/lib/moment/moment.js"></script>
 
 <script type="text/javascript" src="/javascript/lib/bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="/javascript/lib/bootstrap/bootbox.min.js"></script>
-<script type="text/javascript" src="/javascript/lib/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/javascript/lib/bootstrap/bootstrap-datetimepicker.min.js"></script>
 
 <script type="text/javascript" src="/javascript/lib/jquery/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/javascript/lib/jquery/jquery.jeditable.datepicker.js"></script>
@@ -29,8 +29,6 @@
 <script type="text/javascript" src="/javascript/lib/jquery/jquery.dataTables.editable.js"></script>
 <script type="text/javascript" src="/javascript/lib/jquery/jquery.watermark.js"></script>
 <script type="text/javascript" src="/javascript/lib/jquery/jquery.form.js"></script>
-
-<script type="text/javascript" src="/javascript/lib/select2/select2.min.js"></script>
 
 <script type="text/javascript" src="/javascript/custom/datatablesCustomCode.min.js"></script>
 

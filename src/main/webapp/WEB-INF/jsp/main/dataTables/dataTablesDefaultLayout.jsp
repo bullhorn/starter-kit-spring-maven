@@ -23,14 +23,14 @@
 			<form:form id="${tableName}_formAddNewRow" action="/${customUrl}/add" commandName="newEntity" title="Add new ${entityName}">
 				<div id="idHolder" class="hide"></div>
 
-				<div id="tableWrapper" class="modal hide fade">
+				<div id="tableWrapper" class="modal fade">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h3>Add</h3>
 					</div>
 					<div id="tableWrapperInner" class="modal-body">
 						<label id="lblAddError" class="error"></label>
-						<table id="${tableName}_formTable">
+						<table id="${tableName}_formTable" class="table table-borderless">
 							<c:forEach var="entityEntry" items="${columnsMap}" varStatus="currentRow">
 								<tr class="${entityEntry.value.fieldType.cssClass} ${entityEntry.value.showOnForm.cssClass} formRow">
 									<td><label class="formLabel" for="<c:out value="${entityEntry.value.fieldName}" />">
@@ -42,13 +42,13 @@
 										<c:when test="${entityEntry.value.fieldType.cssClass == 'select'}">
 											<c:choose>
 												<c:when test="${entityEntry.value.showOnForm.cssClass == 'hideOnForm'}">
-													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass}" readonly="true">
+													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass} form-control" readonly="true">
 														<option></option>
 														<form:options items="${dropDownFiller[entityEntry.value.fieldName]}"/>
 													</form:select>
 												</c:when>
 												<c:otherwise>
-													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass}">
+													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass} form-control">
 														<option></option>
 														<form:options items="${dropDownFiller[entityEntry.value.fieldName]}"/>
 													</form:select>
@@ -58,13 +58,13 @@
 										<c:when test="${entityEntry.value.fieldType.cssClass == 'yesNo'}">
 											<c:choose>
 												<c:when test="${entityEntry.value.showOnForm.cssClass == 'hideOnForm'}">
-													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass}" readonly="true">
+													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass} form-control" readonly="true">
 														<option></option>
 														<form:options items="${dropDownFiller['yesNo']}"/>
 													</form:select>
 												</c:when>
 												<c:otherwise>
-													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass}">
+													<form:select path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass} form-control">
 														<option></option>
 														<form:options items="${dropDownFiller['yesNo']}"/>
 													</form:select>
@@ -72,10 +72,10 @@
 											</c:choose>
 										</c:when>
 										<c:when test="${entityEntry.value.fieldType.cssClass == 'textarea'}">
-											<form:textarea path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass}"/>
+											<form:textarea path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass} form-control"/>
 										</c:when>
 										<c:otherwise>
-											<form:input type="${entityEntry.value.fieldType.inputType}" path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass}"/>
+											<form:input type="${entityEntry.value.fieldType.inputType}" path="${entityEntry.value.fieldName}" rel="${currentRow.index}" cssClass="${entityEntry.value.fieldType.cssClass} form-control"/>
 										</c:otherwise>
 									</c:choose></td>
 									<td id="${entityEntry.value.fieldName}Error">
