@@ -6,12 +6,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -20,6 +23,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.json.JSONArray;
 
 public class Utility {
 
@@ -42,6 +46,12 @@ public class Utility {
 		}
 
 		return theMap;
+	}
+
+	public static void combineJsonArrays(JSONArray jsonArray1, JSONArray jsonArray2) {
+		IntStream.range(0, jsonArray2.length()).forEach(index -> {
+			jsonArray1.put(jsonArray2.get(index));
+		});
 	}
 
 	public static Boolean isPositive(Integer value) {
@@ -288,7 +298,7 @@ public class Utility {
 		return false;
 	}
 
-	public static Boolean listContains(List<String> toCheckIn, String toCheckFor) {
+	public static Boolean listContains(Collection<String> toCheckIn, String toCheckFor) {
 		for(String object : toCheckIn) {
 			if(object.equalsIgnoreCase(toCheckFor)) {
 				return true;
@@ -356,14 +366,16 @@ public class Utility {
 		}
 	}
 
-	public static String createEntireInStatement(List<String> values) {
-		StringBuilder builder = new StringBuilder(" IN (");
+	public static String createEntireInStatement(Collection<String> values) {
+		return createEntireInStatement("", values);
+	}
 
-		for(String value : values) {
-			builder.append("'"+value + "',");
-		}
+	public static String createEntireInStatement(String field, Collection<String> values) {
+		String commaSeparated = values.parallelStream().map( value -> {
+			return "'" + value + "'";
+		}).collect(Collectors.joining(","));
 
-		return builder.subSequence(0, builder.length()-1).toString()+")";
+		return field + " IN (" + commaSeparated + ")";
 	}
 
     public static Integer nullCheck(Integer value) {
