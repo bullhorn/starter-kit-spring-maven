@@ -41,6 +41,16 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 	private String customDate1;
 	private String customDate2;
 	private String customDate3;
+	private String customEncryptedText1;
+	private String customEncryptedText2;
+	private String customEncryptedText3;
+	private String customEncryptedText4;
+	private String customEncryptedText5;
+	private String customEncryptedText6;
+	private String customEncryptedText7;
+	private String customEncryptedText8;
+	private String customEncryptedText9;
+	private String customEncryptedText10;
 	private String customFloat1;
 	private String customFloat2;
 	private String customFloat3;
@@ -313,6 +323,86 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 
 	public String getCustomDate3() {
 		return customDate3;
+	}
+
+	public String getCustomEncryptedText1() {
+		return customEncryptedText1;
+	}
+
+	public void setCustomEncryptedText1(String customEncryptedText1) {
+		this.customEncryptedText1 = customEncryptedText1;
+	}
+
+	public String getCustomEncryptedText2() {
+		return customEncryptedText2;
+	}
+
+	public void setCustomEncryptedText2(String customEncryptedText2) {
+		this.customEncryptedText2 = customEncryptedText2;
+	}
+
+	public String getCustomEncryptedText3() {
+		return customEncryptedText3;
+	}
+
+	public void setCustomEncryptedText3(String customEncryptedText3) {
+		this.customEncryptedText3 = customEncryptedText3;
+	}
+
+	public String getCustomEncryptedText4() {
+		return customEncryptedText4;
+	}
+
+	public void setCustomEncryptedText4(String customEncryptedText4) {
+		this.customEncryptedText4 = customEncryptedText4;
+	}
+
+	public String getCustomEncryptedText5() {
+		return customEncryptedText5;
+	}
+
+	public void setCustomEncryptedText5(String customEncryptedText5) {
+		this.customEncryptedText5 = customEncryptedText5;
+	}
+
+	public String getCustomEncryptedText6() {
+		return customEncryptedText6;
+	}
+
+	public void setCustomEncryptedText6(String customEncryptedText6) {
+		this.customEncryptedText6 = customEncryptedText6;
+	}
+
+	public String getCustomEncryptedText7() {
+		return customEncryptedText7;
+	}
+
+	public void setCustomEncryptedText7(String customEncryptedText7) {
+		this.customEncryptedText7 = customEncryptedText7;
+	}
+
+	public String getCustomEncryptedText8() {
+		return customEncryptedText8;
+	}
+
+	public void setCustomEncryptedText8(String customEncryptedText8) {
+		this.customEncryptedText8 = customEncryptedText8;
+	}
+
+	public String getCustomEncryptedText9() {
+		return customEncryptedText9;
+	}
+
+	public void setCustomEncryptedText9(String customEncryptedText9) {
+		this.customEncryptedText9 = customEncryptedText9;
+	}
+
+	public String getCustomEncryptedText10() {
+		return customEncryptedText10;
+	}
+
+	public void setCustomEncryptedText10(String customEncryptedText10) {
+		this.customEncryptedText10 = customEncryptedText10;
 	}
 
 	public void setCustomDate3(String customDate3) {
@@ -1519,6 +1609,86 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 		this.customDate3 = customDate3;
 	}
 
+	public String getCandidate_customEncryptedText1() {
+		return customEncryptedText1;
+	}
+
+	public void setCandidate_customEncryptedText1(String customEncryptedText1) {
+		this.customEncryptedText1 = customEncryptedText1;
+	}
+
+	public String getCandidate_customEncryptedText2() {
+		return customEncryptedText2;
+	}
+
+	public void setCandidate_customEncryptedText2(String customEncryptedText2) {
+		this.customEncryptedText2 = customEncryptedText2;
+	}
+
+	public String getCandidate_customEncryptedText3() {
+		return customEncryptedText3;
+	}
+
+	public void setCandidate_customEncryptedText3(String customEncryptedText3) {
+		this.customEncryptedText3 = customEncryptedText3;
+	}
+
+	public String getCandidate_customEncryptedText4() {
+		return customEncryptedText4;
+	}
+
+	public void setCandidate_customEncryptedText4(String customEncryptedText4) {
+		this.customEncryptedText4 = customEncryptedText4;
+	}
+
+	public String getCandidate_customEncryptedText5() {
+		return customEncryptedText5;
+	}
+
+	public void setCandidate_customEncryptedText5(String customEncryptedText5) {
+		this.customEncryptedText5 = customEncryptedText5;
+	}
+
+	public String getCandidate_customEncryptedText6() {
+		return customEncryptedText6;
+	}
+
+	public void setCandidate_customEncryptedText6(String customEncryptedText6) {
+		this.customEncryptedText6 = customEncryptedText6;
+	}
+
+	public String getCandidate_customEncryptedText7() {
+		return customEncryptedText7;
+	}
+
+	public void setCandidate_customEncryptedText7(String customEncryptedText7) {
+		this.customEncryptedText7 = customEncryptedText7;
+	}
+
+	public String getCandidate_customEncryptedText8() {
+		return customEncryptedText8;
+	}
+
+	public void setCandidate_customEncryptedText8(String customEncryptedText8) {
+		this.customEncryptedText8 = customEncryptedText8;
+	}
+
+	public String getCandidate_customEncryptedText9() {
+		return customEncryptedText9;
+	}
+
+	public void setCandidate_customEncryptedText9(String customEncryptedText9) {
+		this.customEncryptedText9 = customEncryptedText9;
+	}
+
+	public String getCandidate_customEncryptedText10() {
+		return customEncryptedText10;
+	}
+
+	public void setCandidate_customEncryptedText10(String customEncryptedText10) {
+		this.customEncryptedText10 = customEncryptedText10;
+	}
+
 	public String getCandidate_customFloat1() {
 		return customFloat1;
 	}
@@ -2596,6 +2766,16 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 		candidate.setCustomDate1(stringToDateTime(customDate1));
 		candidate.setCustomDate2(stringToDateTime(customDate2));
 		candidate.setCustomDate3(stringToDateTime(customDate3));
+		candidate.setCustomEncryptedText1(customEncryptedText1);
+		candidate.setCustomEncryptedText2(customEncryptedText2);
+		candidate.setCustomEncryptedText3(customEncryptedText3);
+		candidate.setCustomEncryptedText4(customEncryptedText4);
+		candidate.setCustomEncryptedText5(customEncryptedText5);
+		candidate.setCustomEncryptedText6(customEncryptedText6);
+		candidate.setCustomEncryptedText7(customEncryptedText7);
+		candidate.setCustomEncryptedText8(customEncryptedText8);
+		candidate.setCustomEncryptedText9(customEncryptedText9);
+		candidate.setCustomEncryptedText10(customEncryptedText10);
 		candidate.setCustomFloat1(toBigDecimal(customFloat1, "customFloat1"));
 		candidate.setCustomFloat2(toBigDecimal(customFloat2, "customFloat2"));
 		candidate.setCustomFloat3(toBigDecimal(customFloat3, "customFloat3"));
