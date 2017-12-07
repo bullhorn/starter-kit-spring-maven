@@ -123,7 +123,6 @@
 
 	<bean id="bullhornapi" class="com.client.core.soap.service.impl.BullhornAPISoap">
 		<constructor-arg ref="appSettings" />
-		<constructor-arg ref="bullhornLogDAO" />
 	</bean>
 
 	<bean id="bullhornData" class="com.bullhornsdk.data.api.StandardBullhornData">

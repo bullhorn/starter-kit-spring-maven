@@ -28,7 +28,6 @@ import com.bullhorn.entity.AbstractDto;
 import com.bullhorn.entity.ApiEntityName;
 import com.bullhorn.entity.user.UserTypeDto;
 import com.client.core.ApplicationSettings;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.soap.service.BullhornAPI;
 import com.client.core.soap.workers.EntityFindWorker;
 
@@ -53,13 +52,10 @@ public class BullhornAPISoap implements BullhornAPI {
 
 	private int corporationID;
 
-    private BullhornLogDAO bullhornLogDAO;
-
-    public BullhornAPISoap(ApplicationSettings appSettings, BullhornLogDAO bullhornLogDAO) {
+    public BullhornAPISoap(ApplicationSettings appSettings) {
         this.appSettings = appSettings;
         this.service = createService();
         this.session = createSession();
-        this.bullhornLogDAO = bullhornLogDAO;
         this.sessionLastUpdated = new DateTime(DateTimeZone.forID("EST5EDT"));
     }
 
@@ -324,11 +320,6 @@ public class BullhornAPISoap implements BullhornAPI {
     @Override
     public ApplicationSettings getAppSettings() {
         return appSettings;
-    }
-
-    @Override
-    public BullhornLogDAO getBullhornLogDAO() {
-        return bullhornLogDAO;
     }
     
     @Override

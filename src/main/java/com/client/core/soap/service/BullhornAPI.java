@@ -10,7 +10,6 @@ import com.bullhorn.entity.AbstractDto;
 import com.bullhorn.entity.ApiEntityName;
 import com.bullhorn.entity.user.UserTypeDto;
 import com.client.core.ApplicationSettings;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 
 /**
  * Main bullhorn api utility class. Handles session creation.
@@ -100,8 +99,6 @@ public interface BullhornAPI {
     public int getCorporationID();
 
     public ApplicationSettings getAppSettings();
-
-    public BullhornLogDAO getBullhornLogDAO();
 
     public String getHostName();
     

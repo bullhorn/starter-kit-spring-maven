@@ -10,9 +10,8 @@ import com.bullhorn.apiservice.result.ApiFindResult;
 import com.bullhorn.apiservice.result.ApiSaveResult;
 import com.bullhorn.entity.AbstractDto;
 import com.client.core.ApplicationSettings;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
-import com.client.core.soap.service.impl.BullhornAPISoap;
 import com.client.core.base.tools.test.TestEntities;
+import com.client.core.soap.service.impl.BullhornAPISoap;
 
 /**
  * This implementation of BullhornAPI is used for unit tests. It caches the entities in a map for speed.
@@ -27,12 +26,12 @@ public class EmbeddedBullhornAPISoap extends BullhornAPISoap {
 	private final Map<String, Map<Integer, ? extends AbstractDto>> soapEntityMap;
 
 	public EmbeddedBullhornAPISoap() {
-		super(null, null);
+		super(null);
 		this.soapEntityMap = null;
 	}
 
-	public EmbeddedBullhornAPISoap(ApplicationSettings appSettings, BullhornLogDAO bullhornLogDAO, TestEntities testEntities) {
-		super(appSettings, bullhornLogDAO);
+	public EmbeddedBullhornAPISoap(ApplicationSettings appSettings, TestEntities testEntities) {
+		super(appSettings);
 		this.soapEntityMap = new HashMap<String, Map<Integer, ? extends AbstractDto>>();
 		// setupTestEntities(testEntities);
 	}
