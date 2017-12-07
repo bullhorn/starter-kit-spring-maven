@@ -1,6 +1,6 @@
 package com.client.core.email.service.impl;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class StandardEmailTemplateService implements EmailTemplateService {
     }
 
     @Override
-    public void sendEmail(List<String> mailTo, MailTemplate mailTemplate, Map<String, Object> parameters) throws MessagingException {
+    public void sendEmail(Collection<String> mailTo, MailTemplate mailTemplate, Map<String, Object> parameters) throws MessagingException {
         MailTemplateInfo mailInfo = new MailTemplateInfo();
 
         mailInfo.setTo(mailTo);

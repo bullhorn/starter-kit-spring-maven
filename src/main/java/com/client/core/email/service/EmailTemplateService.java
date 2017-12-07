@@ -1,6 +1,6 @@
 package com.client.core.email.service;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -34,12 +34,12 @@ public interface EmailTemplateService {
      *
      * @throws MessagingException when the email is malformed or SMTP setup is not correct.
      */
-    void sendEmail(List<String> mailTo, MailTemplate mailTemplate, Map<String, Object> parameters) throws MessagingException;
+    void sendEmail(Collection<String> mailTo, MailTemplate mailTemplate, Map<String, Object> parameters) throws MessagingException;
 
     /**
      * Sends an email to the email addresses provided in the {@link MailInfo}, using the sender from the passed in {@link MailInfo},
      * or if not provided, the one in {@link com.client.core.email.MailSettings}.  Provides much more functionality than
-     * either {@link #sendEmail(List, MailTemplate, Map)} or {@link #sendEmail(String, MailTemplate, Map)}
+     * either {@link #sendEmail(Collection, MailTemplate, Map)} or {@link #sendEmail(String, MailTemplate, Map)}
      *
      * Note if the body is provided in the {@link MailInfo} it will be overwritten by the result of rendering the {@link MailTemplate}.
      * Similarly if the subject is provided in the {@link MailInfo} it will be overwritten by the subject in the {@link MailTemplate}
