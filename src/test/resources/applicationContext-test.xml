@@ -46,7 +46,6 @@
 	
 		<bean id="bullhornapi" class="com.client.core.soap.EmbeddedBullhornAPISoap">
 			<constructor-arg ref="appSettings" />
-			<constructor-arg ref="bullhornLogDAO" />
 			<constructor-arg ref="testEntities" />
 		</bean>
 		
@@ -58,7 +57,6 @@
 
 		<bean id="bullhornapi" class="com.client.core.soap.EmbeddedBullhornAPISoap">
 			<constructor-arg ref="appSettings" />
-			<constructor-arg ref="bullhornLogDAO" />
 			<constructor-arg ref="testEntities" />
 		</bean>
 		
