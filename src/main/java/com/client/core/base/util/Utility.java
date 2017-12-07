@@ -37,6 +37,10 @@ public class Utility {
         return value.replaceAll("\\s", "\\\\ ").replaceAll("\\)", "\\\\)").replaceAll("\\(", "\\\\(");
     }
 
+    public static String escapeQuotesForQuery(String value) {
+        return value.replaceAll("'", "''");
+    }
+
 	public static Map<String, String> commaDelimitedStringToMap(String commaDelimited) {
 		List<String> parsed = Arrays.asList(commaDelimited.split(","));
 		Map<String, String> theMap = new LinkedHashMap<String, String>();
