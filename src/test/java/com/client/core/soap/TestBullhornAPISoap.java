@@ -117,11 +117,6 @@ public class TestBullhornAPISoap extends BaseTest {
 	}
 
 	@Test
-	public void testGetBullhornLogDAO() {
-		assertNotNull(bullhornAPI.getBullhornLogDAO());
-	}
-
-	@Test
 	public void testAssembleOpenWindowLink() {
 		String link = bullhornAPI.assembleOpenWindowLink(ApiEntityName.CANDIDATE, getTestEntities().getCandidateId());
 
