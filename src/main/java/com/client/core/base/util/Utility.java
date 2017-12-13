@@ -12,10 +12,13 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,6 +30,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
+
+import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.core.type.QueryEntity;
+import com.bullhornsdk.data.model.entity.core.type.SearchEntity;
+import com.bullhornsdk.data.model.parameter.QueryParams;
+import com.bullhornsdk.data.model.parameter.SearchParams;
+import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
+import com.bullhornsdk.data.model.response.list.ListWrapper;
+import com.client.core.AppContext;
+import com.google.common.collect.Lists;
 
 public class Utility {
 
@@ -420,5 +433,134 @@ public class Utility {
     public static String getHostFromBullhornUrl(String currentBullhornUrl) {
         return currentBullhornUrl.substring(0, StringUtils.indexOfIgnoreCase(currentBullhornUrl, "/bullhornstaffing/"));
     }
+
+    public static <T extends QueryEntity, R> void queryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+        queryForAll(type, where, fields, (batch) -> {
+            batch.parallelStream().forEach(process);
+        });
+    }
+
+    public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+        List<R> result = Lists.newArrayList();
+
+        queryForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+        List<T> result = Lists.newArrayList();
+
+        queryForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends QueryEntity, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, R, R> collect) {
+        R result = collect.supplier().get();
+
+        queryForAll(type, where, fields, (batch) -> {
+            batch.parallelStream().forEach( entity -> {
+                collect.accumulator().accept(result, entity);
+            });
+        });
+
+        return result;
+    }
+
+    public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+        searchForAll(type, where, fields, (batch) -> {
+            batch.parallelStream().forEach(process);
+        });
+    }
+
+    public static <T extends SearchEntity, R> List<R> searchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+        List<R> result = Lists.newArrayList();
+
+        searchForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends SearchEntity> List<T> searchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+        List<T> result = Lists.newArrayList();
+
+        searchForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends SearchEntity, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, R, R> collect) {
+        R result = collect.supplier().get();
+
+        searchForAll(type, where, fields, (batch) -> {
+            batch.parallelStream().forEach( entity -> {
+                collect.accumulator().accept(result, entity);
+            });
+        });
+
+        return result;
+    }
+
+    private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
+        queryForAll(type, where, fields, process, 0);
+    }
+
+    private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
+        BullhornData bullhornData = getBullhornData();
+
+        QueryParams params = ParamFactory.queryParams();
+        params.setStart(start);
+        params.setCount(BATCH_SIZE);
+        params.setShowTotalMatched(true);
+
+        ListWrapper<T> result = bullhornData.query(type, where, fields, params);
+
+        process.accept(result.getData());
+
+        if(result.getStart() + result.getCount() > result.getTotal()) {
+            queryForAll(type, where, fields, process, result.getStart() + result.getCount());
+        }
+    }
+
+    private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
+        searchForAll(type, where, fields, process, 0);
+    }
+
+    private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
+        BullhornData bullhornData = getBullhornData();
+
+        SearchParams params = ParamFactory.searchParams();
+        params.setStart(start);
+        params.setCount(BATCH_SIZE);
+
+        ListWrapper<T> result = bullhornData.search(type, where, fields, params);
+
+        process.accept(result.getData());
+
+        if(result.getStart() + result.getCount() > result.getTotal()) {
+            searchForAll(type, where, fields, process, result.getStart() + result.getCount());
+        }
+    }
+
+    private static final int BATCH_SIZE = 200;
+
+    private static synchronized BullhornData getBullhornData() {
+        if(BULLHORN_DATA == null) {
+            BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
+        }
+
+        return BULLHORN_DATA;
+    }
+
+    private static BullhornData BULLHORN_DATA;
 
 }
