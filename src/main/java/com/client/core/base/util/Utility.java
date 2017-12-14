@@ -464,12 +464,16 @@ public class Utility {
         R result = collect.supplier().get();
 
         queryForAll(type, where, fields, (batch) -> {
+        	R batchResult = collect.supplier().get();
+
             batch.parallelStream().forEach( entity -> {
-                collect.accumulator().accept(result, entity);
+                collect.accumulator().accept(batchResult, entity);
             });
+
+            collect.combiner().apply(result, batchResult);
         });
 
-        return result;
+        return collect.finisher().apply(result);
     }
 
     public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
@@ -502,12 +506,16 @@ public class Utility {
         R result = collect.supplier().get();
 
         searchForAll(type, where, fields, (batch) -> {
-            batch.parallelStream().forEach( entity -> {
-                collect.accumulator().accept(result, entity);
-            });
+	        R batchResult = collect.supplier().get();
+
+	        batch.parallelStream().forEach( entity -> {
+		        collect.accumulator().accept(batchResult, entity);
+	        });
+
+	        collect.combiner().apply(result, batchResult);
         });
 
-        return result;
+	    return collect.finisher().apply(result);
     }
 
     private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
