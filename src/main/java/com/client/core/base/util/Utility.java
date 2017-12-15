@@ -460,16 +460,20 @@ public class Utility {
         return result;
     }
 
-    public static <T extends QueryEntity, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, R, R> collect) {
-        R result = collect.supplier().get();
+    public static <T extends QueryEntity, A, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
 
         queryForAll(type, where, fields, (batch) -> {
+        	A batchResult = collect.supplier().get();
+
             batch.parallelStream().forEach( entity -> {
-                collect.accumulator().accept(result, entity);
+                collect.accumulator().accept(batchResult, entity);
             });
+
+            collect.combiner().apply(result, batchResult);
         });
 
-        return result;
+        return collect.finisher().apply(result);
     }
 
     public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
@@ -498,16 +502,20 @@ public class Utility {
         return result;
     }
 
-    public static <T extends SearchEntity, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, R, R> collect) {
-        R result = collect.supplier().get();
+    public static <T extends SearchEntity, A, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
 
         searchForAll(type, where, fields, (batch) -> {
-            batch.parallelStream().forEach( entity -> {
-                collect.accumulator().accept(result, entity);
-            });
+	        A batchResult = collect.supplier().get();
+
+	        batch.parallelStream().forEach( entity -> {
+		        collect.accumulator().accept(batchResult, entity);
+	        });
+
+	        collect.combiner().apply(result, batchResult);
         });
 
-        return result;
+	    return collect.finisher().apply(result);
     }
 
     private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
@@ -526,7 +534,7 @@ public class Utility {
 
         process.accept(result.getData());
 
-        if(result.getStart() + result.getCount() > result.getTotal()) {
+        if(result.getStart() + result.getCount() < result.getTotal()) {
             queryForAll(type, where, fields, process, result.getStart() + result.getCount());
         }
     }
@@ -546,7 +554,7 @@ public class Utility {
 
         process.accept(result.getData());
 
-        if(result.getStart() + result.getCount() > result.getTotal()) {
+        if(result.getStart() + result.getCount() < result.getTotal()) {
             searchForAll(type, where, fields, process, result.getStart() + result.getCount());
         }
     }
