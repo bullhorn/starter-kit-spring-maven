@@ -534,7 +534,7 @@ public class Utility {
 
         process.accept(result.getData());
 
-        if(result.getStart() + result.getCount() > result.getTotal()) {
+        if(result.getStart() + result.getCount() < result.getTotal()) {
             queryForAll(type, where, fields, process, result.getStart() + result.getCount());
         }
     }
@@ -554,7 +554,7 @@ public class Utility {
 
         process.accept(result.getData());
 
-        if(result.getStart() + result.getCount() > result.getTotal()) {
+        if(result.getStart() + result.getCount() < result.getTotal()) {
             searchForAll(type, where, fields, process, result.getStart() + result.getCount());
         }
     }
