@@ -460,11 +460,11 @@ public class Utility {
         return result;
     }
 
-    public static <T extends QueryEntity, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, R, R> collect) {
-        R result = collect.supplier().get();
+    public static <T extends QueryEntity, A, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
 
         queryForAll(type, where, fields, (batch) -> {
-        	R batchResult = collect.supplier().get();
+        	A batchResult = collect.supplier().get();
 
             batch.parallelStream().forEach( entity -> {
                 collect.accumulator().accept(batchResult, entity);
@@ -502,11 +502,11 @@ public class Utility {
         return result;
     }
 
-    public static <T extends SearchEntity, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, R, R> collect) {
-        R result = collect.supplier().get();
+    public static <T extends SearchEntity, A, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
 
         searchForAll(type, where, fields, (batch) -> {
-	        R batchResult = collect.supplier().get();
+	        A batchResult = collect.supplier().get();
 
 	        batch.parallelStream().forEach( entity -> {
 		        collect.accumulator().accept(batchResult, entity);
