@@ -1,6 +1,6 @@
 package com.client.core.email.service;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.mail.MessagingException;
 
@@ -31,12 +31,12 @@ public interface Emailer {
      *
      * @throws MessagingException when the email is malformed or SMTP setup is not correct.
      */
-	void sendEmail(String subject, List<String> mailTo, String message) throws MessagingException;
+	void sendEmail(String subject, Collection<String> mailTo, String message) throws MessagingException;
 
     /**
      * Sends an email to the email addresses provided in the {@link MailInfo}, using the sender from the passed in {@link MailInfo},
      * or if not provided, the one in {@link com.client.core.email.MailSettings}.  Provides much more functionality than
-     * either {@link #sendEmail(String, List, String)} or {@link #sendEmail(String, String, String)}
+     * either {@link #sendEmail(String, Collection, String)} or {@link #sendEmail(String, String, String)}
      *
      * @param mailInfo the object containing all the information about the email to be sent
      *
