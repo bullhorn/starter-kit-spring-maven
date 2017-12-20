@@ -62,7 +62,7 @@ public class StandardEmailer implements Emailer {
      * {@inheritDoc}
      */
     @Override
-    public synchronized void sendEmail(String subject, List<String> mailTo, String message) throws MessagingException {
+    public synchronized void sendEmail(String subject, Collection<String> mailTo, String message) throws MessagingException {
         MailInfo mailInfo = new MailInfo();
         mailInfo.setBody(message);
         mailInfo.setSubject(subject);
