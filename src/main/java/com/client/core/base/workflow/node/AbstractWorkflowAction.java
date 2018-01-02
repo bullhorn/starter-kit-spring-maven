@@ -12,7 +12,6 @@ import com.client.core.ApplicationSettings;
 import com.client.core.base.workflow.traversing.Traverser;
 import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
-import com.client.core.soap.service.BullhornAPI;
 
 /**
  * Created by john.sullivan on 12/5/2017.
@@ -24,7 +23,6 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
     private EmailTemplateService emailTemplateService;
     private ApplicationSettings appSettings;
     private MessageSource messageSource;
-    private BullhornAPI bullhornApi;
     private Emailer emailer;
 
     protected String getMessageUsingKey(String key) throws NoSuchMessageException {
@@ -65,14 +63,6 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
         }
 
         return emailer;
-    }
-
-    protected BullhornAPI getBullhornApi() {
-        if(this.bullhornApi == null) {
-            this.bullhornApi = AppContext.getApplicationContext().getBean(BullhornAPI.class);
-        }
-
-        return bullhornApi;
     }
 
     protected Logger getLog() {

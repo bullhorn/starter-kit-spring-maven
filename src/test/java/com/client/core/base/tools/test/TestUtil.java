@@ -3,20 +3,13 @@ package com.client.core.base.tools.test;
 import java.text.DateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.bullhorn.apiservice.query.DtoQuery;
-import com.bullhorn.entity.AbstractDto;
 import com.bullhorn.entity.ApiEntityName;
-import com.bullhorn.entity.candidate.CandidateEducationDto;
-import com.bullhorn.entity.candidate.CandidateReferenceDto;
-import com.bullhorn.entity.candidate.CandidateWorkHistoryDto;
-import com.bullhorn.entity.job.JobOrderDto;
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.core.ApplicationSettings;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
@@ -44,7 +37,6 @@ import com.client.core.scheduledtasks.workflow.traversing.impl.JobSubmissionEven
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementChangeRequestEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.PlacementEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.SendoutEventTraverser;
-import com.client.core.soap.service.BullhornAPI;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,9 +47,6 @@ public class TestUtil {
 
 	@Autowired
 	private TestEntities testEntities;
-
-	@Autowired
-	private BullhornAPI bullhornApi;
 
 	@Autowired
 	private BullhornData bullhornData;
@@ -230,71 +219,6 @@ public class TestUtil {
 		return traverser;
 	}
 
-	/**
-	 * Returns a valid CandidateWorkHistoryDto
-	 * 
-	 * @return
-	 */
-	public CandidateWorkHistoryDto validWorkHistory() {
-
-		CandidateWorkHistoryDto entity = findCandidateInfo(ApiEntityName.CANDIDATE_WORK_HISTORY);
-
-		return entity;
-	}
-
-	/**
-	 * Returns a valid CandidateEducationDto
-	 * 
-	 * @return
-	 */
-	public CandidateEducationDto validEducation() {
-
-		CandidateEducationDto entity = findCandidateInfo(ApiEntityName.CANDIDATE_EDUCATION);
-
-		return entity;
-	}
-
-	/**
-	 * Returns a valid CandidateReferenceDto
-	 * 
-	 * @return
-	 */
-	public CandidateReferenceDto validReference() {
-
-		CandidateReferenceDto entity = findCandidateInfo(ApiEntityName.CANDIDATE_REFERENCE);
-
-		return entity;
-	}
-
-	/**
-	 * Returns a valid JobOrderDto
-	 * 
-	 * @return
-	 */
-	public JobOrderDto validJob() {
-
-		JobOrderDto entity = bullhornApi.findEntity(ApiEntityName.JOB_ORDER.value(), testEntities.getJobOrderId());
-
-		return entity;
-	}
-
-	public <T extends AbstractDto> T findCandidateInfo(ApiEntityName entityName) {
-
-		String whereClause = "userID = " + testEntities.getCandidateId() + " and isDeleted = 0";
-		DtoQuery dtoQuery = new DtoQuery();
-		dtoQuery.setEntityName(entityName.value());
-		dtoQuery.setMaxResults(1);
-
-		if (whereClause != null && whereClause.trim().length() > 0) {
-			dtoQuery.setWhere(whereClause);
-		}
-
-		List<T> queryResult = bullhornApi.getQueryResults(entityName.value(), dtoQuery);
-
-		return queryResult.get(0);
-
-	}
-
 	public static byte[] convertObjectToFormUrlEncodedBytes(Object object) {
 
 		return convertObjectToFormUrlParameters(object).getBytes();
@@ -349,14 +273,6 @@ public class TestUtil {
 
 	public void setTestEntities(TestEntities testEntities) {
 		this.testEntities = testEntities;
-	}
-
-	public BullhornAPI getBullhornApi() {
-		return bullhornApi;
-	}
-
-	public void setBullhornApi(BullhornAPI bullhornApi) {
-		this.bullhornApi = bullhornApi;
 	}
 
 }
