@@ -1,12 +1,11 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhorn.entity.client.ClientCorporationDto;
-import com.bullhorn.entity.emb.AddressWithoutCountry;
+import org.apache.log4j.Logger;
+
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporationDepartment;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
-import org.apache.log4j.Logger;
 
 /**
  * Used to get values from bullhorn client corporation form and convert these to the regular ClientCorporationDto
@@ -981,102 +980,5 @@ public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation>
 
         return formClientCorporationDto;
     }
-
-	/**
-	 * Converts the form values to a SOAP dto.
-	 * 
-	 * @deprecated use {@link #instantiateEntity()} instead for BullhornEntity
-	 * @return a SOAP dto
-	 */
-	@Deprecated
-	public ClientCorporationDto instantiateBullhornDto() {
-
-		ClientCorporationDto clientCorporation = new ClientCorporationDto();
-
-		clientCorporation.setAnnualRevenue(toBigDecimal(annualRevenue,"annualRevenue"));
-		clientCorporation.setBillingContact(billingContact);
-		clientCorporation.setBillingFrequency(billingFrequency);
-		clientCorporation.setBillingPhone(billingPhone);
-		clientCorporation.setBusinessSectorList(businessSectorList);
-		clientCorporation.setClientCorporationID(clientCorporationID);
-		clientCorporation.setCompanyDescription(companyDescription);
-		clientCorporation.setCompanyURL(companyURL);
-		clientCorporation.setCompetitors(competitors);
-		clientCorporation.setCulture(culture);
-		clientCorporation.setCustomDate1(stringToXMLGregorianCalendar(customDate1));
-		clientCorporation.setCustomDate2(stringToXMLGregorianCalendar(customDate2));
-		clientCorporation.setCustomDate3(stringToXMLGregorianCalendar(customDate3));
-		clientCorporation.setCustomFloat1(toDouble(customFloat1,"customFloat1"));
-		clientCorporation.setCustomFloat2(toDouble(customFloat2,"customFloat2"));
-		clientCorporation.setCustomFloat3(toDouble(customFloat3,"customFloat3"));
-		clientCorporation.setCustomInt1(customInt1);
-		clientCorporation.setCustomInt2(customInt2);
-		clientCorporation.setCustomInt3(customInt3);
-		clientCorporation.setCustomText1(customText1);
-		clientCorporation.setCustomText10(customText10);
-		clientCorporation.setCustomText11(customText11);
-		clientCorporation.setCustomText12(customText12);
-		clientCorporation.setCustomText13(customText13);
-		clientCorporation.setCustomText14(customText14);
-		clientCorporation.setCustomText15(customText15);
-		clientCorporation.setCustomText16(customText16);
-		clientCorporation.setCustomText17(customText17);
-		clientCorporation.setCustomText18(customText18);
-		clientCorporation.setCustomText19(customText19);
-		clientCorporation.setCustomText2(customText2);
-		clientCorporation.setCustomText20(customText20);
-		clientCorporation.setCustomText3(customText3);
-		clientCorporation.setCustomText4(customText4);
-		clientCorporation.setCustomText5(customText5);
-		clientCorporation.setCustomText6(customText6);
-		clientCorporation.setCustomText7(customText7);
-		clientCorporation.setCustomText8(customText8);
-		clientCorporation.setCustomText9(customText9);
-		clientCorporation.setCustomTextBlock1(customTextBlock1);
-		clientCorporation.setCustomTextBlock2(customTextBlock2);
-		clientCorporation.setCustomTextBlock3(customTextBlock3);
-		clientCorporation.setCustomTextBlock4(customTextBlock4);
-		clientCorporation.setCustomTextBlock5(customTextBlock5);
-		clientCorporation.setDateAdded(null);
-		clientCorporation.setDateFounded(null);
-		clientCorporation.setDepartmentID(departmentID);
-		clientCorporation.setExternalID(externalID);
-		clientCorporation.setFax(fax);
-		clientCorporation.setFeeArrangement(toDouble(feeArrangement,"feeArrangement"));
-		clientCorporation.setFunding(funding);
-		clientCorporation.setIndustryList(industryList);
-		clientCorporation.setInvoiceFormat(invoiceFormat);
-		clientCorporation.setName(name);
-		clientCorporation.setNotes(notes);
-		clientCorporation.setNumEmployees(numEmployees);
-		clientCorporation.setNumOffices(numOffices);
-		clientCorporation.setOwnership(ownership);
-		clientCorporation.setParentClientCorporationID(parentClientCorporationID);
-		clientCorporation.setPhone(phone);
-		clientCorporation.setRevenue(null);
-		clientCorporation.setStatus(status);
-		clientCorporation.setTaxRate(toDouble(taxRate,"taxRate"));
-		clientCorporation.setTickerSymbol(tickerSymbol);
-		clientCorporation.setWorkWeekStart(workWeekStart);
-
-		com.bullhorn.entity.emb.Address address = new com.bullhorn.entity.emb.Address();
-		address.setAddress1(address1);
-		address.setAddress2(address2);
-		address.setCity(city);
-		address.setCountryID(countryID);
-		address.setState(state);
-		address.setZip(zip);
-		clientCorporation.setAddress(address);
-
-		AddressWithoutCountry billingAddress = new AddressWithoutCountry();
-		billingAddress.setAddress1(billingAddress1);
-		billingAddress.setAddress2(billingAddress2);
-		billingAddress.setCity(billingCity);
-		billingAddress.setState(billingState);
-		billingAddress.setZip(billingZip);
-		clientCorporation.setBillingAddress(billingAddress);
-
-		return clientCorporation;
-	}
 
 }

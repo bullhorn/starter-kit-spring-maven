@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhorn.entity.candidate.CandidateDto;
+import org.apache.log4j.Logger;
+
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.Category;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
@@ -9,7 +10,6 @@ import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.util.Util;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.base.Strings;
-import org.apache.log4j.Logger;
 
 /**
  * Maps a candidate form in BH to a CandidateDto
@@ -3049,160 +3049,4 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 
         return formCandidateDto;
     }
-	
-	
-	/**
-	 * Converts the form values to a SOAP dto.
-	 * 
-	 * @deprecated use {@link #instantiateEntity()} instead for BullhornEntity
-	 * @return a SOAP dto
-	 */
-	@Deprecated
-	public CandidateDto instantiateBullhornDto() {
-		CandidateDto candidateDto = new CandidateDto();
-
-		com.bullhorn.entity.emb.Address address = new com.bullhorn.entity.emb.Address();
-		address.setAddress1(address1);
-		address.setAddress2(address2);
-		address.setCity(city);
-		address.setCountryID(toInteger(countryID, "countryID"));
-		address.setState(state);
-		address.setZip(zip);
-
-		candidateDto.setAddress(address);
-		candidateDto.setCategoryID(getFirstIntegerInCommaSeparatedList(categoryID));
-		candidateDto.setCertifications(certifications);
-		candidateDto.setComments(comments);
-		candidateDto.setCompanyName(companyName);
-		candidateDto.setCompanyURL(companyURL);
-		candidateDto.setCustomDate1(stringToXMLGregorianCalendar(customDate1));
-		candidateDto.setCustomDate2(stringToXMLGregorianCalendar(customDate2));
-		candidateDto.setCustomDate3(stringToXMLGregorianCalendar(customDate3));
-		candidateDto.setCustomFloat1(toDouble(customFloat1, "customFloat1"));
-		candidateDto.setCustomFloat2(toDouble(customFloat2, "customFloat2"));
-		candidateDto.setCustomFloat3(toDouble(customFloat3, "customFloat3"));
-		candidateDto.setCustomInt1(toInteger(customInt1, "customInt1"));
-		candidateDto.setCustomInt2(toInteger(customInt2, "customInt2"));
-		candidateDto.setCustomInt3(toInteger(customInt3, "customInt3"));
-		candidateDto.setCustomText1(customText1);
-		candidateDto.setCustomText2(customText2);
-		candidateDto.setCustomText3(customText3);
-		candidateDto.setCustomText4(customText4);
-		candidateDto.setCustomText5(customText5);
-		candidateDto.setCustomText6(customText6);
-		candidateDto.setCustomText7(customText7);
-		candidateDto.setCustomText8(customText8);
-		candidateDto.setCustomText9(customText9);
-		candidateDto.setCustomText10(customText10);
-		candidateDto.setCustomText11(customText11);
-		candidateDto.setCustomText12(customText12);
-		candidateDto.setCustomText13(customText13);
-		candidateDto.setCustomText14(customText14);
-		candidateDto.setCustomText15(customText15);
-		candidateDto.setCustomText16(customText16);
-		candidateDto.setCustomText17(customText17);
-		candidateDto.setCustomText18(customText18);
-		candidateDto.setCustomText19(customText19);
-		candidateDto.setCustomText20(customText20);
-		candidateDto.setCustomTextBlock1(customTextBlock1);
-		candidateDto.setCustomTextBlock2(customTextBlock2);
-		candidateDto.setCustomTextBlock3(customTextBlock3);
-		candidateDto.setCustomTextBlock4(customTextBlock4);
-		candidateDto.setCustomTextBlock5(customTextBlock5);
-		candidateDto.setDateAdded(stringToXMLGregorianCalendar(dateAdded));
-		candidateDto.setDateI9Expiration(stringToXMLGregorianCalendar(dateI9Expiration));
-		candidateDto.setDateAvailable(stringToXMLGregorianCalendar(dateAvailable));
-		candidateDto.setDateAvailableEnd(stringToXMLGregorianCalendar(dateAvailableEnd));
-		candidateDto.setDateLastComment(stringToXMLGregorianCalendar(dateLastComment));
-		candidateDto.setDateOfBirth(stringToXMLGregorianCalendar(dateOfBirth));
-		candidateDto.setDateNextCall(stringToXMLGregorianCalendar(dateNextCall));
-		candidateDto.setDayRate(toBigDecimal(dayRate, "dayRate"));
-		candidateDto.setDayRateLow(toBigDecimal(dayRateLow, "dayRateLow"));
-		candidateDto.setDegreeList(degreeList);
-		candidateDto.setDescription(description);
-		candidateDto.setDesiredLocations(desiredLocations);
-		candidateDto.setDisability(disability);
-		candidateDto.setEducationDegree(educationDegree);
-		candidateDto.setEmail(email);
-		candidateDto.setEmail2(email2);
-		candidateDto.setEmail3(email3);
-		candidateDto.setEmployeeType(employeeType);
-		candidateDto.setEmploymentPreference(employmentPreference);
-		candidateDto.setEthnicity(ethnicity);
-		candidateDto.setExperience(toInteger(experience, "experience"));
-		candidateDto.setExternalID(externalID);
-		candidateDto.setFax(fax);
-		candidateDto.setFax2(fax2);
-		candidateDto.setFax3(fax3);
-		candidateDto.setFederalAddtionalWitholdingsAmount(toBigDecimal(federalAddtionalWitholdingsAmount,
-				"federalAddtionalWitholdingsAmount"));
-		candidateDto.setFederalExemptions(toInteger(federalExemptions, "federalExemptions"));
-		candidateDto.setFederalFilingStatus(federalFilingStatus);
-		candidateDto.setFirstName(firstName);
-		candidateDto.setGender(gender);
-		candidateDto.setHourlyRate(toBigDecimal(hourlyRate, "hourlyRate"));
-		candidateDto.setHourlyRateLow(toBigDecimal(hourlyRateLow, "hourlyRateLow"));
-		candidateDto.setIsEditable(toBoolean(isEditable, "isEditable"));
-		candidateDto.setI9OnFile(toInteger(i9OnFile, "i9OnFile"));
-		candidateDto.setLastName(lastName);
-		candidateDto.setLinkedPersonID(toInteger(linkedPersonID, "linkedPersonID"));
-		candidateDto.setLocalAddtionalWitholdingsAmount(toBigDecimal(localAddtionalWitholdingsAmount, "localAddtionalWitholdingsAmount"));
-		candidateDto.setLocalExemptions(toInteger(localExemptions, "localExemptions"));
-		candidateDto.setLocalFilingStatus(localFilingStatus);
-		candidateDto.setLocalTaxCode(localTaxCode);
-		candidateDto.setMassMailOptOut(toBoolean(massMailOptOut,"massMailOptOut"));
-		candidateDto.setMiddleName(middleName);
-		candidateDto.setMobile(mobile);
-		candidateDto.setName((Strings.nullToEmpty(firstName) + " " + Strings.nullToEmpty(lastName)).trim());
-		candidateDto.setNamePrefix(namePrefix);
-		candidateDto.setNameSuffix(nameSuffix);
-		candidateDto.setNickName(nickName);
-		candidateDto.setOccupation(occupation);
-		candidateDto.setPager(pager);
-		candidateDto.setPhone(phone);
-		candidateDto.setPhone2(phone2);
-		candidateDto.setPhone3(phone3);
-		candidateDto.setPreferredContact(preferredContact);
-		candidateDto.setRecentClientList(recentClientList);
-		if (Util.isNumeric(recruiterUserID))
-			candidateDto.setOwnerID(Integer.parseInt(recruiterUserID));
-		else if (recruiterUserID != null) {
-			String[] ownerIDs = recruiterUserID.split(",");
-			candidateDto.setOwnerID(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0);
-		}
-
-		candidateDto.setReferredBy(referredBy);
-		candidateDto.setReferredByPersonID(toInteger(referredByUserID, "referredByUserID"));
-		candidateDto.setSalary(toBigDecimal(salary, "salary"));
-		candidateDto.setSalaryLow(toBigDecimal(salaryLow, "salaryLow"));
-
-		com.bullhorn.entity.emb.Address secondaryAddress = new com.bullhorn.entity.emb.Address();
-		secondaryAddress.setAddress1(secondaryAddress1);
-		secondaryAddress.setAddress2(secondaryAddress2);
-		secondaryAddress.setCity(secondaryCity);
-		secondaryAddress.setCountryID(toInteger(secondaryCountryID, "secondaryCountryID"));
-		secondaryAddress.setState(secondaryState);
-		secondaryAddress.setZip(secondaryZip);
-		candidateDto.setSecondaryAddress(secondaryAddress);
-
-		candidateDto.setSkillSet(skillSet);
-		candidateDto.setSmsOptIn(toBoolean(smsOptIn, "smsOptIn"));
-		candidateDto.setSource(source);
-		candidateDto.setSsn(ssn);
-		candidateDto.setStateAddtionalWitholdingsAmount(toBigDecimal(stateAddtionalWitholdingsAmount, "stateAddtionalWitholdingsAmount"));
-		candidateDto.setStateExemptions(toInteger(stateExemptions, "stateExemptions"));
-		candidateDto.setStateFilingStatus(stateFilingStatus);
-		candidateDto.setStatus(status);
-		candidateDto.setTaxID(taxID);
-		candidateDto.setTaxState(taxState);
-		candidateDto.setTravelLimit(toInteger(travelLimit, "travelLimit"));
-		candidateDto.setType(type);
-		candidateDto.setUserID(toInteger(userID, "userID"));
-		candidateDto.setVeteran(veteran);
-		candidateDto.setWillRelocate(toBoolean(willRelocate, "willRelocate"));
-		candidateDto.setWorkAuthorized(toBoolean(workAuthorized, "workAuthorized"));
-		candidateDto.setWorkPhone(workPhone);
-
-		return candidateDto;
-	}
 }

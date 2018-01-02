@@ -1,10 +1,14 @@
 package com.client.core.formtrigger.model.form.impl;
 
 
-import com.bullhorn.entity.job.PlacementChangeRequestDto;
-import com.bullhornsdk.data.model.entity.core.standard.*;
-import com.client.core.formtrigger.model.form.AbstractFormDto;
 import org.apache.log4j.Logger;
+
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
+import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Placement;
+import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
+import com.client.core.formtrigger.model.form.AbstractFormDto;
 
 public class FormPlacementChangeRequestDto extends AbstractFormDto<PlacementChangeRequest> {
 	private Integer billingUserID;
@@ -2041,189 +2045,6 @@ public class FormPlacementChangeRequestDto extends AbstractFormDto<PlacementChan
 		entity.setTerminationReason(terminationReason);
 		entity.setVendorClientCorporation(new ClientCorporation(vendorClientCorporationID));
 		entity.setWorkWeekStart(toInteger(workWeekStart, "workWeekStart"));
-
-		return entity;
-	}
-
-	/**
-	 * Converts the form values to a SOAP dto.
-	 * 
-	 * @deprecated use {@link #instantiateEntity()} instead for BullhornEntity
-	 * @return a SOAP dto
-	 */
-	@Deprecated
-	public PlacementChangeRequestDto instantiateBullhornDto() {
-		PlacementChangeRequestDto entity = new PlacementChangeRequestDto();
-
-		entity.setBillingClientContactID(billingUserID);
-		entity.setBillingFrequency(billingFrequency);
-		entity.setClientBillRate(toDouble(clientBillRate, "clientBillRate"));
-		entity.setClientOvertimeRate(toDouble(clientOverTimeRate, "clientOverTimeRate"));
-		entity.setComments(comments);
-		entity.setCorrelatedCustomDate1(stringToXMLGregorianCalendar(customDate1));
-		entity.setCorrelatedCustomDate2(stringToXMLGregorianCalendar(customDate2));
-		entity.setCorrelatedCustomDate3(stringToXMLGregorianCalendar(customDate3));
-		entity.setCorrelatedCustomFloat1(toDouble(correlatedCustomFloat1, "correlatedCustomFloat1"));
-		entity.setCorrelatedCustomFloat2(toDouble(correlatedCustomFloat2, "correlatedCustomFloat2"));
-		entity.setCorrelatedCustomFloat3(toDouble(correlatedCustomFloat3, "correlatedCustomFloat3"));
-		entity.setCorrelatedCustomInt1(toInteger(correlatedCustomInt1, "correlatedCustomInt1"));
-		entity.setCorrelatedCustomInt2(toInteger(correlatedCustomInt2, "correlatedCustomInt2"));
-		entity.setCorrelatedCustomInt3(toInteger(correlatedCustomInt3, "correlatedCustomInt3"));
-		entity.setCorrelatedCustomText1(correlatedCustomText1);
-		entity.setCorrelatedCustomText10(correlatedCustomText10);
-		entity.setCorrelatedCustomText2(correlatedCustomText2);
-		entity.setCorrelatedCustomText3(correlatedCustomText3);
-		entity.setCorrelatedCustomText4(correlatedCustomText4);
-		entity.setCorrelatedCustomText5(correlatedCustomText5);
-		entity.setCorrelatedCustomText6(correlatedCustomText6);
-		entity.setCorrelatedCustomText7(correlatedCustomText7);
-		entity.setCorrelatedCustomText8(correlatedCustomText8);
-		entity.setCorrelatedCustomText9(correlatedCustomText9);
-		entity.setCorrelatedCustomTextBlock1(correlatedCustomTextBlock1);
-		entity.setCorrelatedCustomTextBlock2(correlatedCustomTextBlock2);
-		entity.setCorrelatedCustomTextBlock3(correlatedCustomTextBlock3);
-		entity.setCostCenter(costCenter);
-		entity.setCustomBillRate1(toBigDecimal(customBillRate1, "customBillRate1"));
-		entity.setCustomBillRate10(toBigDecimal(customBillRate10, "customBillRate10"));
-		entity.setCustomBillRate2(toBigDecimal(customBillRate2, "customBillRate2"));
-		entity.setCustomBillRate3(toBigDecimal(customBillRate3, "customBillRate3"));
-		entity.setCustomBillRate4(toBigDecimal(customBillRate4, "customBillRate4"));
-		entity.setCustomBillRate5(toBigDecimal(customBillRate5, "customBillRate5"));
-		entity.setCustomBillRate6(toBigDecimal(customBillRate6, "customBillRate6"));
-		entity.setCustomBillRate7(toBigDecimal(customBillRate7, "customBillRate7"));
-		entity.setCustomBillRate8(toBigDecimal(customBillRate8, "customBillRate8"));
-		entity.setCustomBillRate9(toBigDecimal(customBillRate9, "customBillRate9"));
-		entity.setCustomDate1(stringToXMLGregorianCalendar(customDate1));
-		entity.setCustomDate2(stringToXMLGregorianCalendar(customDate2));
-		entity.setCustomDate3(stringToXMLGregorianCalendar(customDate3));
-		entity.setCustomFloat1(toDouble(customFloat1, "customFloat1"));
-		entity.setCustomFloat2(toDouble(customFloat2, "customFloat2"));
-		entity.setCustomFloat3(toDouble(customFloat3, "customFloat3"));
-		entity.setCustomInt1(toInteger(customInt1, "customInt1"));
-		entity.setCustomInt2(toInteger(customInt2, "customInt2"));
-		entity.setCustomInt3(toInteger(customInt3, "customInt3"));
-		entity.setCustomPayRate1(toBigDecimal(customPayRate1, "customPayRate1"));
-		entity.setCustomPayRate10(toBigDecimal(customPayRate10, "customPayRate10"));
-		entity.setCustomPayRate2(toBigDecimal(customPayRate2, "customPayRate2"));
-		entity.setCustomPayRate3(toBigDecimal(customPayRate3, "customPayRate3"));
-		entity.setCustomPayRate4(toBigDecimal(customPayRate4, "customPayRate4"));
-		entity.setCustomPayRate5(toBigDecimal(customPayRate5, "customPayRate5"));
-		entity.setCustomPayRate6(toBigDecimal(customPayRate6, "customPayRate6"));
-		entity.setCustomPayRate7(toBigDecimal(customPayRate7, "customPayRate7"));
-		entity.setCustomPayRate8(toBigDecimal(customPayRate8, "customPayRate8"));
-		entity.setCustomPayRate9(toBigDecimal(customPayRate9, "customPayRate9"));
-		entity.setCustomText1(customText1);
-		entity.setCustomText10(customText10);
-		entity.setCustomText11(customText11);
-		entity.setCustomText12(customText12);
-		entity.setCustomText13(customText13);
-		entity.setCustomText14(customText14);
-		entity.setCustomText15(customText15);
-		entity.setCustomText16(customText16);
-		entity.setCustomText17(customText17);
-		entity.setCustomText18(customText18);
-		entity.setCustomText19(customText19);
-		entity.setCustomText2(customText2);
-		entity.setCustomText20(customText20);
-		entity.setCustomText21(customText21);
-		entity.setCustomText22(customText22);
-		entity.setCustomText23(customText23);
-		entity.setCustomText24(customText24);
-		entity.setCustomText25(customText25);
-		entity.setCustomText26(customText26);
-		entity.setCustomText27(customText27);
-		entity.setCustomText28(customText28);
-		entity.setCustomText29(customText29);
-		entity.setCustomText3(customText3);
-		entity.setCustomText30(customText30);
-		entity.setCustomText31(customText31);
-		entity.setCustomText32(customText32);
-		entity.setCustomText33(customText33);
-		entity.setCustomText34(customText34);
-		entity.setCustomText35(customText35);
-		entity.setCustomText36(customText36);
-		entity.setCustomText37(customText37);
-		entity.setCustomText38(customText38);
-		entity.setCustomText39(customText39);
-		entity.setCustomText4(customText4);
-		entity.setCustomText40(customText40);
-		entity.setCustomText5(customText5);
-		entity.setCustomText6(customText6);
-		entity.setCustomText7(customText7);
-		entity.setCustomText8(customText8);
-		entity.setCustomText9(customText9);
-		entity.setCustomTextBlock1(customTextBlock1);
-		entity.setCustomTextBlock2(customTextBlock2);
-		entity.setCustomTextBlock3(customTextBlock3);
-		entity.setCustomTextBlock4(customTextBlock4);
-		entity.setCustomTextBlock5(customTextBlock5);
-		entity.setDateBegin(stringToXMLGregorianCalendar(dateBegin));
-		entity.setDateClientEffective(stringToXMLGregorianCalendar(dateClientEffective));
-		entity.setDateEffective(stringToXMLGregorianCalendar(dateEffective));
-		entity.setDateEnd(stringToXMLGregorianCalendar(dateEnd));
-		entity.setDaysGuaranteed(toInteger(daysGuaranteed, "daysGuaranteed"));
-		entity.setDaysProRated(toInteger(daysProRated, "daysProRated"));
-		entity.setDurationWeeks(toDouble(durationWeeks, "durationWeeks"));
-		entity.setEmployeeType(employeeType);
-		entity.setEmploymentType(employmentType);
-		entity.setFee(toDouble(fee, "fee"));
-		entity.setHoursOfOperation(hoursOfOperation);
-		entity.setHoursPerDay(toDouble(hoursPerDay, "hoursPerDay"));
-		entity.setHousingManagerID(housingManagerID);
-		entity.setHousingStatus(housingStatus);
-		entity.setOtExemption(toInteger(otExemption, "otExemption"));
-		entity.setOvertimeRate(toDouble(overtimeRate, "overtimeRate"));
-		entity.setPayRate(toBigDecimal(payRate, "payRate"));
-		entity.setPlacementChangeRequestID(placementChangeRequestID);
-		entity.setPlacementID(placementID);
-		entity.setRecruitingManagerPercentGrossMargin(toDouble(recruitingManagerPercentGrossMargin, "recruitingManagerPercentGrossMargin"));
-		entity.setReportTo(reportTo);
-		entity.setRequestCustomDate1(stringToXMLGregorianCalendar(requestCustomDate1));
-		entity.setRequestCustomDate2(stringToXMLGregorianCalendar(requestCustomDate2));
-		entity.setRequestCustomDate3(stringToXMLGregorianCalendar(requestCustomDate3));
-		entity.setRequestCustomFloat1(toDouble(requestCustomFloat1, "requestCustomFloat1"));
-		entity.setRequestCustomFloat2(toDouble(requestCustomFloat2, "requestCustomFloat2"));
-		entity.setRequestCustomFloat3(toDouble(requestCustomFloat3, "requestCustomFloat3"));
-		entity.setRequestCustomInt1(toInteger(requestCustomInt1, "requestCustomInt1"));
-		entity.setRequestCustomInt2(toInteger(requestCustomInt2, "requestCustomInt2"));
-		entity.setRequestCustomInt3(toInteger(requestCustomInt3, "requestCustomInt3"));
-		entity.setRequestCustomText1(requestCustomText1);
-		entity.setRequestCustomText10(requestCustomText10);
-		entity.setRequestCustomText11(requestCustomText11);
-		entity.setRequestCustomText12(requestCustomText12);
-		entity.setRequestCustomText13(requestCustomText13);
-		entity.setRequestCustomText14(requestCustomText14);
-		entity.setRequestCustomText15(requestCustomText15);
-		entity.setRequestCustomText16(requestCustomText16);
-		entity.setRequestCustomText17(requestCustomText17);
-		entity.setRequestCustomText18(requestCustomText18);
-		entity.setRequestCustomText19(requestCustomText19);
-		entity.setRequestCustomText2(requestCustomText2);
-		entity.setRequestCustomText20(requestCustomText20);
-		entity.setRequestCustomText3(requestCustomText3);
-		entity.setRequestCustomText4(requestCustomText4);
-		entity.setRequestCustomText5(requestCustomText5);
-		entity.setRequestCustomText6(requestCustomText6);
-		entity.setRequestCustomText7(requestCustomText7);
-		entity.setRequestCustomText8(requestCustomText8);
-		entity.setRequestCustomText9(requestCustomText9);
-		entity.setRequestCustomTextBlock1(requestCustomTextBlock1);
-		entity.setRequestCustomTextBlock2(requestCustomTextBlock2);
-		entity.setRequestCustomTextBlock3(requestCustomTextBlock3);
-		entity.setRequestCustomTextBlock4(requestCustomTextBlock4);
-		entity.setRequestCustomTextBlock5(requestCustomTextBlock5);
-		entity.setRequestStatus(requestStatus);
-		entity.setRequestType(requestType);
-		entity.setRequestingUserID(requestingUserID);
-		entity.setSalary(toBigDecimal(salary, "salary"));
-		entity.setSalaryUnit(salaryUnit);
-		entity.setSalesManagerPercentGrossMargin(toDouble(salesManagerPercentGrossMargin, "salesManagerPercentGrossMargin"));
-		entity.setStatementClientContactID(statementUserID);
-		entity.setStatus(status);
-		entity.setTerminationReason(terminationReason);
-		entity.setVendorClientCorporationID(vendorClientCorporationID);
-		entity.setWorkWeekStart(toInteger(workWeekStart, "workWeekStart"));
-		entity.setWorkersCompRateID(workersCompRateID);
 
 		return entity;
 	}

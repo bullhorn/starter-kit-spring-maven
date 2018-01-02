@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.bullhorn.entity.job.JobSubmissionDto;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
@@ -251,26 +250,6 @@ public class FormJobSubmissionDto extends AbstractFormDto<JobSubmission> {
         jobSubmission.setJobOrder(new JobOrder(getFirstIntegerInCommaSeparatedList(jobPostingID)));
 		jobSubmission.setId(jobResponseID);
 		jobSubmission.setSendingUser(new CorporateUser(sendingUserID));
-		jobSubmission.setSource(source);
-		jobSubmission.setStatus(status);
-
-		return jobSubmission;
-	}
-
-	/**
-	 * Converts the form values to a SOAP dto.
-	 * 
-	 * @deprecated use {@link #instantiateEntity()} instead for BullhornEntity
-	 * @return a SOAP dto
-	 */
-	@Deprecated
-	public JobSubmissionDto instantiateBullhornDto() {
-		JobSubmissionDto jobSubmission = new JobSubmissionDto();
-
-		jobSubmission.setCandidateID(getFirstIntegerInCommaSeparatedList(userID));
-		jobSubmission.setJobOrderID(getFirstIntegerInCommaSeparatedList(jobPostingID));
-		jobSubmission.setJobSubmissionID(jobResponseID);
-		jobSubmission.setSendingUserID(sendingUserID);
 		jobSubmission.setSource(source);
 		jobSubmission.setStatus(status);
 

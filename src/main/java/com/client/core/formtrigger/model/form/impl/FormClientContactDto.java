@@ -1,11 +1,15 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhorn.entity.client.ClientContactDto;
-import com.bullhornsdk.data.model.entity.core.standard.*;
+import org.apache.log4j.Logger;
+
+import com.bullhornsdk.data.model.entity.core.standard.Category;
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
+import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.util.Util;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
-import org.apache.log4j.Logger;
 
 /**
  * Maps a client contact form in BH to a ClientContactDto
@@ -1889,119 +1893,5 @@ public class FormClientContactDto extends AbstractFormDto<ClientContact> {
 
         return formClientContactDto;
     }
-	
-	
-	/**
-	 * Converts the form values to a SOAP dto.
-	 * 
-	 * @deprecated use {@link #instantiateEntity()} instead for BullhornEntity
-	 * @return a SOAP dto
-	 */
-	@Deprecated
-	public ClientContactDto instantiateBullhornDto() {
-
-		ClientContactDto clientContactDto = new ClientContactDto();
-
-		com.bullhorn.entity.emb.Address address = new com.bullhorn.entity.emb.Address();
-		address.setAddress1(address1);
-		address.setAddress2(address2);
-		address.setCity(city);
-		address.setCountryID(countryID);
-		address.setState(state);
-		address.setZip(zip);
-		clientContactDto.setAddress(address);
-
-		clientContactDto.setCategoryID(getFirstIntegerInCommaSeparatedList(categoryID));
-		clientContactDto.setCertifications(certifications);
-		clientContactDto.setComments(comments);
-		clientContactDto.setClientCorporationID(clientCorporationID);
-		clientContactDto.setCustomDate1(stringToXMLGregorianCalendar(customDate1));
-		clientContactDto.setCustomDate2(stringToXMLGregorianCalendar(customDate2));
-		clientContactDto.setCustomDate3(stringToXMLGregorianCalendar(customDate3));
-		clientContactDto.setCustomFloat1(toDouble(customFloat1,"customFloat1"));
-		clientContactDto.setCustomFloat2(toDouble(customFloat2,"customFloat2"));
-		clientContactDto.setCustomFloat3(toDouble(customFloat3,"customFloat3"));
-		clientContactDto.setCustomInt1(customInt1);
-		clientContactDto.setCustomInt2(customInt2);
-		clientContactDto.setCustomInt3(customInt3);
-		clientContactDto.setCustomText1(customText1);
-		clientContactDto.setCustomText2(customText2);
-		clientContactDto.setCustomText3(customText3);
-		clientContactDto.setCustomText4(customText4);
-		clientContactDto.setCustomText5(customText5);
-		clientContactDto.setCustomText6(customText6);
-		clientContactDto.setCustomText7(customText7);
-		clientContactDto.setCustomText8(customText8);
-		clientContactDto.setCustomText9(customText9);
-		clientContactDto.setCustomText10(customText10);
-		clientContactDto.setCustomText11(customText11);
-		clientContactDto.setCustomText12(customText12);
-		clientContactDto.setCustomText13(customText13);
-		clientContactDto.setCustomText14(customText14);
-		clientContactDto.setCustomText15(customText15);
-		clientContactDto.setCustomText16(customText16);
-		clientContactDto.setCustomText17(customText17);
-		clientContactDto.setCustomText18(customText18);
-		clientContactDto.setCustomText19(customText19);
-		clientContactDto.setCustomText20(customText20);
-		clientContactDto.setCustomTextBlock1(customTextBlock1);
-		clientContactDto.setCustomTextBlock2(customTextBlock2);
-		clientContactDto.setCustomTextBlock3(customTextBlock3);
-		clientContactDto.setCustomTextBlock4(customTextBlock4);
-		clientContactDto.setCustomTextBlock5(customTextBlock5);
-		clientContactDto.setDateLastVisit(stringToXMLGregorianCalendar(dateLastVisit));
-		clientContactDto.setDescription(description);
-		clientContactDto.setDesiredCategories(desiredCategories);
-		clientContactDto.setDesiredSkills(desiredSkills);
-		clientContactDto.setDesiredSpecialties(desiredSpecialties);
-		clientContactDto.setDivision(division);
-		clientContactDto.setEmail(email);
-		clientContactDto.setEmail2(email2);
-		clientContactDto.setEmail3(email3);
-		clientContactDto.setExternalID(externalID);
-		clientContactDto.setFax(fax);
-		clientContactDto.setFax2(fax2);
-		clientContactDto.setFax3(fax3);
-		clientContactDto.setFirstName(firstName);
-		clientContactDto.setLastName(lastName);
-		clientContactDto.setMiddleName(middleName);
-		clientContactDto.setMobile(mobile);
-		clientContactDto.setNamePrefix(namePrefix);
-		clientContactDto.setNameSuffix(nameSuffix);
-		clientContactDto.setNickName(nickName);
-		clientContactDto.setOccupation(occupation);
-		clientContactDto.setOffice(office);
-		clientContactDto.setPager(pager);
-		clientContactDto.setPhone(phone);
-		clientContactDto.setPhone2(phone2);
-		clientContactDto.setPhone3(phone3);
-		clientContactDto.setPreferredContact(preferredContact);
-		if (Util.isNumeric(recruiterUserID))
-			clientContactDto.setOwnerID(Integer.parseInt(recruiterUserID));
-		else {
-			String[] ownerIDs = recruiterUserID.split(",");
-			clientContactDto.setOwnerID(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0);
-		}
-		
-		clientContactDto.setReferredByPersonID(referredByUserID);
-		clientContactDto.setReportToPersonID(reportToUserID);
-
-		com.bullhorn.entity.emb.Address secondaryAddress = new com.bullhorn.entity.emb.Address();
-		secondaryAddress.setAddress1(secondaryAddress1);
-		secondaryAddress.setAddress2(secondaryAddress2);
-		secondaryAddress.setCity(secondaryCity);
-		secondaryAddress.setCountryID(secondaryCountryID);
-		secondaryAddress.setState(secondaryState);
-		secondaryAddress.setZip(secondaryZip);
-		clientContactDto.setSecondaryAddress(secondaryAddress);
-
-		clientContactDto.setSmsOptIn(smsOptIn);
-		clientContactDto.setSource(source);
-		clientContactDto.setStatus(status);
-		clientContactDto.setType(type);
-		clientContactDto.setUserID(userID);
-
-		return clientContactDto;
-	}
 
 }

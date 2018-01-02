@@ -1,12 +1,12 @@
 package com.client.core.formtrigger.model.form.impl;
 
-import com.bullhorn.entity.note.NoteDto;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
 import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 public class FormNoteDto extends AbstractFormDto<Note> {
 
@@ -197,31 +197,6 @@ public class FormNoteDto extends AbstractFormDto<Note> {
 			log.error("Error parsing job id");
 			return 0;
 		}
-	}
-
-	/**
-	 * Converts the form values to a SOAP dto.
-	 * 
-	 * @deprecated use {@link #instantiateEntity()} instead for BullhornEntity
-	 * @return a SOAP dto
-	 */
-	@Deprecated
-	public NoteDto instantiateBullhornDto() {
-		NoteDto note = new NoteDto();
-
-		note.setAction(action);
-		note.setCommentingPersonID(commentingUserID);
-		note.setComments(comments);
-		note.setDateAdded(stringToXMLGregorianCalendar(dateAdded));
-
-		if (!StringUtils.isBlank(jobPostingID)) {
-			note.setJobOrderID(getJobId());
-		}
-
-		note.setNoteID(userCommentID);
-		note.setPersonReferenceID(userID);
-
-		return note;
 	}
 
 }

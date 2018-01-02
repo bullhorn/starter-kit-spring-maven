@@ -9,7 +9,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.bullhorn.entity.ApiEntityName;
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.core.ApplicationSettings;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
@@ -29,7 +28,6 @@ import com.client.core.formtrigger.workflow.traversing.NoteFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFormTriggerTraverser;
 import com.client.core.formtrigger.workflow.traversing.PlacementFormTriggerTraverser;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
-import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workflow.traversing.impl.CandidateEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.ClientContactEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.JobOrderEventTraverser;
@@ -41,7 +39,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.google.common.collect.Sets;
 
 public class TestUtil {
 
@@ -57,45 +54,6 @@ public class TestUtil {
 
 	public TestUtil() {
 		super();
-	}
-
-	public static CustomSubscriptionEvent event(Integer entityID, ApiEntityName entityName, EventType eventType, String[] updatedProperties,
-												Integer updatingUserID) {
-		CustomSubscriptionEvent event = new CustomSubscriptionEvent();
-		event.setEntityId(entityID);
-		event.setEntityName(entityName.value());
-		event.setEventType(eventType.value());
-		event.setUpdatingUserId(updatingUserID);
-
-		if(updatedProperties != null) {
-			event.setUpdatedProperties(Sets.newHashSet(updatedProperties));
-		}
-
-		return event;
-	}
-
-	public JobSubmissionEventTraverser jobSubmissionEventTraverser(EventType eventType, String[] updatedProperties) {
-		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobSubmissionId(), ApiEntityName.JOB_SUBMISSION, eventType,
-				updatedProperties, getTestEntities().getCorporateUserId());
-		return jobSubmissionEventTraverser(event);
-	}
-
-	public SendoutEventTraverser sendoutEventTraverser(EventType eventType, String[] updatedProperties) {
-		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getSendoutId(), ApiEntityName.SENDOUT, eventType, updatedProperties,
-				getTestEntities().getCorporateUserId());
-		return sendoutEventTraverser(event);
-	}
-
-	public PlacementEventTraverser placementEventTraverser(EventType eventType, String[] updatedProperties) {
-		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getPlacementId(), ApiEntityName.PLACEMENT, eventType, updatedProperties,
-				getTestEntities().getCorporateUserId());
-		return placementEventTraverser(event);
-	}
-
-	public JobOrderEventTraverser jobEventTraverser(EventType eventType, String[] updatedProperties) {
-		CustomSubscriptionEvent event = TestUtil.event(getTestEntities().getJobOrderId(), ApiEntityName.JOB_ORDER, eventType, updatedProperties,
-				getTestEntities().getCorporateUserId());
-		return jobEventTraverser(event);
 	}
 
 	public JobSubmissionEventTraverser jobSubmissionEventTraverser(CustomSubscriptionEvent event) {
