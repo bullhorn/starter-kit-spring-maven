@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.client.core.base.workflow.traversing.TriggerTraverser;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -19,34 +17,39 @@ import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.base.workflow.traversing.AbstractTriggerTraverser;
+import com.client.core.base.workflow.traversing.TriggerTraverser;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.form.RestFormEntity;
+import com.google.common.collect.Lists;
 
 /**
  * Created by hiqbal on 12/15/2015.
  */
 
-public class AbstractRestTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends AbstractTriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
+public class AbstractRestTriggerController<E extends BullhornEntity, R extends RestFormEntity<E>, H extends TriggerHelper<E>, T extends AbstractTriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
 
     private static Logger log = Logger.getLogger(AbstractRestTriggerController.class);
 
     private final Class<E> type;
+    private final Class<R> formType;
     private final List<TriggerValidator<E, H, T>> triggerValidators;
 
     protected final BullhornData bullhornData;
 
     private final JsonConverter jsonConverter;
 
-    public AbstractRestTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators) {
+    public AbstractRestTriggerController(Class<E> type, Class<R> formType, Optional<List<TriggerValidator<E, H, T>>> triggerValidators) {
         super();
         this.type = type;
+        this.formType = formType;
         this.triggerValidators = sort(triggerValidators);
         this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
         this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
     }
 
-    protected RestTriggerRequest<E> convertToObject(String value) {
-        return jsonConverter.convertJsonStringToEntity(value, RestTriggerRequest.class, type);
+    protected RestTriggerRequest<E, R> convertToObject(String value) {
+        return jsonConverter.convertJsonStringToEntity(value, RestTriggerRequest.class, formType);
     }
 
     protected Map<String, Object> convertToMap(String value) {

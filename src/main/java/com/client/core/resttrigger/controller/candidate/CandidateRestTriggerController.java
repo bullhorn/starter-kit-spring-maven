@@ -18,6 +18,7 @@ import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.resttrigger.controller.AbstractRestTriggerController;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.form.impl.CandidateRestFormEntity;
 import com.client.core.resttrigger.model.helper.impl.CandidateRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.CandidateRestTriggerTraverser;
 
@@ -26,13 +27,13 @@ import com.client.core.resttrigger.workflow.traversing.CandidateRestTriggerTrave
  */
 @Controller
 @RequestMapping("/resttrigger/candidate/*")
-public class CandidateRestTriggerController extends AbstractRestTriggerController<Candidate, CandidateRestTriggerHelper, CandidateRestTriggerTraverser> {
+public class CandidateRestTriggerController extends AbstractRestTriggerController<Candidate, CandidateRestFormEntity, CandidateRestTriggerHelper, CandidateRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(CandidateRestTriggerController.class);
 
     @Autowired
     public CandidateRestTriggerController(Optional<List<TriggerValidator<Candidate, CandidateRestTriggerHelper, CandidateRestTriggerTraverser>>> triggerValidators) {
-        super(Candidate.class, triggerValidators);
+        super(Candidate.class, CandidateRestFormEntity.class, triggerValidators);
     }
 
     /**
@@ -49,7 +50,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 
 	    Map<String, Object> valuesChanges = (Map<String, Object>) convertToMap(body).get("data");
 
-	    RestTriggerRequest<Candidate> restTriggerRequest = convertToObject(body);
+	    RestTriggerRequest<Candidate, CandidateRestFormEntity> restTriggerRequest = convertToObject(body);
 
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();

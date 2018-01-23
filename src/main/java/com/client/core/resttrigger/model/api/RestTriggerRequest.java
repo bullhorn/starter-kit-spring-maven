@@ -1,6 +1,7 @@
 package com.client.core.resttrigger.model.api;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.core.resttrigger.model.form.RestFormEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,17 +9,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by hiqbal on 12/18/2015.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RestTriggerRequest<T extends BullhornEntity> {
+public class RestTriggerRequest<T extends BullhornEntity, R extends RestFormEntity<T>> {
 
-    private T data;
+    private R data;
     private RestTriggerMeta meta;
 
     @JsonProperty("data")
-    public T getData() {
+    public R getData() {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(R data) {
         this.data = data;
     }
 
@@ -36,7 +37,7 @@ public class RestTriggerRequest<T extends BullhornEntity> {
         if (this == o) return true;
         if (!(o instanceof RestTriggerRequest)) return false;
 
-        RestTriggerRequest<?> that = (RestTriggerRequest<?>) o;
+        RestTriggerRequest<?, ?> that = (RestTriggerRequest<?, ?>) o;
 
         if (data != null ? !data.equals(that.data) : that.data != null) return false;
         return meta != null ? meta.equals(that.meta) : that.meta == null;
