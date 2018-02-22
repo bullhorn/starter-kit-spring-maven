@@ -7,7 +7,6 @@
 
 	<bean id="testUtil" class="com.client.core.base.tools.test.TestUtil">
 		<property name="testEntities" ref="testEntities" />
-		<property name="bullhornApi" ref="bullhornapi" />
 	</bean>
 
     <bean id="testEntities" class="com.client.core.base.tools.test.TestEntities">
