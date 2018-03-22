@@ -95,6 +95,41 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
     private String type;
     private String willRelocate;
 
+    private String customTextBlock1;
+    private String customTextBlock2;
+    private String customTextBlock3;
+    private String customTextBlock4;
+    private String customTextBlock5;
+    private String customDate1;
+    private String customDate2;
+    private String customDate3;
+    private String customFloat1;
+    private String customFloat2;
+    private String customFloat3;
+    private String customInt1;
+    private String customInt2;
+    private String customInt3;
+    private String customText1;
+    private String customText2;
+    private String customText3;
+    private String customText4;
+    private String customText5;
+    private String customText6;
+    private String customText7;
+    private String customText8;
+    private String customText9;
+    private String customText10;
+    private String customText11;
+    private String customText12;
+    private String customText13;
+    private String customText14;
+    private String customText15;
+    private String customText16;
+    private String customText17;
+    private String customText18;
+    private String customText19;
+    private String customText20;
+
     public String getAddress1() {
         return address1;
     }
@@ -653,6 +688,279 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
 
     public void setWillRelocate(String willRelocate) {
         this.willRelocate = willRelocate;
+    }
+
+
+    public String getCustomTextBlock1() {
+        return customTextBlock1;
+    }
+
+    public void setCustomTextBlock1(String customTextBlock1) {
+        this.customTextBlock1 = customTextBlock1;
+    }
+
+    public String getCustomTextBlock2() {
+        return customTextBlock2;
+    }
+
+    public void setCustomTextBlock2(String customTextBlock2) {
+        this.customTextBlock2 = customTextBlock2;
+    }
+
+    public String getCustomTextBlock3() {
+        return customTextBlock3;
+    }
+
+    public void setCustomTextBlock3(String customTextBlock3) {
+        this.customTextBlock3 = customTextBlock3;
+    }
+
+    public String getCustomTextBlock4() {
+        return customTextBlock4;
+    }
+
+    public void setCustomTextBlock4(String customTextBlock4) {
+        this.customTextBlock4 = customTextBlock4;
+    }
+
+    public String getCustomTextBlock5() {
+        return customTextBlock5;
+    }
+
+    public void setCustomTextBlock5(String customTextBlock5) {
+        this.customTextBlock5 = customTextBlock5;
+    }
+
+    public String getCustomDate1() {
+        return customDate1;
+    }
+
+    public void setCustomDate1(String customDate1) {
+        this.customDate1 = customDate1;
+    }
+
+    public String getCustomDate2() {
+        return customDate2;
+    }
+
+    public void setCustomDate2(String customDate2) {
+        this.customDate2 = customDate2;
+    }
+
+    public String getCustomDate3() {
+        return customDate3;
+    }
+
+    public void setCustomDate3(String customDate3) {
+        this.customDate3 = customDate3;
+    }
+
+    public String getCustomFloat1() {
+        return customFloat1;
+    }
+
+    public void setCustomFloat1(String customFloat1) {
+        this.customFloat1 = customFloat1;
+    }
+
+    public String getCustomFloat2() {
+        return customFloat2;
+    }
+
+    public void setCustomFloat2(String customFloat2) {
+        this.customFloat2 = customFloat2;
+    }
+
+    public String getCustomFloat3() {
+        return customFloat3;
+    }
+
+    public void setCustomFloat3(String customFloat3) {
+        this.customFloat3 = customFloat3;
+    }
+
+    public String getCustomInt1() {
+        return customInt1;
+    }
+
+    public void setCustomInt1(String customInt1) {
+        this.customInt1 = customInt1;
+    }
+
+    public String getCustomInt2() {
+        return customInt2;
+    }
+
+    public void setCustomInt2(String customInt2) {
+        this.customInt2 = customInt2;
+    }
+
+    public String getCustomInt3() {
+        return customInt3;
+    }
+
+    public void setCustomInt3(String customInt3) {
+        this.customInt3 = customInt3;
+    }
+
+    public String getCustomText1() {
+        return customText1;
+    }
+
+    public void setCustomText1(String customText1) {
+        this.customText1 = customText1;
+    }
+
+    public String getCustomText2() {
+        return customText2;
+    }
+
+    public void setCustomText2(String customText2) {
+        this.customText2 = customText2;
+    }
+
+    public String getCustomText3() {
+        return customText3;
+    }
+
+    public void setCustomText3(String customText3) {
+        this.customText3 = customText3;
+    }
+
+    public String getCustomText4() {
+        return customText4;
+    }
+
+    public void setCustomText4(String customText4) {
+        this.customText4 = customText4;
+    }
+
+    public String getCustomText5() {
+        return customText5;
+    }
+
+    public void setCustomText5(String customText5) {
+        this.customText5 = customText5;
+    }
+
+    public String getCustomText6() {
+        return customText6;
+    }
+
+    public void setCustomText6(String customText6) {
+        this.customText6 = customText6;
+    }
+
+    public String getCustomText7() {
+        return customText7;
+    }
+
+    public void setCustomText7(String customText7) {
+        this.customText7 = customText7;
+    }
+
+    public String getCustomText8() {
+        return customText8;
+    }
+
+    public void setCustomText8(String customText8) {
+        this.customText8 = customText8;
+    }
+
+    public String getCustomText9() {
+        return customText9;
+    }
+
+    public void setCustomText9(String customText9) {
+        this.customText9 = customText9;
+    }
+
+    public String getCustomText10() {
+        return customText10;
+    }
+
+    public void setCustomText10(String customText10) {
+        this.customText10 = customText10;
+    }
+
+    public String getCustomText11() {
+        return customText11;
+    }
+
+    public void setCustomText11(String customText11) {
+        this.customText11 = customText11;
+    }
+
+    public String getCustomText12() {
+        return customText12;
+    }
+
+    public void setCustomText12(String customText12) {
+        this.customText12 = customText12;
+    }
+
+    public String getCustomText13() {
+        return customText13;
+    }
+
+    public void setCustomText13(String customText13) {
+        this.customText13 = customText13;
+    }
+
+    public String getCustomText14() {
+        return customText14;
+    }
+
+    public void setCustomText14(String customText14) {
+        this.customText14 = customText14;
+    }
+
+    public String getCustomText15() {
+        return customText15;
+    }
+
+    public void setCustomText15(String customText15) {
+        this.customText15 = customText15;
+    }
+
+    public String getCustomText16() {
+        return customText16;
+    }
+
+    public void setCustomText16(String customText16) {
+        this.customText16 = customText16;
+    }
+
+    public String getCustomText17() {
+        return customText17;
+    }
+
+    public void setCustomText17(String customText17) {
+        this.customText17 = customText17;
+    }
+
+    public String getCustomText18() {
+        return customText18;
+    }
+
+    public void setCustomText18(String customText18) {
+        this.customText18 = customText18;
+    }
+
+    public String getCustomText19() {
+        return customText19;
+    }
+
+    public void setCustomText19(String customText19) {
+        this.customText19 = customText19;
+    }
+
+    public String getCustomText20() {
+        return customText20;
+    }
+
+    public void setCustomText20(String customText20) {
+        this.customText20 = customText20;
     }
 
     public String getLead_address1() {
@@ -1215,6 +1523,278 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         this.willRelocate = willRelocate;
     }
 
+    public String getLead_customTextBlock1() {
+        return customTextBlock1;
+    }
+
+    public void setLead_customTextBlock1(String customTextBlock1) {
+        this.customTextBlock1 = customTextBlock1;
+    }
+
+    public String getLead_customTextBlock2() {
+        return customTextBlock2;
+    }
+
+    public void setLead_customTextBlock2(String customTextBlock2) {
+        this.customTextBlock2 = customTextBlock2;
+    }
+
+    public String getLead_customTextBlock3() {
+        return customTextBlock3;
+    }
+
+    public void setLead_customTextBlock3(String customTextBlock3) {
+        this.customTextBlock3 = customTextBlock3;
+    }
+
+    public String getLead_customTextBlock4() {
+        return customTextBlock4;
+    }
+
+    public void setLead_customTextBlock4(String customTextBlock4) {
+        this.customTextBlock4 = customTextBlock4;
+    }
+
+    public String getLead_customTextBlock5() {
+        return customTextBlock5;
+    }
+
+    public void setLead_customTextBlock5(String customTextBlock5) {
+        this.customTextBlock5 = customTextBlock5;
+    }
+
+    public String getLead_customDate1() {
+        return customDate1;
+    }
+
+    public void setLead_customDate1(String customDate1) {
+        this.customDate1 = customDate1;
+    }
+
+    public String getLead_customDate2() {
+        return customDate2;
+    }
+
+    public void setLead_customDate2(String customDate2) {
+        this.customDate2 = customDate2;
+    }
+
+    public String getLead_customDate3() {
+        return customDate3;
+    }
+
+    public void setLead_customDate3(String customDate3) {
+        this.customDate3 = customDate3;
+    }
+
+    public String getLead_customFloat1() {
+        return customFloat1;
+    }
+
+    public void setLead_customFloat1(String customFloat1) {
+        this.customFloat1 = customFloat1;
+    }
+
+    public String getLead_customFloat2() {
+        return customFloat2;
+    }
+
+    public void setLead_customFloat2(String customFloat2) {
+        this.customFloat2 = customFloat2;
+    }
+
+    public String getLead_customFloat3() {
+        return customFloat3;
+    }
+
+    public void setLead_customFloat3(String customFloat3) {
+        this.customFloat3 = customFloat3;
+    }
+
+    public String getLead_customInt1() {
+        return customInt1;
+    }
+
+    public void setLead_customInt1(String customInt1) {
+        this.customInt1 = customInt1;
+    }
+
+    public String getLead_customInt2() {
+        return customInt2;
+    }
+
+    public void setLead_customInt2(String customInt2) {
+        this.customInt2 = customInt2;
+    }
+
+    public String getLead_customInt3() {
+        return customInt3;
+    }
+
+    public void setLead_customInt3(String customInt3) {
+        this.customInt3 = customInt3;
+    }
+
+    public String getLead_customText1() {
+        return customText1;
+    }
+
+    public void setLead_customText1(String customText1) {
+        this.customText1 = customText1;
+    }
+
+    public String getLead_customText2() {
+        return customText2;
+    }
+
+    public void setLead_customText2(String customText2) {
+        this.customText2 = customText2;
+    }
+
+    public String getLead_customText3() {
+        return customText3;
+    }
+
+    public void setLead_customText3(String customText3) {
+        this.customText3 = customText3;
+    }
+
+    public String getLead_customText4() {
+        return customText4;
+    }
+
+    public void setLead_customText4(String customText4) {
+        this.customText4 = customText4;
+    }
+
+    public String getLead_customText5() {
+        return customText5;
+    }
+
+    public void setLead_customText5(String customText5) {
+        this.customText5 = customText5;
+    }
+
+    public String getLead_customText6() {
+        return customText6;
+    }
+
+    public void setLead_customText6(String customText6) {
+        this.customText6 = customText6;
+    }
+
+    public String getLead_customText7() {
+        return customText7;
+    }
+
+    public void setLead_customText7(String customText7) {
+        this.customText7 = customText7;
+    }
+
+    public String getLead_customText8() {
+        return customText8;
+    }
+
+    public void setLead_customText8(String customText8) {
+        this.customText8 = customText8;
+    }
+
+    public String getLead_customText9() {
+        return customText9;
+    }
+
+    public void setLead_customText9(String customText9) {
+        this.customText9 = customText9;
+    }
+
+    public String getLead_customText10() {
+        return customText10;
+    }
+
+    public void setLead_customText10(String customText10) {
+        this.customText10 = customText10;
+    }
+
+    public String getLead_customText11() {
+        return customText11;
+    }
+
+    public void setLead_customText11(String customText11) {
+        this.customText11 = customText11;
+    }
+
+    public String getLead_customText12() {
+        return customText12;
+    }
+
+    public void setLead_customText12(String customText12) {
+        this.customText12 = customText12;
+    }
+
+    public String getLead_customText13() {
+        return customText13;
+    }
+
+    public void setLead_customText13(String customText13) {
+        this.customText13 = customText13;
+    }
+
+    public String getLead_customText14() {
+        return customText14;
+    }
+
+    public void setLead_customText14(String customText14) {
+        this.customText14 = customText14;
+    }
+
+    public String getLead_customText15() {
+        return customText15;
+    }
+
+    public void setLead_customText15(String customText15) {
+        this.customText15 = customText15;
+    }
+
+    public String getLead_customText16() {
+        return customText16;
+    }
+
+    public void setLead_customText16(String customText16) {
+        this.customText16 = customText16;
+    }
+
+    public String getLead_customText17() {
+        return customText17;
+    }
+
+    public void setLead_customText17(String customText17) {
+        this.customText17 = customText17;
+    }
+
+    public String getLead_customText18() {
+        return customText18;
+    }
+
+    public void setLead_customText18(String customText18) {
+        this.customText18 = customText18;
+    }
+
+    public String getLead_customText19() {
+        return customText19;
+    }
+
+    public void setLead_customText19(String customText19) {
+        this.customText19 = customText19;
+    }
+
+    public String getLead_customText20() {
+        return customText20;
+    }
+
+    public void setLead_customText20(String customText20) {
+        this.customText20 = customText20;
+    }
+
     @Override
     public Lead instantiateEntity() {
 
@@ -1316,6 +1896,41 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
         lead.setTearsheets(tearsheets);
 
         lead.setTimeZoneOffsetEST(Utility.parseInteger(timeZoneOffsetEST));
+
+        lead.setCustomTextBlock1(customTextBlock1);
+        lead.setCustomTextBlock2(customTextBlock2);
+        lead.setCustomTextBlock3(customTextBlock3);
+        lead.setCustomTextBlock4(customTextBlock4);
+        lead.setCustomTextBlock5(customTextBlock5);
+        lead.setCustomDate1(stringToDateTime(customDate1));
+        lead.setCustomDate2(stringToDateTime(customDate2));
+        lead.setCustomDate3(stringToDateTime(customDate3));
+        lead.setCustomFloat1(Utility.parseBigDecimal(customFloat1));
+        lead.setCustomFloat2(Utility.parseBigDecimal(customFloat2));
+        lead.setCustomFloat3(Utility.parseBigDecimal(customFloat3));
+        lead.setCustomInt1(Utility.parseInteger(customInt1));
+        lead.setCustomInt2(Utility.parseInteger(customInt2));
+        lead.setCustomInt3(Utility.parseInteger(customInt3));
+        lead.setCustomText1(customText1);
+        lead.setCustomText2(customText2);
+        lead.setCustomText3(customText3);
+        lead.setCustomText4(customText4);
+        lead.setCustomText5(customText5);
+        lead.setCustomText6(customText6);
+        lead.setCustomText7(customText7);
+        lead.setCustomText8(customText8);
+        lead.setCustomText9(customText9);
+        lead.setCustomText10(customText10);
+        lead.setCustomText11(customText11);
+        lead.setCustomText12(customText12);
+        lead.setCustomText13(customText13);
+        lead.setCustomText14(customText14);
+        lead.setCustomText15(customText15);
+        lead.setCustomText16(customText16);
+        lead.setCustomText17(customText17);
+        lead.setCustomText18(customText18);
+        lead.setCustomText19(customText19);
+        lead.setCustomText20(customText20);
 
         return lead;
 
@@ -1612,6 +2227,108 @@ public class FormLeadDto extends AbstractFormDto<Lead> {
                 .append(",\n\t\"willRelocate\": ")
                 .append("'")
                 .append(willRelocate).append('\'')
+                .append(",\n\t\"customTextBlock1\": ")
+                .append("'")
+                .append(customTextBlock1).append('\'')
+                .append(",\n\t\"customTextBlock2\": ")
+                .append("'")
+                .append(customTextBlock2).append('\'')
+                .append(",\n\t\"customTextBlock3\": ")
+                .append("'")
+                .append(customTextBlock3).append('\'')
+                .append(",\n\t\"customTextBlock4\": ")
+                .append("'")
+                .append(customTextBlock4).append('\'')
+                .append(",\n\t\"customTextBlock5\": ")
+                .append("'")
+                .append(customTextBlock5).append('\'')
+                .append(",\n\t\"customDate1\": ")
+                .append("'")
+                .append(customDate1).append('\'')
+                .append(",\n\t\"customDate2\": ")
+                .append("'")
+                .append(customDate2).append('\'')
+                .append(",\n\t\"customDate3\": ")
+                .append("'")
+                .append(customDate3).append('\'')
+                .append(",\n\t\"customFloat1\": ")
+                .append("'")
+                .append(customFloat1).append('\'')
+                .append(",\n\t\"customFloat2\": ")
+                .append("'")
+                .append(customFloat2).append('\'')
+                .append(",\n\t\"customFloat3\": ")
+                .append("'")
+                .append(customFloat3).append('\'')
+                .append(",\n\t\"customInt1\": ")
+                .append("'")
+                .append(customInt1).append('\'')
+                .append(",\n\t\"customInt2\": ")
+                .append("'")
+                .append(customInt2).append('\'')
+                .append(",\n\t\"customInt3\": ")
+                .append("'")
+                .append(customInt3).append('\'')
+                .append(",\n\t\"customText1\": ")
+                .append("'")
+                .append(customText1).append('\'')
+                .append(",\n\t\"customText2\": ")
+                .append("'")
+                .append(customText2).append('\'')
+                .append(",\n\t\"customText3\": ")
+                .append("'")
+                .append(customText3).append('\'')
+                .append(",\n\t\"customText4\": ")
+                .append("'")
+                .append(customText4).append('\'')
+                .append(",\n\t\"customText5\": ")
+                .append("'")
+                .append(customText5).append('\'')
+                .append(",\n\t\"customText6\": ")
+                .append("'")
+                .append(customText6).append('\'')
+                .append(",\n\t\"customText7\": ")
+                .append("'")
+                .append(customText7).append('\'')
+                .append(",\n\t\"customText8\": ")
+                .append("'")
+                .append(customText8).append('\'')
+                .append(",\n\t\"customText9\": ")
+                .append("'")
+                .append(customText9).append('\'')
+                .append(",\n\t\"customText10\": ")
+                .append("'")
+                .append(customText10).append('\'')
+                .append(",\n\t\"customText11\": ")
+                .append("'")
+                .append(customText11).append('\'')
+                .append(",\n\t\"customText12\": ")
+                .append("'")
+                .append(customText12).append('\'')
+                .append(",\n\t\"customText13\": ")
+                .append("'")
+                .append(customText13).append('\'')
+                .append(",\n\t\"customText14\": ")
+                .append("'")
+                .append(customText14).append('\'')
+                .append(",\n\t\"customText15\": ")
+                .append("'")
+                .append(customText15).append('\'')
+                .append(",\n\t\"customText16\": ")
+                .append("'")
+                .append(customText16).append('\'')
+                .append(",\n\t\"customText17\": ")
+                .append("'")
+                .append(customText17).append('\'')
+                .append(",\n\t\"customText18\": ")
+                .append("'")
+                .append(customText18).append('\'')
+                .append(",\n\t\"customText19\": ")
+                .append("'")
+                .append(customText19).append('\'')
+                .append(",\n\t\"customText20\": ")
+                .append("'")
+                .append(customText20).append('\'')
                 .append('}')
                 .toString();
     }
