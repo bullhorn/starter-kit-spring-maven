@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -29,11 +30,14 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 import org.json.JSONArray;
 
 import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.QueryEntity;
 import com.bullhornsdk.data.model.entity.core.type.SearchEntity;
+import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.bullhornsdk.data.model.parameter.QueryParams;
 import com.bullhornsdk.data.model.parameter.SearchParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
@@ -42,6 +46,59 @@ import com.client.core.AppContext;
 import com.google.common.collect.Lists;
 
 public class Utility {
+
+    public static Set<Integer> parseCommaSeparatedIntegers(String value) {
+        return parseCommaSeparated(value, Utility::forceParseInteger);
+    }
+
+    public static Set<String> parseCommaSeparatedStrings(String value) {
+        return parseCommaSeparated(value, Function.identity());
+    }
+
+    private static <T> Set<T> parseCommaSeparated(String value, Function<String, T> map) {
+        return Stream.of(StringUtils.defaultIfBlank(value, "").split(",")).parallel().map(map).collect(Collectors.toSet());
+    }
+
+    public static <T, R> Boolean valueChanged(T oldEntity, T newEntity, Function<T, R> get) {
+        R oldValue = get.apply(oldEntity);
+        R newValue = get.apply(newEntity);
+
+        if(oldValue instanceof Address) {
+            return valueChanged((Address) oldEntity, (Address) newEntity, Address::getAddress1)
+                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getAddress2)
+                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getCity)
+                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getState)
+                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getZip)
+                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getCountryID);
+        } else if(oldValue instanceof BullhornEntity) {
+            return valueChanged((BullhornEntity) oldValue, (BullhornEntity) newValue, BullhornEntity::getId);
+        }
+
+        return valueChanged(oldValue, newValue);
+    }
+
+    public static <T> Boolean valueChanged(T oldValue, T newValue) {
+        if(oldValue == null) {
+            return newValue != null;
+        } else if(newValue == null) {
+            return true;
+        } else if(oldValue instanceof String) {
+            String oldString = StringUtils.defaultIfBlank((String)oldValue, "");
+            String newString = StringUtils.defaultIfBlank((String)newValue, "");
+
+            return !oldString.equals(newString);
+        } else if(oldValue instanceof Boolean || oldValue instanceof Integer) {
+            return oldValue != newValue;
+        } else if(oldValue instanceof BigDecimal) {
+            return ((BigDecimal) oldValue).compareTo((BigDecimal) newValue) != 0;
+        } else if(oldValue instanceof DateTime) {
+            return Days.daysBetween((DateTime) oldValue, (DateTime) newValue).getDays() != 0;
+        } else if(oldValue instanceof BullhornEntity) {
+            return valueChanged((BullhornEntity) oldValue, (BullhornEntity) newValue, BullhornEntity::getId);
+        }
+
+        return !oldValue.equals(newValue);
+    }
 
     private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
 
