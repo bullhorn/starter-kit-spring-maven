@@ -1488,7 +1488,7 @@ public class FormPlacementDto extends AbstractFormDto<Placement> {
 		entity.setReferralFee(toBigDecimal(referralFee, "referralFee"));
 		entity.setReferralFeeType(referralFeeType);
 		entity.setReportTo(reportTo);
-		entity.setReportedMargin(toInteger(reportedMargin, "reportedMargin"));
+		entity.setReportedMargin(toBigDecimal(reportedMargin, "reportedMargin"));
 		entity.setSalary(toBigDecimal(salary, "salary"));
 		entity.setSalaryUnit(salaryUnit);
 		entity.setSalesManagerPercentGrossMargin(toBigDecimal(salesManagerPercentGrossMargin, "salesManagerPercentGrossMargin"));
