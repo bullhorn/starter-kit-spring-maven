@@ -1,8 +1,8 @@
 # Bullhorn Starter Kit (Spring/Maven)
 
 The Bullhorn Starter Kit is a collection of Java code that lets you integrate custom business logic with the Bullhorn CRM application. The code itself is 100% boilerplate and should require no modification, but rather is designed for plugging in your own classes or extending existing ones. The following technologies are required:
- 1. [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
- 2. [Maven 3](https://maven.apache.org/download.cgi)
+ 1. [Java 10](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+ 2. [Maven 3.6.0 or higher](https://maven.apache.org/download.cgi)
 
 Run ``mvn clean install -P{mavenProfile}`` to generate a deployable WAR file in the target folder. You can also deploy to a local Tomcat 7 container provided by Maven by running ``mvn clean tomcat7:run -P${mavenProfile}``, effectively running your application locally. If you want to skip unit tests, pass the flag ``-DskipTests``. See the [javadoc](http://bullhorn.github.io/starter-kit-spring-maven/) for class and method-level documentation.
 
