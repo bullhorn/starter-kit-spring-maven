@@ -1,6 +1,7 @@
 package com.client.core.resttrigger.model.api;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,7 +14,7 @@ public class RestTriggerRequest<T extends BullhornEntity> {
     private T data;
     private RestTriggerMeta meta;
 
-    @JsonProperty("data")
+    @JsonIgnore
     public T getData() {
         return data;
     }

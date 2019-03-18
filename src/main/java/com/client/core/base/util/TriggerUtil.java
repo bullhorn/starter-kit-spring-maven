@@ -1,13 +1,16 @@
 package com.client.core.base.util;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.AppContext;
 import com.client.core.base.tools.entitychanger.EntityChanger;
+import com.google.common.collect.Lists;
 
 /**
  * Created by johnsully83 on 25/08/2016.
@@ -68,4 +71,35 @@ public class TriggerUtil {
 		return ENTITY_CHANGER;
 	}
 
+	public static <E extends BullhornEntity> OneToMany<E> convertIdListToEntityOneToMany(List<Map<String, Integer>> entityIds, Supplier<E> constructor){
+		List<E> bullhornEntities = Lists.newArrayList();
+
+		entityIds.stream().forEach(entityId ->{
+			E entity = constructor.get();
+			entity.setId(entityId.get("id"));
+			bullhornEntities.add(entity);
+		});
+
+		OneToMany<E> oneToMany = new OneToMany<>();
+		oneToMany.setData(bullhornEntities);
+		oneToMany.setTotal(bullhornEntities.size());
+		return oneToMany;
+	}
+
+	public static <E extends BullhornEntity> OneToMany<E> convertReplaceAllToEntityOneToMany(Map<String, List<Integer>> replaceAllIds, Supplier<E> constructor) {
+		List<Integer> entityIds = replaceAllIds.get("replaceAll");
+
+		List<E> bullhornEntities = Lists.newArrayList();
+
+		entityIds.stream().forEach(entityId ->{
+			E entity = constructor.get();
+			entity.setId(entityId);
+			bullhornEntities.add(entity);
+		});
+
+		OneToMany<E> oneToMany = new OneToMany<>();
+		oneToMany.setData(bullhornEntities);
+		oneToMany.setTotal(bullhornEntities.size());
+		return oneToMany;
+	}
 }
