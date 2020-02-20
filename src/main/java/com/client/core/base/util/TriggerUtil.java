@@ -52,7 +52,7 @@ public class TriggerUtil {
 			try {
 				entityChanger.setField(entity, entry.getKey(), entry.getValue());
 			} catch(MissingPropertyException e) {
-				log.error("Missing Property: ", e);
+				log.error(e.getMessage());
 			}
 		});
 
