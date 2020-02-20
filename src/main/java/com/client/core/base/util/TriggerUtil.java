@@ -11,11 +11,15 @@ import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.AppContext;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.Lists;
+import groovy.lang.MissingPropertyException;
+import org.apache.log4j.Logger;
 
 /**
  * Created by johnsully83 on 25/08/2016.
  */
 public class TriggerUtil {
+
+	private static final Logger log = Logger.getLogger(TriggerUtil.class);
 
 	public static boolean isError(String key) {
 		key = key.toLowerCase();
@@ -36,16 +40,20 @@ public class TriggerUtil {
 	}
 
 	public static <E extends BullhornEntity> E populateEntity(Integer entityID, Class<E> type, Map<String, Object> values, Supplier<E> constructor) {
-        E entity = Optional.of(entityID).filter(id -> {
-            return id != null && id > 0;
-        }).map( id -> {
-            return getBullhornData().findEntity(type, id);
-        }).orElseGet(constructor);
+		E entity = Optional.of(entityID).filter(id -> {
+			return id != null && id > 0;
+		}).map( id -> {
+			return getBullhornData().findEntity(type, id);
+		}).orElseGet(constructor);
 
 		EntityChanger entityChanger = getEntityChanger();
 
 		values.entrySet().forEach( entry -> {
-			entityChanger.setField(entity, entry.getKey(), entry.getValue());
+			try {
+				entityChanger.setField(entity, entry.getKey(), entry.getValue());
+			} catch(MissingPropertyException e) {
+				log.error("Missing Property: ", e);
+			}
 		});
 
 		return entity;
