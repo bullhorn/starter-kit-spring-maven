@@ -102,12 +102,9 @@
 	<bean id="bullhornRestCredentials" class="com.bullhornsdk.data.api.BullhornRestCredentials">
 		<property name="username" value="${apiusername}" />
 		<property name="password" value="${apipassword}" />
-		<property name="restTokenUrl" value="${rest.tokenUrl}" />
 		<property name="restClientId" value="${rest.clientId}" />
 		<property name="restClientSecret" value="${rest.clientSecret}" />
-		<property name="restLoginUrl" value="${rest.loginUrl}" />
 		<property name="restSessionMinutesToLive" value="${rest.sessionMinutesToLive}" />
-		<property name="restAuthorizeUrl" value="${rest.authorizeUrl}" />
 	</bean>
 
     <bean id="mailSettings" class="com.client.core.email.MailSettings">
