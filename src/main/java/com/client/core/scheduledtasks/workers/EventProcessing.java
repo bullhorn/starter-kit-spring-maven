@@ -1,34 +1,18 @@
 package com.client.core.scheduledtasks.workers;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
-
 import com.bullhorn.entity.ApiEntityName;
-import com.bullhornsdk.data.model.entity.core.standard.Appointment;
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateEducation;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateReference;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateWorkHistory;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.bullhornsdk.data.model.entity.core.standard.Lead;
-import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
-import com.bullhornsdk.data.model.entity.core.standard.Sendout;
-import com.bullhornsdk.data.model.entity.core.standard.Task;
+import com.bullhornsdk.data.model.entity.core.certificationrequirement.CandidateCertificationRequirement;
+import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmissionCertificationRequirement;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.base.util.StackTraceUtil;
 import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.log.BullhornLog;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.soap.model.SubscriptionEvent;
+import org.apache.log4j.Logger;
+
+import java.util.List;
 
 /**
  * Handles one subscription event by passing it through the proper workflow for the entity that had an event thrown. Also
@@ -36,51 +20,51 @@ import com.client.core.soap.model.SubscriptionEvent;
  * and then reprocessing them the next time we retrieve events (for a maximum of 4 tries)
  */
 public class EventProcessing implements Runnable {
-	private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = Logger.getLogger(getClass());
 
     private final EventWorkflowFactory eventWorkflowFactory;
-	private final BullhornLogDAO bullhornLogDAO;
-	private final CustomSubscriptionEvent event;
-	private final Integer corporationID;
-	
-	private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
-		super();
-		this.eventWorkflowFactory = eventWorkflowFactory;
+    private final BullhornLogDAO bullhornLogDAO;
+    private final CustomSubscriptionEvent event;
+    private final Integer corporationID;
+
+    private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
+        super();
+        this.eventWorkflowFactory = eventWorkflowFactory;
         this.bullhornLogDAO = bullhornLogDAO;
         this.event = event;
-		this.corporationID = corporationID;
-	}
+        this.corporationID = corporationID;
+    }
 
-	public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
-		return new EventProcessing(corporationID, bullhornLogDAO, event, eventWorkflowFactory);
-	}
+    public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
+        return new EventProcessing(corporationID, bullhornLogDAO, event, eventWorkflowFactory);
+    }
 
     /**
      * Performs the actual handling of a single event by parsing out the kind of event from the {@link SubscriptionEvent} provided via
      * the {@link EventProcessing#(Integer, BullhornLogDAO, SubscriptionEvent)} constructor and handing the event off
      * to the proper workflow.
      */
-	@Override
-	public void run() {
-		BullhornLog bhlog = BullhornLog.instantiateLog(event, corporationID);
+    @Override
+    public void run() {
+        BullhornLog bhlog = BullhornLog.instantiateLog(event, corporationID);
 
-		try {
-			doAction();
+        try {
+            doAction();
 
-			if (event.isError()) {
-				try {
-					bullhornLogDAO.updateLog(bhlog);
-				} catch (Exception e) {
-					log.error("Error updating event to successful", e);
-				}
-			}
-		} catch (Exception e) {
-			log.error("Event " + event.getEventId() + " resulted in error:" + e.getMessage(), e);
-			logError(bhlog, e);
-		}
-	}
-	
-	private void doAction() throws Exception {
+            if (event.isError()) {
+                try {
+                    bullhornLogDAO.updateLog(bhlog);
+                } catch (Exception e) {
+                    log.error("Error updating event to successful", e);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Event " + event.getEventId() + " resulted in error:" + e.getMessage(), e);
+            logError(bhlog, e);
+        }
+    }
+
+    private void doAction() throws Exception {
         if (isAppointmentEvent()) {
             eventWorkflowFactory.execute(Appointment.class, event);
         } else if (isCandidateEvent()) {
@@ -117,110 +101,134 @@ public class EventProcessing implements Runnable {
             eventWorkflowFactory.execute(Sendout.class, event);
         } else if (isTaskEvent()) {
             eventWorkflowFactory.execute(Task.class, event);
+        } else if (isCandidateCertificationEvent()) {
+            eventWorkflowFactory.execute(CandidateCertification.class, event);
+        } else if (isCandidateCertificationRequirementEvent()) {
+            eventWorkflowFactory.execute(CandidateCertificationRequirement.class, event);
+        } else if (isJobSubmissionCertificationRequirementEvent()) {
+            eventWorkflowFactory.execute(JobSubmissionCertificationRequirement.class, event);
+        } else if (isPlacementCertificationEvent()) {
+            eventWorkflowFactory.execute(PlacementCertification.class, event);
         }
-	}
+    }
 
-	private boolean isAppointmentEvent() {
-		return entityIsOfType(ApiEntityName.APPOINTMENT.value());
-	}
+    private boolean isAppointmentEvent() {
+        return entityIsOfType(ApiEntityName.APPOINTMENT.value());
+    }
 
-	private boolean isCandidateEvent() {
-		return entityIsOfType(ApiEntityName.CANDIDATE.value());
-	}
+    private boolean isCandidateEvent() {
+        return entityIsOfType(ApiEntityName.CANDIDATE.value());
+    }
 
-	private boolean isCandidateReferenceEvent() {
-		return entityIsOfType(ApiEntityName.CANDIDATE_REFERENCE.value());
-	}
+    private boolean isCandidateReferenceEvent() {
+        return entityIsOfType(ApiEntityName.CANDIDATE_REFERENCE.value());
+    }
 
-	private boolean isCandidateWorkHistoryEvent() {
-		return entityIsOfType(ApiEntityName.CANDIDATE_WORK_HISTORY.value());
-	}
+    private boolean isCandidateWorkHistoryEvent() {
+        return entityIsOfType(ApiEntityName.CANDIDATE_WORK_HISTORY.value());
+    }
 
-	private boolean isCandidateEducationEvent() {
-		return entityIsOfType(ApiEntityName.CANDIDATE_EDUCATION.value());
-	}
+    private boolean isCandidateEducationEvent() {
+        return entityIsOfType(ApiEntityName.CANDIDATE_EDUCATION.value());
+    }
 
-	private boolean isClientContactEvent() {
-		return entityIsOfType(ApiEntityName.CLIENT_CONTACT.value());
-	}
+    private boolean isClientContactEvent() {
+        return entityIsOfType(ApiEntityName.CLIENT_CONTACT.value());
+    }
 
-	private boolean isClientCorporationEvent() {
-		return entityIsOfType(ApiEntityName.CLIENT_CORPORATION.value());
-	}
+    private boolean isClientCorporationEvent() {
+        return entityIsOfType(ApiEntityName.CLIENT_CORPORATION.value());
+    }
 
-	private boolean isCorporateUserEvent() {
-		return entityIsOfType(ApiEntityName.CORPORATE_USER.value());
-	}
+    private boolean isCorporateUserEvent() {
+        return entityIsOfType(ApiEntityName.CORPORATE_USER.value());
+    }
 
-	private boolean isJobEvent() {
-		return entityIsOfType(ApiEntityName.JOB_ORDER.value());
-	}
+    private boolean isJobEvent() {
+        return entityIsOfType(ApiEntityName.JOB_ORDER.value());
+    }
 
-	private boolean isJobSubmissionEvent() {
-		return entityIsOfType(ApiEntityName.JOB_SUBMISSION.value());
-	}
+    private boolean isJobSubmissionEvent() {
+        return entityIsOfType(ApiEntityName.JOB_SUBMISSION.value());
+    }
 
     private boolean isLeadEvent() {
         return entityIsOfType("Lead");
     }
 
-	private boolean isNoteEvent() {
-		return entityIsOfType(ApiEntityName.NOTE.value());
-	}
+    private boolean isNoteEvent() {
+        return entityIsOfType(ApiEntityName.NOTE.value());
+    }
 
-	private boolean isPlacementEvent() {
-		return entityIsOfType(ApiEntityName.PLACEMENT.value());
-	}
+    private boolean isPlacementEvent() {
+        return entityIsOfType(ApiEntityName.PLACEMENT.value());
+    }
 
     private boolean isOpportunityEvent() {
         return entityIsOfType(Opportunity.class.getSimpleName());
     }
 
-	private boolean isPlacementChangeRequestEvent() {
-		return entityIsOfType(ApiEntityName.PLACEMENT_CHANGE_REQUEST.value());
-	}
+    private boolean isPlacementChangeRequestEvent() {
+        return entityIsOfType(ApiEntityName.PLACEMENT_CHANGE_REQUEST.value());
+    }
 
-	private boolean isPlacementCommissionEvent() {
-		return entityIsOfType(ApiEntityName.PLACEMENT_COMMISSION.value());
-	}
+    private boolean isPlacementCommissionEvent() {
+        return entityIsOfType(ApiEntityName.PLACEMENT_COMMISSION.value());
+    }
 
-	private boolean isSendoutEvent() {
-		return entityIsOfType(ApiEntityName.SENDOUT.value());
-	}
+    private boolean isSendoutEvent() {
+        return entityIsOfType(ApiEntityName.SENDOUT.value());
+    }
 
-	private boolean isTaskEvent() {
-		return entityIsOfType(ApiEntityName.TASK.value());
-	}
+    private boolean isTaskEvent() {
+        return entityIsOfType(ApiEntityName.TASK.value());
+    }
 
-	private boolean entityIsOfType(String entityTypeToCheck) {
-		String entityType = event.getEntityName();
-		
-		if (entityTypeToCheck.equalsIgnoreCase(entityType)) {
-			return true;
-		}
-		
-		return false;
-	}
+    private boolean isCandidateCertificationEvent() {
+        return entityIsOfType(ApiEntityName.CANDIDATE_CERTIFICATION.value());
+    }
 
-	private void logError(BullhornLog bhlog, Exception e) {
-		String stackTrace = StackTraceUtil.getCustomStackTrace(e);
-		bhlog.setError(stackTrace);
-		bhlog.setStatus("error");
+    private boolean isCandidateCertificationRequirementEvent() {
+        return entityIsOfType(ApiEntityName.CANDIDATE_CERTIFICATION_REQUIREMENT.value());
+    }
 
-		String queryWhere = "corporationID = " + bhlog.getCorporationID() + " AND subscriptionID = '" + bhlog.getSubscriptionID()
-				+ "'" + " AND eventID = '" + bhlog.getEventID() + "'";
-		try {
-			List<BullhornLog> selectLog = bullhornLogDAO.selectWhere(queryWhere);
-			
-			if (selectLog.size() > 0) {
-				bullhornLogDAO.updateLog(bhlog);
-			} else {
-				bullhornLogDAO.insertLog(bhlog);
-			}
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+    private boolean isJobSubmissionCertificationRequirementEvent() {
+        return entityIsOfType(ApiEntityName.JOB_SUBMISSION_CERTIFICATION_REQUIREMENT.value());
+    }
+
+    private boolean isPlacementCertificationEvent() {
+        return entityIsOfType(ApiEntityName.PLACEMENT_CERTIFICATION.value());
+    }
+
+    private boolean entityIsOfType(String entityTypeToCheck) {
+        String entityType = event.getEntityName();
+
+        if (entityTypeToCheck.equalsIgnoreCase(entityType)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void logError(BullhornLog bhlog, Exception e) {
+        String stackTrace = StackTraceUtil.getCustomStackTrace(e);
+        bhlog.setError(stackTrace);
+        bhlog.setStatus("error");
+
+        String queryWhere = "corporationID = " + bhlog.getCorporationID() + " AND subscriptionID = '" + bhlog.getSubscriptionID()
+                + "'" + " AND eventID = '" + bhlog.getEventID() + "'";
+        try {
+            List<BullhornLog> selectLog = bullhornLogDAO.selectWhere(queryWhere);
+
+            if (selectLog.size() > 0) {
+                bullhornLogDAO.updateLog(bhlog);
+            } else {
+                bullhornLogDAO.insertLog(bhlog);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
 }
