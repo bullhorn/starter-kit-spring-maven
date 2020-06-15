@@ -97,6 +97,7 @@
         <property name="applicationTimeFormat" value="${applicationTimeFormat}" />
 		<property name="standardCronExpression" value="${standardCronExpression}" />
 		<property name="standardSubscriptionName" value="${standardSubscriptionName}" />
+		<property name="metaCacheMinutes" value="${metaCacheMinutes}" />
 	</bean>
 
 	<bean id="bullhornRestCredentials" class="com.bullhornsdk.data.api.BullhornRestCredentials">

@@ -43,6 +43,8 @@ public class CustomSubscriptionEvent{
 
         if(event.getUpdatedProperties() != null) {
             customSubscriptionEvent.setUpdatedProperties(Sets.newHashSet(event.getUpdatedProperties()));
+        } else {
+            customSubscriptionEvent.setUpdatedProperties(Sets.newHashSet());
         }
 
         if(event.getEventMetadata().containsKey("PERSON_ID")){
