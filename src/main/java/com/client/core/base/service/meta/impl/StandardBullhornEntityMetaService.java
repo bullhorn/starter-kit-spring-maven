@@ -6,6 +6,7 @@ import com.bullhornsdk.data.model.entity.meta.Field;
 import com.client.core.ApplicationSettings;
 import com.client.core.base.service.meta.BullhornEntityMetaService;
 import com.client.core.base.tools.cache.BullhornEntityMetaCache;
+import com.client.core.base.tools.meta.BullhornEntityMetaExcludedFields;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,9 @@ public class StandardBullhornEntityMetaService implements BullhornEntityMetaServ
             cacheMap.put(type, new BullhornEntityMetaCache<>(bullhornData, type, applicationSettings.getMetaCacheMinutes()));
         }
 
-        return cacheMap.get(type).get().getFields();
+        return cacheMap.get(type).get().getFields().parallelStream().filter(field -> {
+            return BullhornEntityMetaExcludedFields.isNotExcludedField(type, field.getName());
+        }).collect(Collectors.toList());
     }
 
     @Override

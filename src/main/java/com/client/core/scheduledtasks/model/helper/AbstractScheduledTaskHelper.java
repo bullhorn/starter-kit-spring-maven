@@ -8,6 +8,7 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
 import com.bullhornsdk.data.model.entity.embedded.UserType;
 import com.client.core.AppContext;
+import com.client.core.base.service.meta.BullhornEntityMetaService;
 import com.client.core.base.tools.copy.KryoObjectCopyHelper;
 import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
@@ -20,6 +21,7 @@ public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> impl
 
     private final Logger log = Logger.getLogger(getClass());
 
+    private final BullhornEntityMetaService bullhornEntityMetaService;
     private final BullhornData bullhornData;
     private final CustomSubscriptionEvent event;
 
@@ -34,6 +36,7 @@ public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> impl
     public AbstractScheduledTaskHelper(CustomSubscriptionEvent event, Class<E> type) {
         super();
         this.bullhornData = AppContext.getApplicationContext().getBean("bullhornData", BullhornData.class);
+        this.bullhornEntityMetaService = AppContext.getApplicationContext().getBean(BullhornEntityMetaService.class);
         this.event = event;
         this.type = type;
         this.allEntitiesToSaveBackToBH = Maps.newHashMap();
@@ -41,6 +44,7 @@ public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> impl
 
     public AbstractScheduledTaskHelper(CustomSubscriptionEvent event, Class<E> type, BullhornData bullhornData) {
         this.bullhornData = bullhornData;
+        this.bullhornEntityMetaService = AppContext.getApplicationContext().getBean(BullhornEntityMetaService.class);
         this.event = event;
         this.type = type;
         this.allEntitiesToSaveBackToBH = Maps.newHashMap();
@@ -49,7 +53,9 @@ public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> impl
     @Override
     public E getEntity() {
         if (entity == null) {
-            entity = bullhornData.findEntity(type, getEvent().getEntityId());
+            Set<String> fields = bullhornEntityMetaService.getFieldNames(type);
+
+            entity = bullhornData.findEntity(type, getEvent().getEntityId(), fields);
         }
 
         return entity;
@@ -142,7 +148,9 @@ public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> impl
             throw new IllegalArgumentException("Must pass in a non-null id to findEntity");
         }
 
-        return bullhornData.findEntity(type, id);
+        Set<String> fields = bullhornEntityMetaService.getFieldNames(type);
+
+        return bullhornData.findEntity(type, id, fields);
     }
 
     /**
