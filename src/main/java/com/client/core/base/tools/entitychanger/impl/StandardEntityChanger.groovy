@@ -74,7 +74,17 @@ class StandardEntityChanger implements EntityChanger {
                     } else if (BullhornEntity.class.isAssignableFrom(property.type)) {
                         target."$finalField" = property.type.newInstance();
                         target."$finalField".id = value;
+                    } else if (Integer.class.equals(property.type)) {
+                        target."$finalField" = asType(value, Integer.class)
+                    } else if (BigDecimal.class.equals(property.type)) {
+                        target."$finalField" = asType(value, BigDecimal.class);
+                    } else if (Boolean.class.equals(property.type)) {
+                        target."$finalField" = asType(value, Boolean.class)
+                    } else {
+                        log.error("Error setting field ${finalField} to value ${value}", e);
                     }
+                } else {
+                    log.error("Error setting field ${finalField} to value ${value}, no property ${property} on ${target.getClass().getSimpleName()}");
                 }
             }
         }

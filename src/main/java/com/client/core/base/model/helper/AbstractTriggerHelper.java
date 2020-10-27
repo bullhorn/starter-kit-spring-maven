@@ -3,6 +3,8 @@ package com.client.core.base.model.helper;
 import java.util.List;
 import java.util.Set;
 
+import com.client.core.AppContext;
+import com.client.core.base.service.meta.BullhornEntityMetaService;
 import org.apache.log4j.Logger;
 
 import com.bullhornsdk.data.api.BullhornData;
@@ -27,7 +29,9 @@ import com.bullhornsdk.data.model.response.crud.CrudResponse;
 
 public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements TriggerHelper<E> {
 
+	private final BullhornEntityMetaService bullhornEntityMetaService;
 	private final BullhornData bullhornData;
+
 	protected final Integer updatingUserID;
 	protected E newEntity;
 	protected E oldEntity;
@@ -37,6 +41,7 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 
 	public AbstractTriggerHelper(Integer updatingUserID, BullhornData bullhornData) {
 		super();
+		this.bullhornEntityMetaService = AppContext.getApplicationContext().getBean(BullhornEntityMetaService.class);
 		this.bullhornData = bullhornData;
 		this.updatingUserID = updatingUserID;
 	}
@@ -61,7 +66,11 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 	@Override
 	public CorporateUser getUpdatingUser() {
 		if (updatingUser == null) {
-			setUpdatingUser(findCorporateUser(updatingUserID));
+			Set<String> corporateUserFields = bullhornEntityMetaService.getFieldNames(CorporateUser.class);
+
+			corporateUserFields.add("userType(id)");
+
+			setUpdatingUser(findEntity(CorporateUser.class, updatingUserID, corporateUserFields));
 		}
 
 		return updatingUser;
@@ -115,6 +124,10 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 	public <RE extends BullhornEntity> RE findEntity(Class<RE> type, Integer id, Set<String> fields) {
 		if (id == null || id <= 0) {
             throw new IllegalArgumentException("Must pass in a non-null id to findEntity");
+		}
+
+		if (fields == null || fields.contains("*")) {
+			fields = bullhornEntityMetaService.getFieldNames(type);
 		}
 
 		return bullhornData.findEntity(type, id, fields);

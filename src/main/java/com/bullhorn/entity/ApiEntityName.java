@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for apiEntityName.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
@@ -92,7 +92,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "apiEntityName")
 @XmlEnum
@@ -112,6 +111,8 @@ public enum ApiEntityName {
     CANDIDATE_ASSESSMENT_SYSTEM("CandidateAssessmentSystem"),
     @XmlEnumValue("CandidateCertification")
     CANDIDATE_CERTIFICATION("CandidateCertification"),
+    @XmlEnumValue("CandidateCertificationRequirement")
+    CANDIDATE_CERTIFICATION_REQUIREMENT("CandidateCertificationRequirement"),
     @XmlEnumValue("CandidateEducation")
     CANDIDATE_EDUCATION("CandidateEducation"),
     @XmlEnumValue("CandidateReference")
@@ -174,6 +175,8 @@ public enum ApiEntityName {
     JOB_ORDER_TEMPLATE_ATTRIBUTE("JobOrderTemplateAttribute"),
     @XmlEnumValue("JobSubmission")
     JOB_SUBMISSION("JobSubmission"),
+    @XmlEnumValue("JobSubmissionCertificationRequirement")
+    JOB_SUBMISSION_CERTIFICATION_REQUIREMENT("JobSubmissionCertificationRequirement"),
     @XmlEnumValue("Note")
     NOTE("Note"),
     @XmlEnumValue("NoteEntity")
@@ -182,6 +185,8 @@ public enum ApiEntityName {
     PERSON("Person"),
     @XmlEnumValue("Placement")
     PLACEMENT("Placement"),
+    @XmlEnumValue("PlacementCertification")
+    PLACEMENT_CERTIFICATION("PlacementCertification"),
     @XmlEnumValue("PlacementChangeRequest")
     PLACEMENT_CHANGE_REQUEST("PlacementChangeRequest"),
     @XmlEnumValue("PlacementCommission")
@@ -259,7 +264,7 @@ public enum ApiEntityName {
     }
 
     public static ApiEntityName fromValue(String v) {
-        for (ApiEntityName c: ApiEntityName.values()) {
+        for (ApiEntityName c : ApiEntityName.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

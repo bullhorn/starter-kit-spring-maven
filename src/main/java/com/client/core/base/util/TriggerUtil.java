@@ -3,12 +3,14 @@ package com.client.core.base.util;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.AppContext;
+import com.client.core.base.service.meta.BullhornEntityMetaService;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.Lists;
 import groovy.lang.MissingPropertyException;
@@ -43,7 +45,9 @@ public class TriggerUtil {
 		E entity = Optional.of(entityID).filter(id -> {
 			return id != null && id > 0;
 		}).map( id -> {
-			return getBullhornData().findEntity(type, id);
+			Set<String> fields = getBullhornEntityMetaService().getFieldNames(type);
+
+			return getBullhornData().findEntity(type, id, fields);
 		}).orElseGet(constructor);
 
 		EntityChanger entityChanger = getEntityChanger();
@@ -61,7 +65,7 @@ public class TriggerUtil {
 
 	private static BullhornData BULLHORN_DATA;
 
-	private synchronized  static BullhornData getBullhornData() {
+	private synchronized static BullhornData getBullhornData() {
 		if(TriggerUtil.BULLHORN_DATA == null) {
 			TriggerUtil.BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
 		}
@@ -71,12 +75,22 @@ public class TriggerUtil {
 
 	private static EntityChanger ENTITY_CHANGER;
 
-	private synchronized  static EntityChanger getEntityChanger() {
+	private synchronized static EntityChanger getEntityChanger() {
 		if(TriggerUtil.ENTITY_CHANGER == null) {
 			TriggerUtil.ENTITY_CHANGER = AppContext.getApplicationContext().getBean(EntityChanger.class);
 		}
 
 		return ENTITY_CHANGER;
+	}
+
+	private static BullhornEntityMetaService BULLHORN_ENTITY_META_SERVICE;
+
+	private synchronized static BullhornEntityMetaService getBullhornEntityMetaService() {
+		if(TriggerUtil.BULLHORN_ENTITY_META_SERVICE == null) {
+			TriggerUtil.BULLHORN_ENTITY_META_SERVICE = AppContext.getApplicationContext().getBean(BullhornEntityMetaService.class);
+		}
+
+		return BULLHORN_ENTITY_META_SERVICE;
 	}
 
 	public static <E extends BullhornEntity> OneToMany<E> convertIdListToEntityOneToMany(List<Map<String, Integer>> entityIds, Supplier<E> constructor){

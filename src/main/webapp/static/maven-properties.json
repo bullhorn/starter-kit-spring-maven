@@ -1,8 +1,0 @@
-{
-  "version": "${project.version}",
-  "warName": "${project.artifactId}-${project.version}",
-  "environmentVariables": {
-    "apikey": "${apikey}",
-    "applicationRoot": "${applicationRoot}"
-  }
-}
