@@ -68,8 +68,6 @@ public abstract class AbstractTriggerHelper<E extends BullhornEntity> implements
 		if (updatingUser == null) {
 			Set<String> corporateUserFields = bullhornEntityMetaService.getFieldNames(CorporateUser.class);
 
-			corporateUserFields.add("userType(id)");
-
 			setUpdatingUser(findEntity(CorporateUser.class, updatingUserID, corporateUserFields));
 		}
 
