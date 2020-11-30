@@ -17,10 +17,7 @@ import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -175,7 +172,13 @@ public class StandardEmailer implements Emailer {
         List<Address> recipients = Lists.newArrayList();
 
         for(String address : addresses){
-            recipients.addAll(Arrays.asList(InternetAddress.parse(address, false)));
+            try {
+                recipients.addAll(Arrays.asList(InternetAddress.parse(address, false)));
+            } catch (AddressException e) {
+                log.error("Error occurred parsing email address '" + address + "', not adding to recipients.");
+            } catch (Exception e) {
+                log.error("Unknown error occurred parsing email address '" + address + "', not adding to recipients.", e);
+            }
         }
 
         message.addRecipients(type, recipients.toArray(new Address[recipients.size()]));
