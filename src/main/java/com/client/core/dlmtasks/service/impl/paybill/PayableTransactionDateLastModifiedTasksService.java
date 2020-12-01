@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PayableTransactionDateLastModifiedTasksService extends QueryDateLastModifiedTasksService<PayableTransaction> {
 
     @Autowired
-    public PayableTransactionDateLastModifiedTasksService(List<DateLastModifiedEventTask<PayableTransaction>> dateLastModifiedEventTasks) {
+    public PayableTransactionDateLastModifiedTasksService(Optional<List<DateLastModifiedEventTask<PayableTransaction>>> dateLastModifiedEventTasks) {
         super(dateLastModifiedEventTasks, PayableTransaction.class);
     }
 

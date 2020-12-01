@@ -19,13 +19,13 @@ public class DateLastModifiedEventProcessing implements Runnable {
     private final List<DateLastModifiedTasksService<? extends BullhornEntity>> dateLastModifiedTasksServices;
 
     @Autowired
-    public DateLastModifiedEventProcessing(Optional<List<DateLastModifiedTasksService<? extends BullhornEntity>>> dateLastModifiedTasksServices) {
-        this.dateLastModifiedTasksServices = dateLastModifiedTasksServices.orElseGet(Lists::newArrayList);
+    public DateLastModifiedEventProcessing(List<DateLastModifiedTasksService<? extends BullhornEntity>> dateLastModifiedTasksServices) {
+        this.dateLastModifiedTasksServices = dateLastModifiedTasksServices;
     }
 
     @Override
     public void run() {
-        DateTime start = new DateTime();
+        DateTime start = new DateTime().withSecondOfMinute(0).withMillisOfSecond(0);
 
         this.dateLastModifiedTasksServices.parallelStream().forEach(dateLastModifiedTasksService -> {
             try {

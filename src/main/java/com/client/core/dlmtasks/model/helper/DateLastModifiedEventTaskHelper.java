@@ -8,11 +8,13 @@ import java.util.Set;
 
 public interface DateLastModifiedEventTaskHelper<T extends BullhornEntity> {
 
-    void process(DateTime start, T entity);
+    void process(T entity);
 
     boolean shouldProcess(DateTime start);
 
     Set<String> getFields();
+
+    void updateLastRun(DateTime value);
 
     DateLastModifiedOption.IncludeDateAdded getIncludeDateAdded();
 

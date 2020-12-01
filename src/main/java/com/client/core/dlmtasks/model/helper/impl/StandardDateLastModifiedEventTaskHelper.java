@@ -22,14 +22,12 @@ public class StandardDateLastModifiedEventTaskHelper<T extends BullhornEntity> i
     }
 
     @Override
-    public void process(DateTime start, T entity) {
+    public void process(T entity) {
         try {
             eventTask.process(entity);
         } catch (RuntimeException e) {
             log.error("Error occurred running " + eventTask.getClass().getSimpleName() + " for " + eventTask.getType().getSimpleName() + " #" + entity.getId(), e);
         }
-
-        this.lastRun = start;
     }
 
     @Override
@@ -46,6 +44,11 @@ public class StandardDateLastModifiedEventTaskHelper<T extends BullhornEntity> i
     @Override
     public Set<String> getFields() {
         return this.eventTask.getFields();
+    }
+
+    @Override
+    public void updateLastRun(DateTime value) {
+        this.lastRun = value;
     }
 
     @Override

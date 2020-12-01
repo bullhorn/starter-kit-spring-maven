@@ -8,12 +8,13 @@ import com.client.core.dlmtasks.workflow.node.DateLastModifiedEventTask;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class QueryDateLastModifiedTasksService<T extends QueryEntity> extends AbstractDateLastModifiedTasksService<T> {
 
-    public QueryDateLastModifiedTasksService(List<DateLastModifiedEventTask<T>> dateLastModifiedEventTasks, Class<T> type) {
+    public QueryDateLastModifiedTasksService(Optional<List<DateLastModifiedEventTask<T>>> dateLastModifiedEventTasks, Class<T> type) {
         super(dateLastModifiedEventTasks, type);
     }
 
