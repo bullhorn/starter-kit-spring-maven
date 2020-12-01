@@ -1,4 +1,4 @@
-package com.client.core.dlmtasks.service.impl;
+package com.client.core.dlmtasks.service;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.base.util.Utility;

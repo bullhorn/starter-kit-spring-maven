@@ -1,4 +1,4 @@
-package com.client.core.dlmtasks.workflow.node.impl;
+package com.client.core.dlmtasks.workflow.node;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.dlmtasks.model.DateLastModifiedOption;
@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 
 import java.util.Set;
 
-public abstract class StandardDateLastModifiedEventTask<T extends BullhornEntity> {
+public abstract class AbstractDateLastModifiedEventTask<T extends BullhornEntity> {
 
     private static final Set<String> ID = Sets.newHashSet("id");
 
@@ -15,28 +15,28 @@ public abstract class StandardDateLastModifiedEventTask<T extends BullhornEntity
     private final Set<String> fields;
     private final DateLastModifiedOption.IncludeDateAdded includeDateAdded;
 
-    public StandardDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes) {
+    public AbstractDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes) {
         this.type = type;
         this.intervalMinutes = intervalMinutes;
         this.fields = Sets.newHashSet("id");
         this.includeDateAdded = DateLastModifiedOption.IncludeDateAdded.YES;
     }
 
-    public StandardDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes, Set<String> fields) {
+    public AbstractDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes, Set<String> fields) {
         this.type = type;
         this.intervalMinutes = intervalMinutes;
         this.fields = fields;
         this.includeDateAdded = DateLastModifiedOption.IncludeDateAdded.YES;
     }
 
-    public StandardDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes, DateLastModifiedOption.IncludeDateAdded includeDateAdded) {
+    public AbstractDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes, DateLastModifiedOption.IncludeDateAdded includeDateAdded) {
         this.type = type;
         this.intervalMinutes = intervalMinutes;
         this.fields = ID;
         this.includeDateAdded = includeDateAdded;
     }
 
-    public StandardDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes, Set<String> fields,
+    public AbstractDateLastModifiedEventTask(Class<T> type, Integer intervalMinutes, Set<String> fields,
                                              DateLastModifiedOption.IncludeDateAdded includeDateAdded) {
         this.type = type;
         this.intervalMinutes = intervalMinutes;
