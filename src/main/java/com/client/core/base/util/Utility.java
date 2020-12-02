@@ -27,6 +27,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -46,6 +47,58 @@ import com.client.core.AppContext;
 import com.google.common.collect.Lists;
 
 public class Utility {
+
+	public static Set<String> mergeFieldSets(Set<String> set1, Set<String> set2) {
+		return mergeNestedFields(Sets.union(set1, set2));
+	}
+
+	public static Set<String> mergeNestedFields(Set<String> fields) {
+		return fields.parallelStream().map(field -> {
+			return field.replaceAll("\\s+", "");
+		}).collect(Collectors.groupingBy(field -> {
+			return StringUtils.substringBefore(field, "(").trim();
+		})).entrySet().parallelStream().map(entry -> {
+			if (entry.getValue().size() == 1) {
+				return entry.getValue().get(0).trim();
+			} else {
+				Set<String> nestedFields = entry.getValue().parallelStream().map(nestedField -> {
+					return StringUtils.substringBeforeLast(StringUtils.substringAfter(nestedField, "("), ")");
+				}).flatMap(nestedField -> {
+					return splitOutsideParentheses(nestedField).stream();
+				}).collect(Collectors.toSet());
+
+				return mergeNestedFields(nestedFields).parallelStream().collect(Collectors.joining(",", entry.getKey() + "(", ")"));
+			}
+		}).collect(Collectors.toSet());
+	}
+
+	public static Set<String> splitOutsideParentheses(String value) {
+		Set<String> result = Sets.newHashSet();
+
+		StringBuilder current = new StringBuilder();
+		Integer isParenthesis = 0;
+
+		for(Integer index = 0; index < value.length(); index++) {
+			if (value.charAt(index) == '(') {
+				isParenthesis++;
+				current.append('(');
+			} else if (value.charAt(index) == ')' && isParenthesis > 0) {
+				isParenthesis--;
+				current.append(')');
+			} else if (value.charAt(index) == ',' && isParenthesis == 0) {
+				result.add(current.toString());
+				current = new StringBuilder();
+			} else {
+				current.append(value.charAt(index));
+			}
+		}
+
+		if (StringUtils.isNotBlank(current)) {
+			result.add(current.toString());
+		}
+
+		return result;
+	}
 
     public static Set<Integer> parseCommaSeparatedIntegers(String value) {
         return parseCommaSeparated(value, Utility::forceParseInteger);
