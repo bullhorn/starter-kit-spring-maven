@@ -12,12 +12,12 @@ The application uses [Spring Framework](http://projects.spring.io/spring-framewo
   - [REST Login](http://developer.bullhorn.com/articles/getting_started) Information about getting started with Bullhorn REST APIs
   - [REST Documentation](http://developer.bullhorn.com/sites/default/files/BullhornRESTAPI_0.pdf) Extensive documentation on the REST APIs
 
-There are several ways to customize Bullhorn, including:
+There are several ways to customize Bullhorn through this repository, including:
    - REST triggers
    - Subscription-based scheduled tasks (asynchronous event handling)
    - Date Last Modified-based scheduled tasks
 
-There are also several other ways to custom Bullhorn, but that are specific to the older UI/UX called 'S-Release'.  This functionality within the starter-kit-spring-maven is considered deprecated, and is subject to be removed with future releases:
+There are also several other ways to customize Bullhorn, but that are specific to the older UI/UX called 'S-Release'.  This functionality within the starter-kit-spring-maven is considered deprecated, and is subject to be removed with future releases:
    - Custom tabs/cards/menu actions (recommendation is to use the [extension-starter](https://github.com/bullhorn/extension-starter) for Bullhorn Novo)
    - Form scripts (starter-kit-spring-maven functionality removed, S-Release only)
    - Form triggers (deprecated, S-Release only)
