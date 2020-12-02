@@ -172,11 +172,11 @@ In order to add a return value to the ``formResponse`` (i.e., to set a value on 
 ```
 Will respond to Bullhorn telling it to set the status field to a value of 'Approved' before saving the entity.
 
-## Form Scripts
+## Form Scripts (functionality removed)
 The functionality supporting Form Scripts in the starter-kit-spring-maven has been removed.  To view or obtain the old documentation or functionality, view an older commit/release of the starter-kit.
 
 
-## Custom tabs (starter-kit-spring-maven functionality deprecated, use the [extension-starter](https://github.com/bullhorn/extension-starter)
+## Custom tabs (starter-kit-spring-maven functionality deprecated, use the [extension-starter](https://github.com/bullhorn/extension-starter))
 In Bullhorn, Custom Tabs are what they sound like...they allow you to add custom content onto a tab of any of the main types of entities.  Configuration typically only consists of providing a URL endpoint that you wish to be iframed in the aforementioned tab, and consequently this allows for essentially any type of customization.  An additional parameter with the name ``displayHeight`` can be appended to the configured URL to determine the height of the iframe in the tab (see [SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for more information).  Of note are the context variables provided by Bullhorn, always appended to the request URL as form-encoded parameters (case-sensitive):
   - EntityID - The ID of the entity being saved
   - EntityType - The type of entity being saved (i.e. Placement, Candidate)
