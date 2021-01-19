@@ -24,8 +24,8 @@ public abstract class ClientCorporationTriggerHelper extends AbstractTriggerHelp
 	}
 
 	@Override
-	public void setNewEntity(ClientCorporation newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(ClientCorporation newEntity) {
+		this.newEntity = newEntity;
 
 	}
 
@@ -38,8 +38,8 @@ public abstract class ClientCorporationTriggerHelper extends AbstractTriggerHelp
 	}
 
 	@Override
-	public void setOldEntity(ClientCorporation oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(ClientCorporation oldEntity) {
+		this.oldEntity = oldEntity;
 
 	}
 }

@@ -107,8 +107,8 @@ public abstract class PlacementChangeRequestTriggerHelper extends AbstractTrigge
 	}
 
 	@Override
-	public void setNewEntity(PlacementChangeRequest newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(PlacementChangeRequest newEntity) {
+		this.newEntity = newEntity;
 	}
 
 	@Override
@@ -121,8 +121,8 @@ public abstract class PlacementChangeRequestTriggerHelper extends AbstractTrigge
 	}
 
 	@Override
-	public void setOldEntity(PlacementChangeRequest oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(PlacementChangeRequest oldEntity) {
+		this.oldEntity = oldEntity;
 	}
 
 }

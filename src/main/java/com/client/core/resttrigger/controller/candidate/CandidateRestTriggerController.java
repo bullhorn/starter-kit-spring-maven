@@ -54,7 +54,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData, getTriggerEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +78,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData, getTriggerEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

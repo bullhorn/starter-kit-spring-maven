@@ -3,10 +3,15 @@ package com.client.core.resttrigger.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.client.core.base.model.fields.CandidateTriggerEntity;
+import com.client.core.base.model.fields.RelatedTriggerEntity;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -37,12 +42,29 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
 
     private final JsonConverter jsonConverter;
 
+    private final Map<? extends RelatedTriggerEntity, Set<String>> triggerEntityFields;
+
     public AbstractRestTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators) {
         super();
         this.type = type;
         this.triggerValidators = sort(triggerValidators);
         this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
         this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
+        this.triggerEntityFields = constructTriggerEntityFields();
+    }
+
+    private Map<? extends RelatedTriggerEntity, Set<String>> constructTriggerEntityFields() {// TODO handle standard fields
+        return triggerValidators.stream().map(TriggerValidator::getTriggerEntityFields).reduce(Maps.newLinkedHashMap(), (map, triggerEntityFields) -> {
+            triggerEntityFields.entrySet().parallelStream().forEach(singleEntityFields -> {
+                if (map.containsKey(singleEntityFields.getKey())) {
+                    // TODO merge fieldSets, Angler?
+                } else {
+                    map.put(singleEntityFields.getKey(), singleEntityFields.getValue());
+                }
+            });
+
+            return map;
+        });
     }
 
     protected RestTriggerRequest<E> convertToObject(String value) {
@@ -51,6 +73,10 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
 
     protected Map<String, Object> convertToMap(String value) {
         return jsonConverter.convertJsonStringToMap(value);
+    }
+
+    protected Map<? extends RelatedTriggerEntity, Set<String>> getTriggerEntityFields() {
+        return triggerEntityFields;
     }
 
     /**

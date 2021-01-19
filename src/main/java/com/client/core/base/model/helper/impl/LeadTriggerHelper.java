@@ -24,8 +24,8 @@ public abstract class LeadTriggerHelper extends AbstractTriggerHelper<Lead> {
     }
 
     @Override
-    public void setNewEntity(Lead newDto) {
-        this.newEntity = newDto;
+    public void setNewEntity(Lead newEntity) {
+        this.newEntity = newEntity;
     }
 
     @Override
@@ -38,8 +38,8 @@ public abstract class LeadTriggerHelper extends AbstractTriggerHelper<Lead> {
     }
 
     @Override
-    public void setOldEntity(Lead oldDto) {
-        this.oldEntity = oldDto;
+    public void setOldEntity(Lead oldEntity) {
+        this.oldEntity = oldEntity;
     }
 
     /**

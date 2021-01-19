@@ -33,8 +33,8 @@ public abstract class JobSubmissionTriggerHelper extends AbstractTriggerHelper<J
 	}
 
 	@Override
-	public void setNewEntity(JobSubmission newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(JobSubmission newEntity) {
+		this.newEntity = newEntity;
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public abstract class JobSubmissionTriggerHelper extends AbstractTriggerHelper<J
 	}
 
 	@Override
-	public void setOldEntity(JobSubmission oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(JobSubmission oldEntity) {
+		this.oldEntity = oldEntity;
 	}
 
 	/**

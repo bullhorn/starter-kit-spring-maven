@@ -1,8 +1,11 @@
 package com.client.core.resttrigger.workflow.node.impl;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.core.base.model.fields.RelatedTriggerEntity;
 import com.client.core.base.workflow.node.AbstractWorkflowAction;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
 import com.client.core.resttrigger.model.helper.RestTriggerHelper;
@@ -16,12 +19,16 @@ public abstract class AbstractRestTriggerValidator<E extends BullhornEntity, H e
 
     private final Integer order;
 
-    protected AbstractRestTriggerValidator(Integer order) {
+    private final Map<? extends RelatedTriggerEntity, Set<String>> triggerEntityFields;
+
+    protected AbstractRestTriggerValidator(Integer order, Map<? extends RelatedTriggerEntity, Set<String>> triggerEntityFields) {
         this.order = order;
+        this.triggerEntityFields = triggerEntityFields;
     }
 
-    protected AbstractRestTriggerValidator() {
+    protected AbstractRestTriggerValidator(Map<? extends RelatedTriggerEntity, Set<String>> triggerEntityFields) {
         this.order = -1;
+        this.triggerEntityFields = triggerEntityFields;
     }
 
     @Override
@@ -33,6 +40,11 @@ public abstract class AbstractRestTriggerValidator<E extends BullhornEntity, H e
         return Stream.of(fields).anyMatch(field -> {
             return helper.getPopulatedFields().contains(field);
         });
+    }
+
+    @Override
+    public Map<? extends RelatedTriggerEntity, Set<String>> getTriggerEntityFields() {
+        return this.triggerEntityFields;
     }
 
 }

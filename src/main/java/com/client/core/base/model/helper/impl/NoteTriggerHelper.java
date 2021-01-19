@@ -24,8 +24,8 @@ public abstract class NoteTriggerHelper extends AbstractTriggerHelper<Note> {
 	}
 
 	@Override
-	public void setNewEntity(Note newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(Note newEntity) {
+		this.newEntity = newEntity;
 	}
 
 	@Override

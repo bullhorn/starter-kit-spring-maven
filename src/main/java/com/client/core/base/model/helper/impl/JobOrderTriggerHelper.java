@@ -29,8 +29,8 @@ public abstract class JobOrderTriggerHelper extends AbstractTriggerHelper<JobOrd
 	}
 
 	@Override
-	public void setNewEntity(JobOrder newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(JobOrder newEntity) {
+		this.newEntity = newEntity;
 
 	}
 
@@ -44,8 +44,8 @@ public abstract class JobOrderTriggerHelper extends AbstractTriggerHelper<JobOrd
 	}
 
 	@Override
-	public void setOldEntity(JobOrder oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(JobOrder oldEntity) {
+		this.oldEntity = oldEntity;
 
 	}
 

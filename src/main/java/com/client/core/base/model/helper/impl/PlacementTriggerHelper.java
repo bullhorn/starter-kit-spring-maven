@@ -105,8 +105,8 @@ public abstract class PlacementTriggerHelper extends AbstractTriggerHelper<Place
 	}
 
 	@Override
-	public void setNewEntity(Placement newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(Placement newEntity) {
+		this.newEntity = newEntity;
 	}
 
 	@Override
@@ -119,8 +119,8 @@ public abstract class PlacementTriggerHelper extends AbstractTriggerHelper<Place
 	}
 
 	@Override
-	public void setOldEntity(Placement oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(Placement oldEntity) {
+		this.oldEntity = oldEntity;
 	}
 
 }

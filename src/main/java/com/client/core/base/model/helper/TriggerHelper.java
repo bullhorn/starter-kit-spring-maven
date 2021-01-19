@@ -41,16 +41,12 @@ public interface TriggerHelper<E extends BullhornEntity> {
 	 */
 	E getNewEntity();
 
-	void setNewEntity(E newEntity);
-
 	/**
 	 * The currently stored data for this entity that is saved in bullhorn.
 	 *
 	 * @return The currently stored data from bullhorn
 	 */
 	E getOldEntity();
-
-	void setOldEntity(E oldDto);
 
 	/**
 	 * The user who made the update
@@ -59,16 +55,12 @@ public interface TriggerHelper<E extends BullhornEntity> {
 	 */
 	CorporateUser getUpdatingUser();
 
-	void setUpdatingUser(CorporateUser updatingUser);
-
 	/**
 	 * The user type of the user who made the update.
 	 *
 	 * @return
 	 */
 	UserType getUpdatingUserUserType();
-
-	void setUpdatingUserUserType(UserType updatingUserUserType);
 
 	/**
 	 * Save the entity to bullhorn
@@ -78,33 +70,31 @@ public interface TriggerHelper<E extends BullhornEntity> {
 	 */
 	<U extends UpdateEntity> void saveDto(U entity);
 
-	CorporateUser findCorporateUser(Integer id);
-
-	<RE extends BullhornEntity> RE findEntity(Class<RE> type, Integer id);
+	CorporateUser findCorporateUser(Integer id, Set<String> fields);
 
 	<RE extends BullhornEntity> RE findEntity(Class<RE> type, Integer id, Set<String> fields);
 
-	Candidate findCandidate(Integer id);
+	Candidate findCandidate(Integer id, Set<String> fields);
 
-	ClientCorporation findClientCorporation(Integer id);
+	ClientCorporation findClientCorporation(Integer id, Set<String> fields);
 
-	ClientContact findClientContact(Integer id);
+	ClientContact findClientContact(Integer id, Set<String> fields);
 
-	Placement findPlacement(Integer id);
+	Placement findPlacement(Integer id, Set<String> fields);
 
-	JobSubmission findJobSubmission(Integer id);
+	JobSubmission findJobSubmission(Integer id, Set<String> fields);
 
-	JobOrder findJobOrder(Integer id);
+	JobOrder findJobOrder(Integer id, Set<String> fields);
 
-	Note findNote(Integer id);
+	Note findNote(Integer id, Set<String> fields);
 
-	PlacementChangeRequest findPlacementChangeRequest(Integer id);
+	PlacementChangeRequest findPlacementChangeRequest(Integer id, Set<String> fields);
 
-	Opportunity findOpportunity(Integer id);
+	Opportunity findOpportunity(Integer id, Set<String> fields);
 
-	Lead findLead(Integer id);
+	Lead findLead(Integer id, Set<String> fields);
 
-	List<PlacementCommission> getCommissions(Integer placementID);
+	List<PlacementCommission> getCommissions(Integer placementID, Set<String> fields);
 
 	BullhornData getBullhornData();
 

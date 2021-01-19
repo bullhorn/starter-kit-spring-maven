@@ -39,8 +39,8 @@ public abstract class ClientContactTriggerHelper extends AbstractTriggerHelper<C
 	}
 
 	@Override
-	public void setNewEntity(ClientContact newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(ClientContact newEntity) {
+		this.newEntity = newEntity;
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public abstract class ClientContactTriggerHelper extends AbstractTriggerHelper<C
 	}
 
 	@Override
-	public void setOldEntity(ClientContact oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(ClientContact oldEntity) {
+		this.oldEntity = oldEntity;
 	}
 
 }

@@ -3,7 +3,12 @@ package com.client.core.base.model.helper.impl;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.client.core.base.model.fields.RelatedTriggerEntity;
 import com.client.core.base.model.helper.AbstractTriggerHelper;
+import com.client.core.base.model.fields.CandidateTriggerEntity;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Holds and keeps data needed for validations to minimize the number of API calls.
@@ -17,44 +22,25 @@ public abstract class CandidateTriggerHelper extends AbstractTriggerHelper<Candi
 
 	private CorporateUser candidateOwner;
 
-	public CandidateTriggerHelper(Integer updatingUserID, BullhornData bullhornData) {
-		super(updatingUserID, bullhornData);
-	}
-
-	@Override
-	public Integer getUpdatingUserID() {
-		return updatingUserID;
-	}
-
-	@Override
-	public void setNewEntity(Candidate newEntity) {
-		this.newEntity = newEntity;
+	public CandidateTriggerHelper(Integer updatingUserID, BullhornData bullhornData, Map<? extends RelatedTriggerEntity, Set<String>> triggerEntityFields) {
+		super(updatingUserID, bullhornData, triggerEntityFields);
 	}
 
 	@Override
 	public Candidate getOldEntity() {
 		if (oldEntity == null) {
-			setOldEntity(findCandidate(getNewEntity().getId()));
+			setOldEntity(findCandidate(getNewEntity().getId(), CandidateTriggerEntity.CANDIDATE));
 		}
+
 		return oldEntity;
-	}
-
-	@Override
-	public void setOldEntity(Candidate oldEntity) {
-		this.oldEntity = oldEntity;
-
 	}
 
 	public CorporateUser getCandidateOwner() {
 		if (candidateOwner == null) {
-			setCandidateOwner(findCorporateUser(getNewEntity().getOwner().getId()));
+			this.candidateOwner = findCorporateUser(getNewEntity().getOwner().getId(), CandidateTriggerEntity.CANDIDATE_OWNER);
 		}
 
 		return candidateOwner;
-	}
-
-	public void setCandidateOwner(CorporateUser candidateOwner) {
-		this.candidateOwner = candidateOwner;
 	}
 
 }

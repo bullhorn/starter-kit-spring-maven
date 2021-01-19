@@ -32,8 +32,8 @@ public abstract class OpportunityTriggerHelper extends AbstractTriggerHelper<Opp
 	}
 
 	@Override
-	public void setNewEntity(Opportunity newDto) {
-		this.newEntity = newDto;
+	public void setNewEntity(Opportunity newEntity) {
+		this.newEntity = newEntity;
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public abstract class OpportunityTriggerHelper extends AbstractTriggerHelper<Opp
 	}
 
 	@Override
-	public void setOldEntity(Opportunity oldDto) {
-		this.oldEntity = oldDto;
+	public void setOldEntity(Opportunity oldEntity) {
+		this.oldEntity = oldEntity;
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
+import com.client.core.base.model.fields.RelatedTriggerEntity;
 import com.client.core.base.model.helper.impl.CandidateTriggerHelper;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.resttrigger.model.helper.RestTriggerHelper;
@@ -22,8 +23,9 @@ public class CandidateRestTriggerHelper extends CandidateTriggerHelper implement
 	private final Integer entityID;
 	private final Map<String, Object> valuesChanged;
 
-	public CandidateRestTriggerHelper(Integer entityID, Map<String, Object> valuesChanged, Integer updatingUserID, BullhornData bullhornData) {
-		super(updatingUserID, bullhornData);
+	public CandidateRestTriggerHelper(Integer entityID, Map<String, Object> valuesChanged, Integer updatingUserID,
+									  BullhornData bullhornData, Map<? extends RelatedTriggerEntity, Set<String>> triggerEntityFields) {
+		super(updatingUserID, bullhornData, triggerEntityFields);
 		this.entityID = entityID;
 		this.valuesChanged = valuesChanged;
 	}
