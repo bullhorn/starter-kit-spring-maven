@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created by hiqbal on 12/18/2015.
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestTriggerRequest<T extends BullhornEntity> {
 

@@ -5,9 +5,7 @@ import com.client.core.base.util.Utility
 import org.apache.log4j.Logger
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
-/**
- * Created by hiqbal on 12/15/2015.
- */
+
 @Service
 class StandardEntityChanger implements EntityChanger {
 

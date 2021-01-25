@@ -1,28 +1,21 @@
 package com.client.core.formtrigger.model.form;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.core.AppContext;
+import com.client.core.ApplicationSettings;
+import com.client.core.base.util.Utility;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
-import com.client.core.base.util.Util;
-import com.client.core.base.util.Utility;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractFormDto<T extends BullhornEntity> implements CustomDto<T> {
 
@@ -100,7 +93,7 @@ public abstract class AbstractFormDto<T extends BullhornEntity> implements Custo
 		for (DateTimeFormatter format : dateFormats) {
 			try {
 				DateTime date = format.parseDateTime(dateString);
-				return date.withZoneRetainFields(Util.defaultTimeZone());
+				return date.withZoneRetainFields(Utility.defaultTimeZone());
 			} catch (IllegalArgumentException e) {
 
 				// intentionally empty

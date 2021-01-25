@@ -9,7 +9,6 @@ import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.log.BullhornLog;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
-import com.client.core.soap.model.SubscriptionEvent;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -40,8 +39,8 @@ public class EventProcessing implements Runnable {
     }
 
     /**
-     * Performs the actual handling of a single event by parsing out the kind of event from the {@link SubscriptionEvent} provided via
-     * the {@link EventProcessing#(Integer, BullhornLogDAO, SubscriptionEvent)} constructor and handing the event off
+     * Performs the actual handling of a single event by parsing out the kind of event from the {@link com.client.core.soap.model.SubscriptionEvent} provided via
+     * the {@link EventProcessing#(Integer, BullhornLogDAO, com.client.core.soap.model.SubscriptionEvent)} constructor and handing the event off
      * to the proper workflow.
      */
     @Override

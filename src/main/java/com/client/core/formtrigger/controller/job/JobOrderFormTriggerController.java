@@ -1,24 +1,20 @@
 package com.client.core.formtrigger.controller.job;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
+import com.client.core.base.model.relatedentity.JobOrderRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobOrderDto;
 import com.client.core.formtrigger.model.helper.impl.JobOrderFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.JobOrderFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Entry point for Job Validations.
@@ -36,7 +32,7 @@ public class JobOrderFormTriggerController extends AbstractFormTriggerController
     
     @Autowired
     public JobOrderFormTriggerController(Optional<List<TriggerValidator<JobOrder, JobOrderFormTriggerHelper, JobOrderFormTriggerTraverser>>> triggerValidators) {
-        super(JobOrder.class, triggerValidators);
+        super(JobOrder.class, triggerValidators, JobOrderRelatedEntity.values());
     }
 
 	/**
@@ -53,7 +49,7 @@ public class JobOrderFormTriggerController extends AbstractFormTriggerController
 	public String addEntity(@ModelAttribute FormJobOrderDto formJobOrderDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Job Order Validation Process----------------------------------------");
 
-		JobOrderFormTriggerTraverser traverser = new JobOrderFormTriggerTraverser(formJobOrderDto, updatingUserID, false,bullhornData);
+		JobOrderFormTriggerTraverser traverser = new JobOrderFormTriggerTraverser(formJobOrderDto, updatingUserID, false, getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}
@@ -72,7 +68,7 @@ public class JobOrderFormTriggerController extends AbstractFormTriggerController
 	public String editEntity(@ModelAttribute FormJobOrderDto formJobOrderDto, @RequestParam("ft.userId") Integer updatingUserID) {
 		log.info("---------------------------- Starting Job Order Validation Process----------------------------------------");
 
-		JobOrderFormTriggerTraverser traverser = new JobOrderFormTriggerTraverser(formJobOrderDto, updatingUserID, true,bullhornData);
+		JobOrderFormTriggerTraverser traverser = new JobOrderFormTriggerTraverser(formJobOrderDto, updatingUserID, true, getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}

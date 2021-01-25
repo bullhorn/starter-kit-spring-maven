@@ -6,9 +6,6 @@ import com.client.core.base.workflow.traversing.TriggerTraverser;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.client.core.formtrigger.model.helper.FormTriggerHelper;
 
-/**
- * Created by john.sullivan on 9/3/2017.
- */
 public interface FormTriggerValidator<E extends BullhornEntity, D extends AbstractFormDto<E>, H extends FormTriggerHelper<D, E>, T extends TriggerTraverser<E, H>> extends TriggerValidator<E, H, T> {
 
 }

@@ -1,27 +1,23 @@
 package com.client.core.formtrigger.controller.jobsubmission;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
+import com.client.core.base.model.relatedentity.JobOrderRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
 import com.client.core.formtrigger.model.helper.impl.JobSubmissionFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.JobSubmissionFormTriggerTraverser;
 import com.google.common.collect.Maps;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Entry point for Job submission Validations.
@@ -39,7 +35,7 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 
     @Autowired
     public JobSubmissionFormTriggerController(Optional<List<TriggerValidator<JobSubmission, JobSubmissionFormTriggerHelper, JobSubmissionFormTriggerTraverser>>> triggerValidators) {
-        super(JobSubmission.class, triggerValidators);
+        super(JobSubmission.class, triggerValidators, JobOrderRelatedEntity.values());
     }
 
 	/**
@@ -84,7 +80,7 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
         List<FormJobSubmissionDto> submissions = formJobSubmissionDto.instantiateEntities();
 
         return submissions.parallelStream().map( submission -> {
-            return new JobSubmissionFormTriggerTraverser(submission, updatingUserID, edit, bullhornData);
+            return new JobSubmissionFormTriggerTraverser(submission, updatingUserID, edit, getRelatedEntityFields());
         }).collect(Collectors.toList());
     }
 

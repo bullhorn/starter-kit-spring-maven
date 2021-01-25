@@ -8,12 +8,6 @@ import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import org.apache.log4j.Logger;
 
-/**
- * Used to get values from bullhorn client corporation form and convert these to the regular ClientCorporationDto
- * 
- * @author magnus.palm
- * 
- */
 public class FormClientCorporationDto extends AbstractFormDto<ClientCorporation> {
 
 	public FormClientCorporationDto() {

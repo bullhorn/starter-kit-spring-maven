@@ -1,24 +1,20 @@
 package com.client.core.formtrigger.controller.placementchangerequest;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
+import com.client.core.base.model.relatedentity.PlacementChangeRequestRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormPlacementChangeRequestDto;
 import com.client.core.formtrigger.model.helper.impl.PlacementChangeRequestFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.PlacementChangeRequestFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Entry point for Placement change request formtrigger Validations.
@@ -36,7 +32,7 @@ public class PlacementChangeRequestFormTriggerController extends AbstractFormTri
 
     @Autowired
     public PlacementChangeRequestFormTriggerController(Optional<List<TriggerValidator<PlacementChangeRequest, PlacementChangeRequestFormTriggerHelper, PlacementChangeRequestFormTriggerTraverser>>> triggerValidators) {
-        super(PlacementChangeRequest.class, triggerValidators);
+        super(PlacementChangeRequest.class, triggerValidators, PlacementChangeRequestRelatedEntity.values());
     }
 
 	/**
@@ -54,7 +50,7 @@ public class PlacementChangeRequestFormTriggerController extends AbstractFormTri
 		log.info("---------------------------- Starting Placement Change Request Validation Add Process----------------------------------------");
 
 		PlacementChangeRequestFormTriggerTraverser traverser = new PlacementChangeRequestFormTriggerTraverser(formPlacementChangeRequestDto,
-				updatingUserID, isEdit(formPlacementChangeRequestDto),bullhornData);
+				updatingUserID, isEdit(formPlacementChangeRequestDto), getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}

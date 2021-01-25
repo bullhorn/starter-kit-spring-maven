@@ -1,92 +1,43 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.ClientContactRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
- * will be stored in this Traverser for subsequent automation work.
- * 
- * The allsToSaveBackToBH map will contain deep copies of relevant dtos that should be saved back to BH. The copies
- * will be updated according to task logic, while the original dtos will NOT be updated so that subsequent logic will
- * still be made on original values.
- * 
- * Once all automation work has been done the dtos that need saving will be saved only once. In this way keeping the api
- * calls to a minimum by saving each dto only once, even though multiple tasks might have updated different fields on
- * the same dto.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.Map;
+import java.util.Set;
+
 public class ClientContactScheduledTaskHelper extends AbstractScheduledTaskHelper<ClientContact> {
 
 	private ClientCorporation clientCorporation;
 	private CorporateUser clientContactOwner;
 
-	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, ClientContact.class);
-	}
-	
-	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event, ClientContact.class, bullhornData);
+	public ClientContactScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(event, ClientContact.class, ClientContactRelatedEntity.CLIENT_CONTACT, relatedEntityFields);
 	}
 
-    /**
-     * Gets the ClientContact for the Placement, if ClientContact == null then makes api call, otherwise returns
-     * ClientContact instance variable.
-     *
-     * @return the ClientContact connected to the job connected to the placement
-     */
     public ClientContact getClientContact() {
         return getEntity();
     }
 
-	/**
-	 * Gets the ClientCorporation for the Placement, if ClientCorporation == null then makes api call, otherwise
-	 * returns ClientCorporation instance variable.
-	 * 
-	 * @return the ClientCorporation connected to the job connected to the placement
-	 */
 	public ClientCorporation getClientCorporation() {
 		if (clientCorporation == null) {
-			setClientCorporation(findClientCorporation(getClientContact().getClientCorporation().getId()));
+			this.clientCorporation = findClientCorporation(getClientContact().getClientCorporation().getId(), ClientContactRelatedEntity.CLIENT_CORPORATION);
 		}
+
 		return clientCorporation;
 	}
 
-	public void setClientCorporation(ClientCorporation clientCorporation) {
-		this.clientCorporation = clientCorporation;
-	}
-
-	/**
-	 * Gets the CorporateUser client contact owner, if candidateOwner == null then makes api call, otherwise returns
-	 * candidateOwner instance variable.
-	 * 
-	 * @return the CorporateUser connected to the client contact
-	 */
 	public CorporateUser getClientContactOwner() {
 		if (clientContactOwner == null) {
-			setClientContactOwner(findCorporateUser(getClientContact().getOwner().getId()));
+			this.clientContactOwner = findCorporateUser(getClientContact().getOwner().getId(), ClientContactRelatedEntity.CLIENT_CONTACT_OWNER);
 		}
+
 		return clientContactOwner;
 	}
 
-	public void setClientContactOwner(CorporateUser clientContactOwner) {
-		this.clientContactOwner = clientContactOwner;
-	}
-
-    @Override
-    public String toString() {
-        return new StringBuilder("ClientContactScheduledTaskHelper {")
-                .append("\n\t\"clientCorporation\": ")
-                .append(clientCorporation)
-                .append(",\n\t\"clientContactOwner\": ")
-                .append(clientContactOwner)
-                .append('}')
-                .toString();
-    }
 }

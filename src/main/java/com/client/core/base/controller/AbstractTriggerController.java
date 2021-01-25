@@ -16,10 +16,6 @@ import com.client.core.base.tools.propertyeditors.CustomObjectEditor;
 import com.client.core.base.tools.propertyeditors.MyCustomNumberEditor;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
 
-/**
- * Created by hiqbal on 12/15/2015.
- */
-
 public abstract class AbstractTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>>{
 
     protected final BullhornData bullhornData;

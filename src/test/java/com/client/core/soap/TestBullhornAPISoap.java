@@ -1,17 +1,5 @@
 package com.client.core.soap;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import com.bullhorn.apiservice.query.DtoQuery;
 import com.bullhorn.apiservice.result.ApiSaveResult;
 import com.bullhorn.entity.ApiEntityName;
@@ -21,8 +9,18 @@ import com.bullhorn.entity.user.CorporateUserDto;
 import com.bullhorn.entity.user.UserTypeDto;
 import com.client.BaseTest;
 import com.client.core.ApplicationSettings;
-import com.client.core.soap.model.SubscriptionEvent;
 import com.client.core.soap.service.impl.BullhornAPISoap;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @Ignore
 public class TestBullhornAPISoap extends BaseTest {

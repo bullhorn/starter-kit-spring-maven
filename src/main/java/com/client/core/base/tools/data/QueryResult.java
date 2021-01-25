@@ -5,9 +5,6 @@ import java.util.List;
 import com.client.core.base.model.Entity;
 import com.google.common.collect.Lists;
 
-/**
- * Created by john.sullivan on 6/9/2016.
- */
 public class QueryResult<T extends Entity> {
 
     private List<T> data;

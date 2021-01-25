@@ -1,26 +1,18 @@
 package com.client.core.base.tools.propertyeditors;
 
-import java.beans.PropertyEditorSupport;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.util.StringUtils;
 
-/**
- * Custom property editor for joda DateTime. Used for converting DateTime values for spring MVC
- * 
- * @author magnus.palm
- * 
- */
+import java.beans.PropertyEditorSupport;
+
 public class CustomDateTimeEditor extends PropertyEditorSupport {
 
     private final DateTimeFormatter customDateTimeFormatter;
 
     private final DateTimeFormatter iso8601DateTimeFormatter;
-
-    private final static String iso8601Format = "yyyy-mm-dd'T'HH:MM:SS.SSS";
 
     private final boolean allowEmpty;
 
@@ -30,7 +22,7 @@ public class CustomDateTimeEditor extends PropertyEditorSupport {
      * The "allowEmpty" parameter states if an empty String should be allowed for parsing, i.e. get interpreted as null value.
      * Otherwise, an IllegalArgumentException gets thrown in that case.
      * 
-     * @param dateFormat
+     * @param formatPattern
      *            DateFormat to use for parsing and rendering
      * @param allowEmpty
      *            if empty strings should be allowed

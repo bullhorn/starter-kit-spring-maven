@@ -1,31 +1,20 @@
 package com.client.matchers;
 
-import java.io.UnsupportedEncodingException;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.springframework.test.util.JsonPathExpectationsHelper;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-/**
- * JsonP implementation of JsonPathResultMatchers.
- * 
- * It removes the callback padding from the jsonValue.
- * 
- * Example: callback({ "id" : 1, "name" : "Unassigned 2774" }) will be evaluated as: { "id" : 1, "name" : "Unassigned 2774" }
- * 
- * @author Magnus Fiore Palm
- * 
- */
+import java.io.UnsupportedEncodingException;
 
 public class JsonpPathResultMatchers {
 
 	private JsonPathExpectationsHelper jsonPathHelper;
 
 	/**
-	 * Protected constructor. Use {@link MockMvcResultMatchers#jsonPath(String, Object...)} or
-	 * {@link MockMvcResultMatchers#jsonPath(String, Matcher)}.
+	 * Protected constructor. Use {@link org.springframework.test.web.servlet.result.MockMvcResultMatchers#jsonPath(String, Object...)} or
+	 * {@link org.springframework.test.web.servlet.result.MockMvcResultMatchers#jsonPath(String, Matcher)}.
 	 */
 	public JsonpPathResultMatchers(String expression, Object... args) {
 

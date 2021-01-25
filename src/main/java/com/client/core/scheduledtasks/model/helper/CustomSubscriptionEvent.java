@@ -8,9 +8,6 @@ import org.joda.time.DateTime;
 import com.bullhornsdk.data.model.response.event.Event;
 import com.google.common.collect.Sets;
 
-/**
- * Created by hiqbal on 10/5/2016.
- */
 public class CustomSubscriptionEvent{
 
     private String eventId;

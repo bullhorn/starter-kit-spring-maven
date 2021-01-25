@@ -15,9 +15,6 @@ import com.client.core.base.util.Utility;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.collect.Lists;
 
-/**
- * Created by hiqbal on 12/22/2015.
- */
 public class FormLeadDto extends AbstractFormDto<Lead> {
 
     public FormLeadDto() {

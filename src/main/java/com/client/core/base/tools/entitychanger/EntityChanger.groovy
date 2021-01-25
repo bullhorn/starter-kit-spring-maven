@@ -1,8 +1,5 @@
 package com.client.core.base.tools.entitychanger
 
-/**
- * Created by hiqbal on 12/15/2015.
- */
 interface EntityChanger {
 
     public <T, V> V retrieveField(T entity, String field, Class<V> type);

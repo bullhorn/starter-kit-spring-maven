@@ -1,79 +1,38 @@
 package com.client.core.base.model.helper.impl;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.Lead;
 import com.client.core.base.model.helper.AbstractTriggerHelper;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.LeadRelatedEntity;
 
-/**
- * Created by hiqbal on 12/23/2015.
- */
+import java.util.Map;
+import java.util.Set;
+
 public abstract class LeadTriggerHelper extends AbstractTriggerHelper<Lead> {
 
     private CorporateUser owner;
     private ClientCorporation clientCorporation;
 
-    public LeadTriggerHelper(Integer updatingUserID, BullhornData bullhornData) {
-        super(updatingUserID, bullhornData);
+    public LeadTriggerHelper(Integer updatingUserID, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        super(updatingUserID, Lead.class, LeadRelatedEntity.LEAD, relatedEntityFields);
     }
 
-    @Override
-    public Integer getUpdatingUserID() {
-        return updatingUserID;
-    }
-
-    @Override
-    public void setNewEntity(Lead newEntity) {
-        this.newEntity = newEntity;
-    }
-
-    @Override
-    public Lead getOldEntity() {
-        if (oldEntity == null) {
-            setOldEntity(findLead(getNewEntity().getId()));
-        }
-
-        return oldEntity;
-    }
-
-    @Override
-    public void setOldEntity(Lead oldEntity) {
-        this.oldEntity = oldEntity;
-    }
-
-    /**
-     * Gets the owner of the job
-     *
-     * @return a CorporateUserDto
-     */
-    public CorporateUser getOwner() {
+    public CorporateUser getLeadOwner() {
         if (owner == null) {
-            setOwner(findCorporateUser(getNewEntity().getOwner().getId()));
+            this.owner = findCorporateUser(getNewEntity().getOwner().getId(), LeadRelatedEntity.LEAD_OWNER);
         }
 
         return owner;
     }
 
-    public void setOwner(CorporateUser owner) {
-        this.owner = owner;
-    }
-
-    /**
-     * Gets the client corporation connected to the lead
-     *
-     * @return a ClientCorporationDto
-     */
-    public ClientCorporation getClientCorpration() {
+    public ClientCorporation getClientCorporation() {
         if (clientCorporation == null) {
-            setClientCorporation(findClientCorporation(getNewEntity().getClientCorporation().getId()));
+            this.clientCorporation = findClientCorporation(getNewEntity().getClientCorporation().getId(), LeadRelatedEntity.CLIENT_CORPORATION);
         }
 
         return clientCorporation;
-    }
-
-    public void setClientCorporation(ClientCorporation clientCorporation) {
-        this.clientCorporation = clientCorporation;
     }
 
 }

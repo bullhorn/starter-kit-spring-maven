@@ -1,12 +1,5 @@
 package com.client.core.base.model;
 
-/**
- * An entity 
- * 
- * @author magnus.palm
- * 
- * @param <ID> the type of the identifier for this entity
- */
 public interface Entity<ID> {
 
     /**

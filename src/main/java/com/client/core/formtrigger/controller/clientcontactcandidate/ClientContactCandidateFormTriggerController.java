@@ -2,6 +2,10 @@ package com.client.core.formtrigger.controller.clientcontactcandidate;
 
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.CandidateRelatedEntity;
+import com.client.core.base.model.relatedentity.ClientContactRelatedEntity;
+import com.client.core.base.util.Utility;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormCandidateDto;
@@ -14,14 +18,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Entry point for Client Contact and Candidate Validations.
@@ -39,13 +41,17 @@ public class ClientContactCandidateFormTriggerController extends AbstractFormTri
     private final List<TriggerValidator<ClientContact, ClientContactFormTriggerHelper, ClientContactFormTriggerTraverser>> clientContactTriggerValidators;
     private final List<TriggerValidator<Candidate, CandidateFormTriggerHelper, CandidateFormTriggerTraverser>> candidateTriggerValidators;
 
+	private final Map<? extends BullhornRelatedEntity, Set<String>> candidateRelatedEntityFields;
+	private final Map<? extends BullhornRelatedEntity, Set<String>> clientContactRelatedEntityFields;
 
     @Autowired
     public ClientContactCandidateFormTriggerController(Optional<List<TriggerValidator<ClientContact, ClientContactFormTriggerHelper, ClientContactFormTriggerTraverser>>> clientContactTriggerValidators,
                                                        Optional<List<TriggerValidator<Candidate, CandidateFormTriggerHelper, CandidateFormTriggerTraverser>>> candidateTriggerValidators) {
-        super(ClientContact.class, clientContactTriggerValidators);
+        super(ClientContact.class, clientContactTriggerValidators, ClientContactRelatedEntity.values());
         this.clientContactTriggerValidators = sort(clientContactTriggerValidators);
         this.candidateTriggerValidators = sort(candidateTriggerValidators);
+		this.clientContactRelatedEntityFields = Utility.getRequestedFields(ClientContactRelatedEntity.values(), this.clientContactTriggerValidators);
+        this.candidateRelatedEntityFields = Utility.getRequestedFields(CandidateRelatedEntity.values(), this.candidateTriggerValidators);
     }
 
 	/**
@@ -63,7 +69,7 @@ public class ClientContactCandidateFormTriggerController extends AbstractFormTri
 		log.info("---------------------------- Starting Client Contact Validation Process----------------------------------------");
 
 		ClientContactFormTriggerTraverser traverser = new ClientContactFormTriggerTraverser(formClientContactDto, updatingUserID,
-				false, bullhornData);
+				false, clientContactRelatedEntityFields);
 
 		return handleClientContactRequest(traverser);
 	}
@@ -87,7 +93,7 @@ public class ClientContactCandidateFormTriggerController extends AbstractFormTri
 			log.info("---------------------------- Starting Client Contact Validation Process----------------------------------------");
 
 			ClientContactFormTriggerTraverser traverser = new ClientContactFormTriggerTraverser(formClientContactDto, updatingUserID,
-					true, bullhornData);
+					true, clientContactRelatedEntityFields);
 
 			return handleClientContactRequest(traverser);
 		}
@@ -96,7 +102,7 @@ public class ClientContactCandidateFormTriggerController extends AbstractFormTri
 			log.info("---------------------------- Starting Candidate Validation Process----------------------------------------");
 
 			CandidateFormTriggerTraverser traverser = new CandidateFormTriggerTraverser(formCandidateDto, updatingUserID,
-					true, bullhornData);
+					true, candidateRelatedEntityFields);
 
 			return handleCandidateRequest(traverser);
 		}
@@ -119,7 +125,7 @@ public class ClientContactCandidateFormTriggerController extends AbstractFormTri
 		log.info("---------------------------- Starting Candidate Validation Process----------------------------------------");
 
 		CandidateFormTriggerTraverser traverser = new CandidateFormTriggerTraverser(formCandidateDto, updatingUserID, false,
-				bullhornData);
+				candidateRelatedEntityFields);
 
 		return handleCandidateRequest(traverser);
 	}

@@ -37,12 +37,6 @@ import com.client.core.soap.tools.id.standard.TaskEntityIdHelper;
 import com.client.core.soap.tools.id.standard.UserTypeEntityIdHelper;
 import com.client.core.soap.tools.id.standard.UserWorkEntityIdHelper;
 
-/**
- * Factory class to retrieve an EntityIdHelper for a certain Class<?> type
- * 
- * @author magnus.palm
- * 
- */
 public class EntityIdHelperFactory {
 
     /**

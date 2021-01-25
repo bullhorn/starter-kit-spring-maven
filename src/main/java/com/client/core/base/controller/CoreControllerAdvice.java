@@ -1,11 +1,8 @@
 package com.client.core.base.controller;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import com.client.core.ApplicationSettings;
+import com.client.core.base.tools.propertyeditors.CustomBigDecimalEditor;
+import com.client.core.base.tools.propertyeditors.CustomDateTimeEditor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -22,10 +19,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.client.core.ApplicationSettings;
-import com.client.core.base.tools.propertyeditors.CustomBigDecimalEditor;
-import com.client.core.base.tools.propertyeditors.CustomDateTimeEditor;
-import com.client.core.base.tools.propertyeditors.CustomXMLGregorianCalendarEditor;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @ControllerAdvice(value = { "com.client.core" })
 public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
@@ -54,7 +50,6 @@ public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
         binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
         binder.registerCustomEditor(Boolean.class, new CustomBooleanEditor(true));
-        binder.registerCustomEditor(XMLGregorianCalendar.class, new CustomXMLGregorianCalendarEditor(dateFormat, true));
         binder.registerCustomEditor(DateTime.class, new CustomDateTimeEditor(applicationDateFormatString, true));
         binder.registerCustomEditor(BigDecimal.class, new CustomBigDecimalEditor(2, true));
     }

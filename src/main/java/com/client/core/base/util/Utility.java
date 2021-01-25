@@ -27,6 +27,9 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.workflow.node.WorkflowAction;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -47,6 +50,29 @@ import com.client.core.AppContext;
 import com.google.common.collect.Lists;
 
 public class Utility {
+
+	public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
+																					   List<? extends WorkflowAction<?, ?>> actions) {
+		Map<? extends BullhornRelatedEntity, Set<String>> requestedFields = actions.stream().map(WorkflowAction::getRelatedEntityFields).reduce(Maps.newLinkedHashMap(), (map, relatedEntityFields) -> {
+			return relatedEntityFields.entrySet().parallelStream().collect(Collectors.toMap(Map.Entry::getKey, oneRelatedEntityFields -> {
+				if (map.containsKey(oneRelatedEntityFields.getKey())) {
+					Set<String> currentFields = map.get(oneRelatedEntityFields.getKey());
+
+					return Utility.mergeFieldSets(oneRelatedEntityFields.getValue(), currentFields);
+				} else {
+					return oneRelatedEntityFields.getValue();
+				}
+			}));
+		});
+
+		return Stream.of(relatedEntities).collect(Collectors.toMap(Function.identity(), relatedEntity -> {
+			if (requestedFields.containsKey(relatedEntity)) {
+				return Utility.mergeFieldSets(relatedEntity.getDefaultFields(), requestedFields.get(relatedEntity));
+			}
+
+			return relatedEntity.getDefaultFields();
+		}));
+	}
 
 	public static Set<String> mergeFieldSets(Set<String> set1, Set<String> set2) {
 		return mergeNestedFields(Sets.union(set1, set2));
@@ -98,6 +124,28 @@ public class Utility {
 		}
 
 		return result;
+	}
+
+	public static boolean isNumbersOnly(String str) {
+		if (str == null || str.isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i)))
+				return false;
+		}
+		return true;
+	}
+
+	public static boolean isNumeric(String value) {
+		if (value == null || value.isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < value.length(); i++) {
+			if (!Character.isDigit(value.charAt(i)) && !".".equalsIgnoreCase(Character.toString(value.charAt(i))))
+				return false;
+		}
+		return true;
 	}
 
     public static Set<Integer> parseCommaSeparatedIntegers(String value) {
@@ -340,7 +388,7 @@ public class Utility {
 	        return null;
 	    }
 
-		DateTime now = Util.nowUsingTimeZone(null);
+		DateTime now = nowUsingTimeZone(null);
 
 		DateTime theCorrectDate = new DateTime(date,DateTimeZone.UTC);
 		theCorrectDate = theCorrectDate.plusHours(now.getHourOfDay());
@@ -348,7 +396,24 @@ public class Utility {
 		return theCorrectDate;
 	}
 
+	public static DateTimeZone defaultTimeZone() {
+		return DateTimeZone.forID("EST5EDT");
+	}
 
+	/**
+	 * Returns today based on time zone; defaults timeZone to "EST5EDT" if null passed in.
+	 *
+	 * @param timeZone
+	 *            a valid time zone, if null then defaults to "EST5EDT";
+	 * @return today's date in DateTime for the passed in timeZone
+	 */
+	public static DateTime nowUsingTimeZone(DateTimeZone timeZone) {
+		if (timeZone == null) {
+			timeZone = defaultTimeZone();
+		}
+
+		return new DateTime(timeZone);
+	}
 
 	public static DateTime forceParseStringToDateTime(String dateStr, String dateFormat) {
 		return new DateTime(forceParseStringToDate(dateStr, dateFormat));

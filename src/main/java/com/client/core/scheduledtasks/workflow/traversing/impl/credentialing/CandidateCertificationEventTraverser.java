@@ -1,9 +1,13 @@
 package com.client.core.scheduledtasks.workflow.traversing.impl.credentialing;
 
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.impl.credentialing.CandidateCertificationScheduledTaskHelper;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasksTraverser;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A Traverser is passed through a Node work flow and it's instance variables are set for future Event handling.
@@ -13,8 +17,8 @@ import com.client.core.scheduledtasks.workflow.traversing.AbstractScheduledTasks
 
 public class CandidateCertificationEventTraverser extends AbstractScheduledTasksTraverser<CandidateCertificationScheduledTaskHelper> {
 
-    public CandidateCertificationEventTraverser(CustomSubscriptionEvent event) {
-        super(new CandidateCertificationScheduledTaskHelper(event), EventType.getType(event.getEntityEventType()));
+    public CandidateCertificationEventTraverser(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        super(new CandidateCertificationScheduledTaskHelper(event, relatedEntityFields), EventType.getType(event.getEntityEventType()));
     }
 
 }

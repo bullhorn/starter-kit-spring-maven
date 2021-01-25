@@ -3,9 +3,6 @@ package com.client.core.base.tools;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
-/**
- * Created by johnsully83 on 16/02/2017.
- */
 public abstract class TimedCache<T> {
 
 	private final int minutesBetweenRetrievals;

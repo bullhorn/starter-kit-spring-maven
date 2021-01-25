@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.candidate;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.Candidate;
+import com.client.core.base.model.relatedentity.CandidateRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.CandidateRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.CandidateRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.CandidateRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.CandidateRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/21/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/candidate/*")
 public class CandidateRestTriggerController extends AbstractRestTriggerController<Candidate, CandidateRestTriggerHelper, CandidateRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 
     @Autowired
     public CandidateRestTriggerController(Optional<List<TriggerValidator<Candidate, CandidateRestTriggerHelper, CandidateRestTriggerTraverser>>> triggerValidators) {
-        super(Candidate.class, triggerValidators);
+        super(Candidate.class, triggerValidators, CandidateRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData, getTriggerEntityFields());
+	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class CandidateRestTriggerController extends AbstractRestTriggerControlle
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData, getTriggerEntityFields());
+	    CandidateRestTriggerTraverser traverser = new CandidateRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

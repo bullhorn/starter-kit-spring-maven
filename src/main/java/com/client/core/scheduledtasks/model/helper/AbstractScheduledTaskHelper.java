@@ -1,64 +1,47 @@
 package com.client.core.scheduledtasks.model.helper;
 
-import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.certificationrequirement.CandidateCertificationRequirement;
-import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmissionCertificationRequirement;
-import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
-import com.bullhornsdk.data.model.entity.embedded.UserType;
-import com.client.core.AppContext;
-import com.client.core.base.service.meta.BullhornEntityMetaService;
+import com.client.core.base.model.helper.AbstractHelper;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.tools.copy.KryoObjectCopyHelper;
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> implements ScheduledTaskHelper<E> {
+public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> extends AbstractHelper<E> implements ScheduledTaskHelper<E> {
 
-    private final Logger log = Logger.getLogger(getClass());
-
-    private final BullhornEntityMetaService bullhornEntityMetaService;
-    private final BullhornData bullhornData;
     private final CustomSubscriptionEvent event;
 
     private final Map<String, UpdateEntity> allEntitiesToSaveBackToBH;
 
     private final Class<E> type;
+    private final BullhornRelatedEntity self;
 
     private E entity;
-    private CorporateUser updatingUser;
-    private UserType updatingUserUserType;
 
-    public AbstractScheduledTaskHelper(CustomSubscriptionEvent event, Class<E> type) {
-        super();
-        this.bullhornData = AppContext.getApplicationContext().getBean("bullhornData", BullhornData.class);
-        this.bullhornEntityMetaService = AppContext.getApplicationContext().getBean(BullhornEntityMetaService.class);
+    public AbstractScheduledTaskHelper(CustomSubscriptionEvent event, Class<E> type, BullhornRelatedEntity self,
+                                       Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        super(event.getUpdatingUserId(), relatedEntityFields);
         this.event = event;
         this.type = type;
-        this.allEntitiesToSaveBackToBH = Maps.newHashMap();
-    }
-
-    public AbstractScheduledTaskHelper(CustomSubscriptionEvent event, Class<E> type, BullhornData bullhornData) {
-        this.bullhornData = bullhornData;
-        this.bullhornEntityMetaService = AppContext.getApplicationContext().getBean(BullhornEntityMetaService.class);
-        this.event = event;
-        this.type = type;
+        this.self = self;
         this.allEntitiesToSaveBackToBH = Maps.newHashMap();
     }
 
     @Override
     public E getEntity() {
-        if (entity == null) {
-            Set<String> fields = bullhornEntityMetaService.getFieldNames(type);
-
-            entity = bullhornData.findEntity(type, getEvent().getEntityId(), fields);
+        if (this.entity == null) {
+            this.entity = findEntity(type, event.getEntityId(), self);
         }
 
         return entity;
+    }
+
+    protected void setEntity(E entity) {
+        this.entity = entity;
     }
 
     @Override
@@ -104,316 +87,6 @@ public abstract class AbstractScheduledTaskHelper<E extends BullhornEntity> impl
         }
 
         return entityToSave;
-    }
-
-    @Override
-    public BullhornData getBullhornData() {
-        return bullhornData;
-    }
-
-    /**
-     * Gets the CorporateUserDto for the person who saved the entity, if updatingUser == null then makes api call, otherwise returns
-     * updatingUser instance variable.
-     *
-     * @return the CorporateUserDto of the updating user
-     */
-    public CorporateUser getUpdatingUser() {
-        if (updatingUser == null) {
-            setUpdatingUser(findCorporateUser(event.getUpdatingUserId()));
-        }
-
-        return updatingUser;
-    }
-
-    public void setUpdatingUser(CorporateUser updatingUser) {
-        this.updatingUser = updatingUser;
-    }
-
-    public UserType getUpdatingUserUserType() {
-        if (updatingUserUserType == null) {
-            UserType userType = findEntity(UserType.class, getUpdatingUser().getUserType().getId());
-
-            setUpdatingUserUserType(userType);
-        }
-
-        return updatingUserUserType;
-    }
-
-    public void setUpdatingUserUserType(UserType updatingUserUserType) {
-        this.updatingUserUserType = updatingUserUserType;
-    }
-
-    public <T extends BullhornEntity> T findEntity(Class<T> type, Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Must pass in a non-null id to findEntity");
-        }
-
-        Set<String> fields = bullhornEntityMetaService.getFieldNames(type);
-
-        return bullhornData.findEntity(type, id, fields);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Appointment findAppointment(Integer id) {
-        return findEntity(Appointment.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public CorporateUser findCorporateUser(Integer id) {
-        return findEntity(CorporateUser.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Candidate findCandidate(Integer id) {
-        return findEntity(Candidate.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public CandidateEducation findCandidateEducation(Integer id) {
-        return findEntity(CandidateEducation.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public CandidateReference findCandidateReference(Integer id) {
-        return findEntity(CandidateReference.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public CandidateWorkHistory findCandidateWorkHistory(Integer id) {
-        return findEntity(CandidateWorkHistory.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public ClientCorporation findClientCorporation(Integer id) {
-        return findEntity(ClientCorporation.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public ClientContact findClientContact(Integer id) {
-        return findEntity(ClientContact.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public JobSubmission findJobSubmission(Integer id) {
-        return findEntity(JobSubmission.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public JobOrder findJobOrder(Integer id) {
-        return findEntity(JobOrder.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws BullhornApiErrorException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Opportunity findOpportunity(Integer id) {
-        return findEntity(Opportunity.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Note findNote(Integer id) {
-        return findEntity(Note.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Placement findPlacement(Integer id) {
-        return findEntity(Placement.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public PlacementChangeRequest findPlacementChangeRequest(Integer id) {
-        return findEntity(PlacementChangeRequest.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public PlacementCommission findPlacementCommission(Integer id) {
-        return findEntity(PlacementCommission.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Task findTask(Integer id) {
-        return findEntity(Task.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public UserType findUserType(Integer id) {
-        return findEntity(UserType.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Sendout findSendout(Integer id) {
-        return findEntity(Sendout.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public Certification findCertification(Integer id) {
-        return findEntity(Certification.class, id);
-    }
-
-    /**
-     * Makes api call to bullhorn.
-     * <p>
-     * throws IllegalArgumentException if an error occured with the api call or if no entity with passed in id exists.
-     *
-     * @param id
-     * @return the dto
-     */
-    public CandidateCertification findCandidateCertification(Integer id) {
-        return findEntity(CandidateCertification.class, id);
-    }
-
-    public CandidateCertificationRequirement findCandidateCertificationRequirement(Integer id) {
-        return findEntity(CandidateCertificationRequirement.class, id);
-    }
-
-    public JobSubmissionCertificationRequirement findJobSubmissionCertificationRequirement(Integer id) {
-        return findEntity(JobSubmissionCertificationRequirement.class, id);
-    }
-
-    public PlacementCertification findPlacementCertification(Integer id) {
-        return findEntity(PlacementCertification.class, id);
-    }
-
-
-    @Override
-    public String toString() {
-        String NEW_LINE = System.getProperty("line.separator");
-
-        return new StringBuilder().append(this.getClass().getName() + " Object {" + NEW_LINE)
-                .append(" event: " + event + NEW_LINE)
-                .append(" allEntitiesToSaveBackToBH: " + allEntitiesToSaveBackToBH + NEW_LINE)
-                .append("}").toString();
     }
 
 }

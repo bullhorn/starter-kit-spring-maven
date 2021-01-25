@@ -1,28 +1,21 @@
 package com.client.core.formtrigger.controller.lead;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.Lead;
+import com.client.core.base.model.relatedentity.LeadRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormLeadDto;
 import com.client.core.formtrigger.model.helper.impl.LeadFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.LeadFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by hiqbal on 12/23/2015.
- */
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/formtrigger/lead/*")
 public class LeadFormTriggerController extends AbstractFormTriggerController<Lead, LeadFormTriggerHelper, LeadFormTriggerTraverser> {
@@ -31,7 +24,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
 
     @Autowired
     public LeadFormTriggerController(Optional<List<TriggerValidator<Lead, LeadFormTriggerHelper, LeadFormTriggerTraverser>>> triggerValidators) {
-        super(Lead.class, triggerValidators);
+        super(Lead.class, triggerValidators, LeadRelatedEntity.values());
     }
 
     /**
@@ -48,7 +41,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
     public String addEntity(@ModelAttribute FormLeadDto formLeadDto, @RequestParam("ft.userId") Integer updatingUserID) {
         log.info("---------------------------- Starting Lead Validation Process----------------------------------------");
 
-        LeadFormTriggerTraverser traverser = new LeadFormTriggerTraverser(formLeadDto, updatingUserID, false, bullhornData);
+        LeadFormTriggerTraverser traverser = new LeadFormTriggerTraverser(formLeadDto, updatingUserID, false, getRelatedEntityFields());
 
         return handleRequest(traverser);
     }
@@ -67,7 +60,7 @@ public class LeadFormTriggerController extends AbstractFormTriggerController<Lea
     public String editEntity(@ModelAttribute FormLeadDto formLeadDto, @RequestParam("ft.userId") Integer updatingUserID) {
         log.info("---------------------------- Starting Lead Validation Process----------------------------------------");
 
-        LeadFormTriggerTraverser traverser = new LeadFormTriggerTraverser(formLeadDto, updatingUserID, true, bullhornData);
+        LeadFormTriggerTraverser traverser = new LeadFormTriggerTraverser(formLeadDto, updatingUserID, true, getRelatedEntityFields());
 
         return handleRequest(traverser);
     }

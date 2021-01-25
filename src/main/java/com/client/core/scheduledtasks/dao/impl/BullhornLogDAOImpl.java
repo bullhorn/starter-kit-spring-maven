@@ -1,22 +1,22 @@
 package com.client.core.scheduledtasks.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import javax.sql.DataSource;
+import com.client.core.base.util.Utility;
+import com.client.core.scheduledtasks.dao.BullhornLogDAO;
+import com.client.core.scheduledtasks.model.log.BullhornError;
+import com.client.core.scheduledtasks.model.log.BullhornLog;
+import com.client.core.scheduledtasks.model.log.Request;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
-import com.client.core.scheduledtasks.model.log.BullhornError;
-import com.client.core.scheduledtasks.model.log.BullhornLog;
-import com.client.core.scheduledtasks.model.log.Request;
-import com.client.core.base.util.Util;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 public class BullhornLogDAOImpl implements BullhornLogDAO {
 
@@ -94,7 +94,7 @@ public class BullhornLogDAOImpl implements BullhornLogDAO {
                 ps.setString(8, log.getEntity());
                 ps.setInt(9, log.getEntityID());
                 ps.setString(10, log.getEventType());
-                ps.setString(11, Util.arrayToString(log.getUpdatedProperties(), ","));
+                ps.setString(11, Utility.arrayToString(log.getUpdatedProperties(), ","));
                 ps.setDate(12, log.getEventTimeStamp());
                 return ps;
             }

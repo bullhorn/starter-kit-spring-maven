@@ -6,16 +6,10 @@ import com.bullhornsdk.data.model.entity.core.standard.Category;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.Person;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.client.core.base.util.Util;
+import com.client.core.base.util.Utility;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import com.google.common.base.Strings;
 import org.apache.log4j.Logger;
-
-/**
- * Maps a candidate form in BH to a CandidateDto
- * 
- * @author magnus.palm
- */
 
 public class FormCandidateDto extends AbstractFormDto<Candidate> {
 
@@ -2862,12 +2856,12 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 		candidate.setPhone3(phone3);
 		candidate.setPreferredContact(preferredContact);
 		candidate.setRecentClientList(recentClientList);
-		if (Util.isNumeric(recruiterUserID))
+		if (Utility.isNumeric(recruiterUserID))
 			candidate.setOwner(new CorporateUser(Integer.parseInt(recruiterUserID)));
 		else if (recruiterUserID != null) {
 			String[] ownerIDs = recruiterUserID.split(",");
 			candidate
-					.setOwner(new CorporateUser(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0));
+					.setOwner(new CorporateUser(ownerIDs.length > 0 && Utility.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0));
 		}
 
 		candidate.setReferredBy(referredBy);
@@ -3164,11 +3158,11 @@ public class FormCandidateDto extends AbstractFormDto<Candidate> {
 		candidateDto.setPhone3(phone3);
 		candidateDto.setPreferredContact(preferredContact);
 		candidateDto.setRecentClientList(recentClientList);
-		if (Util.isNumeric(recruiterUserID))
+		if (Utility.isNumeric(recruiterUserID))
 			candidateDto.setOwnerID(Integer.parseInt(recruiterUserID));
 		else if (recruiterUserID != null) {
 			String[] ownerIDs = recruiterUserID.split(",");
-			candidateDto.setOwnerID(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0);
+			candidateDto.setOwnerID(ownerIDs.length > 0 && Utility.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0);
 		}
 
 		candidateDto.setReferredBy(referredBy);

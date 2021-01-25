@@ -1,12 +1,12 @@
 package com.client.core.scheduledtasks.model.helper;
 
-import java.util.Map;
-
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
+import com.client.core.base.model.helper.Helper;
 
-public interface ScheduledTaskHelper<E extends BullhornEntity> {
+import java.util.Map;
+
+public interface ScheduledTaskHelper<E extends BullhornEntity> extends Helper<E> {
 
     /**
      * Returns the entity the subscription event occurred for
@@ -48,7 +48,5 @@ public interface ScheduledTaskHelper<E extends BullhornEntity> {
 	 * @return A deep copy of the passed in T entity.
 	 */
 	<T extends UpdateEntity> T getOneEntityToSave(T entity);
-
-    BullhornData getBullhornData();
 
 }

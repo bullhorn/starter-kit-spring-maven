@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 import com.client.core.soap.service.BullhornAPI;
 import com.client.core.soap.tools.hostname.HostNameUtility;
 
-/**
- * Created by hiqbal on 7/12/2016.
- */
 @Service
 public class StandardHostNameUtility implements HostNameUtility {
 

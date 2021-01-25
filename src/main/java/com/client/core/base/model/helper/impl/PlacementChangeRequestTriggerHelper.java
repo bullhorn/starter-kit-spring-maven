@@ -1,128 +1,101 @@
 package com.client.core.base.model.helper.impl;
 
-import java.util.List;
-
-import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementChangeRequest;
-import com.bullhornsdk.data.model.entity.core.standard.PlacementCommission;
+import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.base.model.helper.AbstractTriggerHelper;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.CandidateRelatedEntity;
+import com.client.core.base.model.relatedentity.PlacementChangeRequestRelatedEntity;
 
-/**
- * Holds and keeps data needed for validations to minimize the number of API calls.
- * 
- * 
- * 
- * @author magnus.palm
- * 
- * 
- */
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public abstract class PlacementChangeRequestTriggerHelper extends AbstractTriggerHelper<PlacementChangeRequest> {
 
-	private List<PlacementCommission> commissions;
 	private Placement placement;
-	private CorporateUser jobOwner;
+	private List<PlacementCommission> commissions;
+	private ClientContact clientContact;
+	private ClientCorporation clientCorporation;
 	private Candidate candidate;
-	private ClientCorporation clientCorpration;
-	private JobOrder job;
+	private CorporateUser candidateOwner;
+	private JobOrder jobOrder;
+	private CorporateUser jobOwner;
+	private JobSubmission jobSubmission;
 
-	public PlacementChangeRequestTriggerHelper(Integer updatingUserID, BullhornData bullhornData) {
-		super(updatingUserID, bullhornData);
+	public PlacementChangeRequestTriggerHelper(Integer updatingUserID, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(updatingUserID, PlacementChangeRequest.class, PlacementChangeRequestRelatedEntity.PLACEMENT_CHANGE_REQUEST, relatedEntityFields);
 	}
 
 	public Placement getPlacement() {
 		if (placement == null) {
-			setPlacement(findPlacement(getNewEntity().getPlacement().getId()));
+			this.placement = findPlacement(getNewEntity().getPlacement().getId(), PlacementChangeRequestRelatedEntity.PLACEMENT);
 		}
 
 		return placement;
 	}
 
-	public void setPlacement(Placement placement) {
-		this.placement = placement;
-	}
-
-	public JobOrder getJob() {
-		if (job == null) {
-			setJob(findJobOrder(getPlacement().getJobOrder().getId()));
+	public JobOrder getJobOrder() {
+		if (jobOrder == null) {
+			this.jobOrder = findJobOrder(getPlacement().getJobOrder().getId(), PlacementChangeRequestRelatedEntity.JOB_ORDER);
 		}
 
-		return job;
-	}
-
-	public void setJob(JobOrder job) {
-		this.job = job;
+		return jobOrder;
 	}
 
 	public List<PlacementCommission> getCommissions() {
 		if (commissions == null) {
-			setCommissions(getCommissions(getNewEntity().getPlacement().getId()));
+			this.commissions = getCommissions(getPlacement().getId(), PlacementChangeRequestRelatedEntity.COMMISSIONS);
 		}
 
 		return commissions;
 	}
 
-	public void setCommissions(List<PlacementCommission> commissions) {
-		this.commissions = commissions;
-	}
-
 	public CorporateUser getJobOwner() {
 		if (jobOwner == null) {
-			setJobOwner(findCorporateUser(getJob().getOwner().getId()));
+			this.jobOwner = findCorporateUser(getJobOrder().getOwner().getId(), PlacementChangeRequestRelatedEntity.JOB_OWNER);
 		}
 
 		return jobOwner;
 	}
 
-	public void setJobOwner(CorporateUser jobOwner) {
-		this.jobOwner = jobOwner;
-	}
-
 	public Candidate getCandidate() {
 		if (candidate == null) {
-			setCandidate(findCandidate(getPlacement().getCandidate().getId()));
+			this.candidate = findCandidate(getPlacement().getCandidate().getId(), PlacementChangeRequestRelatedEntity.CANDIDATE);
 		}
 
 		return candidate;
 	}
 
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
-	public ClientCorporation getClientCorpration() {
-		if (clientCorpration == null) {
-			setClientCorpration(findClientCorporation(getJob().getClientCorporation().getId()));
+	public CorporateUser getCandidateOwner() {
+		if (candidateOwner == null) {
+			this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), CandidateRelatedEntity.CANDIDATE_OWNER);
 		}
 
-		return clientCorpration;
+		return candidateOwner;
 	}
 
-	public void setClientCorpration(ClientCorporation clientCorpration) {
-		this.clientCorpration = clientCorpration;
-	}
-
-	@Override
-	public void setNewEntity(PlacementChangeRequest newEntity) {
-		this.newEntity = newEntity;
-	}
-
-	@Override
-	public PlacementChangeRequest getOldEntity() {
-		if (oldEntity == null) {
-			setOldEntity(findPlacementChangeRequest(getNewEntity().getId()));
+	public ClientContact getClientContact() {
+		if (clientContact == null) {
+			this.clientContact = findClientContact(getJobOrder().getClientContact().getId(), PlacementChangeRequestRelatedEntity.CLIENT_CONTACT);
 		}
 
-		return oldEntity;
+		return clientContact;
 	}
 
-	@Override
-	public void setOldEntity(PlacementChangeRequest oldEntity) {
-		this.oldEntity = oldEntity;
+	public ClientCorporation getClientCorporation() {
+		if (clientCorporation == null) {
+			this.clientCorporation = findClientCorporation(getJobOrder().getClientCorporation().getId(), PlacementChangeRequestRelatedEntity.CLIENT_CORPORATION);
+		}
+
+		return clientCorporation;
+	}
+
+	public JobSubmission getJobSubmission() {
+		if (jobSubmission == null) {
+			this.jobSubmission = findJobSubmission(getPlacement().getJobSubmission().getId(), PlacementChangeRequestRelatedEntity.JOB_SUBMISSION);
+		}
+
+		return jobSubmission;
 	}
 
 }

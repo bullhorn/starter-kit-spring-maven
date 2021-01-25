@@ -1,81 +1,53 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.bullhornsdk.data.model.entity.core.standard.Person;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.NoteRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
- * will be stored in this Traverser for subsequent automation work.
- * 
- * The allsToSaveBackToBH map will contain deep copies of relevant dtos that should be saved back to BH. The copies
- * will be updated according to task logic, while the original dtos will NOT be updated so that subsequent logic will
- * still be made on original values.
- * 
- * Once all automation work has been done the dtos that need saving will be saved only once. In this way keeping the api
- * calls to a minimum by saving each dto only once, even though multiple tasks might have updated different fields on
- * the same dto.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 public class NoteScheduledTaskHelper extends AbstractScheduledTaskHelper<Note> {
 
-	private JobOrder job;
-	private CorporateUser commentingUser;
+	private Person personReference;
+	private Person commentingPerson;
+	private JobOrder jobOrder;
 
-	public NoteScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, Note.class);
+	public NoteScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(event, Note.class, NoteRelatedEntity.NOTE, relatedEntityFields);
 	}
 
 	public Note getNote() {
         return getEntity();
     }
 
-	/**
-	 * Gets the JoOrder for the note, if job == null then makes api call, otherwise returns job instance
-	 * variable.
-	 * 
-	 * @return the JobOrder connected to the placement
-	 */
-	public JobOrder getJob() {
-		if (job == null) {
-			setJob(findJobOrder(getNote().getJobOrder().getId()));
+	public Person getPersonReference() {
+		if (personReference == null) {
+			this.personReference = findPerson(getNote().getPersonReference().getId(), NoteRelatedEntity.PERSON_REFERENCE);
 		}
-		return job;
+
+		return personReference;
 	}
 
-	public void setJob(JobOrder job) {
-		this.job = job;
-	}
-
-	/**
-	 * Gets the CorporateUser that added the note, if commentingUser == null then makes api call, otherwise returns
-	 * commentingUser instance variable.
-	 * 
-	 * @return the CorporateUser that added the note
-	 */
-	public CorporateUser getCommentingUser() {
-		if (commentingUser == null) {
-			setCommentingUser(findCorporateUser(getNote().getCommentingPerson().getId()));
+	public Person getCommentingPerson() {
+		if (commentingPerson == null) {
+			this.commentingPerson = findPerson(getNote().getPersonReference().getId(), NoteRelatedEntity.COMMENTING_PERSON);
 		}
-		return commentingUser;
+
+		return commentingPerson;
 	}
 
-	public void setCommentingUser(CorporateUser commentingUser) {
-		this.commentingUser = commentingUser;
-	}
+	public Optional<JobOrder> getJobOrder() {
+		if (jobOrder == null && isPopulated(getNote().getJobOrder())) {
+			this.jobOrder = findJobOrder(getNote().getJobOrder().getId(), NoteRelatedEntity.JOB_ORDER);
+		}
 
-    @Override
-    public String toString() {
-        return new StringBuilder("NoteScheduledTaskHelper {")
-                .append("\n\t\"job\": ")
-                .append(job)
-                .append(",\n\t\"commentingUser\": ")
-                .append(commentingUser)
-                .append('}')
-                .toString();
-    }
+		return Optional.ofNullable(jobOrder);
+	}
+	
 }

@@ -1,24 +1,20 @@
 package com.client.core.formtrigger.controller.placement;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
+import com.client.core.base.model.relatedentity.PlacementRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormPlacementDto;
 import com.client.core.formtrigger.model.helper.impl.PlacementFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.PlacementFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Entry point for Placement formtrigger Validations.
@@ -37,7 +33,7 @@ public class PlacementFormTriggerController extends AbstractFormTriggerControlle
 
     @Autowired
     public PlacementFormTriggerController(Optional<List<TriggerValidator<Placement, PlacementFormTriggerHelper, PlacementFormTriggerTraverser>>> triggerValidators) {
-        super(Placement.class, triggerValidators);
+        super(Placement.class, triggerValidators, PlacementRelatedEntity.values());
     }
 
 	/**
@@ -55,7 +51,7 @@ public class PlacementFormTriggerController extends AbstractFormTriggerControlle
 		log.info("---------------------------- Starting Placement Validation Add Process----------------------------------------");
 
 		PlacementFormTriggerTraverser traverser = new PlacementFormTriggerTraverser(formPlacementDto, updatingUserID, false,
-				bullhornData);
+				getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}
@@ -75,7 +71,7 @@ public class PlacementFormTriggerController extends AbstractFormTriggerControlle
 		log.info("---------------------------- Starting Placement Validation Edit Process----------------------------------------");
 
 		PlacementFormTriggerTraverser traverser = new PlacementFormTriggerTraverser(formPlacementDto, updatingUserID, true,
-				bullhornData);
+				getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}
