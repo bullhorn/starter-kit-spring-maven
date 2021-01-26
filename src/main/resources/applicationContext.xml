@@ -72,12 +72,6 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-
-	<!-- DAO BEANS -->
-	<bean id="bullhornLogDAO" class="com.client.core.scheduledtasks.dao.impl.BullhornLogDAOImpl">
-		<property name="dataSource" ref="dataSourceLog" />
-	</bean>
-
     <bean id="sessionFilter" class="com.client.core.SessionFilter">
         <constructor-arg ref="appSettings" />
     </bean>

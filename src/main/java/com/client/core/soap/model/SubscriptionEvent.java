@@ -3,10 +3,8 @@ package com.client.core.soap.model;
 import java.sql.Date;
 import java.util.Arrays;
 
-import com.bullhorn.dataevent.event.DataEvent;
-import com.client.core.scheduledtasks.model.log.BullhornLog;
-
 public class SubscriptionEvent {
+
 	private String eventType;
 	private String eventID;
 	private String requestID;
@@ -18,45 +16,6 @@ public class SubscriptionEvent {
 	private boolean isError;
 	private int updatingUserID;
 	private String transactionID;
-
-	public static SubscriptionEvent instantiateNonError(DataEvent dataEvent, String updatingUserID,
-			String subscriptionName, int requestID) {
-		SubscriptionEvent se = new SubscriptionEvent();
-		se.setEventID(dataEvent.getEventId());
-		se.setEventTimeStamp(dataEvent.getEventTimestamp());
-		se.setError(false);
-		se.setSubscriptionName(subscriptionName);
-		se.setUpdatingUserID(Integer.parseInt(updatingUserID));
-		se.setRequestID(Integer.toString(requestID));
-		return se;
-	}
-	
-	public static SubscriptionEvent instantiateNonErrorWithTransactionID(DataEvent dataEvent, String updatingUserID,
-			String subscriptionName, int requestID, String transactionID) {
-		SubscriptionEvent se = new SubscriptionEvent();
-		se.setEventID(dataEvent.getEventId());
-		se.setEventTimeStamp(dataEvent.getEventTimestamp());
-		se.setError(false);
-		se.setSubscriptionName(subscriptionName);
-		se.setUpdatingUserID(Integer.parseInt(updatingUserID));
-		se.setRequestID(Integer.toString(requestID));
-		se.setTransactionID(transactionID);
-		return se;
-	}
-	
-	public static SubscriptionEvent instantiateError(BullhornLog log,String subscriptionName) {
-		SubscriptionEvent se = new SubscriptionEvent();
-		se.setEntityID(log.getEntityID());
-		se.setEntityType(log.getEntity());
-		se.setError(true);
-		se.setEventID(log.getEventID());
-		se.setRequestID(log.getRequestID());
-		se.setEventType(log.getEventType());
-		se.setSubscriptionName(subscriptionName);
-		se.setUpdatedProperties(log.getUpdatedProperties());
-		se.setEventTimeStamp(log.getEventTimeStamp().getTime());
-		return se;
-	}
 	
 	public String getEventType() {
 		return eventType;
@@ -176,8 +135,4 @@ public class SubscriptionEvent {
 		return builder.toString();
 	}
 
-	
-	
-	
-	
 }

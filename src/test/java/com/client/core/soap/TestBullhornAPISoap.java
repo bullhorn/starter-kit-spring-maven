@@ -101,15 +101,6 @@ public class TestBullhornAPISoap extends BaseTest {
 	}
 
 	@Test
-	public void testGetCorporationID() {
-		int corporationId = Integer.valueOf(applicationSettings.getCorporationID());
-
-		int corpId = bullhornAPI.getCorporationID();
-
-		assertTrue(corporationId == corpId);
-	}
-
-	@Test
 	public void testGetAppSettings() {
 		assertNotNull(bullhornAPI.getAppSettings());
 	}

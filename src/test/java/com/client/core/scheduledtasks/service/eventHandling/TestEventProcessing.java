@@ -19,7 +19,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.client.BaseTest;
 import com.client.core.ApplicationSettings;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
@@ -32,9 +31,6 @@ public class TestEventProcessing extends BaseTest {
     @Autowired
     @Qualifier("appSettings")
     private ApplicationSettings appSettings;
-
-	@Autowired
-	private BullhornLogDAO bullhornLogDAO;
 
 	@Autowired
     private EventWorkflowFactory eventWorkflowFactory;
@@ -139,7 +135,7 @@ public class TestEventProcessing extends BaseTest {
 		// loop through each event
 		for (CustomSubscriptionEvent event : subscriptionEvents) {
 			error = false;
-            EventProcessing processEvent = EventProcessing.instantiateRunnable(corporationID, bullhornLogDAO, event, eventWorkflowFactory);
+            EventProcessing processEvent = EventProcessing.instantiateRunnable(event, eventWorkflowFactory);
 			// send to exec service
 			try {
 				exec.execute(processEvent);

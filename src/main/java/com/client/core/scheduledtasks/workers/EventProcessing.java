@@ -4,14 +4,9 @@ import com.bullhorn.entity.ApiEntityName;
 import com.bullhornsdk.data.model.entity.core.certificationrequirement.CandidateCertificationRequirement;
 import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmissionCertificationRequirement;
 import com.bullhornsdk.data.model.entity.core.standard.*;
-import com.client.core.base.util.StackTraceUtil;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
-import com.client.core.scheduledtasks.model.log.BullhornLog;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import org.apache.log4j.Logger;
-
-import java.util.List;
 
 /**
  * Handles one subscription event by passing it through the proper workflow for the entity that had an event thrown. Also
@@ -22,44 +17,29 @@ public class EventProcessing implements Runnable {
     private final Logger log = Logger.getLogger(getClass());
 
     private final EventWorkflowFactory eventWorkflowFactory;
-    private final BullhornLogDAO bullhornLogDAO;
     private final CustomSubscriptionEvent event;
-    private final Integer corporationID;
 
-    private EventProcessing(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
+    private EventProcessing(CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
         super();
         this.eventWorkflowFactory = eventWorkflowFactory;
-        this.bullhornLogDAO = bullhornLogDAO;
         this.event = event;
-        this.corporationID = corporationID;
     }
 
-    public static EventProcessing instantiateRunnable(Integer corporationID, BullhornLogDAO bullhornLogDAO, CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
-        return new EventProcessing(corporationID, bullhornLogDAO, event, eventWorkflowFactory);
+    public static EventProcessing instantiateRunnable(CustomSubscriptionEvent event, EventWorkflowFactory eventWorkflowFactory) {
+        return new EventProcessing(event, eventWorkflowFactory);
     }
 
     /**
      * Performs the actual handling of a single event by parsing out the kind of event from the {@link com.client.core.soap.model.SubscriptionEvent} provided via
-     * the {@link EventProcessing#(Integer, BullhornLogDAO, com.client.core.soap.model.SubscriptionEvent)} constructor and handing the event off
+     * the {@link EventProcessing#(Integer, com.client.core.soap.model.SubscriptionEvent)} constructor and handing the event off
      * to the proper workflow.
      */
     @Override
     public void run() {
-        BullhornLog bhlog = BullhornLog.instantiateLog(event, corporationID);
-
         try {
             doAction();
-
-            if (event.isError()) {
-                try {
-                    bullhornLogDAO.updateLog(bhlog);
-                } catch (Exception e) {
-                    log.error("Error updating event to successful", e);
-                }
-            }
         } catch (Exception e) {
             log.error("Event " + event.getEventId() + " resulted in error:" + e.getMessage(), e);
-            logError(bhlog, e);
         }
     }
 
@@ -207,27 +187,6 @@ public class EventProcessing implements Runnable {
         }
 
         return false;
-    }
-
-    private void logError(BullhornLog bhlog, Exception e) {
-        String stackTrace = StackTraceUtil.getCustomStackTrace(e);
-        bhlog.setError(stackTrace);
-        bhlog.setStatus("error");
-
-        String queryWhere = "corporationID = " + bhlog.getCorporationID() + " AND subscriptionID = '" + bhlog.getSubscriptionID()
-                + "'" + " AND eventID = '" + bhlog.getEventID() + "'";
-        try {
-            List<BullhornLog> selectLog = bullhornLogDAO.selectWhere(queryWhere);
-
-            if (selectLog.size() > 0) {
-                bullhornLogDAO.updateLog(bhlog);
-            } else {
-                bullhornLogDAO.insertLog(bhlog);
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
 }
