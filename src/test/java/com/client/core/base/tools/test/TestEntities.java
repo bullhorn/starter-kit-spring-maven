@@ -1,11 +1,5 @@
 package com.client.core.base.tools.test;
 
-/**
- * Contains the PS Sandbox test entities that should be used in unit tests.
- * 
- * @author magnus.palm
- * 
- */
 public class TestEntities {
 
 	private Integer appointmentId;

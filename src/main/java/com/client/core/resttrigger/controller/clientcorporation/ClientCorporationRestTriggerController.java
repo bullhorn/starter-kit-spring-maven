@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.clientcorporation;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.client.core.base.model.relatedentity.ClientCorporationRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.ClientCorporationRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.ClientCorporationRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.ClientCorporationRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.ClientCorporationRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/16/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/clientcorporation/*")
 public class ClientCorporationRestTriggerController extends AbstractRestTriggerController<ClientCorporation, ClientCorporationRestTriggerHelper, ClientCorporationRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class ClientCorporationRestTriggerController extends AbstractRestTriggerC
 
     @Autowired
     public ClientCorporationRestTriggerController(Optional<List<TriggerValidator<ClientCorporation, ClientCorporationRestTriggerHelper, ClientCorporationRestTriggerTraverser>>> triggerValidators) {
-        super(ClientCorporation.class, triggerValidators);
+        super(ClientCorporation.class, triggerValidators, ClientCorporationRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class ClientCorporationRestTriggerController extends AbstractRestTriggerC
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    ClientCorporationRestTriggerTraverser traverser = new ClientCorporationRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    ClientCorporationRestTriggerTraverser traverser = new ClientCorporationRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class ClientCorporationRestTriggerController extends AbstractRestTriggerC
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    ClientCorporationRestTriggerTraverser traverser = new ClientCorporationRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    ClientCorporationRestTriggerTraverser traverser = new ClientCorporationRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

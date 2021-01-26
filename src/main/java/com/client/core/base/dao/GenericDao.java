@@ -8,14 +8,6 @@ import javax.persistence.EntityNotFoundException;
 import com.client.core.base.model.Entity;
 import com.client.core.base.tools.data.QueryResult;
 
-/**
- * Generic data-access-object.  Provides database access for a given entity type, represented by a domain class, typically a POJO
- * 
- * @author magnus.palm
- * 
- * @param <T> the entity type
- * @param <ID> the primary key of entity
- */
 public interface GenericDao<T extends Entity<ID>, ID> {
 
 	/**

@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.placement;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.Placement;
+import com.client.core.base.model.relatedentity.PlacementRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.PlacementRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.PlacementRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.PlacementRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.PlacementRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/16/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/placement/*")
 public class PlacementRestTriggerController extends AbstractRestTriggerController<Placement, PlacementRestTriggerHelper, PlacementRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class PlacementRestTriggerController extends AbstractRestTriggerControlle
 
     @Autowired
     public PlacementRestTriggerController(Optional<List<TriggerValidator<Placement, PlacementRestTriggerHelper, PlacementRestTriggerTraverser>>> triggerValidators) {
-        super(Placement.class, triggerValidators);
+        super(Placement.class, triggerValidators, PlacementRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class PlacementRestTriggerController extends AbstractRestTriggerControlle
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    PlacementRestTriggerTraverser traverser = new PlacementRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    PlacementRestTriggerTraverser traverser = new PlacementRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class PlacementRestTriggerController extends AbstractRestTriggerControlle
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    PlacementRestTriggerTraverser traverser = new PlacementRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    PlacementRestTriggerTraverser traverser = new PlacementRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

@@ -1,17 +1,10 @@
 package com.client.core.soap.workers;
 
-import java.util.concurrent.Callable;
-
 import com.bullhorn.entity.AbstractDto;
 import com.client.core.soap.service.BullhornAPI;
 
-/**
- * Helper for multi-threaded entity find.
- * 
- * @author Magnus
- * 
- * @param <T>
- */
+import java.util.concurrent.Callable;
+
 public class EntityFindWorker<T extends AbstractDto> implements Callable<T> {
 
 	private final Object entityID;

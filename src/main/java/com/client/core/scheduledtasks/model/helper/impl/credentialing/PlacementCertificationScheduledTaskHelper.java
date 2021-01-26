@@ -1,23 +1,32 @@
 package com.client.core.scheduledtasks.model.helper.impl.credentialing;
 
 import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.PlacementCertificationRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Created by m.kesmetzis on 06/05/2020.
- */
+import java.util.Map;
+import java.util.Set;
 
 public class PlacementCertificationScheduledTaskHelper extends AbstractScheduledTaskHelper<PlacementCertification> {
 
     private Placement placement;
+    private JobSubmission jobSubmission;
+    private CorporateUser jobSubmissionSendingUser;
+    private Candidate candidate;
+    private CorporateUser candidateOwner;
+    private JobOrder jobOrder;
+    private CorporateUser jobOwner;
+    private ClientContact clientContact;
+    private ClientCorporation clientCorporation;
     private CandidateCertification candidateCertification;
     private Certification certification;
     private CorporateUser modifyingUser;
     private CorporateUser owner;
 
-    public PlacementCertificationScheduledTaskHelper(CustomSubscriptionEvent event) {
-        super(event, PlacementCertification.class);
+    public PlacementCertificationScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        super(event, PlacementCertification.class, PlacementCertificationRelatedEntity.PLACEMENT_CERTIFICATION_REQUIREMENT, relatedEntityFields);
     }
 
 
@@ -27,67 +36,118 @@ public class PlacementCertificationScheduledTaskHelper extends AbstractScheduled
 
     public Placement getPlacement() {
         if (placement == null) {
-            setPlacement(findPlacement(getPlacementCertification().getPlacement().getId()));
+            this.placement = findPlacement(getPlacementCertification().getPlacement().getId(), PlacementCertificationRelatedEntity.PLACEMENT);
         }
+        
         return placement;
     }
 
-    public void setPlacement(Placement placement) {
-        this.placement = placement;
+    public JobSubmission getJobSubmission() {
+        if (jobSubmission == null) {
+            this.jobSubmission = findJobSubmission(getPlacement().getJobSubmission().getId(),
+                    PlacementCertificationRelatedEntity.JOB_SUBMISSION);
+        }
+
+        return jobSubmission;
+    }
+
+    public CorporateUser getJobSubmissionSendingUser() {
+        if (jobSubmissionSendingUser == null) {
+            this.jobSubmissionSendingUser = findCorporateUser(getJobSubmission().getSendingUser().getId(),
+                    PlacementCertificationRelatedEntity.JOB_SUBMISSION_SENDING_USER);
+        }
+
+        return jobSubmissionSendingUser;
+    }
+
+    public Candidate getCandidate() {
+        if (candidate == null) {
+            this.candidate = findCandidate(getPlacement().getCandidate().getId(),
+                    PlacementCertificationRelatedEntity.CANDIDATE);
+        }
+
+        return candidate;
+    }
+
+    public CorporateUser getCandidateOwner() {
+        if (candidateOwner == null) {
+            this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(),
+                    PlacementCertificationRelatedEntity.CANDIDATE_OWNER);
+        }
+
+        return candidateOwner;
+    }
+
+    public JobOrder getJobOrder() {
+        if (jobOrder == null) {
+            this.jobOrder = findJobOrder(getPlacement().getJobOrder().getId(),
+                    PlacementCertificationRelatedEntity.JOB_ORDER);
+        }
+
+        return jobOrder;
+    }
+
+    public CorporateUser getJobOwner() {
+        if (jobOwner == null) {
+            this.jobOwner = findCorporateUser(getJobOrder().getOwner().getId(),
+                    PlacementCertificationRelatedEntity.JOB_OWNER);
+        }
+
+        return jobOwner;
+    }
+
+    public ClientContact getClientContact() {
+        if (clientContact == null) {
+            this.clientContact = findClientContact(getJobOrder().getClientContact().getId(),
+                    PlacementCertificationRelatedEntity.CLIENT_CONTACT);
+        }
+
+        return clientContact;
+    }
+
+    public ClientCorporation getClientCorporation() {
+        if (clientCorporation == null) {
+            this.clientCorporation = findClientCorporation(getJobOrder().getClientCorporation().getId(),
+                    PlacementCertificationRelatedEntity.CLIENT_CORPORATION);
+        }
+
+        return clientCorporation;
     }
 
     public CandidateCertification getCandidateCertification() {
         if (candidateCertification == null) {
-            setCandidateCertification(findCandidateCertification(getPlacementCertification().getCandidateCertification().getId()));
+            this.candidateCertification = findCandidateCertification(getPlacementCertification().getCandidateCertification().getId(),
+                    PlacementCertificationRelatedEntity.CANDIDATE_CERTIFICATION);
         }
-        return candidateCertification;
-    }
 
-    public void setCandidateCertification(CandidateCertification candidateCertification) {
-        this.candidateCertification = candidateCertification;
+        return candidateCertification;
     }
 
     public Certification getCertification() {
         if (certification == null) {
-            setCertification(findCertification(getPlacementCertification().getCertification().getId()));
+            this.certification = findCertification(getPlacementCertification().getCertification().getId(),
+                    PlacementCertificationRelatedEntity.CERTIFICATION);
         }
-        return certification;
-    }
 
-    public void setCertification(Certification certification) {
-        this.certification = certification;
+        return certification;
     }
 
     public CorporateUser getModifyingUser() {
         if (modifyingUser == null) {
-            setModifyingUser(findCorporateUser(getPlacementCertification().getModifyingUser().getId()));
+            this.modifyingUser = findCorporateUser(getPlacementCertification().getModifyingUser().getId(),
+                    PlacementCertificationRelatedEntity.MODIFYING_USER);
         }
-        return modifyingUser;
-    }
 
-    public void setModifyingUser(CorporateUser modifyingUser) {
-        this.modifyingUser = modifyingUser;
+        return modifyingUser;
     }
 
     public CorporateUser getOwner() {
         if (owner == null) {
-            setOwner(findCorporateUser(getPlacementCertification().getOwner().getId()));
+            this.owner = findCorporateUser(getPlacementCertification().getOwner().getId(),
+                    PlacementCertificationRelatedEntity.OWNER);
         }
+
         return owner;
     }
 
-    public void setOwner(CorporateUser owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return "PlacementCertificationScheduledTaskHelper{" +
-                "placement=" + placement +
-                ", candidateCertification=" + candidateCertification +
-                ", certification=" + certification +
-                ", modifyingUser=" + modifyingUser +
-                ", owner=" + owner +
-                '}';
-    }
 }

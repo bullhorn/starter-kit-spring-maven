@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.opportunity;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
+import com.client.core.base.model.relatedentity.OpportunityRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.OpportunityRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.OpportunityRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.OpportunityRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.OpportunityRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/21/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/opportunity/*")
 public class OpportunityRestTriggerController extends AbstractRestTriggerController<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
 
     @Autowired
     public OpportunityRestTriggerController(Optional<List<TriggerValidator<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser>>> triggerValidators) {
-        super(Opportunity.class, triggerValidators);
+        super(Opportunity.class, triggerValidators, OpportunityRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    OpportunityRestTriggerTraverser traverser = new OpportunityRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    OpportunityRestTriggerTraverser traverser = new OpportunityRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    OpportunityRestTriggerTraverser traverser = new OpportunityRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    OpportunityRestTriggerTraverser traverser = new OpportunityRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

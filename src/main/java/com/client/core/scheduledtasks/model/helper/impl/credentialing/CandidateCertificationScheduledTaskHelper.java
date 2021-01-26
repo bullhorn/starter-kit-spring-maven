@@ -4,72 +4,59 @@ import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CandidateCertification;
 import com.bullhornsdk.data.model.entity.core.standard.Certification;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.CandidateCertificationRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.CandidateCertificationRequirementRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Created by m.kesmetzis on 06/05/2020.
- */
+import java.util.Map;
+import java.util.Set;
 
 public class CandidateCertificationScheduledTaskHelper extends AbstractScheduledTaskHelper<CandidateCertification> {
 
     private Candidate candidate;
+    private CorporateUser candidateOwner;
     private Certification certification;
     private CorporateUser modifyingUser;
 
-    public CandidateCertificationScheduledTaskHelper(CustomSubscriptionEvent event) {
-        super(event, CandidateCertification.class);
+    public CandidateCertificationScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        super(event, CandidateCertification.class, CandidateCertificationRelatedEntity.CANDIDATE_CERTIFICATION, relatedEntityFields);
     }
-
 
     public CandidateCertification getCandidateCertification() {
         return getEntity();
     }
 
-
     public Candidate getCandidate() {
         if (candidate == null) {
-            setCandidate(findCandidate(getCandidateCertification().getCandidate().getId()));
+            this.candidate = findCandidate(getCandidateCertification().getCandidate().getId(), CandidateCertificationRelatedEntity.CANDIDATE);
         }
+
         return candidate;
     }
 
-    public void setCandidate(Candidate candidate) {
-        this.candidate = candidate;
-    }
+    public CorporateUser getCandidateOwner() {
+        if (candidateOwner == null) {
+            this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), CandidateCertificationRequirementRelatedEntity.CANDIDATE_OWNER);
+        }
 
+        return candidateOwner;
+    }
 
     public Certification getCertification() {
         if (certification == null) {
-            setCertification(findCertification(getCandidateCertification().getCertification().getId()));
+            this.certification = findCertification(getCandidateCertification().getCertification().getId(), CandidateCertificationRelatedEntity.CERTIFICATION);
         }
+
         return certification;
     }
 
-    public void setCertification(Certification certification) {
-        this.certification = certification;
-    }
-
-
     public CorporateUser getModifyingUser() {
         if (modifyingUser == null) {
-            setModifyingUser(findCorporateUser(getCandidateCertification().getModifyingUser().getId()));
+            this.modifyingUser = findCorporateUser(getCandidateCertification().getModifyingUser().getId(), CandidateCertificationRelatedEntity.MODIFYING_USER);
         }
         return modifyingUser;
     }
 
-    public void setModifyingUser(CorporateUser modifyingUser) {
-        this.modifyingUser = modifyingUser;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder("CandidateCertificationScheduledTaskHelper {")
-                .append("\n\t\"candidate\": ")
-                .append(candidate)
-                .append(",\n\t\"modifyingUser\": ")
-                .append(modifyingUser)
-                .append('}')
-                .toString();
-    }
 }

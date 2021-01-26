@@ -1,24 +1,20 @@
 package com.client.core.formtrigger.controller.note;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.client.core.base.model.relatedentity.NoteRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormNoteDto;
 import com.client.core.formtrigger.model.helper.impl.NoteFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.NoteFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Entry point for Job submission Validations.
@@ -36,7 +32,7 @@ public class NoteFormTriggerController extends AbstractFormTriggerController<Not
 
     @Autowired
     public NoteFormTriggerController(Optional<List<TriggerValidator<Note, NoteFormTriggerHelper, NoteFormTriggerTraverser>>> triggerValidators) {
-        super(Note.class, triggerValidators);
+        super(Note.class, triggerValidators, NoteRelatedEntity.values());
     }
 
 	/**
@@ -54,7 +50,7 @@ public class NoteFormTriggerController extends AbstractFormTriggerController<Not
 		log.info("---------------------------- Starting Note Validation Process----------------------------------------");
 
 		NoteFormTriggerTraverser traverser = new NoteFormTriggerTraverser(formNoteDto, updatingUserID, isEdit(formNoteDto),
-				bullhornData);
+				getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}

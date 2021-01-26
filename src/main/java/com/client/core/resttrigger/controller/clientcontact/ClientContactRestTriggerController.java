@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.clientcontact;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
+import com.client.core.base.model.relatedentity.ClientContactRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.ClientContactRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.ClientContactRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.ClientContactRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.ClientContactRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/16/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/clientcontact/*")
 public class ClientContactRestTriggerController extends AbstractRestTriggerController<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
 
     @Autowired
     public ClientContactRestTriggerController(Optional<List<TriggerValidator<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser>>> triggerValidators) {
-        super(ClientContact.class, triggerValidators);
+        super(ClientContact.class, triggerValidators, ClientContactRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    ClientContactRestTriggerTraverser traverser = new ClientContactRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    ClientContactRestTriggerTraverser traverser = new ClientContactRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class ClientContactRestTriggerController extends AbstractRestTriggerContr
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
         Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    ClientContactRestTriggerTraverser traverser = new ClientContactRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    ClientContactRestTriggerTraverser traverser = new ClientContactRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
         return handleRequest(traverser, valuesChanges);
     }

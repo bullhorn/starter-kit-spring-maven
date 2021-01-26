@@ -6,6 +6,12 @@ import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmis
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.UpdateEntity;
+import com.client.core.base.model.relatedentity.*;
+import com.client.core.base.model.relatedentity.credentialing.CandidateCertificationRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.CandidateCertificationRequirementRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.JobSubmissionCertificationRequirementRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.PlacementCertificationRelatedEntity;
+import com.client.core.base.util.Utility;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.model.helper.ScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.impl.*;
@@ -22,19 +28,20 @@ import com.client.core.scheduledtasks.workflow.traversing.impl.credentialing.Can
 import com.client.core.scheduledtasks.workflow.traversing.impl.credentialing.JobSubmissionCertificationRequirementEventTraverser;
 import com.client.core.scheduledtasks.workflow.traversing.impl.credentialing.PlacementCertificationEventTraverser;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Created by john.sullivan on 12/5/2017.
- */
 @Service
 public class StandardEventWorkflowFactory implements EventWorkflowFactory {
+
+    private final Map<Class<? extends BullhornEntity>, Map<? extends BullhornRelatedEntity, Set<String>>> allRelatedEntityFields;
 
     private final List<EventTask<Appointment, AppointmentScheduledTaskHelper, AppointmentEventTraverser>> appointmentNodes;
     private final List<EventTask<Candidate, CandidateScheduledTaskHelper, CandidateEventTraverser>> candidateNodes;
@@ -59,7 +66,6 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
     private final List<EventTask<CandidateCertificationRequirement, CandidateCertificationRequirementScheduledTaskHelper, CandidateCertificationRequirementEventTraverser>> candidateCertificationRequirementNodes;
     private final List<EventTask<JobSubmissionCertificationRequirement, JobSubmissionCertificationRequirementScheduledTaskHelper, JobSubmissionCertificationRequirementEventTraverser>> jobSubmissionCertificationRequirementNodes;
     private final List<EventTask<PlacementCertification, PlacementCertificationScheduledTaskHelper, PlacementCertificationEventTraverser>> placementCertificationNodes;
-
 
     private final BullhornData bullhornData;
 
@@ -92,12 +98,13 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
         this.jobSubmissionCertificationRequirementNodes = sort(jobSubmissionCertificationRequirementNodes);
         this.placementCertificationNodes = sort(placementCertificationNodes);
         this.bullhornData = bullhornData;
+        this.allRelatedEntityFields = constructAllRelatedEntityFields();
     }
 
     @Override
     public <T extends BullhornEntity> void execute(Class<T> type, CustomSubscriptionEvent event) {
         if (Appointment.class.equals(type)) {
-            AppointmentEventTraverser traverser = new AppointmentEventTraverser(event);
+            AppointmentEventTraverser traverser = new AppointmentEventTraverser(event, allRelatedEntityFields.get(Appointment.class));
 
             appointmentNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -105,7 +112,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (CandidateEducation.class.equals(type)) {
-            CandidateEducationEventTraverser traverser = new CandidateEducationEventTraverser(event);
+            CandidateEducationEventTraverser traverser = new CandidateEducationEventTraverser(event, allRelatedEntityFields.get(CandidateEducation.class));
 
             candidateEducationNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -113,7 +120,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Candidate.class.equals(type)) {
-            CandidateEventTraverser traverser = new CandidateEventTraverser(event);
+            CandidateEventTraverser traverser = new CandidateEventTraverser(event, allRelatedEntityFields.get(Candidate.class));
 
             candidateNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -121,13 +128,13 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (CandidateReference.class.equals(type)) {
-            CandidateReferenceEventTraverser traverser = new CandidateReferenceEventTraverser(event);
+            CandidateReferenceEventTraverser traverser = new CandidateReferenceEventTraverser(event, allRelatedEntityFields.get(CandidateReference.class));
 
             candidateReferenceNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
             });
         } else if (CandidateWorkHistory.class.equals(type)) {
-            CandidateWorkHistoryEventTraverser traverser = new CandidateWorkHistoryEventTraverser(event);
+            CandidateWorkHistoryEventTraverser traverser = new CandidateWorkHistoryEventTraverser(event, allRelatedEntityFields.get(CandidateWorkHistory.class));
 
             candidateWorkHistoryNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -135,7 +142,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (ClientContact.class.equals(type)) {
-            ClientContactEventTraverser traverser = new ClientContactEventTraverser(event);
+            ClientContactEventTraverser traverser = new ClientContactEventTraverser(event, allRelatedEntityFields.get(ClientContact.class));
 
             clientContactNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -143,7 +150,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (ClientCorporation.class.equals(type)) {
-            ClientCorporationEventTraverser traverser = new ClientCorporationEventTraverser(event);
+            ClientCorporationEventTraverser traverser = new ClientCorporationEventTraverser(event, allRelatedEntityFields.get(ClientCorporation.class));
 
             clientCorporationNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -151,7 +158,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (CorporateUser.class.equals(type)) {
-            CorporateUserEventTraverser traverser = new CorporateUserEventTraverser(event);
+            CorporateUserEventTraverser traverser = new CorporateUserEventTraverser(event, allRelatedEntityFields.get(CorporateUser.class));
 
             corporateUserNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -159,7 +166,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (JobOrder.class.equals(type)) {
-            JobOrderEventTraverser traverser = new JobOrderEventTraverser(event);
+            JobOrderEventTraverser traverser = new JobOrderEventTraverser(event, allRelatedEntityFields.get(JobOrder.class));
 
             jobOrderNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -167,7 +174,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (JobSubmission.class.equals(type)) {
-            JobSubmissionEventTraverser traverser = new JobSubmissionEventTraverser(event);
+            JobSubmissionEventTraverser traverser = new JobSubmissionEventTraverser(event, allRelatedEntityFields.get(JobSubmission.class));
 
             jobSubmissionNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -175,7 +182,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Lead.class.equals(type)) {
-            LeadEventTraverser traverser = new LeadEventTraverser(event);
+            LeadEventTraverser traverser = new LeadEventTraverser(event, allRelatedEntityFields.get(Lead.class));
 
             leadNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -183,7 +190,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Note.class.equals(type)) {
-            NoteEventTraverser traverser = new NoteEventTraverser(event);
+            NoteEventTraverser traverser = new NoteEventTraverser(event, allRelatedEntityFields.get(Note.class));
 
             noteNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -191,7 +198,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Opportunity.class.equals(type)) {
-            OpportunityEventTraverser traverser = new OpportunityEventTraverser(event);
+            OpportunityEventTraverser traverser = new OpportunityEventTraverser(event, allRelatedEntityFields.get(Opportunity.class));
 
             opportunityNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -199,7 +206,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (PlacementChangeRequest.class.equals(type)) {
-            PlacementChangeRequestEventTraverser traverser = new PlacementChangeRequestEventTraverser(event);
+            PlacementChangeRequestEventTraverser traverser = new PlacementChangeRequestEventTraverser(event, allRelatedEntityFields.get(PlacementChangeRequest.class));
 
             placementChangeRequestNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -207,7 +214,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (PlacementCommission.class.equals(type)) {
-            PlacementCommissionEventTraverser traverser = new PlacementCommissionEventTraverser(event);
+            PlacementCommissionEventTraverser traverser = new PlacementCommissionEventTraverser(event, allRelatedEntityFields.get(PlacementCommission.class));
 
             placementCommissionNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -215,7 +222,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Placement.class.equals(type)) {
-            PlacementEventTraverser traverser = new PlacementEventTraverser(event);
+            PlacementEventTraverser traverser = new PlacementEventTraverser(event, allRelatedEntityFields.get(Placement.class));
 
             placementNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -223,7 +230,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Sendout.class.equals(type)) {
-            SendoutEventTraverser traverser = new SendoutEventTraverser(event);
+            SendoutEventTraverser traverser = new SendoutEventTraverser(event, allRelatedEntityFields.get(Sendout.class));
 
             sendoutNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -231,7 +238,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (Task.class.equals(type)) {
-            TaskEventTraverser traverser = new TaskEventTraverser(event);
+            TaskEventTraverser traverser = new TaskEventTraverser(event, allRelatedEntityFields.get(Task.class));
 
             taskNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -239,7 +246,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (CandidateCertification.class.equals(type)) {
-            CandidateCertificationEventTraverser traverser = new CandidateCertificationEventTraverser(event);
+            CandidateCertificationEventTraverser traverser = new CandidateCertificationEventTraverser(event, allRelatedEntityFields.get(CandidateCertification.class));
 
             candidateCertificationNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -247,7 +254,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (CandidateCertificationRequirement.class.equals(type)) {
-            CandidateCertificationRequirementEventTraverser traverser = new CandidateCertificationRequirementEventTraverser(event);
+            CandidateCertificationRequirementEventTraverser traverser = new CandidateCertificationRequirementEventTraverser(event, allRelatedEntityFields.get(CandidateCertificationRequirement.class));
 
             candidateCertificationRequirementNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -255,7 +262,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (JobSubmissionCertificationRequirement.class.equals(type)) {
-            JobSubmissionCertificationRequirementEventTraverser traverser = new JobSubmissionCertificationRequirementEventTraverser(event);
+            JobSubmissionCertificationRequirementEventTraverser traverser = new JobSubmissionCertificationRequirementEventTraverser(event, allRelatedEntityFields.get(JobSubmissionCertificationRequirement.class));
 
             jobSubmissionCertificationRequirementNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -263,7 +270,7 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
             handleResult(traverser);
         } else if (PlacementCertification.class.equals(type)) {
-            PlacementCertificationEventTraverser traverser = new PlacementCertificationEventTraverser(event);
+            PlacementCertificationEventTraverser traverser = new PlacementCertificationEventTraverser(event, allRelatedEntityFields.get(PlacementCertification.class));
 
             placementCertificationNodes.stream().forEach((eventTask) -> {
                 eventTask.handle(traverser);
@@ -283,6 +290,35 @@ public class StandardEventWorkflowFactory implements EventWorkflowFactory {
 
     private <E extends BullhornEntity, H extends ScheduledTaskHelper<E>, T extends ScheduledTasksTraverser<H>> List<EventTask<E, H, T>> sort(Optional<List<EventTask<E, H, T>>> values) {
         return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
+    }
+
+    private Map<Class<? extends BullhornEntity>, Map<? extends BullhornRelatedEntity, Set<String>>> constructAllRelatedEntityFields() {
+        Map<Class<? extends BullhornEntity>, Map<? extends BullhornRelatedEntity, Set<String>>> allRelatedEntityFields = Maps.newLinkedHashMap();
+
+        allRelatedEntityFields.put(Appointment.class, Utility.getRequestedFields(AppointmentRelatedEntity.values(), appointmentNodes));
+        allRelatedEntityFields.put(Candidate.class, Utility.getRequestedFields(CandidateRelatedEntity.values(), candidateNodes));
+        allRelatedEntityFields.put(CandidateEducation.class, Utility.getRequestedFields(CandidateEducationRelatedEntity.values(), candidateEducationNodes));
+        allRelatedEntityFields.put(CandidateReference.class, Utility.getRequestedFields(CandidateReferenceRelatedEntity.values(), candidateReferenceNodes));
+        allRelatedEntityFields.put(CandidateWorkHistory.class, Utility.getRequestedFields(CandidateWorkHistoryRelatedEntity.values(), candidateWorkHistoryNodes));
+        allRelatedEntityFields.put(ClientContact.class, Utility.getRequestedFields(ClientContactRelatedEntity.values(), clientContactNodes));
+        allRelatedEntityFields.put(ClientCorporation.class, Utility.getRequestedFields(ClientCorporationRelatedEntity.values(), clientCorporationNodes));
+        allRelatedEntityFields.put(CorporateUser.class, Utility.getRequestedFields(CorporateUserRelatedEntity.values(), corporateUserNodes));
+        allRelatedEntityFields.put(JobOrder.class, Utility.getRequestedFields(JobOrderRelatedEntity.values(), jobOrderNodes));
+        allRelatedEntityFields.put(JobSubmission.class, Utility.getRequestedFields(JobSubmissionRelatedEntity.values(), jobSubmissionNodes));
+        allRelatedEntityFields.put(Lead.class, Utility.getRequestedFields(LeadRelatedEntity.values(), leadNodes));
+        allRelatedEntityFields.put(Note.class, Utility.getRequestedFields(NoteRelatedEntity.values(), noteNodes));
+        allRelatedEntityFields.put(Opportunity.class, Utility.getRequestedFields(OpportunityRelatedEntity.values(), opportunityNodes));
+        allRelatedEntityFields.put(PlacementChangeRequest.class, Utility.getRequestedFields(PlacementChangeRequestRelatedEntity.values(), placementChangeRequestNodes));
+        allRelatedEntityFields.put(PlacementCommission.class, Utility.getRequestedFields(PlacementCommissionRelatedEntity.values(), placementCommissionNodes));
+        allRelatedEntityFields.put(Placement.class, Utility.getRequestedFields(PlacementRelatedEntity.values(), placementNodes));
+        allRelatedEntityFields.put(Sendout.class, Utility.getRequestedFields(SendoutRelatedEntity.values(), sendoutNodes));
+        allRelatedEntityFields.put(Task.class, Utility.getRequestedFields(TaskRelatedEntity.values(), taskNodes));
+        allRelatedEntityFields.put(CandidateCertification.class, Utility.getRequestedFields(CandidateCertificationRelatedEntity.values(), candidateCertificationNodes));
+        allRelatedEntityFields.put(CandidateCertificationRequirement.class, Utility.getRequestedFields(CandidateCertificationRequirementRelatedEntity.values(), candidateCertificationRequirementNodes));
+        allRelatedEntityFields.put(JobSubmissionCertificationRequirement.class, Utility.getRequestedFields(JobSubmissionCertificationRequirementRelatedEntity.values(), jobSubmissionCertificationRequirementNodes));
+        allRelatedEntityFields.put(PlacementCertification.class, Utility.getRequestedFields(PlacementCertificationRelatedEntity.values(), placementCertificationNodes));
+
+        return allRelatedEntityFields;
     }
 
 }

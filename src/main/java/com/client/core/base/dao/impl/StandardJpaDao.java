@@ -23,14 +23,6 @@ import com.client.core.base.tools.data.QueryResult;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-/**
- * Jpa implementation of GenericDao
- * 
- * @author magnus.palm
- * 
- * @param <T> Type of entity
- * @param <ID> Type of primary key of entity
- */
 public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T, ID> {
 
     private final QueryTranslatorFactory translatorFactory = new ASTQueryTranslatorFactory();

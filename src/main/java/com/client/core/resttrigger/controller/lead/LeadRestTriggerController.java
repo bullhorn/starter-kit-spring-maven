@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.lead;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.Lead;
+import com.client.core.base.model.relatedentity.LeadRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.LeadRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.LeadRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.Lead;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.LeadRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.LeadRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/23/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/lead/*")
 public class LeadRestTriggerController extends AbstractRestTriggerController<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class LeadRestTriggerController extends AbstractRestTriggerController<Lea
 
     @Autowired
     public LeadRestTriggerController(Optional<List<TriggerValidator<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser>>> triggerValidators) {
-        super(Lead.class, triggerValidators);
+        super(Lead.class, triggerValidators, LeadRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class LeadRestTriggerController extends AbstractRestTriggerController<Lea
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    LeadRestTriggerTraverser traverser = new LeadRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    LeadRestTriggerTraverser traverser = new LeadRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class LeadRestTriggerController extends AbstractRestTriggerController<Lea
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    LeadRestTriggerTraverser traverser = new LeadRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    LeadRestTriggerTraverser traverser = new LeadRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

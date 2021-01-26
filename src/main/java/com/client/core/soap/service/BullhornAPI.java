@@ -11,12 +11,6 @@ import com.bullhorn.entity.ApiEntityName;
 import com.bullhorn.entity.user.UserTypeDto;
 import com.client.core.ApplicationSettings;
 
-/**
- * Main bullhorn api utility class. Handles session creation.
- * 
- * @author magnus.palm
- * 
- */
 public interface BullhornAPI {
 
     /**

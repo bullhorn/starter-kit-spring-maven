@@ -1,131 +1,95 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.TaskRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
- * will be stored in this Traverser for subsequent automation work.
- * 
- * The allsToSaveBackToBH map will contain deep copies of relevant dtos that should be saved back to BH. The copies
- * will be updated according to task logic, while the original dtos will NOT be updated so that subsequent logic will
- * still be made on original values.
- * 
- * Once all automation work has been done the dtos that need saving will be saved only once. In this way keeping the api
- * calls to a minimum by saving each dto only once, even though multiple tasks might have updated different fields on
- * the same dto.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 public class TaskScheduledTaskHelper extends AbstractScheduledTaskHelper<Task> {
 
+	private CorporateUser taskOwner;
+	private JobOrder jobOrder;
 	private Placement placement;
-	private JobOrder job;
 	private JobSubmission jobSubmission;
 	private Candidate candidate;
-	private CorporateUser taskOwner;
 	private ClientContact clientContact;
+	private Lead lead;
+	private Opportunity opportunity;
 
-	public TaskScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, Task.class);
+	public TaskScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(event, Task.class, TaskRelatedEntity.TASK, relatedEntityFields);
 	}
 
 	public Task getTask() {
         return getEntity();
     }
 
-	/**
-	 * Gets the JoOrder for the task, if job == null then makes api call, otherwise returns job instance
-	 * variable.
-	 * 
-	 * @return the JobOrder connected to the task
-	 */
-	public JobOrder getJob() {
-		if (job == null) {
-			setJob(findJobOrder(getTask().getJobOrder().getId()));
-		}
-		return job;
-	}
-
-	public void setJob(JobOrder job) {
-		this.job = job;
-	}
-
-
-
-	public Placement getPlacement() {
-		if (placement == null) {
-			setPlacement(findPlacement(getTask().getPlacement().getId()));
-		}
-		return placement;
-	}
-
-	public void setPlacement(Placement placement) {
-		this.placement = placement;
-	}
-
-	public JobSubmission getJobSubmission() {
-		if (jobSubmission == null) {
-			setJobSubmission(findJobSubmission(getTask().getJobSubmission().getId()));
-		}
-		return jobSubmission;
-	}
-
-	public void setJobSubmission(JobSubmission jobSubmission) {
-		this.jobSubmission = jobSubmission;
-	}
-
-	public Candidate getCandidate() {
-		if (candidate == null) {
-			setCandidate(findCandidate(getTask().getCandidate().getId()));
-		}
-		return candidate;
-	}
-
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
 	public CorporateUser getTaskOwner() {
 		if (taskOwner == null) {
-			setTaskOwner(findCorporateUser(getTask().getOwner().getId()));
+			this.taskOwner = findCorporateUser(getTask().getOwner().getId(), TaskRelatedEntity.TASK_OWNER);
 		}
+
 		return taskOwner;
 	}
 
-	public void setTaskOwner(CorporateUser taskOwner) {
-		this.taskOwner = taskOwner;
-	}
-
-	public ClientContact getClientContact() {
-		if (clientContact == null) {
-			setClientContact(findClientContact(getTask().getClientContact().getId()));
+	public Optional<JobOrder> getJobOrder() {
+		if (jobOrder == null && isPopulated(getTask().getJobOrder())) {
+			this.jobOrder = findJobOrder(getTask().getJobOrder().getId(), TaskRelatedEntity.JOB_ORDER);
 		}
-		return clientContact;
+
+		return Optional.ofNullable(jobOrder);
 	}
 
-	public void setClientContact(ClientContact clientContact) {
-		this.clientContact = clientContact;
+	public Optional<Placement> getPlacement() {
+		if (placement == null) {
+			this.placement = findPlacement(getTask().getPlacement().getId(), TaskRelatedEntity.PLACEMENT);
+		}
+
+		return Optional.ofNullable(placement);
 	}
 
-    @Override
-    public String toString() {
-        return new StringBuilder("TaskScheduledTaskHelper {")
-                .append("\n\t\"placement\": ")
-                .append(placement)
-                .append(",\n\t\"job\": ")
-                .append(job)
-                .append(",\n\t\"jobSubmission\": ")
-                .append(jobSubmission)
-                .append(",\n\t\"candidate\": ")
-                .append(candidate)
-                .append(",\n\t\"taskOwner\": ")
-                .append(taskOwner)
-                .append(",\n\t\"clientContact\": ")
-                .append(clientContact)
-                .append('}')
-                .toString();
-    }
+	public Optional<JobSubmission> getJobSubmission() {
+		if (jobSubmission == null) {
+			this.jobSubmission = findJobSubmission(getTask().getJobSubmission().getId(), TaskRelatedEntity.JOB_SUBMISSION);
+		}
+
+		return Optional.ofNullable(jobSubmission);
+	}
+
+	public Optional<Candidate> getCandidate() {
+		if (candidate == null) {
+			this.candidate = findCandidate(getTask().getCandidate().getId(), TaskRelatedEntity.CANDIDATE);
+		}
+
+		return Optional.ofNullable(candidate);
+	}
+
+	public Optional<ClientContact> getClientContact() {
+		if (clientContact == null && isPopulated(getTask().getClientContact())) {
+			this.clientContact = findClientContact(getTask().getClientContact().getId(), TaskRelatedEntity.CLIENT_CONTACT);
+		}
+
+		return Optional.ofNullable(clientContact);
+	}
+
+	public Optional<Lead> getLead() {
+		if (lead == null && isPopulated(getTask().getLead())) {
+			this.lead = findLead(getTask().getLead().getId(), TaskRelatedEntity.LEAD);
+		}
+
+		return Optional.ofNullable(lead);
+	}
+
+	public Opportunity getOpportunity() {
+		if(opportunity == null && isPopulated(getTask().getOpportunity())) {
+			this.opportunity = findOpportunity(getTask().getOpportunity().getId(), TaskRelatedEntity.OPPORTUNITY);
+		}
+
+		return opportunity;
+	}
 }

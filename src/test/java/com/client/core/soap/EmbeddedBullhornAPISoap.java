@@ -1,24 +1,16 @@
 package com.client.core.soap;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.bullhorn.apiservice.result.ApiFindResult;
 import com.bullhorn.apiservice.result.ApiSaveResult;
 import com.bullhorn.entity.AbstractDto;
 import com.client.core.ApplicationSettings;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.core.soap.service.impl.BullhornAPISoap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-/**
- * This implementation of BullhornAPI is used for unit tests. It caches the entities in a map for speed.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.HashMap;
+import java.util.Map;
 
 public class EmbeddedBullhornAPISoap extends BullhornAPISoap {
 
@@ -65,7 +57,6 @@ public class EmbeddedBullhornAPISoap extends BullhornAPISoap {
 		return mapWithSoapEntitiesOfTypeT.get(id);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends AbstractDto> T findEntity(String entityType, Object id) {
 

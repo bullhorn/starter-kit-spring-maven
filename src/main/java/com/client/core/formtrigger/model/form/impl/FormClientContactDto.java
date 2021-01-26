@@ -3,16 +3,9 @@ package com.client.core.formtrigger.model.form.impl;
 import com.bullhorn.entity.client.ClientContactDto;
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.client.core.base.util.Util;
+import com.client.core.base.util.Utility;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 import org.apache.log4j.Logger;
-
-/**
- * Maps a client contact form in BH to a ClientContactDto
- * 
- * @author magnus.palm
- * 
- */
 
 public class FormClientContactDto extends AbstractFormDto<ClientContact> {
 
@@ -1758,11 +1751,11 @@ public class FormClientContactDto extends AbstractFormDto<ClientContact> {
 		clientContact.setPhone2(phone2);
 		clientContact.setPhone3(phone3);
 		clientContact.setPreferredContact(preferredContact);
-		if (Util.isNumeric(recruiterUserID))
+		if (Utility.isNumeric(recruiterUserID))
 			clientContact.setOwner(new CorporateUser(Integer.parseInt(recruiterUserID)));
 		else {
 			String[] ownerIDs = recruiterUserID.split(",");
-			clientContact.setOwner(new CorporateUser(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0));
+			clientContact.setOwner(new CorporateUser(ownerIDs.length > 0 && Utility.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0));
 		}
 
 		clientContact.setReferredByPerson(new Person(referredByUserID));
@@ -1976,11 +1969,11 @@ public class FormClientContactDto extends AbstractFormDto<ClientContact> {
 		clientContactDto.setPhone2(phone2);
 		clientContactDto.setPhone3(phone3);
 		clientContactDto.setPreferredContact(preferredContact);
-		if (Util.isNumeric(recruiterUserID))
+		if (Utility.isNumeric(recruiterUserID))
 			clientContactDto.setOwnerID(Integer.parseInt(recruiterUserID));
 		else {
 			String[] ownerIDs = recruiterUserID.split(",");
-			clientContactDto.setOwnerID(ownerIDs.length > 0 && Util.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0);
+			clientContactDto.setOwnerID(ownerIDs.length > 0 && Utility.isNumbersOnly(ownerIDs[0]) ? Integer.parseInt(ownerIDs[0]) : 0);
 		}
 		
 		clientContactDto.setReferredByPersonID(referredByUserID);

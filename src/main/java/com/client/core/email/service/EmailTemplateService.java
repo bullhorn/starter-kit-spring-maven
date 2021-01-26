@@ -1,17 +1,12 @@
 package com.client.core.email.service;
 
-import java.util.Collection;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-
-import com.client.core.email.model.MailInfo;
 import com.client.core.email.model.MailTemplate;
 import com.client.core.email.model.MailTemplateInfo;
 
-/**
- * Created by john.sullivan on 10/1/2017.
- */
+import javax.mail.MessagingException;
+import java.util.Collection;
+import java.util.Map;
+
 public interface EmailTemplateService {
 
     /**
@@ -37,12 +32,12 @@ public interface EmailTemplateService {
     void sendEmail(Collection<String> mailTo, MailTemplate mailTemplate, Map<String, Object> parameters) throws MessagingException;
 
     /**
-     * Sends an email to the email addresses provided in the {@link MailInfo}, using the sender from the passed in {@link MailInfo},
+     * Sends an email to the email addresses provided in the {@link com.client.core.email.model.MailInfo}, using the sender from the passed in {@link com.client.core.email.model.MailInfo},
      * or if not provided, the one in {@link com.client.core.email.MailSettings}.  Provides much more functionality than
      * either {@link #sendEmail(Collection, MailTemplate, Map)} or {@link #sendEmail(String, MailTemplate, Map)}
      *
-     * Note if the body is provided in the {@link MailInfo} it will be overwritten by the result of rendering the {@link MailTemplate}.
-     * Similarly if the subject is provided in the {@link MailInfo} it will be overwritten by the subject in the {@link MailTemplate}
+     * Note if the body is provided in the {@link com.client.core.email.model.MailInfo} it will be overwritten by the result of rendering the {@link MailTemplate}.
+     * Similarly if the subject is provided in the {@link com.client.core.email.model.MailInfo} it will be overwritten by the subject in the {@link MailTemplate}
      *
      * @param mailInfo the object containing all the information about the email to be sent
      * @param mailTemplate the email template to be rendered into the body for the email

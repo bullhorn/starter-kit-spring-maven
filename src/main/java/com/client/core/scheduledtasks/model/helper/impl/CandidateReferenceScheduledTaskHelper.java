@@ -1,88 +1,69 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateReference;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.CandidateReferenceRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Contains all the data needed to handle scheduled tasks automation. Once a Dto has been fetched using the BH api it
- * will be stored in this Traverser for subsequent automation work.
- * 
- * The allDtosToSaveBackToBH map will contain deep copies of relevant dtos that should be saved back to BH. The copies
- * will be updated according to task logic, while the original dtos will NOT be updated so that subsequent logic will
- * still be made on original values.
- * 
- * Once all automation work has been done the dtos that need saving will be saved only once. In this way keeping the api
- * calls to a minimum by saving each dto only once, even though multiple tasks might have updated different fields on
- * the same dto.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+
 public class CandidateReferenceScheduledTaskHelper extends AbstractScheduledTaskHelper<CandidateReference> {
 
 	private Candidate candidate;
 	private CorporateUser candidateOwner;
+	private ClientCorporation clientCorporation;
+	private JobOrder jobOrder;
+	private ClientContact referenceClientContact;
 
-	public CandidateReferenceScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, CandidateReference.class);
+	public CandidateReferenceScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(event, CandidateReference.class, CandidateReferenceRelatedEntity.CANDIDATE_REFERENCE, relatedEntityFields);
 	}
 
-	
-	/**
-	 * Gets the CandidateReference for the event, if candidateReference == null then makes api call, otherwise returns
-	 * candidate instance variable.
-	 * 
-	 * @return the CandidateEducation connected to the event
-	 */
 	public CandidateReference getCandidateReference() {
         return getEntity();
     }
-	
-	/**
-	 * Gets the Candidate  for the Candidate reference , if candidate == null then makes api call, otherwise
-	 * returns candidate instance variable.
-	 * 
-	 * @return the Candidate connected to the candidate reference.
-	 */
+
 	public Candidate getCandidate() {
 		if (candidate == null) {
-			setCandidate(findCandidate(getCandidateReference().getCandidate().getId()));
+			this.candidate = findCandidate(getCandidateReference().getCandidate().getId(), CandidateReferenceRelatedEntity.CANDIDATE);
 		}
+
 		return candidate;
 	}
 
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
-	/**
-	 * Gets the CorporateUser candidate owner for the Candidate , if candidateOwner == null then makes api call,
-	 * otherwise returns candidateOwner instance variable.
-	 * 
-	 * @return the CorporateUser connected to the candidate connected to the candidate reference.
-	 */
 	public CorporateUser getCandidateOwner() {
 		if (candidateOwner == null) {
-			setCandidateOwner(findCorporateUser(getCandidate().getOwner().getId()));
+			this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), CandidateReferenceRelatedEntity.CANDIDATE_OWNER);
 		}
+
 		return candidateOwner;
 	}
 
-	public void setCandidateOwner(CorporateUser candidateOwner) {
-		this.candidateOwner = candidateOwner;
+	public Optional<ClientCorporation> getClientCorporation() {
+		if (this.clientCorporation == null && isPopulated(getCandidateReference().getClientCorporation())) {
+			this.clientCorporation = findClientCorporation(getCandidateReference().getClientCorporation().getId(), CandidateReferenceRelatedEntity.CLIENT_CORPORATION);
+		}
+
+		return Optional.ofNullable(clientCorporation);
 	}
 
-    @Override
-    public String toString() {
-        return new StringBuilder("CandidateReferenceScheduledTaskHelper {")
-                .append("\n\t\"candidate\": ")
-                .append(candidate)
-                .append(",\n\t\"candidateOwner\": ")
-                .append(candidateOwner)
-                .append('}')
-                .toString();
-    }
+	public Optional<JobOrder> getJobOrder() {
+		if (this.jobOrder == null && isPopulated(getCandidateReference().getJobOrder())) {
+			this.jobOrder = findJobOrder(getCandidateReference().getJobOrder().getId(), CandidateReferenceRelatedEntity.JOB_ORDER);
+		}
+
+		return Optional.ofNullable(jobOrder);
+	}
+
+	public Optional<ClientContact> getReferenceClientContact() {
+		if (this.referenceClientContact == null && isPopulated(getCandidateReference().getReferenceClientContact())) {
+			this.referenceClientContact = findClientContact(getCandidateReference().getReferenceClientContact().getId(), CandidateReferenceRelatedEntity.REFERENCE_CLIENT_CONTACT);
+		}
+
+		return Optional.ofNullable(referenceClientContact);
+	}
 }

@@ -1,24 +1,20 @@
 package com.client.core.formtrigger.controller.clientcorporation;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
+import com.client.core.base.model.relatedentity.ClientCorporationRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormClientCorporationDto;
 import com.client.core.formtrigger.model.helper.impl.ClientCorporationFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.ClientCorporationFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Entry point for Client Corporation Validations.
@@ -36,7 +32,7 @@ public class ClientCorporationFormTriggerController extends AbstractFormTriggerC
 
 	@Autowired
 	public ClientCorporationFormTriggerController(Optional<List<TriggerValidator<ClientCorporation, ClientCorporationFormTriggerHelper, ClientCorporationFormTriggerTraverser>>> triggerValidators) {
-		super(ClientCorporation.class, triggerValidators);
+		super(ClientCorporation.class, triggerValidators, ClientCorporationRelatedEntity.values());
 	}
 
 	/**
@@ -54,7 +50,7 @@ public class ClientCorporationFormTriggerController extends AbstractFormTriggerC
 		log.info("---------------------------- Starting Client Corporation Validation Process----------------------------------------");
 
 		ClientCorporationFormTriggerTraverser traverser = new ClientCorporationFormTriggerTraverser(formClientCorporationDto, updatingUserID,
-				false, bullhornData);
+				false, getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}
@@ -74,7 +70,7 @@ public class ClientCorporationFormTriggerController extends AbstractFormTriggerC
 		log.info("---------------------------- Starting Client Corporation Validation Process----------------------------------------");
 
 		ClientCorporationFormTriggerTraverser traverser = new ClientCorporationFormTriggerTraverser(formClientCorporationDto, updatingUserID,
-				true, bullhornData);
+				true, getRelatedEntityFields());
 
 		return handleRequest(traverser);
 	}

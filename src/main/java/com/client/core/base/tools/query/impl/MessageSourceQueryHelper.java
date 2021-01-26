@@ -10,13 +10,6 @@ import org.springframework.context.NoSuchMessageException;
 import com.client.core.base.tools.query.QueryHelper;
 
 
-/**
- * MessageSource implementation of QueryHelper, the queries are stored in a .properties file. Wraps a MessagesSource that is used
- * to store queries. Pass this bean in to Service classes.
- * 
- * @author Magnus Fiore Palm
- * 
- */
 public class MessageSourceQueryHelper implements QueryHelper {
 
 	private final MessageSource queries;

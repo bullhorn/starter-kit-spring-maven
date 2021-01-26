@@ -8,8 +8,6 @@ import com.google.common.collect.Lists;
  * Object used to represent settings used for emailing.  Values should be provided via a properties file and injected
  * using a Spring {@link org.springframework.beans.factory.config.PropertyPlaceholderConfigurer}, either in
  * applicationContext.xml or using {@link org.springframework.beans.factory.annotation.Value} annotations
- *
- * @author johnsully83
  */
 public class MailSettings {
     private String host;

@@ -7,10 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * @author Yaniv Or-Shahar
- * 
- */
 public enum YesNo {
     NO(0, "0", "No", false, "N"),
     YES(1, "1", "Yes", true, "Y");

@@ -1,28 +1,21 @@
 package com.client.core.formtrigger.controller.opportunity;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
+import com.client.core.base.model.relatedentity.OpportunityRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormOpportunityDto;
 import com.client.core.formtrigger.model.helper.impl.OpportunityFormTriggerHelper;
 import com.client.core.formtrigger.workflow.traversing.OpportunityFormTriggerTraverser;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by hiqbal on 12/23/2015.
- */
+import java.util.List;
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/formtrigger/opportunity/*")
 public class OpportunityFormTriggerController extends AbstractFormTriggerController<Opportunity, OpportunityFormTriggerHelper, OpportunityFormTriggerTraverser> {
@@ -31,7 +24,7 @@ public class OpportunityFormTriggerController extends AbstractFormTriggerControl
 
     @Autowired
     public OpportunityFormTriggerController(Optional<List<TriggerValidator<Opportunity, OpportunityFormTriggerHelper, OpportunityFormTriggerTraverser>>> triggerValidators) {
-        super(Opportunity.class, triggerValidators);
+        super(Opportunity.class, triggerValidators, OpportunityRelatedEntity.values());
     }
 
     /**
@@ -48,7 +41,7 @@ public class OpportunityFormTriggerController extends AbstractFormTriggerControl
     public String addEntity(@ModelAttribute FormOpportunityDto formOpportunityDEto, @RequestParam("ft.userId") Integer updatingUserID) {
         log.info("---------------------------- Starting Opportunity Validation Process----------------------------------------");
 
-        OpportunityFormTriggerTraverser traverser = new OpportunityFormTriggerTraverser(formOpportunityDEto, updatingUserID, false, bullhornData);
+        OpportunityFormTriggerTraverser traverser = new OpportunityFormTriggerTraverser(formOpportunityDEto, updatingUserID, false, getRelatedEntityFields());
 
         return handleRequest(traverser);
     }
@@ -67,7 +60,7 @@ public class OpportunityFormTriggerController extends AbstractFormTriggerControl
     public String editEntity(@ModelAttribute FormOpportunityDto formOpportunityDEto, @RequestParam("ft.userId") Integer updatingUserID) {
         log.info("---------------------------- Starting Opportunity Validation Process----------------------------------------");
 
-        OpportunityFormTriggerTraverser traverser = new OpportunityFormTriggerTraverser(formOpportunityDEto, updatingUserID, true, bullhornData);
+        OpportunityFormTriggerTraverser traverser = new OpportunityFormTriggerTraverser(formOpportunityDEto, updatingUserID, true, getRelatedEntityFields());
 
         return handleRequest(traverser);
     }

@@ -31,13 +31,6 @@ import com.client.core.ApplicationSettings;
 import com.client.core.soap.service.BullhornAPI;
 import com.client.core.soap.workers.EntityFindWorker;
 
-/**
- * Main bullhorn api utility class. Handles session creation and session refresh.
- * 
- * @author magnus.palm
- * 
- */
-
 public class BullhornAPISoap implements BullhornAPI {
 
     private DateTime sessionLastUpdated;
@@ -173,7 +166,6 @@ public class BullhornAPISoap implements BullhornAPI {
      * 
      * @return A list of DTOs of type entityType based on the dtoQuery.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends AbstractDto> List<T> getQueryResults(String entityType, DtoQuery dtoQuery) {
         List<T> resultsList = new ArrayList<T>();

@@ -10,14 +10,6 @@ import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.Placement;
 import com.client.core.formtrigger.model.form.AbstractFormDto;
 
-/**
- * Used to get values from bullhorn placement form and convert these to the regular PlacementDto
- * 
- * @author magnus.palm
- * 
- * @param <PlacemementDto>
- */
-
 public class FormPlacementDto extends AbstractFormDto<Placement> {
 
 	public FormPlacementDto() {
