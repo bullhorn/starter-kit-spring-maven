@@ -1,6 +1,5 @@
 package com.client.core.scheduledtasks.workers;
 
-import com.bullhorn.entity.ApiEntityName;
 import com.bullhornsdk.data.model.entity.core.certificationrequirement.CandidateCertificationRequirement;
 import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmissionCertificationRequirement;
 import com.bullhornsdk.data.model.entity.core.standard.*;
@@ -30,8 +29,8 @@ public class EventProcessing implements Runnable {
     }
 
     /**
-     * Performs the actual handling of a single event by parsing out the kind of event from the {@link com.client.core.soap.model.SubscriptionEvent} provided via
-     * the {@link EventProcessing#(Integer, com.client.core.soap.model.SubscriptionEvent)} constructor and handing the event off
+     * Performs the actual handling of a single event by parsing out the kind of event from the {@link com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent} provided via
+     * the {@link EventProcessing#(Integer, com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent)} constructor and handing the event off
      * to the proper workflow.
      */
     @Override
@@ -92,55 +91,55 @@ public class EventProcessing implements Runnable {
     }
 
     private boolean isAppointmentEvent() {
-        return entityIsOfType(ApiEntityName.APPOINTMENT.value());
+        return entityIsOfType(Appointment.class.getSimpleName());
     }
 
     private boolean isCandidateEvent() {
-        return entityIsOfType(ApiEntityName.CANDIDATE.value());
+        return entityIsOfType(Candidate.class.getSimpleName());
     }
 
     private boolean isCandidateReferenceEvent() {
-        return entityIsOfType(ApiEntityName.CANDIDATE_REFERENCE.value());
+        return entityIsOfType(CandidateReference.class.getSimpleName());
     }
 
     private boolean isCandidateWorkHistoryEvent() {
-        return entityIsOfType(ApiEntityName.CANDIDATE_WORK_HISTORY.value());
+        return entityIsOfType(CandidateWorkHistory.class.getSimpleName());
     }
 
     private boolean isCandidateEducationEvent() {
-        return entityIsOfType(ApiEntityName.CANDIDATE_EDUCATION.value());
+        return entityIsOfType(CandidateEducation.class.getSimpleName());
     }
 
     private boolean isClientContactEvent() {
-        return entityIsOfType(ApiEntityName.CLIENT_CONTACT.value());
+        return entityIsOfType(ClientContact.class.getSimpleName());
     }
 
     private boolean isClientCorporationEvent() {
-        return entityIsOfType(ApiEntityName.CLIENT_CORPORATION.value());
+        return entityIsOfType(ClientCorporation.class.getSimpleName());
     }
 
     private boolean isCorporateUserEvent() {
-        return entityIsOfType(ApiEntityName.CORPORATE_USER.value());
+        return entityIsOfType(CorporateUser.class.getSimpleName());
     }
 
     private boolean isJobEvent() {
-        return entityIsOfType(ApiEntityName.JOB_ORDER.value());
+        return entityIsOfType(JobOrder.class.getSimpleName());
     }
 
     private boolean isJobSubmissionEvent() {
-        return entityIsOfType(ApiEntityName.JOB_SUBMISSION.value());
+        return entityIsOfType(JobSubmission.class.getSimpleName());
     }
 
     private boolean isLeadEvent() {
-        return entityIsOfType("Lead");
+        return entityIsOfType(Lead.class.getSimpleName());
     }
 
     private boolean isNoteEvent() {
-        return entityIsOfType(ApiEntityName.NOTE.value());
+        return entityIsOfType(Note.class.getSimpleName());
     }
 
     private boolean isPlacementEvent() {
-        return entityIsOfType(ApiEntityName.PLACEMENT.value());
+        return entityIsOfType(Placement.class.getSimpleName());
     }
 
     private boolean isOpportunityEvent() {
@@ -148,35 +147,35 @@ public class EventProcessing implements Runnable {
     }
 
     private boolean isPlacementChangeRequestEvent() {
-        return entityIsOfType(ApiEntityName.PLACEMENT_CHANGE_REQUEST.value());
+        return entityIsOfType(PlacementChangeRequest.class.getSimpleName());
     }
 
     private boolean isPlacementCommissionEvent() {
-        return entityIsOfType(ApiEntityName.PLACEMENT_COMMISSION.value());
+        return entityIsOfType(PlacementCommission.class.getSimpleName());
     }
 
     private boolean isSendoutEvent() {
-        return entityIsOfType(ApiEntityName.SENDOUT.value());
+        return entityIsOfType(Sendout.class.getSimpleName());
     }
 
     private boolean isTaskEvent() {
-        return entityIsOfType(ApiEntityName.TASK.value());
+        return entityIsOfType(Task.class.getSimpleName());
     }
 
     private boolean isCandidateCertificationEvent() {
-        return entityIsOfType(ApiEntityName.CANDIDATE_CERTIFICATION.value());
+        return entityIsOfType(CandidateCertification.class.getSimpleName());
     }
 
     private boolean isCandidateCertificationRequirementEvent() {
-        return entityIsOfType(ApiEntityName.CANDIDATE_CERTIFICATION_REQUIREMENT.value());
+        return entityIsOfType(CandidateCertificationRequirement.class.getSimpleName());
     }
 
     private boolean isJobSubmissionCertificationRequirementEvent() {
-        return entityIsOfType(ApiEntityName.JOB_SUBMISSION_CERTIFICATION_REQUIREMENT.value());
+        return entityIsOfType(JobSubmissionCertificationRequirement.class.getSimpleName());
     }
 
     private boolean isPlacementCertificationEvent() {
-        return entityIsOfType(ApiEntityName.PLACEMENT_CERTIFICATION.value());
+        return entityIsOfType(PlacementCertification.class.getSimpleName());
     }
 
     private boolean entityIsOfType(String entityTypeToCheck) {

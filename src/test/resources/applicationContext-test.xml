@@ -42,23 +42,10 @@
     </bean>
 
 	<beans profile="cloudtesting">
-	
-		<bean id="bullhornapi" class="com.client.core.soap.EmbeddedBullhornAPISoap">
-			<constructor-arg ref="appSettings" />
-			<constructor-arg ref="testEntities" />
-		</bean>
-		
 		<bean id="bullhornData" class="com.bullhornsdk.data.api.mock.MockBullhornData"/>
-		
 	</beans>
 
 	<beans profile="localtesting">
-
-		<bean id="bullhornapi" class="com.client.core.soap.EmbeddedBullhornAPISoap">
-			<constructor-arg ref="appSettings" />
-			<constructor-arg ref="testEntities" />
-		</bean>
-		
 		<bean id="bullhornData" class="com.bullhornsdk.data.api.mock.MockBullhornData"/>
 		
 		<!-- Test embedded db setup for the different modules. This entire applicationContext-test.xml 

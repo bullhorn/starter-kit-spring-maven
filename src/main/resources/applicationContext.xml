@@ -113,10 +113,6 @@
         <property name="routeToWhenDisabled" value="${mail.routeToWhenDisabled}" />
     </bean>
 
-	<bean id="bullhornapi" class="com.client.core.soap.service.impl.BullhornAPISoap">
-		<constructor-arg ref="appSettings" />
-	</bean>
-
 	<bean id="bullhornData" class="com.bullhornsdk.data.api.StandardBullhornData">
         <constructor-arg ref="bullhornRestCredentials" />
 	</bean>
