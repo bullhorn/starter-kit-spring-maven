@@ -1,4 +1,4 @@
-package com.client.core.resttrigger.controller.submission;
+package com.client.core.resttrigger.controller.jobsubmission;
 
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
 import com.client.core.base.model.relatedentity.JobSubmissionRelatedEntity;
