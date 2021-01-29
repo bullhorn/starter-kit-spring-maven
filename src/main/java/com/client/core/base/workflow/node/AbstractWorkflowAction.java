@@ -75,16 +75,6 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
         return emailer;
     }
 
-    protected <T extends BullhornRelatedEntity> Map<BullhornRelatedEntity, Set<String>> mergeFields(Map<T, Set<String>> entityFields,
-                                                                                                    Map<StandardRelatedEntity, Set<String>> standardFields) {
-        Map<BullhornRelatedEntity, Set<String>> allRelatedEntities = Maps.newLinkedHashMap();
-
-        allRelatedEntities.putAll(entityFields);
-        allRelatedEntities.putAll(standardFields);
-
-        return allRelatedEntities;
-    }
-
     @Override
     public Map<? extends BullhornRelatedEntity, Set<String>> getRelatedEntityFields() {
         Map<BullhornRelatedEntity, Set<String>> allFields = Maps.newLinkedHashMap();
