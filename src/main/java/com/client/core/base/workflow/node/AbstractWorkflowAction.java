@@ -31,12 +31,6 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
     public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
         this.relatedEntityFields = relatedEntityFields;
     }
-
-    public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields,
-                                  Map<StandardRelatedEntity, Set<String>> standardFields) {
-        this.relatedEntityFields = mergeFields(relatedEntityFields, standardFields);
-    }
-
     protected Map<StandardRelatedEntity, Set<String>> getStandardEntityFields() {
         return Maps.newLinkedHashMap();
     }
