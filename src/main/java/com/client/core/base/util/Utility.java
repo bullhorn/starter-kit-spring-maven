@@ -28,6 +28,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.workflow.node.WorkflowAction;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -65,7 +66,7 @@ public class Utility {
 			}));
 		});
 
-		return Stream.of(relatedEntities).collect(Collectors.toMap(Function.identity(), relatedEntity -> {
+		return Stream.concat(Stream.of(relatedEntities), Stream.of(StandardRelatedEntity.values())).collect(Collectors.toMap(Function.identity(), relatedEntity -> {
 			if (requestedFields.containsKey(relatedEntity)) {
 				return Utility.mergeFieldSets(relatedEntity.getDefaultFields(), requestedFields.get(relatedEntity));
 			}
