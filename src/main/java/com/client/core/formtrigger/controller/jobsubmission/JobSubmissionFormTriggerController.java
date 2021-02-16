@@ -1,7 +1,6 @@
 package com.client.core.formtrigger.controller.jobsubmission;
 
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.client.core.base.model.relatedentity.JobOrderRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
@@ -35,7 +34,7 @@ public class JobSubmissionFormTriggerController extends AbstractFormTriggerContr
 
     @Autowired
     public JobSubmissionFormTriggerController(Optional<List<TriggerValidator<JobSubmission, JobSubmissionFormTriggerHelper, JobSubmissionFormTriggerTraverser>>> triggerValidators) {
-        super(JobSubmission.class, triggerValidators, JobOrderRelatedEntity.values());
+        super(JobSubmission.class, triggerValidators, JobSubmissionRelatedEntity.values());
     }
 
 	/**
