@@ -1,6 +1,7 @@
 package com.client.core.formtrigger.controller.jobsubmission;
 
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
+import com.client.core.base.model.relatedentity.JobSubmissionRelatedEntity;
 import com.client.core.base.workflow.node.TriggerValidator;
 import com.client.core.formtrigger.controller.AbstractFormTriggerController;
 import com.client.core.formtrigger.model.form.impl.FormJobSubmissionDto;
