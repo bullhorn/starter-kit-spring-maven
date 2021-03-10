@@ -6,7 +6,7 @@ import java.util.Set;
 
 public enum CandidateEducationRelatedEntity implements BullhornRelatedEntity {
     CANDIDATE_EDUCATION(
-            "candidate(id,name)", "degree", "major", "gpa", "startDate", "endDate", "school"
+            "id", "candidate(id,name)", "degree", "major", "gpa", "startDate", "endDate", "school"
     ),
     CANDIDATE("id", "name", "email", "phone", "owner(id,name)"),
     CANDIDATE_OWNER("id", "name", "email")
