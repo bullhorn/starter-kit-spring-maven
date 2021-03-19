@@ -616,6 +616,12 @@ public class Utility {
         });
     }
 
+    public static <T extends QueryEntity, R> void sequentialQueryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+        queryForAll(type, where, fields, (batch) -> {
+            batch.forEach(process);
+        });
+    }
+
     public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
@@ -626,11 +632,31 @@ public class Utility {
         return result;
     }
 
+    public static <T extends QueryEntity, R> List<R> sequentialQueryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+        List<R> result = Lists.newArrayList();
+
+        queryForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().map(map).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
     public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
         queryForAll(type, where, fields, (batch) -> {
             result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends QueryEntity> List<T> sequentialQueryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+        List<T> result = Lists.newArrayList();
+
+        queryForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
         });
 
         return result;
@@ -652,9 +678,31 @@ public class Utility {
         return collect.finisher().apply(result);
     }
 
+    public static <T extends QueryEntity, A, R> R sequentialQueryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
+
+        queryForAll(type, where, fields, (batch) -> {
+        	A batchResult = collect.supplier().get();
+
+            batch.forEach( entity -> {
+                collect.accumulator().accept(batchResult, entity);
+            });
+
+            collect.combiner().apply(result, batchResult);
+        });
+
+        return collect.finisher().apply(result);
+    }
+
     public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
         searchForAll(type, where, fields, (batch) -> {
             batch.parallelStream().forEach(process);
+        });
+    }
+
+    public static <T extends SearchEntity, R> void sequentialSearchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+        searchForAll(type, where, fields, (batch) -> {
+            batch.forEach(process);
         });
     }
 
@@ -663,6 +711,16 @@ public class Utility {
 
         searchForAll(type, where, fields, (batch) -> {
             result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends SearchEntity, R> List<R> sequentialSearchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+        List<R> result = Lists.newArrayList();
+
+        searchForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().map(map).collect(Collectors.toList()));
         });
 
         return result;
@@ -678,6 +736,16 @@ public class Utility {
         return result;
     }
 
+    public static <T extends SearchEntity> List<T> sequentialSearchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+        List<T> result = Lists.newArrayList();
+
+        searchForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
     public static <T extends SearchEntity, A, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
         A result = collect.supplier().get();
 
@@ -685,6 +753,22 @@ public class Utility {
 	        A batchResult = collect.supplier().get();
 
 	        batch.parallelStream().forEach( entity -> {
+		        collect.accumulator().accept(batchResult, entity);
+	        });
+
+	        collect.combiner().apply(result, batchResult);
+        });
+
+	    return collect.finisher().apply(result);
+    }
+
+    public static <T extends SearchEntity, A, R> R sequentialSearchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
+
+        searchForAll(type, where, fields, (batch) -> {
+	        A batchResult = collect.supplier().get();
+
+	        batch.forEach( entity -> {
 		        collect.accumulator().accept(batchResult, entity);
 	        });
 
