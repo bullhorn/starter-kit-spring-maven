@@ -149,72 +149,72 @@ public class Utility {
 		return true;
 	}
 
-    public static Set<Integer> parseCommaSeparatedIntegers(String value) {
-        return parseCommaSeparated(value, Utility::forceParseInteger);
-    }
+	public static Set<Integer> parseCommaSeparatedIntegers(String value) {
+		return parseCommaSeparated(value, Utility::forceParseInteger);
+	}
 
-    public static Set<String> parseCommaSeparatedStrings(String value) {
-        return parseCommaSeparated(value, Function.identity());
-    }
+	public static Set<String> parseCommaSeparatedStrings(String value) {
+		return parseCommaSeparated(value, Function.identity());
+	}
 
-    private static <T> Set<T> parseCommaSeparated(String value, Function<String, T> map) {
-        return Stream.of(StringUtils.defaultIfBlank(value, "").split(",")).parallel().map(map).collect(Collectors.toSet());
-    }
+	private static <T> Set<T> parseCommaSeparated(String value, Function<String, T> map) {
+		return Stream.of(StringUtils.defaultIfBlank(value, "").split(",")).parallel().map(map).collect(Collectors.toSet());
+	}
 
-    public static <T, R> Boolean valueChanged(T oldEntity, T newEntity, Function<T, R> get) {
-        R oldValue = get.apply(oldEntity);
-        R newValue = get.apply(newEntity);
+	public static <T, R> Boolean valueChanged(T oldEntity, T newEntity, Function<T, R> get) {
+		R oldValue = get.apply(oldEntity);
+		R newValue = get.apply(newEntity);
 
-        if(oldValue instanceof Address) {
-            return valueChanged((Address) oldEntity, (Address) newEntity, Address::getAddress1)
-                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getAddress2)
-                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getCity)
-                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getState)
-                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getZip)
-                    || valueChanged((Address) oldEntity, (Address) newEntity, Address::getCountryID);
-        } else if(oldValue instanceof BullhornEntity) {
-            return valueChanged((BullhornEntity) oldValue, (BullhornEntity) newValue, BullhornEntity::getId);
-        }
+		if(oldValue instanceof Address) {
+			return valueChanged((Address) oldEntity, (Address) newEntity, Address::getAddress1)
+					|| valueChanged((Address) oldEntity, (Address) newEntity, Address::getAddress2)
+					|| valueChanged((Address) oldEntity, (Address) newEntity, Address::getCity)
+					|| valueChanged((Address) oldEntity, (Address) newEntity, Address::getState)
+					|| valueChanged((Address) oldEntity, (Address) newEntity, Address::getZip)
+					|| valueChanged((Address) oldEntity, (Address) newEntity, Address::getCountryID);
+		} else if(oldValue instanceof BullhornEntity) {
+			return valueChanged((BullhornEntity) oldValue, (BullhornEntity) newValue, BullhornEntity::getId);
+		}
 
-        return valueChanged(oldValue, newValue);
-    }
+		return valueChanged(oldValue, newValue);
+	}
 
-    public static <T> Boolean valueChanged(T oldValue, T newValue) {
-        if(oldValue == null) {
-            return newValue != null;
-        } else if(newValue == null) {
-            return true;
-        } else if(oldValue instanceof String) {
-            String oldString = StringUtils.defaultIfBlank((String)oldValue, "");
-            String newString = StringUtils.defaultIfBlank((String)newValue, "");
+	public static <T> Boolean valueChanged(T oldValue, T newValue) {
+		if(oldValue == null) {
+			return newValue != null;
+		} else if(newValue == null) {
+			return true;
+		} else if(oldValue instanceof String) {
+			String oldString = StringUtils.defaultIfBlank((String)oldValue, "");
+			String newString = StringUtils.defaultIfBlank((String)newValue, "");
 
-            return !oldString.equals(newString);
-        } else if(oldValue instanceof Boolean || oldValue instanceof Integer) {
-            return oldValue != newValue;
-        } else if(oldValue instanceof BigDecimal) {
-            return ((BigDecimal) oldValue).compareTo((BigDecimal) newValue) != 0;
-        } else if(oldValue instanceof DateTime) {
-            return Days.daysBetween((DateTime) oldValue, (DateTime) newValue).getDays() != 0;
-        } else if(oldValue instanceof BullhornEntity) {
-            return valueChanged((BullhornEntity) oldValue, (BullhornEntity) newValue, BullhornEntity::getId);
-        }
+			return !oldString.equals(newString);
+		} else if(oldValue instanceof Boolean || oldValue instanceof Integer) {
+			return oldValue != newValue;
+		} else if(oldValue instanceof BigDecimal) {
+			return ((BigDecimal) oldValue).compareTo((BigDecimal) newValue) != 0;
+		} else if(oldValue instanceof DateTime) {
+			return Days.daysBetween((DateTime) oldValue, (DateTime) newValue).getDays() != 0;
+		} else if(oldValue instanceof BullhornEntity) {
+			return valueChanged((BullhornEntity) oldValue, (BullhornEntity) newValue, BullhornEntity::getId);
+		}
 
-        return !oldValue.equals(newValue);
-    }
+		return !oldValue.equals(newValue);
+	}
 
-    private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
+	private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
 
-    public static String formatDateForSearch(DateTime value) {
-        return value.toString(SEARCH_DATE_FORMAT);
-    }
+	public static String formatDateForSearch(DateTime value) {
+		return value.toString(SEARCH_DATE_FORMAT);
+	}
 
-    public static String escapeWhitespaceForSearch(String value) {
-        return value.replaceAll("\\s", "\\\\ ").replaceAll("\\)", "\\\\)").replaceAll("\\(", "\\\\(");
-    }
+	public static String escapeWhitespaceForSearch(String value) {
+		return value.replaceAll("\\s", "\\\\ ").replaceAll("\\)", "\\\\)").replaceAll("\\(", "\\\\(");
+	}
 
-    public static String escapeQuotesForQuery(String value) {
-        return value.replaceAll("'", "''");
-    }
+	public static String escapeQuotesForQuery(String value) {
+		return value.replaceAll("'", "''");
+	}
 
 	public static Map<String, String> commaDelimitedStringToMap(String commaDelimited) {
 		List<String> parsed = Arrays.asList(commaDelimited.split(","));
@@ -233,23 +233,23 @@ public class Utility {
 		});
 	}
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
-        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
 
-        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
+		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+	}
 
 	public static Boolean isPositive(Integer value) {
-	    return value != null && value > 0;
-    }
+		return value != null && value > 0;
+	}
 
-    public static Boolean isPositive(BigDecimal value) {
-        return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-    }
+	public static Boolean isPositive(BigDecimal value) {
+		return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+	}
 
 	public static Boolean isPositive(Object value) {
-        return isPositive(forceParseBigDecimal(value));
-    }
+		return isPositive(forceParseBigDecimal(value));
+	}
 
 	public static BigDecimal parseBigDecimal(Object value) {
 		if(value == null || value.toString().isEmpty()) {
@@ -279,17 +279,17 @@ public class Utility {
 		}
 	}
 
-    public static Integer parseInteger(Object value) {
-        if(value == null || value.toString().isEmpty()) {
-            return null;
-        } else {
-            try {
-                return Integer.parseInt(value.toString());
-            } catch(NumberFormatException e) {
-                return null;
-            }
-        }
-    }
+	public static Integer parseInteger(Object value) {
+		if(value == null || value.toString().isEmpty()) {
+			return null;
+		} else {
+			try {
+				return Integer.parseInt(value.toString());
+			} catch(NumberFormatException e) {
+				return null;
+			}
+		}
+	}
 
 	public static Integer forceParseInteger(Object value) {
 		if(value == null || value.toString().isEmpty()) {
@@ -366,7 +366,7 @@ public class Utility {
 
 	public static  Date forceParseStringToDate(String dateStr, String dateFormat) {
 		if(dateStr == null || dateStr.isEmpty() || dateFormat == null || dateFormat.isEmpty()) {
-            return DateTime.now().toDate();
+			return DateTime.now().toDate();
 		} else {
 			TimeZone timeZone = TimeZone.getTimeZone("America/Detroit");
 			DateFormat format = new SimpleDateFormat(dateFormat);
@@ -383,11 +383,11 @@ public class Utility {
 	public static DateTime parseStringToDateTime(String dateStr, String dateFormat) {
 
 
-	    Date date = parseStringToDate(dateStr, dateFormat);
+		Date date = parseStringToDate(dateStr, dateFormat);
 
-	    if(date == null){
-	        return null;
-	    }
+		if(date == null){
+			return null;
+		}
 
 		DateTime now = nowUsingTimeZone(null);
 
@@ -537,9 +537,9 @@ public class Utility {
 		return false;
 	}
 
-    public static String parseString(Object value) {
-        return value == null ? "" : value.toString();
-    }
+	public static String parseString(Object value) {
+		return value == null ? "" : value.toString();
+	}
 
 	public static DateTime xmlGregorianCalendarToDateTime(XMLGregorianCalendar calendar) {
 		if(calendar == null) {
@@ -580,171 +580,255 @@ public class Utility {
 		return field + " IN (" + commaSeparated + ")";
 	}
 
-    public static Integer nullCheck(Integer value) {
-        return nullCheck(value, 0);
-    }
+	public static Integer nullCheck(Integer value) {
+		return nullCheck(value, 0);
+	}
 
-    public static <T> T nullCheck(T value, T defaultValue) {
-        return value == null ? defaultValue : value;
-    }
+	public static <T> T nullCheck(T value, T defaultValue) {
+		return value == null ? defaultValue : value;
+	}
 
-    public static BigDecimal nullCheck(BigDecimal value) {
-        return nullCheck(value, BigDecimal.ZERO);
-    }
+	public static BigDecimal nullCheck(BigDecimal value) {
+		return nullCheck(value, BigDecimal.ZERO);
+	}
 
-    public static String nullCheck(String value) {
-        return nullCheck(value, "");
-    }
+	public static String nullCheck(String value) {
+		return nullCheck(value, "");
+	}
 
-    public static String longDateFormatToShort(String applicationDateFormat) {
-        String shortDateFormat = StringUtils.defaultIfBlank(applicationDateFormat, "").replaceAll("MM", "M").replaceAll("dd", "d").replaceAll("yyyy", "yy");
+	public static String longDateFormatToShort(String applicationDateFormat) {
+		String shortDateFormat = StringUtils.defaultIfBlank(applicationDateFormat, "").replaceAll("MM", "M").replaceAll("dd", "d").replaceAll("yyyy", "yy");
 
-        return new StringBuilder(shortDateFormat).append(" h:mm a").toString();
-    }
+		return new StringBuilder(shortDateFormat).append(" h:mm a").toString();
+	}
 
-    public static String javaDateFormatToJavascriptDateFormat(String format) {
-        return StringUtils.defaultIfBlank(format, "").replaceAll("d", "D").replaceAll("y", "Y");
-    }
+	public static String javaDateFormatToJavascriptDateFormat(String format) {
+		return StringUtils.defaultIfBlank(format, "").replaceAll("d", "D").replaceAll("y", "Y");
+	}
 
-    public static String getHostFromBullhornUrl(String currentBullhornUrl) {
-        return currentBullhornUrl.substring(0, StringUtils.indexOfIgnoreCase(currentBullhornUrl, "/bullhornstaffing/"));
-    }
+	public static String getHostFromBullhornUrl(String currentBullhornUrl) {
+		return currentBullhornUrl.substring(0, StringUtils.indexOfIgnoreCase(currentBullhornUrl, "/bullhornstaffing/"));
+	}
 
-    public static <T extends QueryEntity, R> void queryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
-        queryForAll(type, where, fields, (batch) -> {
-            batch.parallelStream().forEach(process);
-        });
-    }
+	public static <T extends QueryEntity, R> void queryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+		queryForAll(type, where, fields, (batch) -> {
+			batch.parallelStream().forEach(process);
+		});
+	}
 
-    public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
-        List<R> result = Lists.newArrayList();
+	public static <T extends QueryEntity, R> void sequentialQueryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+		queryForAll(type, where, fields, (batch) -> {
+			batch.forEach(process);
+		});
+	}
 
-        queryForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
-        });
+	public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+		List<R> result = Lists.newArrayList();
 
-        return result;
-    }
+		queryForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
+		});
 
-    public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
-        List<T> result = Lists.newArrayList();
+		return result;
+	}
 
-        queryForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
-        });
+	public static <T extends QueryEntity, R> List<R> sequentialQueryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+		List<R> result = Lists.newArrayList();
 
-        return result;
-    }
+		queryForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.stream().map(map).collect(Collectors.toList()));
+		});
 
-    public static <T extends QueryEntity, A, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
-        A result = collect.supplier().get();
+		return result;
+	}
 
-        queryForAll(type, where, fields, (batch) -> {
-        	A batchResult = collect.supplier().get();
+	public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+		List<T> result = Lists.newArrayList();
 
-            batch.parallelStream().forEach( entity -> {
-                collect.accumulator().accept(batchResult, entity);
-            });
+		queryForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
+		});
 
-            collect.combiner().apply(result, batchResult);
-        });
+		return result;
+	}
 
-        return collect.finisher().apply(result);
-    }
+	public static <T extends QueryEntity> List<T> sequentialQueryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+		List<T> result = Lists.newArrayList();
 
-    public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
-        searchForAll(type, where, fields, (batch) -> {
-            batch.parallelStream().forEach(process);
-        });
-    }
+		queryForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
+		});
 
-    public static <T extends SearchEntity, R> List<R> searchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
-        List<R> result = Lists.newArrayList();
+		return result;
+	}
 
-        searchForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
-        });
+	public static <T extends QueryEntity, A, R> R queryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+		A result = collect.supplier().get();
 
-        return result;
-    }
+		queryForAll(type, where, fields, (batch) -> {
+			A batchResult = collect.supplier().get();
 
-    public static <T extends SearchEntity> List<T> searchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
-        List<T> result = Lists.newArrayList();
+			batch.parallelStream().forEach( entity -> {
+				collect.accumulator().accept(batchResult, entity);
+			});
 
-        searchForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
-        });
+			collect.combiner().apply(result, batchResult);
+		});
 
-        return result;
-    }
+		return collect.finisher().apply(result);
+	}
 
-    public static <T extends SearchEntity, A, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
-        A result = collect.supplier().get();
+	public static <T extends QueryEntity, A, R> R sequentialQueryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+		A result = collect.supplier().get();
 
-        searchForAll(type, where, fields, (batch) -> {
-	        A batchResult = collect.supplier().get();
+		queryForAll(type, where, fields, (batch) -> {
+			A batchResult = collect.supplier().get();
 
-	        batch.parallelStream().forEach( entity -> {
-		        collect.accumulator().accept(batchResult, entity);
-	        });
+			batch.forEach( entity -> {
+				collect.accumulator().accept(batchResult, entity);
+			});
 
-	        collect.combiner().apply(result, batchResult);
-        });
+			collect.combiner().apply(result, batchResult);
+		});
 
-	    return collect.finisher().apply(result);
-    }
+		return collect.finisher().apply(result);
+	}
 
-    private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
-        queryForAll(type, where, fields, process, 0);
-    }
+	public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+		searchForAll(type, where, fields, (batch) -> {
+			batch.parallelStream().forEach(process);
+		});
+	}
 
-    private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
-        BullhornData bullhornData = getBullhornData();
+	public static <T extends SearchEntity, R> void sequentialSearchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+		searchForAll(type, where, fields, (batch) -> {
+			batch.forEach(process);
+		});
+	}
 
-        QueryParams params = ParamFactory.queryParams();
-        params.setStart(start);
-        params.setCount(BATCH_SIZE);
-        params.setShowTotalMatched(true);
+	public static <T extends SearchEntity, R> List<R> searchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+		List<R> result = Lists.newArrayList();
 
-        ListWrapper<T> result = bullhornData.query(type, where, fields, params);
+		searchForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
+		});
 
-        process.accept(result.getData());
+		return result;
+	}
 
-        if(result.getStart() + result.getCount() < result.getTotal()) {
-            queryForAll(type, where, fields, process, result.getStart() + result.getCount());
-        }
-    }
+	public static <T extends SearchEntity, R> List<R> sequentialSearchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+		List<R> result = Lists.newArrayList();
 
-    private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
-        searchForAll(type, where, fields, process, 0);
-    }
+		searchForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.stream().map(map).collect(Collectors.toList()));
+		});
 
-    private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
-        BullhornData bullhornData = getBullhornData();
+		return result;
+	}
 
-        SearchParams params = ParamFactory.searchParams();
-        params.setStart(start);
-        params.setCount(BATCH_SIZE);
+	public static <T extends SearchEntity> List<T> searchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+		List<T> result = Lists.newArrayList();
 
-        ListWrapper<T> result = bullhornData.search(type, where, fields, params);
+		searchForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
+		});
 
-        process.accept(result.getData());
+		return result;
+	}
 
-        if(result.getStart() + result.getCount() < result.getTotal()) {
-            searchForAll(type, where, fields, process, result.getStart() + result.getCount());
-        }
-    }
+	public static <T extends SearchEntity> List<T> sequentialSearchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+		List<T> result = Lists.newArrayList();
 
-    private static final int BATCH_SIZE = 200;
+		searchForAll(type, where, fields, (batch) -> {
+			result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
+		});
 
-    private static synchronized BullhornData getBullhornData() {
-        if(BULLHORN_DATA == null) {
-            BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
-        }
+		return result;
+	}
 
-        return BULLHORN_DATA;
-    }
+	public static <T extends SearchEntity, A, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+		A result = collect.supplier().get();
 
-    private static BullhornData BULLHORN_DATA;
+		searchForAll(type, where, fields, (batch) -> {
+			A batchResult = collect.supplier().get();
+
+			batch.parallelStream().forEach( entity -> {
+				collect.accumulator().accept(batchResult, entity);
+			});
+
+			collect.combiner().apply(result, batchResult);
+		});
+
+		return collect.finisher().apply(result);
+	}
+
+	public static <T extends SearchEntity, A, R> R sequentialSearchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+		A result = collect.supplier().get();
+
+		searchForAll(type, where, fields, (batch) -> {
+			A batchResult = collect.supplier().get();
+
+			batch.forEach( entity -> {
+				collect.accumulator().accept(batchResult, entity);
+			});
+
+			collect.combiner().apply(result, batchResult);
+		});
+
+		return collect.finisher().apply(result);
+	}
+
+	private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
+		queryForAll(type, where, fields, process, 0);
+	}
+
+	private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
+		BullhornData bullhornData = getBullhornData();
+
+		QueryParams params = ParamFactory.queryParams();
+		params.setStart(start);
+		params.setCount(BATCH_SIZE);
+		params.setShowTotalMatched(true);
+
+		ListWrapper<T> result = bullhornData.query(type, where, fields, params);
+
+		process.accept(result.getData());
+
+		if(result.getStart() + result.getCount() < result.getTotal()) {
+			queryForAll(type, where, fields, process, result.getStart() + result.getCount());
+		}
+	}
+
+	private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process) {
+		searchForAll(type, where, fields, process, 0);
+	}
+
+	private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
+		BullhornData bullhornData = getBullhornData();
+
+		SearchParams params = ParamFactory.searchParams();
+		params.setStart(start);
+		params.setCount(BATCH_SIZE);
+
+		ListWrapper<T> result = bullhornData.search(type, where, fields, params);
+
+		process.accept(result.getData());
+
+		if(result.getStart() + result.getCount() < result.getTotal()) {
+			searchForAll(type, where, fields, process, result.getStart() + result.getCount());
+		}
+	}
+
+	private static final int BATCH_SIZE = 200;
+
+	private static synchronized BullhornData getBullhornData() {
+		if(BULLHORN_DATA == null) {
+			BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
+		}
+
+		return BULLHORN_DATA;
+	}
+
+	private static BullhornData BULLHORN_DATA;
 
 }
