@@ -54,16 +54,10 @@ public class Utility {
 
 	public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
 																					   List<? extends WorkflowAction<?, ?>> actions) {
-		Map<? extends BullhornRelatedEntity, Set<String>> requestedFields = actions.stream().map(WorkflowAction::getRelatedEntityFields).reduce(Maps.newLinkedHashMap(), (map, relatedEntityFields) -> {
-			return relatedEntityFields.entrySet().parallelStream().collect(Collectors.toMap(Map.Entry::getKey, oneRelatedEntityFields -> {
-				if (map.containsKey(oneRelatedEntityFields.getKey())) {
-					Set<String> currentFields = map.get(oneRelatedEntityFields.getKey());
-
-					return Utility.mergeFieldSets(oneRelatedEntityFields.getValue(), currentFields);
-				} else {
-					return oneRelatedEntityFields.getValue();
-				}
-			}));
+		Map<? extends BullhornRelatedEntity, Set<String>> requestedFields = actions.stream().map(WorkflowAction::getRelatedEntityFields).reduce(Maps.newLinkedHashMap(), (firstMap, secondMap) -> {
+			return Stream.concat(firstMap.entrySet().stream(), secondMap.entrySet().stream())
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+							Utility::mergeFieldSets));
 		});
 
 		return Stream.concat(Stream.of(relatedEntities), Stream.of(StandardRelatedEntity.values())).collect(Collectors.toMap(Function.identity(), relatedEntity -> {
