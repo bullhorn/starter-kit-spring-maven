@@ -6,7 +6,7 @@ import java.util.Set;
 
 public enum CandidateWorkHistoryRelatedEntity implements BullhornRelatedEntity {
     CANDIDATE_WORK_HISTORY(
-            "candidate(id,name)", "clientCorporation(id,name)", "companyName", "endDate",
+            "id", "candidate(id,name)", "clientCorporation(id,name)", "companyName", "endDate",
             "jobOrder(id,title)", "placement(id,status)", "startDate", "title"
     ),
     CANDIDATE("id", "name", "email", "phone", "owner(id,name)"),
