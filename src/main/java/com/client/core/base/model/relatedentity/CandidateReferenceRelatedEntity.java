@@ -6,7 +6,7 @@ import java.util.Set;
 
 public enum CandidateReferenceRelatedEntity implements BullhornRelatedEntity {
     CANDIDATE_REFERENCE(
-            "candidate(id,name)", "clientCorporation(id,name)", "companyName", "candidateTitle", "jobOrder(id,title)",
+            "id", "candidate(id,name)", "clientCorporation(id,name)", "companyName", "candidateTitle", "jobOrder(id,title)",
             "referenceClientContact(id,name)", "referenceFirstName", "referenceLastName", "referenceEmail", "referenceTitle"
     ),
     CANDIDATE("id", "name", "email", "phone", "owner(id,name)"),
