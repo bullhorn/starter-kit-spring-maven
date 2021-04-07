@@ -12,14 +12,17 @@ The application uses [Spring Framework](http://projects.spring.io/spring-framewo
   - [REST Login](http://developer.bullhorn.com/articles/getting_started) Information about getting started with Bullhorn REST APIs
   - [REST Documentation](http://developer.bullhorn.com/sites/default/files/BullhornRESTAPI_0.pdf) Extensive documentation on the REST APIs
 
-There are several ways to customize Bullhorn, including:
-   - Form triggers
+There are several ways to customize Bullhorn through this repository, including:
    - REST triggers
    - Subscription-based scheduled tasks (asynchronous event handling)
-   - Form scripts
-   - Custom tabs
-   - Custom overview components
-   - Custom edit components
+   - Date Last Modified-based scheduled tasks
+
+There are also several other ways to customize Bullhorn, but that are specific to the older UI/UX called 'S-Release'.  This functionality within the starter-kit-spring-maven is considered deprecated, and is subject to be removed with future releases:
+   - Custom tabs/cards/menu actions (recommendation is to use the [extension-starter](https://github.com/bullhorn/extension-starter) for Bullhorn Novo)
+   - Form scripts (starter-kit-spring-maven functionality removed, S-Release only)
+   - Form triggers (deprecated, S-Release only)
+   - Custom overview components (deprecated, S-Release only)
+   - Custom edit components (deprecated, S-Release only)
 
 The Starter Kit includes code for dealing with most of these methods of customization. Each of these is discussed below. One of the main concepts used for form triggers, REST triggers, and subscription-based scheduled tasks is the workflow, which is described first.
 
@@ -58,54 +61,6 @@ Of the two main types of Traversers, there will be an implementation for each en
 
  ...
 ```
-
-## Form triggers
-Form triggers are a way for you to customize how a record is saved in the Bullhorn CRM.  For each of the main entities, there is both an 'add' form trigger and an 'edit' form trigger. During the configuration of a given trigger, you provide a URL to Bullhorn that is called upon saving the form. Bullhorn passes all information on the form to the URL in the form of an HTTP POST request. The code receiving the request can reply in one of two ways, either stopping the save with a provided error message, or modifying the data that is about to be saved. The following form triggers are available for customization:
-   - Candidate (Add/Edit)
-   - Client Contact (Add/Edit)
-   - Client Corporation (Add/Edit)
-   - Job Order (Add/Edit)
-   - Placement (Add/Edit)
-   - Job Submission (Add/Edit)
-   - Placement Change Request (Add AND Edit, only one trigger for both cases)
-   - Note (Add)
-   - Opportunity (Add/Edit)
-   - Lead (Add/Edit)
-
-The Starter Kit handles all form triggers in the same way. The endpoint controllers are all in the ``com.client.core.formtrigger.controller`` package and are all designed the same way. None of the code in this package requires modification. The endpoints for each form trigger are always the same, with the exception of your application's host name.  The endpoints are of the form: `` ${host}/main/formtrigger/${entity}/${action}?apiKey=${apiKey} ``, where
-  - ${host} is the domain host of your application
-  - ${apiKey} is your Bullhorn API Key
-  - ${action} is one of
-    - add
-    - edit
-  - ${entity} is one of
-    - candidate (only for add, i.e. /candidate/add)
-    - clientcontact (only for add, i.e. /clientcontact/add)
-    - clientcontactcandidate (for edit, i.e. /clientcontactcandidate/edit)
-    - clientcorporation
-    - job
-    - placement
-    - jobsubmission
-    - note (only for add, i.e. /note/add)
-    - placementchangerequest (/placementchangerequest/add runs for both add and edit)
-
-To implement custom logic, you must extend one of the various `FormTriggerValidator` classes (a subclass of `WorkflowAction`), generally described above.  There is one abstract `FormTriggerValidator` class for each kind of entity (e.g. `PlacementFormTriggerValidator`).  Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Form Triggers.
-
-##### ${entityName}FormTriggerTraverser
-The form trigger implementations of ``com.client.core.base.workflow.traversing.TriggerTraverser`` are all essentially the same, the only differences being determined by the type of entity being passed through the workflow (The `TriggerTraverser` class is also used as an extension point for REST triggers).  These differences are described in the general [Traversers](#traversers) section.  The functionality provided by Bullhorn for form triggers is all handled in the ``com.client.core.base.workflow.traversing.AbstractTriggerTraverser`` and will always be the same.  There are two different types of responses we can provide to a form trigger, either an error response or a return values response, and both are handled using the ``Map<String, String> formResponse`` present in all TriggerTraversers.  Such Traversers provide utility methods to send back a response, either with ``public Map<String, String> getFormResponse()`` (and a subsequent `put` call) or ``public void addFormResponse(String key, String message)``.  The ``Map<String, String>`` is maintained throughout the workflow by the ValidationTraverser, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.
-
-In order to add an error to the ``formResponse``, we add a Map Entry consisting of a key in the  form ``error:${someKey}`` and a value consisting of the error message itself, i.e.
-
-```java
- traverser.addFormResponse("error:clientCorporationStatus", "Client Corporation cannot be saved in this status");
-```
-Note that each key provided to the response must be unique, since we use a ``java.util.Map`` to store our response.
-
-In order to add a return value to the ``formResponse`` (i.e., to set a value on the entity being saved before persisting to the database), we add a Map Entry consisting of a key in the form ``returnvalue:${fieldToChange}`` and a value consisting of the value you which to set on the field. That is, the following code
-```java
- traverser.addFormResponse("returnvalue:status", "Approved");
-```
-Will respond to Bullhorn telling it to set the status field to a value of 'Approved' before saving the entity.
 
 ## REST Triggers
 REST Triggers are similar to form triggers in that they allow you to customize how a record gets saved, but from various different places in the application as opposed to just on the standard edit/add pages for an entity.  Specifically, a REST Trigger gets called whenever a consumer of the REST API makes an add or update call and passes a URL parameter ``executeFormTriggers=true``.  At the time of this writing the only places in the application that will definitely call REST triggers are inline edits on list views as well as add/edits done in the mobile application.  Similar to Form Triggers, REST Triggers allow you to either stop the add/update being performed with a custom validation method, or you can change the value of a field or fields on the entity being saved.  Again similar to Form Triggers, the configuration of a REST Trigger involves providing a URL to BULLHORN which get's called when the corresponding action is performed.  The following REST Triggers are available for configuration:
@@ -169,33 +124,71 @@ Most of the functionality provided by the ScheduledTasksTraversers and associate
 ```
 That should be used to perform updates on entities in a scheduled tasks workflow.  You pass in the entity  you are about to make modifications to, which the helper object then makes a deep copy of using [Kryo](https://github.com/EsotericSoftware/kryo) and holds onto in a Map, returning the deep copy.  Then, at the end of every scheduled tasks workflow, the code that executes each of your `EventTask`s will  loop through this map and perform an update call on each entity in it.  This allows you to make modifications to the same entity in different classes without making multiple API calls.  After calling ``getOneEntityToSave``, any modifications made to the object returned will in turn be made to the copy being held by the helper object.
 
-## Form Scripts
-Form scripts allow you to customize the page that loads when you view an entity.  As its name implies, a form script consists of a block of Javascript (technically HTML, typically onl consisting of JS) which is entirely custom and which can perform whatever actions on the page the programmer chooses.  Configuring a form script consists of manually copying and pasting a block of HTML into Bullhorn which then is dropped onto the corresponding entity's page when it loads.  Of note is the fact that a form script run on *all* tabs of the entity it's configured for, so the script typically starts with a check to determine which tab it's on.  A very simple example candidate form script is below:
+## Date Last Modified-based scheduled tasks
+In some cases it may make more sense to write a scheduled task that operates off of a Bullhorn record's `dateLastModified` property, as opposed to writing a subscription-based scheduled task.  An example of such a task would be one that runs every 5 minutes, and queries for JobOrder records that were added or updated in the last 5 minutes (i.e. where `dateLastModified > now() - 5 minutes`), and then performs some kind of business logic on them, perhaps updating an associated record such as the ClientContact.  In such cases the starter-kit provides a framework that handles the interactions with the REST APIs required to retrieve such records, as well as managing the scheduling of the tasks themselves.  
 
-```html
-<script type="text/javascript">
-    var tab = $('a.SubTierNavSelected').text();
+In order to write such a task, you would create a class (typically in `com.client.custom`, and annotated with `@Service`, so that it lives in the Spring Application Context) that extends the appropriate `${entityName}DateLastModifiedEventTask` (e.g. `JobOrderDateLastModifiedEventTask`).  Doing so will force you to implement a constructor that takes a few parameters:
+   - `Integer intervalMinutes` - the number of minutes the task should look back to find new records, as well as how often it runs.  Required
+   - `Set<String> fields` - the fields that should be returned/passed to the REST APIs.  Optional, defaults to "id"
+   - `IncludeDateAdded includeDateAdded` - whether to also include dateAdded in the query the is constructed to pull records (i.e. the where clause gains an `OR dateAdded > now() - intervalMinutesAgo` term).  Optional, defaults to YES
 
-    if(tab == 'Edit') {
-    	$('[name="candidate_ssn"]').prop('readonly', true);
-    }
-</script>
+Finally you will need to implement the method to execute your business logic.  This method is called `process` and takes one parameter, an instance of the entity that was modified (e.g. in our example above, it would take a `JobOrder` object), which will be populated with the fields passed in the `Set<String> fields` constructor parameter.
+
+The framework itself runs every minute by default (controlled by the `date.last.modified.cron.expression` app parameter).  The `com.client.core.dlmtasks.DateLastModifiedEventProcessing` class and other related ones @Autowired all instances of any `${entityName}DateLastModifiedEventTask`s in the Spring Application Context at app startup.  Every minute it checks to see if any of those tasks should execute, and if so generates a `/query/` or `/search/` REST call using the properties passed in the class's constructor, and for each object returned it runs the `process` method.  It minimizes REST calls made by making them in batches whenever it can...if there are two `JobOrderDateLastModifiedEventTask`s that both run every 5 minutes, it will only make the REST calls needed once.  The first run of every task is determined by it's `intervalMinutes` property, and should occur at `intervalMinutes` past the hour, or any multiple of the value thereafter (e.g. in our example it would run at :05, :10, :15, whichever comes next after the app starts up)...specifically it runs when `now().getMinutesOfHours() % intervalMinutesAgo === 0`.  Subsequently the framework keeps track of the last time each task ran and uses that value to determine when each task should be executed.
+
+## Form triggers (deprecated, S-Release only)
+Form triggers are a way for you to customize how a record is saved in the Bullhorn CRM.  For each of the main entities, there is both an 'add' form trigger and an 'edit' form trigger. During the configuration of a given trigger, you provide a URL to Bullhorn that is called upon saving the form. Bullhorn passes all information on the form to the URL in the form of an HTTP POST request. The code receiving the request can reply in one of two ways, either stopping the save with a provided error message, or modifying the data that is about to be saved. The following form triggers are available for customization:
+   - Candidate (Add/Edit)
+   - Client Contact (Add/Edit)
+   - Client Corporation (Add/Edit)
+   - Job Order (Add/Edit)
+   - Placement (Add/Edit)
+   - Job Submission (Add/Edit)
+   - Placement Change Request (Add AND Edit, only one trigger for both cases)
+   - Note (Add)
+   - Opportunity (Add/Edit)
+   - Lead (Add/Edit)
+
+The Starter Kit handles all form triggers in the same way. The endpoint controllers are all in the ``com.client.core.formtrigger.controller`` package and are all designed the same way. None of the code in this package requires modification. The endpoints for each form trigger are always the same, with the exception of your application's host name.  The endpoints are of the form: `` ${host}/main/formtrigger/${entity}/${action}?apiKey=${apiKey} ``, where
+  - ${host} is the domain host of your application
+  - ${apiKey} is your Bullhorn API Key
+  - ${action} is one of
+    - add
+    - edit
+  - ${entity} is one of
+    - candidate (only for add, i.e. /candidate/add)
+    - clientcontact (only for add, i.e. /clientcontact/add)
+    - clientcontactcandidate (for edit, i.e. /clientcontactcandidate/edit)
+    - clientcorporation
+    - job
+    - placement
+    - jobsubmission
+    - note (only for add, i.e. /note/add)
+    - placementchangerequest (/placementchangerequest/add runs for both add and edit)
+
+To implement custom logic, you must extend one of the various `FormTriggerValidator` classes (a subclass of `WorkflowAction`), generally described above.  There is one abstract `FormTriggerValidator` class for each kind of entity (e.g. `PlacementFormTriggerValidator`).  Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Form Triggers.
+
+##### ${entityName}FormTriggerTraverser
+The form trigger implementations of ``com.client.core.base.workflow.traversing.TriggerTraverser`` are all essentially the same, the only differences being determined by the type of entity being passed through the workflow (The `TriggerTraverser` class is also used as an extension point for REST triggers).  These differences are described in the general [Traversers](#traversers) section.  The functionality provided by Bullhorn for form triggers is all handled in the ``com.client.core.base.workflow.traversing.AbstractTriggerTraverser`` and will always be the same.  There are two different types of responses we can provide to a form trigger, either an error response or a return values response, and both are handled using the ``Map<String, String> formResponse`` present in all TriggerTraversers.  Such Traversers provide utility methods to send back a response, either with ``public Map<String, String> getFormResponse()`` (and a subsequent `put` call) or ``public void addFormResponse(String key, String message)``.  The ``Map<String, String>`` is maintained throughout the workflow by the ValidationTraverser, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.
+
+In order to add an error to the ``formResponse``, we add a Map Entry consisting of a key in the  form ``error:${someKey}`` and a value consisting of the error message itself, i.e.
+
+```java
+ traverser.addFormResponse("error:clientCorporationStatus", "Client Corporation cannot be saved in this status");
 ```
-This script detects the currently active tab and disables the SSN field if we are on the Edit tab.
+Note that each key provided to the response must be unique, since we use a ``java.util.Map`` to store our response.
 
-One way you could deploy such a script would be by copying and pasting the exact HTML above into Bullhorn for the Candidate Form Script.  However in order to maintain versioning as well as ensure that our scripts don't affect the core BH ones very much, the Starter Kit provides a mechanism utilizing [RequireJS](http://requirejs.org/) that allows us to deploy our form scripts with the rest of our application.
+In order to add a return value to the ``formResponse`` (i.e., to set a value on the entity being saved before persisting to the database), we add a Map Entry consisting of a key in the form ``returnvalue:${fieldToChange}`` and a value consisting of the value you which to set on the field. That is, the following code
+```java
+ traverser.addFormResponse("returnvalue:status", "Approved");
+```
+Will respond to Bullhorn telling it to set the status field to a value of 'Approved' before saving the entity.
 
-In order to do this we largely utilize Maven plugins as well as RequireJS's native functionality.  We utilize 4 different Maven plugins to accomplish this.  One of these plugins is specific to form scripts, whilst the other three operate on LESS and JS in the application in general.  Javascript and LESS that is 'form script-specific' lives in `src/main/webapp/javascript/src/formscript` and `src/main/webapp/styles/less/formscript`; other 'custom' Javascript and LESS lives in `src/main/webapp/javascript/src/custom` and `src/main/webapp/styles/less/custom`.
-
- 1. The [Maven Assembly plugin](http://maven.apache.org/plugins/maven-assembly-plugin/) is specific to form scripts.  This plugin grabs all of the standard form script HTML files in the application (under `src/main/webapp/formscript-deploy/`; these files should never be modified), injects application parameters into them, and zips all of them up into a single artifact, which then represents all of the form script deployables for the application.  The one application parameter absolutely required for this functionality is `applicationRoot`, which is the hostname of the server where we plan on deploying the JAVA application.  We need this variable so the HTML deployables in the zip archive can correctly point to the requireJS configuration file that will live in the deployed JAVA app. These HTML deployables are exactly what needs to be pasted into BULLHORN to configure a form script; once completed the corresponding entity's form script (i.e. `src/main/webapp/javscript/src/formscript/${entityName}.js`) will be executed and any form script styles (i.e. `src/main/webapp/styles/less/formscript/${entityName}.less`) will be injected onto the page.
- 2. The [Maven WAR plugin](http://maven.apache.org/plugins/maven-war-plugin/) allows you to insert ${variable} placeholders into your Javascript code (either form script or custom).  These variables are expected to be application parameters that are defined either in the pom.xml or in app-${mavenProfile}.properties.
- 3. The [LESS CSS Maven Plugin](https://github.com/marceloverdijk/lesscss-maven-plugin) compiles all of the LESS CSS in `src/main/webapp/styles/less` down to standard CSS (as well as performs minifcation on that CSS).  Compiled files will live in `src/main/webapp/styles/`, which typically will consists of the two standard folders `formscript` and `custom` (which have corresponding LESS source folders under `styles/less`).
- 4. The [Minify Maven Plugin](https://github.com/samaxes/minify-maven-plugin) handles minifcation of all Javascript under `src/main/webapp/javascript/src`.  Minified files as well as their respective source map files will live under `src/main/webapp/javascript`, which should typically just consist of the `custom` and `formscript` folders again (which were copied from `javascript/src`).
-
-In order to import additional libraries using RequireJS in a form script context, add module configuration to `src/main/webapp/javascript/src/formscript/formscript.js` and import your module in your custom Javascript.  There are several tools already available in the folder `src/main/webapp/javascript/src/formscript/modules`, and all of your custom source JS should live in `src/main/webapp/javascript/src/formscript/main/${entityName}.js`; there should already be empty files there for every entity that supports form scripts.  These are exactly the files that get loaded via the HTML deployables we configure in BULLHORN.
+## Form Scripts (functionality removed)
+The functionality supporting Form Scripts in the starter-kit-spring-maven has been removed.  To view or obtain the old documentation or functionality, view an older commit/release of the starter-kit.
 
 
-## Custom tabs
+## Custom tabs (starter-kit-spring-maven functionality deprecated, use the [extension-starter](https://github.com/bullhorn/extension-starter))
 In Bullhorn, Custom Tabs are what they sound like...they allow you to add custom content onto a tab of any of the main types of entities.  Configuration typically only consists of providing a URL endpoint that you wish to be iframed in the aforementioned tab, and consequently this allows for essentially any type of customization.  An additional parameter with the name ``displayHeight`` can be appended to the configured URL to determine the height of the iframe in the tab (see [SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for more information).  Of note are the context variables provided by Bullhorn, always appended to the request URL as form-encoded parameters (case-sensitive):
   - EntityID - The ID of the entity being saved
   - EntityType - The type of entity being saved (i.e. Placement, Candidate)
@@ -352,7 +345,7 @@ public class JpaExampleEntity extends AbstractJpaEntity<Integer> {
 ### jQuery datatables framework
 After the database configuration, we have a table, an object representing it, and an object to perform database actions on the table using our object.  Assuming we want a relatively simple to-many entity, we can utilize the [jQuery](https://jquery.com/) [DataTables](http://datatables.net/) back-end and front-end framework present in the starter-kit.  The [javadocs](http://bullhorn.github.io/starter-kit-spring-maven/) provide detailed information about the different extension points, but the general idea is we extend ``com.client.core.datatables.controller.AbstractDataTablesController<T, ID>``, parameterizing by our domain class and the associated id, and being sure to call ``public void configureTable(TableConfiguration<T, ID> tableConfig)`` in our constructor.  We also extends ``com.client.core.datatables.service.JpaDataTablesService<T, ID>``, and provide our service to the controller.  We provide our service with the Dao we created previously, and we implement two methods that convert between our domain class and an instance of ``com.client.core.datatables.model.configuration.column.ColumnConfiguration``.  Of course, we will also want to make a JSP page under ``src/main/webapp/WEB-INF/jsp/main``, and provide the name of the file to the Controller.  You will most likely want to use a copy of ``src/main/webapp/WEB-INF/jsp/main/dataTables/simpleDataTables.jsp``, which contains the necessary jQuery code to render the table, using the endpoints provided by our Controller implementation.
 
-## Custom overview components
+## Custom overview components (deprecated, S-Release only)
 Custom overview components allow us to customize the overview page of one of the main Bullhorn entities.  Similar to Custom Tabs, configuration involves providing a URL which gets iframed on the overview.  See [the SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for some more information.  Again similar to Custom Tabs, Bullhorn provides some context information in the form of URL parameters appended to the base URL for the component.  They include
   - EntityID - The ID of the entity being saved
   - EntityType - The type of entity being saved (i.e. Placement, Candidate)
@@ -367,7 +360,7 @@ Custom components are available on the following entities:
   - JobOrder
   - Lead
    
-## Custom edit components
+## Custom edit components (deprecated, S-Release only)
 Custom Edit Components are again relatively similar to both Custom Tabs and Custom Components...Bullhorn allows us to provide an iframe URL which essentially acts as the Edit Type for a particular field (only certain fields can be used with Edit Components, the general rule-of-thumb is any customXXXXN field can be used).  Additionally, we can provide a height and a width in pixels that Bullhorn will use when creating the iframe.  The URL will be iframed on the edit tab for the entity which we configure it for, and we can pass a message to the edit tab from the iframe telling Bullhorn what value we want to set the field to.  The following function ``setValue(value)`` can be used from within the iframe to send the message to Bullhorn, which will set the field on the entity with the value passed in, and once the user saves will persist it to the database.  
 ```javascript
 function getQueryStringParameter(href, paramName){

@@ -72,12 +72,6 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-
-	<!-- DAO BEANS -->
-	<bean id="bullhornLogDAO" class="com.client.core.scheduledtasks.dao.impl.BullhornLogDAOImpl">
-		<property name="dataSource" ref="dataSourceLog" />
-	</bean>
-
     <bean id="sessionFilter" class="com.client.core.SessionFilter">
         <constructor-arg ref="appSettings" />
     </bean>
@@ -118,10 +112,6 @@
         <property name="disabled" value="${mail.disabled}" />
         <property name="routeToWhenDisabled" value="${mail.routeToWhenDisabled}" />
     </bean>
-
-	<bean id="bullhornapi" class="com.client.core.soap.service.impl.BullhornAPISoap">
-		<constructor-arg ref="appSettings" />
-	</bean>
 
 	<bean id="bullhornData" class="com.bullhornsdk.data.api.StandardBullhornData">
         <constructor-arg ref="bullhornRestCredentials" />

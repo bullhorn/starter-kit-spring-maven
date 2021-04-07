@@ -1,8 +1,5 @@
 package com.client.core.email.model;
 
-/**
- * Created by john.sullivan on 10/1/2017.
- */
 public class MailTemplate {
 
     private final String fileName;

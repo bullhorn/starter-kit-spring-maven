@@ -2,12 +2,6 @@ package com.client.core.base.tools.propertyeditors;
 
 import java.beans.PropertyEditorSupport;
 
-/**
- * Custom property editor for Object.
- * 
- * @author magnus.palm
- * 
- */
 public class CustomObjectEditor extends PropertyEditorSupport {
 
     public CustomObjectEditor() {

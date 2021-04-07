@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.job;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
+import com.client.core.base.model.relatedentity.JobOrderRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.JobOrderRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.JobOrderRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,18 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.JobOrderRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.JobOrderRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
-/**
- * Created by hiqbal on 12/15/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/job/*")
 public class JobOrderRestTriggerController extends AbstractRestTriggerController<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser> {
@@ -33,7 +30,7 @@ public class JobOrderRestTriggerController extends AbstractRestTriggerController
 
     @Autowired
     public JobOrderRestTriggerController(Optional<List<TriggerValidator<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser>>> triggerValidators) {
-        super(JobOrder.class, triggerValidators);
+        super(JobOrder.class, triggerValidators, JobOrderRelatedEntity.values());
     }
 
     /**
@@ -55,7 +52,7 @@ public class JobOrderRestTriggerController extends AbstractRestTriggerController
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-        JobOrderRestTriggerTraverser traverser = new JobOrderRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+        JobOrderRestTriggerTraverser traverser = new JobOrderRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -79,7 +76,7 @@ public class JobOrderRestTriggerController extends AbstractRestTriggerController
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-        JobOrderRestTriggerTraverser traverser = new JobOrderRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+        JobOrderRestTriggerTraverser traverser = new JobOrderRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

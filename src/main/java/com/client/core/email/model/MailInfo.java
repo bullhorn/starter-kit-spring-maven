@@ -1,10 +1,10 @@
 package com.client.core.email.model;
 
 
+import org.springframework.http.MediaType;
+
 import java.io.Serializable;
 import java.util.Collection;
-
-import org.springframework.http.MediaType;
 
 /**
  * <p>

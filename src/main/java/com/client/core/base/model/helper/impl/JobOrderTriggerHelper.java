@@ -1,86 +1,48 @@
 package com.client.core.base.model.helper.impl;
 
-import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
 import com.bullhornsdk.data.model.entity.core.standard.ClientCorporation;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.client.core.base.model.helper.AbstractTriggerHelper;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.JobOrderRelatedEntity;
 
-/**
- * Holds and keeps data needed for validations to minimize the number of API calls.
- * 
- * BullhornAPI, formJobOrderDto and updatingUserID are required and therefore set to final.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.Map;
+import java.util.Set;
+
 public abstract class JobOrderTriggerHelper extends AbstractTriggerHelper<JobOrder> {
 
 	private CorporateUser jobOwner;
-	private ClientCorporation clientCorpration;
+	private ClientContact clientContact;
+	private ClientCorporation clientCorporation;
 
-	public JobOrderTriggerHelper(Integer updatingUserID, BullhornData bullhornData) {
-		super(updatingUserID, bullhornData);
+	public JobOrderTriggerHelper(Integer updatingUserID, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(updatingUserID, JobOrder.class, JobOrderRelatedEntity.JOB_ORDER, relatedEntityFields);
 	}
 
-	@Override
-	public Integer getUpdatingUserID() {
-		return updatingUserID;
-	}
-
-	@Override
-	public void setNewEntity(JobOrder newDto) {
-		this.newEntity = newDto;
-
-	}
-
-	@Override
-	public JobOrder getOldEntity() {
-		if (oldEntity == null) {
-
-			setOldEntity(super.findJobOrder(getNewEntity().getId()));
-		}
-		return oldEntity;
-	}
-
-	@Override
-	public void setOldEntity(JobOrder oldDto) {
-		this.oldEntity = oldDto;
-
-	}
-
-	/**
-	 * Gets the owner of the job
-	 * 
-	 * @return a CorporateUserDto
-	 */
 	public CorporateUser getJobOwner() {
 		if (jobOwner == null) {
-			setJobOwner(findCorporateUser(getNewEntity().getOwner().getId()));
+			this.jobOwner = findCorporateUser(getNewEntity().getOwner().getId(), JobOrderRelatedEntity.JOB_OWNER);
 		}
 
 		return jobOwner;
 	}
 
-	public void setJobOwner(CorporateUser jobOwner) {
-		this.jobOwner = jobOwner;
-	}
-
-	/**
-	 * Gets the client corporation connected to the job
-	 * 
-	 * @return a ClientCorporationDto
-	 */
-	public ClientCorporation getClientCorpration() {
-		if (clientCorpration == null) {
-			setClientCorpration(findClientCorporation(getNewEntity().getClientCorporation().getId()));
+	public ClientContact getClientContact() {
+		if (clientContact == null) {
+			this.clientContact = findClientContact(getNewEntity().getClientContact().getId(), JobOrderRelatedEntity.CLIENT_CONTACT);
 		}
 
-		return clientCorpration;
+		return clientContact;
 	}
 
-	public void setClientCorpration(ClientCorporation clientCorpration) {
-		this.clientCorpration = clientCorpration;
+	public ClientCorporation getClientCorporation() {
+		if (clientCorporation == null) {
+			this.clientCorporation = findClientCorporation(getNewEntity().getClientCorporation().getId(), JobOrderRelatedEntity.CLIENT_CORPORATION);
+		}
+
+		return clientCorporation;
 	}
 
 }

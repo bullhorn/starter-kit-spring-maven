@@ -1,134 +1,108 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.CandidateRelatedEntity;
+import com.client.core.base.model.relatedentity.PlacementRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.PlacementCertificationRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it
- * will be stored in this Traverser for subsequent automation work.
- * 
- * The allsToSaveBackToBH map will contain deep copies of relevant dtos that should be saved back to BH. The copies
- * will be updated according to task logic, while the original dtos will NOT be updated so that subsequent logic will
- * still be made on original values.
- * 
- * Once all automation work has been done the dtos that need saving will be saved only once. In this way keeping the api
- * calls to a minimum by saving each dto only once, even though multiple tasks might have updated different fields on
- * the same dto.
- * 
- * @author magnus.palm
- * 
- */
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class PlacementScheduledTaskHelper extends AbstractScheduledTaskHelper<Placement> {
 
-	private JobOrder job;
-	private Candidate candidate;
-	private ClientCorporation clientCorporation;
+	private List<PlacementCommission> commissions;
 	private ClientContact clientContact;
+	private ClientCorporation clientCorporation;
+	private Candidate candidate;
 	private CorporateUser candidateOwner;
+	private JobOrder jobOrder;
+	private CorporateUser jobOwner;
+	private JobSubmission jobSubmission;
+	private CorporateUser jobSubmissionSendingUser;
 
-	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, Placement.class);
+	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(event, Placement.class, PlacementRelatedEntity.PLACEMENT, relatedEntityFields);
 	}
-
-	public PlacementScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event, Placement.class, bullhornData);
-	}
-
-	/**
-	 * Gets the Placement based on the SubscriptionEvent.entityID, if placement == null then makes api call,
-	 * otherwise returns placement instance variable.
-	 * 
-	 * @return the Placement
-	 */
+	
 	public Placement getPlacement() {
         return getEntity();
     }
 
-	/**
-	 * Gets the JoOrder for the Placement, if job == null then makes api call, otherwise returns job instance
-	 * variable.
-	 * 
-	 * @return the JobOrder connected to the placement
-	 */
-	public JobOrder getJob() {
-		if (job == null) {
-			setJob(findJobOrder(getPlacement().getJobOrder().getId()));
+	public JobOrder getJobOrder() {
+		if (jobOrder == null) {
+			this.jobOrder = findJobOrder(getPlacement().getJobOrder().getId(), PlacementRelatedEntity.JOB_ORDER);
 		}
-		return job;
+
+		return jobOrder;
 	}
 
-	public void setJob(JobOrder job) {
-		this.job = job;
+	public List<PlacementCommission> getCommissions() {
+		if (commissions == null) {
+			this.commissions = getCommissions(getPlacement().getId(), PlacementRelatedEntity.COMMISSIONS);
+		}
+
+		return commissions;
 	}
 
-	/**
-	 * Gets the Candidate for the Placement, if candidate == null then makes api call, otherwise returns candidate
-	 * instance variable.
-	 * 
-	 * @return the Candidate connected to the placement
-	 */
+	public CorporateUser getJobOwner() {
+		if (jobOwner == null) {
+			this.jobOwner = findCorporateUser(getJobOrder().getOwner().getId(), PlacementRelatedEntity.JOB_OWNER);
+		}
+
+		return jobOwner;
+	}
+
 	public Candidate getCandidate() {
 		if (candidate == null) {
-			setCandidate(findCandidate(getPlacement().getCandidate().getId()));
+			this.candidate = findCandidate(getPlacement().getCandidate().getId(), PlacementRelatedEntity.CANDIDATE);
 		}
+
 		return candidate;
 	}
 
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
-	/**
-	 * Gets the ClientCorporation for the Placement, if ClientCorporation == null then makes api call, otherwise
-	 * returns ClientCorporation instance variable.
-	 * 
-	 * @return the ClientCorporation connected to the job connected to the placement
-	 */
-	public ClientCorporation getClientCorporation() {
-		if (clientCorporation == null) {
-			setClientCorporation(findClientCorporation(getJob().getClientCorporation().getId()));
-		}
-		return clientCorporation;
-	}
-
-	public void setClientCorporation(ClientCorporation clientCorporation) {
-		this.clientCorporation = clientCorporation;
-	}
-
-	/**
-	 * Gets the ClientContact for the Placement, if ClientContact == null then makes api call, otherwise returns
-	 * ClientContact instance variable.
-	 * 
-	 * @return the ClientContact connected to the job connected to the placement
-	 */
-	public ClientContact getClientContact() {
-		if (clientContact == null) {
-			setClientContact(findClientContact(getJob().getClientContact().getId()));
-		}
-		return clientContact;
-	}
-
-	public void setClientContact(ClientContact clientContact) {
-		this.clientContact = clientContact;
-	}
-
-	/**
-	 * Gets the CorporateUser candidate owner for the Candidate for the Placement, if candidateOwner == null then
-	 * makes api call, otherwise returns candidateOwner instance variable.
-	 * 
-	 * @return the CorporateUser connected to the candidate connected to the placement
-	 */
 	public CorporateUser getCandidateOwner() {
 		if (candidateOwner == null) {
-			setCandidateOwner(findCorporateUser(getCandidate().getOwner().getId()));
+			this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), PlacementRelatedEntity.CANDIDATE_OWNER);
 		}
+
 		return candidateOwner;
 	}
 
-	public void setCandidateOwner(CorporateUser candidateOwner) {
-		this.candidateOwner = candidateOwner;
+	public ClientContact getClientContact() {
+		if (clientContact == null) {
+			this.clientContact = findClientContact(getJobOrder().getClientContact().getId(), PlacementRelatedEntity.CLIENT_CONTACT);
+		}
+
+		return clientContact;
+	}
+
+	public ClientCorporation getClientCorporation() {
+		if (clientCorporation == null) {
+			this.clientCorporation = findClientCorporation(getJobOrder().getClientCorporation().getId(), PlacementRelatedEntity.CLIENT_CORPORATION);
+		}
+
+		return clientCorporation;
+	}
+
+	public JobSubmission getJobSubmission() {
+		if (jobSubmission == null) {
+			this.jobSubmission = findJobSubmission(getPlacement().getJobSubmission().getId(), PlacementRelatedEntity.JOB_SUBMISSION);
+		}
+
+		return jobSubmission;
+	}
+
+	public CorporateUser getJobSubmissionSendingUser() {
+		if (jobSubmissionSendingUser == null) {
+			this.jobSubmissionSendingUser = findCorporateUser(getJobSubmission().getSendingUser().getId(),
+					PlacementRelatedEntity.JOB_SUBMISSION_SENDING_USER);
+		}
+
+		return jobSubmissionSendingUser;
 	}
 
 }

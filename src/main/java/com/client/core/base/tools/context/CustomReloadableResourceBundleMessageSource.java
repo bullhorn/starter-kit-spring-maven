@@ -32,20 +32,8 @@
 
 package com.client.core.base.tools.context;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.support.AbstractMessageSource;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -55,52 +43,57 @@ import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.MessageFormat;
+import java.util.*;
+
 /**
  * Spring-specific {@link org.springframework.context.MessageSource} implementation that accesses resource bundles using specified
  * basenames, participating in the Spring {@link org.springframework.context.ApplicationContext}'s resource loading.
- * 
+ *
  * <p>
- * In contrast to the JDK-based {@link ResourceBundleMessageSource}, this class uses {@link java.util.Properties} instances as its
+ * In contrast to the JDK-based {@link org.springframework.context.support.ResourceBundleMessageSource}, this class uses {@link java.util.Properties} instances as its
  * custom data structure for messages, loading them via a {@link org.springframework.util.PropertiesPersister} strategy from
  * Spring {@link Resource} handles. This strategy is not only capable of reloading files based on timestamp changes, but also of
  * loading properties files with a specific character encoding. It will detect XML property files as well.
- * 
+ *
  * <p>
- * In contrast to {@link ResourceBundleMessageSource}, this class supports reloading of properties files through the
+ * In contrast to {@link org.springframework.context.support.ResourceBundleMessageSource}, this class supports reloading of properties files through the
  * {@link #setCacheSeconds "cacheSeconds"} setting, and also through programmatically clearing the properties cache. Since
  * application servers typically cache all files loaded from the classpath, it is necessary to store resources somewhere else (for
  * example, in the "WEB-INF" directory of a web app). Otherwise changes of files in the classpath will <i>not</i> be reflected in
  * the application.
- * 
+ *
  * <p>
  * Note that the base names set as {@link #setBasenames "basenames"} property are treated in a slightly different fashion than the
- * "basenames" property of {@link ResourceBundleMessageSource}. It follows the basic ResourceBundle rule of not specifying file
+ * "basenames" property of {@link org.springframework.context.support.ResourceBundleMessageSource}. It follows the basic ResourceBundle rule of not specifying file
  * extension or language codes, but can refer to any Spring resource location (instead of being restricted to classpath
  * resources). With a "classpath:" prefix, resources can still be loaded from the classpath, but "cacheSeconds" values other than
  * "-1" (caching forever) will not work in this case.
- * 
+ *
  * <p>
- * This MessageSource implementation is usually slightly faster than {@link ResourceBundleMessageSource}, which builds on
+ * This MessageSource implementation is usually slightly faster than {@link org.springframework.context.support.ResourceBundleMessageSource}, which builds on
  * {@link java.util.ResourceBundle} - in the default mode, i.e. when caching forever. With "cacheSeconds" set to 1, message lookup
  * takes about twice as long - with the benefit that changes in individual properties files are detected with a maximum delay of 1
  * second. Higher "cacheSeconds" values usually <i>do not</i> make a significant difference.
- * 
+ *
  * <p>
  * This MessageSource can easily be used outside of an {@link org.springframework.context.ApplicationContext}: It will use a
  * {@link org.springframework.core.io.DefaultResourceLoader} as default, simply getting overridden with the ApplicationContext's
  * resource loader if running in a context. It does not have any other specific dependencies.
- * 
+ *
  * <p>
  * Thanks to Thomas Achleitner for providing the initial implementation of this message source!
- * 
+ *
  * <p>
  * The changes introduced by Lucio Benfante for the Parancoe Team are for supporting a {@link ResourcePatternResolver} as
  * ResourceLoader. This class support classpath*: patterns!
- * 
+ *
  * @author Juergen Hoeller
  * @author Lucio Benfante
- * @author Magnus Fiore Palm
- * 
+ *
  * @see #setCacheSeconds
  * @see #setBasenames
  * @see #setDefaultEncoding
@@ -109,7 +102,7 @@ import org.springframework.util.StringUtils;
  * @see #setResourceLoader
  * @see org.springframework.util.DefaultPropertiesPersister
  * @see org.springframework.core.io.DefaultResourceLoader
- * @see ResourceBundleMessageSource
+ * @see org.springframework.context.support.ResourceBundleMessageSource
  * @see java.util.ResourceBundle
  */
 public class CustomReloadableResourceBundleMessageSource extends AbstractMessageSource implements ResourceLoaderAware {
@@ -143,12 +136,12 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
 
     /**
      * Set a single basename, following the basic ResourceBundle convention of not specifying file extension or language codes,
-     * but in contrast to {@link ResourceBundleMessageSource} referring to a Spring resource location: e.g. "WEB-INF/messages" for
+     * but in contrast to {@link org.springframework.context.support.ResourceBundleMessageSource} referring to a Spring resource location: e.g. "WEB-INF/messages" for
      * "WEB-INF/messages.properties", "WEB-INF/messages_en.properties", etc.
      * <p>
      * XML properties files are also supported: .g. "WEB-INF/messages" will find and load "WEB-INF/messages.xml",
      * "WEB-INF/messages_en.xml", etc as well.
-     * 
+     *
      * @param basename
      *            the single basename
      * @see #setBasenames
@@ -161,7 +154,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
 
     /**
      * Set an array of basenames, each following the basic ResourceBundle convention of not specifying file extension or language
-     * codes, but in contrast to {@link ResourceBundleMessageSource} referring to a Spring resource location: e.g.
+     * codes, but in contrast to {@link org.springframework.context.support.ResourceBundleMessageSource} referring to a Spring resource location: e.g.
      * "WEB-INF/messages" for "WEB-INF/messages.properties", "WEB-INF/messages_en.properties", etc.
      * <p>
      * XML properties files are also supported: .g. "WEB-INF/messages" will find and load "WEB-INF/messages.xml",
@@ -169,7 +162,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * <p>
      * The associated resource bundles will be checked sequentially when resolving a message code. Note that message definitions
      * in a <i>previous</i> resource bundle will override ones in a later bundle, due to the sequential lookup.
-     * 
+     *
      * @param basenames
      *            an array of basenames
      * @see #setBasename
@@ -194,7 +187,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * Default is none, using the {@code java.util.Properties} default encoding: ISO-8859-1.
      * <p>
      * Only applies to classic properties files, not to XML files.
-     * 
+     *
      * @param defaultEncoding
      *            the default charset
      * @see #setFileEncodings
@@ -208,7 +201,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * Set per-file charsets to use for parsing properties files.
      * <p>
      * Only applies to classic properties files, not to XML files.
-     * 
+     *
      * @param fileEncodings
      *            Properties with filenames as keys and charset names as values. Filenames have to match the basename syntax, with
      *            optional locale-specific appendices: e.g. "WEB-INF/messages" or "WEB-INF/messages_en".
@@ -251,7 +244,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * Set the PropertiesPersister to use for parsing properties files.
      * <p>
      * The default is a DefaultPropertiesPersister.
-     * 
+     *
      * @see org.springframework.util.DefaultPropertiesPersister
      */
     public void setPropertiesPersister(PropertiesPersister propertiesPersister) {
@@ -263,7 +256,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * <p>
      * The default is a DefaultResourceLoader. Will get overridden by the ApplicationContext if running in a context, as it
      * implements the ResourceLoaderAware interface. Can be manually overridden when running outside of an ApplicationContext.
-     * 
+     *
      * @see org.springframework.core.io.DefaultResourceLoader
      * @see org.springframework.context.ResourceLoaderAware
      */
@@ -341,9 +334,9 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
             Properties mergedProps = new Properties();
             mergedHolder = new PropertiesHolder(mergedProps, -1);
             for (int i = this.basenames.length - 1; i >= 0; i--) {
-                List filenames = calculateAllFilenames(this.basenames[i], locale);
+                List<String> filenames = calculateAllFilenames(this.basenames[i], locale);
                 for (int j = filenames.size() - 1; j >= 0; j--) {
-                    String filename = (String) filenames.get(j);
+                    String filename = filenames.get(j);
                     PropertiesHolder propHolder = getProperties(filename);
                     if (propHolder.getProperties() != null) {
                         mergedProps.putAll(propHolder.getProperties());
@@ -358,7 +351,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
     /**
      * Calculate all filenames for the given bundle basename and Locale. Will calculate filenames for the given Locale, the system
      * Locale (if applicable), and the default file.
-     * 
+     *
      * @param basename
      *            the basename of the bundle
      * @param locale
@@ -404,7 +397,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * E.g.: basename "messages", Locale "de_AT_oo" -> "messages_de_AT_OO", "messages_de_AT", "messages_de".
      * <p>
      * Follows the rules defined by {@link java.util.Locale#toString()}.
-     * 
+     *
      * @param basename
      *            the basename of the bundle
      * @param locale
@@ -440,7 +433,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
 
     /**
      * Get a PropertiesHolder for the given filename, either from the cache or freshly loaded.
-     * 
+     *
      * @param filename
      *            the bundle filename (basename + Locale)
      * @return the current PropertiesHolder for the bundle
@@ -461,7 +454,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
     /**
      * Refresh the PropertiesHolder for the given bundle filename. The holder can be {@code null} if not cached before, or a
      * timed-out cache entry (potentially getting re-validated against the current last-modified timestamp).
-     * 
+     *
      * @param filename
      *            the bundle filename (basename + Locale)
      * @param propHolder
@@ -565,7 +558,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
 
     /**
      * Load the properties from the given resource.
-     * 
+     *
      * @param resource
      *            the resource to load from
      * @param filename
@@ -624,7 +617,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
 
     /**
      * Clear the resource bundle caches of this MessageSource and all its ancestors.
-     * 
+     *
      * @see #clearCache
      */
     public void clearCacheIncludingAncestors() {

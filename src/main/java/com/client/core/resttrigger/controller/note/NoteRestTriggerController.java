@@ -1,9 +1,13 @@
 package com.client.core.resttrigger.controller.note;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.bullhornsdk.data.model.entity.core.standard.Note;
+import com.client.core.base.model.relatedentity.NoteRelatedEntity;
+import com.client.core.base.workflow.node.TriggerValidator;
+import com.client.core.resttrigger.controller.AbstractRestTriggerController;
+import com.client.core.resttrigger.model.api.RestTriggerRequest;
+import com.client.core.resttrigger.model.api.RestTriggerResponse;
+import com.client.core.resttrigger.model.helper.impl.NoteRestTriggerHelper;
+import com.client.core.resttrigger.workflow.traversing.NoteRestTriggerTraverser;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,17 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.client.core.base.workflow.node.TriggerValidator;
-import com.client.core.resttrigger.controller.AbstractRestTriggerController;
-import com.client.core.resttrigger.model.api.RestTriggerRequest;
-import com.client.core.resttrigger.model.api.RestTriggerResponse;
-import com.client.core.resttrigger.model.helper.impl.NoteRestTriggerHelper;
-import com.client.core.resttrigger.workflow.traversing.NoteRestTriggerTraverser;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-/**
- * Created by hiqbal on 12/23/2015.
- */
 @Controller
 @RequestMapping("/resttrigger/note/*")
 public class NoteRestTriggerController extends AbstractRestTriggerController<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser> {
@@ -32,7 +29,7 @@ public class NoteRestTriggerController extends AbstractRestTriggerController<Not
 
     @Autowired
     public NoteRestTriggerController(Optional<List<TriggerValidator<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser>>> triggerValidators) {
-        super(Note.class, triggerValidators);
+        super(Note.class, triggerValidators, NoteRelatedEntity.values());
     }
 
     /**
@@ -54,7 +51,7 @@ public class NoteRestTriggerController extends AbstractRestTriggerController<Not
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    NoteRestTriggerTraverser traverser = new NoteRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, bullhornData);
+	    NoteRestTriggerTraverser traverser = new NoteRestTriggerTraverser(entityID, valuesChanges, updatingUserID, false, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }
@@ -78,7 +75,7 @@ public class NoteRestTriggerController extends AbstractRestTriggerController<Not
 	    Integer entityID = restTriggerRequest.getMeta().getEntityId();
 	    Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-	    NoteRestTriggerTraverser traverser = new NoteRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, bullhornData);
+	    NoteRestTriggerTraverser traverser = new NoteRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
 
 	    return handleRequest(traverser, valuesChanges);
     }

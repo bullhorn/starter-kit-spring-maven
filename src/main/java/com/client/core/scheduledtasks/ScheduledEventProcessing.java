@@ -1,25 +1,23 @@
 package com.client.core.scheduledtasks;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.apache.log4j.Logger;
-
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.response.event.Event;
 import com.bullhornsdk.data.model.response.event.GetEventsResponse;
 import com.client.core.AppContext;
 import com.client.core.ApplicationSettings;
 import com.client.core.base.util.Utility;
-import com.client.core.scheduledtasks.dao.BullhornLogDAO;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Entry point for scheduled event handling.  Makes API call to BULLHORN to
@@ -34,7 +32,6 @@ public class ScheduledEventProcessing implements Runnable {
 	
 	private final BullhornData bullhornData;
 	private final ApplicationSettings appSettings;
-	private final BullhornLogDAO bullhornLogDAO;
     private final EventWorkflowFactory eventWorkflowFactory;
 
 	public ScheduledEventProcessing(String subscriptionName) {
@@ -42,7 +39,6 @@ public class ScheduledEventProcessing implements Runnable {
 		this.subscriptionName = subscriptionName;
 		this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
 		this.appSettings = AppContext.getApplicationContext().getBean("appSettings", ApplicationSettings.class);
-		this.bullhornLogDAO = AppContext.getApplicationContext().getBean(BullhornLogDAO.class);
 		this.eventWorkflowFactory = AppContext.getApplicationContext().getBean(EventWorkflowFactory.class);
 	}
 
@@ -80,8 +76,8 @@ public class ScheduledEventProcessing implements Runnable {
 
 
 			for (CustomSubscriptionEvent event : subscriptionEvents) {
-				EventProcessing processEvent = EventProcessing.instantiateRunnable(
-						appSettings.getCorporationID(), bullhornLogDAO, event, eventWorkflowFactory);
+				EventProcessing processEvent = EventProcessing.instantiateRunnable(event, eventWorkflowFactory);
+
 				try {
 					exec.execute(processEvent);
 				} catch (RuntimeException e) {

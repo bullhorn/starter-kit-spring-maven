@@ -1,149 +1,113 @@
 package com.client.core.scheduledtasks.model.helper.impl;
 
-import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.SendoutRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Contains all the data needed to handle scheduled tasks automation. Once a  has been fetched using the BH api it will be
- * stored in this Traverser for subsequent automation work.
- * 
- * The allsToSaveBackToBH map will contain deep copies of relevant dtos that should be saved back to BH. The copies will be
- * updated according to task logic, while the original dtos will NOT be updated so that subsequent logic will still be made on
- * original values.
- * 
- * Once all automation work has been done the dtos that need saving will be saved only once. In this way keeping the api calls to
- * a minimum by saving each dto only once, even though multiple tasks might have updated different fields on the same dto.
- * 
- * @author johnsully
- * 
- */
+import java.util.Map;
+import java.util.Set;
+
 public class SendoutScheduledTaskHelper extends AbstractScheduledTaskHelper<Sendout> {
 
+	private CorporateUser user;
+	private JobSubmission jobSubmission;
+	private JobOrder jobOrder;
+	private ClientContact jobOrderClientContact;
+	private ClientCorporation jobOrderClientCorporation;
+	private CorporateUser jobOwner;
 	private Candidate candidate;
+	private CorporateUser candidateOwner;
 	private ClientContact clientContact;
 	private ClientCorporation clientCorporation;
-	private JobOrder jobOrder;
-	private CorporateUser sendingUser;
-
-	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event) {
-		super(event, Sendout.class);
+	
+	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+		super(event, Sendout.class, SendoutRelatedEntity.SENDOUT, relatedEntityFields);
 	}
 
-	public SendoutScheduledTaskHelper(CustomSubscriptionEvent event, BullhornData bullhornData) {
-		super(event, Sendout.class, bullhornData);
-	}
-
-	/**
-	 * Gets the Sendout for the event, if sendout == null then makes api call, otherwise returns
-	 * sendout instance variable.
-	 * 
-	 * @return the Sendout connected to the event
-	 */
 	public Sendout getSendout() {
         return getEntity();
     }
 
-	/**
-	 * Gets the Candidate  for the sendout, if candidate == null then makes api call, otherwise
-	 * returns candidate instance variable.
-	 * 
-	 * @return the Candidate connected to the sendout.
-	 */
-	public Candidate getCandidate() {
-		if (candidate == null) {
-			setCandidate(findCandidate(getSendout().getCandidate().getId()));
+	public JobSubmission getJobSubmission() {
+		if (jobSubmission == null) {
+			this.jobSubmission = findJobSubmission(getSendout().getJobSubmission().getId(), SendoutRelatedEntity.JOB_SUBMISSION);
 		}
-		return candidate;
-	}
-	
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
+
+		return jobSubmission;
 	}
 
-	/**
-	 * Gets the ClientContact  for the sendout, if clientContact == null then makes api call, otherwise
-	 * returns clientContact instance variable.
-	 * 
-	 * @return the ClientContact connected to the sendout.
-	 */
-	public ClientContact getClientContact() {
-		if (clientContact == null) {
-			setClientContact(findClientContact(getSendout().getClientContact().getId()));
+	public CorporateUser getUser() {
+		if (user == null) {
+			this.user = findCorporateUser(getSendout().getUser().getId(), SendoutRelatedEntity.USER);
 		}
-		return clientContact;
+
+		return user;
 	}
 
-	public void setClientContact(ClientContact clientContact) {
-		this.clientContact = clientContact;
-	}
-
-	/**
-	 * Gets the ClientCorporation  for the sendout, if clientCorporation == null then makes api call, otherwise
-	 * returns clientCorporation instance variable.
-	 * 
-	 * @return the ClientCorporation connected to the sendout.
-	 */
-	public ClientCorporation getClientCorporation() {
-		if (clientCorporation == null) {
-			setClientCorporation(findClientCorporation(getSendout().getClientCorporation().getId()));
-		}
-		return clientCorporation;
-	}
-
-	public void setClientCorporation(ClientCorporation clientCorporation) {
-		this.clientCorporation = clientCorporation;
-	}
-
-	/**
-	 * Gets the JobOrder  for the sendout, if jobOrder == null then makes api call, otherwise
-	 * returns jobOrder instance variable.
-	 * 
-	 * @return the JobOrder connected to the sendout.
-	 */
 	public JobOrder getJobOrder() {
 		if (jobOrder == null) {
-			setJobOrder(findJobOrder(getSendout().getJobOrder().getId()));
+			this.jobOrder = findJobOrder(getSendout().getJobOrder().getId(), SendoutRelatedEntity.JOB_ORDER);
 		}
+
 		return jobOrder;
 	}
 
-	public void setJobOrder(JobOrder jobOrder) {
-		this.jobOrder = jobOrder;
-	}
-
-	/**
-	 * Gets the CorporateUser  for the sendout, if sendingUser == null then makes api call, otherwise
-	 * returns sendingUser instance variable.
-	 * 
-	 * @return the CorporateUser connected to the sendout.
-	 */
-	public CorporateUser getSendingUser() {
-		if (sendingUser == null) {
-			setSendingUser(findCorporateUser(getSendout().getUser().getId()));
+	public ClientCorporation getJobOrderClientCorporation() {
+		if (jobOrderClientCorporation == null) {
+			this.jobOrderClientCorporation = findClientCorporation(getJobOrder().getClientCorporation().getId(), SendoutRelatedEntity.JOB_ORDER_CLIENT_CORPORATION);
 		}
-		return sendingUser;
+
+		return jobOrderClientCorporation;
 	}
 
-	public void setSendingUser(CorporateUser sendingUser) {
-		this.sendingUser = sendingUser;
+	public ClientContact getJobOrderClientContact() {
+		if (jobOrderClientContact == null) {
+			this.jobOrderClientContact = findClientContact(getJobOrder().getClientContact().getId(), SendoutRelatedEntity.JOB_ORDER_CLIENT_CONTACT);
+		}
+
+		return jobOrderClientContact;
 	}
 
-    @Override
-    public String toString() {
-        return new StringBuilder("SendoutScheduledTaskHelper {")
-                .append("\n\t\"candidate\": ")
-                .append(candidate)
-                .append(",\n\t\"clientContact\": ")
-                .append(clientContact)
-                .append(",\n\t\"clientCorporation\": ")
-                .append(clientCorporation)
-                .append(",\n\t\"jobOrder\": ")
-                .append(jobOrder)
-                .append(",\n\t\"sendingUser\": ")
-                .append(sendingUser)
-                .append('}')
-                .toString();
-    }
+	public CorporateUser getJobOwner() {
+		if (jobOwner == null) {
+			this.jobOwner = findCorporateUser(getJobOrder().getOwner().getId(), SendoutRelatedEntity.JOB_OWNER);
+		}
+
+		return jobOwner;
+	}
+
+	public Candidate getCandidate() {
+		if (candidate == null) {
+			this.candidate = findCandidate(getSendout().getCandidate().getId(), SendoutRelatedEntity.CANDIDATE);
+		}
+
+		return candidate;
+	}
+
+	public CorporateUser getCandidateOwner() {
+		if (candidateOwner == null) {
+			this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), SendoutRelatedEntity.CANDIDATE_OWNER);
+		}
+
+		return candidateOwner;
+	}
+
+	public ClientCorporation getClientCorporation() {
+		if (clientCorporation == null) {
+			this.clientCorporation = findClientCorporation(getSendout().getClientCorporation().getId(), SendoutRelatedEntity.CLIENT_CORPORATION);
+		}
+
+		return clientCorporation;
+	}
+
+	public ClientContact getClientContact() {
+		if (clientContact == null) {
+			this.clientContact = findClientContact(getSendout().getClientContact().getId(), SendoutRelatedEntity.CLIENT_CONTACT);
+		}
+
+		return clientContact;
+	}
+	
 }

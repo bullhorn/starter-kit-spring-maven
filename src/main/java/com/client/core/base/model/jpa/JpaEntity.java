@@ -1,16 +1,9 @@
 package com.client.core.base.model.jpa;
 
-import java.util.Date;
-
 import com.client.core.base.model.Entity;
 
-/**
- * Core interface that defines a jpa entity
- * 
- * @author magnus.palm
- * 
- * @param <ID> The primary key of the JpaEntity, most likely an Integer but could also be of a more complex type if needed.
- */
+import java.util.Date;
+
 public interface JpaEntity<ID> extends Entity<ID>{
 
 	/**

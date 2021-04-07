@@ -17,9 +17,6 @@ import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Lists;
 
-/**
- * Created by john.sullivan on 10/1/2017.
- */
 @Service
 public class StandardEmailTemplateService implements EmailTemplateService {
 

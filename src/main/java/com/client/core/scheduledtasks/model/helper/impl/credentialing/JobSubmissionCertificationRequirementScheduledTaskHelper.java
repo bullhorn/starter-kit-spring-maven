@@ -1,98 +1,144 @@
 package com.client.core.scheduledtasks.model.helper.impl.credentialing;
 
 import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmissionCertificationRequirement;
-import com.bullhornsdk.data.model.entity.core.standard.CandidateCertification;
-import com.bullhornsdk.data.model.entity.core.standard.Certification;
-import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
-import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
+import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.credentialing.JobSubmissionCertificationRequirementRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
-/**
- * Created by m.kesmetzis on 06/05/2020.
- */
+import java.util.Map;
+import java.util.Set;
 
 public class JobSubmissionCertificationRequirementScheduledTaskHelper extends AbstractScheduledTaskHelper<JobSubmissionCertificationRequirement> {
 
     private JobSubmission jobSubmission;
+    private CorporateUser jobSubmissionSendingUser;
+    private Candidate candidate;
+    private CorporateUser candidateOwner;
+    private JobOrder jobOrder;
+    private CorporateUser jobOwner;
+    private ClientContact clientContact;
+    private ClientCorporation clientCorporation;
     private CandidateCertification candidateCertification;
     private Certification certification;
     private CorporateUser modifyingUser;
     private CorporateUser owner;
 
-    public JobSubmissionCertificationRequirementScheduledTaskHelper(CustomSubscriptionEvent event) {
-        super(event, JobSubmissionCertificationRequirement.class);
+    public JobSubmissionCertificationRequirementScheduledTaskHelper(CustomSubscriptionEvent event, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        super(event, JobSubmissionCertificationRequirement.class, JobSubmissionCertificationRequirementRelatedEntity.JOB_SUBMISSION_CERTIFICATION_REQUIREMENT, relatedEntityFields);
     }
-
 
     public JobSubmissionCertificationRequirement getJobSubmissionCertificationRequirement() {
         return getEntity();
     }
 
-
     public JobSubmission getJobSubmission() {
         if (jobSubmission == null) {
-            setJobSubmission(findJobSubmission(getJobSubmissionCertificationRequirement().getJobSubmission().getId()));
+            this.jobSubmission = findJobSubmission(getJobSubmissionCertificationRequirement().getJobSubmission().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.JOB_SUBMISSION);
         }
+
         return jobSubmission;
     }
 
-    public void setJobSubmission(JobSubmission jobSubmission) {
-        this.jobSubmission = jobSubmission;
+    public CorporateUser getJobSubmissionSendingUser() {
+        if (jobSubmissionSendingUser == null) {
+            this.jobSubmissionSendingUser = findCorporateUser(getJobSubmission().getSendingUser().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.JOB_SUBMISSION_SENDING_USER);
+        }
+
+        return jobSubmissionSendingUser;
+    }
+
+    public Candidate getCandidate() {
+        if (candidate == null) {
+            this.candidate = findCandidate(getJobSubmission().getCandidate().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.CANDIDATE);
+        }
+
+        return candidate;
+    }
+
+    public CorporateUser getCandidateOwner() {
+        if (candidateOwner == null) {
+            this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.CANDIDATE_OWNER);
+        }
+
+        return candidateOwner;
+    }
+
+    public JobOrder getJobOrder() {
+        if (jobOrder == null) {
+            this.jobOrder = findJobOrder(getJobSubmission().getJobOrder().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.JOB_ORDER);
+        }
+
+        return jobOrder;
+    }
+
+    public CorporateUser getJobOwner() {
+        if (jobOwner == null) {
+            this.jobOwner = findCorporateUser(getJobOrder().getOwner().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.JOB_OWNER);
+        }
+
+        return jobOwner;
+    }
+
+    public ClientContact getClientContact() {
+        if (clientContact == null) {
+            this.clientContact = findClientContact(getJobOrder().getClientContact().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.CLIENT_CONTACT);
+        }
+
+        return clientContact;
+    }
+
+    public ClientCorporation getClientCorporation() {
+        if (clientCorporation == null) {
+            this.clientCorporation = findClientCorporation(getJobOrder().getClientCorporation().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.CLIENT_CORPORATION);
+        }
+
+        return clientCorporation;
     }
 
     public CandidateCertification getCandidateCertification() {
         if (candidateCertification == null) {
-            setCandidateCertification(findCandidateCertification(getJobSubmissionCertificationRequirement().getCandidateCertification().getId()));
+            this.candidateCertification = findCandidateCertification(getJobSubmissionCertificationRequirement().getCandidateCertification().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.CANDIDATE_CERTIFICATION);
         }
-        return candidateCertification;
-    }
 
-    public void setCandidateCertification(CandidateCertification candidateCertification) {
-        this.candidateCertification = candidateCertification;
+        return candidateCertification;
     }
 
     public Certification getCertification() {
         if (certification == null) {
-            setCertification(findCertification(getJobSubmissionCertificationRequirement().getCertification().getId()));
+            this.certification = findCertification(getJobSubmissionCertificationRequirement().getCertification().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.CERTIFICATION);
         }
-        return certification;
-    }
 
-    public void setCertification(Certification certification) {
-        this.certification = certification;
+        return certification;
     }
 
     public CorporateUser getModifyingUser() {
         if (modifyingUser == null) {
-            setModifyingUser(findCorporateUser(getJobSubmissionCertificationRequirement().getModifyingUser().getId()));
+            this.modifyingUser = findCorporateUser(getJobSubmissionCertificationRequirement().getModifyingUser().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.MODIFYING_USER);
         }
-        return modifyingUser;
-    }
 
-    public void setModifyingUser(CorporateUser modifyingUser) {
-        this.modifyingUser = modifyingUser;
+        return modifyingUser;
     }
 
     public CorporateUser getOwner() {
         if (owner == null) {
-            setOwner(findCorporateUser(getJobSubmissionCertificationRequirement().getOwner().getId()));
+            this.owner = findCorporateUser(getJobSubmissionCertificationRequirement().getOwner().getId(),
+                    JobSubmissionCertificationRequirementRelatedEntity.OWNER);
         }
+
         return owner;
     }
 
-    public void setOwner(CorporateUser owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public String toString() {
-        return "JobSubmissionCertificationRequirementScheduledTaskHelper{" +
-                "jobSubmission=" + jobSubmission +
-                ", candidateCertification=" + candidateCertification +
-                ", certification=" + certification +
-                ", modifyingUser=" + modifyingUser +
-                ", owner=" + owner +
-                '}';
-    }
 }

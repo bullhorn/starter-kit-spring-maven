@@ -5,9 +5,6 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created by hiqbal on 12/15/2015.
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestTriggerResponse {
 

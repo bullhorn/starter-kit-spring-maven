@@ -1,29 +1,40 @@
 package com.client.core.base.workflow.node;
 
-import java.util.Locale;
-
+import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.core.AppContext;
+import com.client.core.ApplicationSettings;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.StandardRelatedEntity;
+import com.client.core.base.workflow.traversing.Traverser;
+import com.client.core.email.service.EmailTemplateService;
+import com.client.core.email.service.Emailer;
+import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
-import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
-import com.client.core.base.workflow.traversing.Traverser;
-import com.client.core.email.service.EmailTemplateService;
-import com.client.core.email.service.Emailer;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * Created by john.sullivan on 12/5/2017.
- */
 public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends Traverser> implements WorkflowAction<E, T> {
 
     private final Logger log = Logger.getLogger(getClass());
+
+    private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
     private EmailTemplateService emailTemplateService;
     private ApplicationSettings appSettings;
     private MessageSource messageSource;
     private Emailer emailer;
+
+    public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
+        this.relatedEntityFields = relatedEntityFields;
+    }
+
+    protected Map<StandardRelatedEntity, Set<String>> getStandardEntityFields() {
+        return Maps.newLinkedHashMap();
+    }
 
     protected String getMessageUsingKey(String key) throws NoSuchMessageException {
         return getMessageUsingKey(key, new Object[] {});
@@ -63,6 +74,16 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
         }
 
         return emailer;
+    }
+
+    @Override
+    public Map<? extends BullhornRelatedEntity, Set<String>> getRelatedEntityFields() {
+        Map<BullhornRelatedEntity, Set<String>> allFields = Maps.newLinkedHashMap();
+
+        allFields.putAll(getStandardEntityFields());
+        allFields.putAll(this.relatedEntityFields);
+
+        return allFields;
     }
 
     protected Logger getLog() {

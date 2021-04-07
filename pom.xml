@@ -4,7 +4,7 @@
     <groupId>com.client</groupId>
     <artifactId>starter-kit-spring-maven</artifactId>
     <packaging>war</packaging>
-    <version>4.0.0</version>
+    <version>5.0.0</version>
     <name>BULLHORN Spring-Maven Starter Kit</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -550,7 +550,7 @@
         <dependency>
             <groupId>com.bullhorn</groupId>
             <artifactId>sdk-rest</artifactId>
-            <version>1.4.2</version>
+            <version>1.4.21</version>
         </dependency>
 
         <dependency>

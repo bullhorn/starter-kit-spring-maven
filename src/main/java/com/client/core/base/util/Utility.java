@@ -27,6 +27,11 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.StandardRelatedEntity;
+import com.client.core.base.workflow.node.WorkflowAction;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -46,6 +51,97 @@ import com.client.core.AppContext;
 import com.google.common.collect.Lists;
 
 public class Utility {
+
+	public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
+																					   List<? extends WorkflowAction<?, ?>> actions) {
+		Map<? extends BullhornRelatedEntity, Set<String>> requestedFields = actions.stream().map(WorkflowAction::getRelatedEntityFields).reduce(Maps.newLinkedHashMap(), (firstMap, secondMap) -> {
+			return Stream.concat(firstMap.entrySet().stream(), secondMap.entrySet().stream())
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+							Utility::mergeFieldSets));
+		});
+
+		return Stream.concat(Stream.of(relatedEntities), Stream.of(StandardRelatedEntity.values())).collect(Collectors.toMap(Function.identity(), relatedEntity -> {
+			if (requestedFields.containsKey(relatedEntity)) {
+				return Utility.mergeFieldSets(relatedEntity.getDefaultFields(), requestedFields.get(relatedEntity));
+			}
+
+			return relatedEntity.getDefaultFields();
+		}));
+	}
+
+	public static Set<String> mergeFieldSets(Set<String> set1, Set<String> set2) {
+		return mergeNestedFields(Sets.union(set1, set2));
+	}
+
+	public static Set<String> mergeNestedFields(Set<String> fields) {
+		return fields.parallelStream().map(field -> {
+			return field.replaceAll("\\s+", "");
+		}).collect(Collectors.groupingBy(field -> {
+			return StringUtils.substringBefore(field, "(").trim();
+		})).entrySet().parallelStream().map(entry -> {
+			if (entry.getValue().size() == 1) {
+				return entry.getValue().get(0).trim();
+			} else {
+				Set<String> nestedFields = entry.getValue().parallelStream().map(nestedField -> {
+					return StringUtils.substringBeforeLast(StringUtils.substringAfter(nestedField, "("), ")");
+				}).flatMap(nestedField -> {
+					return splitOutsideParentheses(nestedField).stream();
+				}).collect(Collectors.toSet());
+
+				return mergeNestedFields(nestedFields).parallelStream().collect(Collectors.joining(",", entry.getKey() + "(", ")"));
+			}
+		}).collect(Collectors.toSet());
+	}
+
+	public static Set<String> splitOutsideParentheses(String value) {
+		Set<String> result = Sets.newHashSet();
+
+		StringBuilder current = new StringBuilder();
+		Integer isParenthesis = 0;
+
+		for(Integer index = 0; index < value.length(); index++) {
+			if (value.charAt(index) == '(') {
+				isParenthesis++;
+				current.append('(');
+			} else if (value.charAt(index) == ')' && isParenthesis > 0) {
+				isParenthesis--;
+				current.append(')');
+			} else if (value.charAt(index) == ',' && isParenthesis == 0) {
+				result.add(current.toString());
+				current = new StringBuilder();
+			} else {
+				current.append(value.charAt(index));
+			}
+		}
+
+		if (StringUtils.isNotBlank(current)) {
+			result.add(current.toString());
+		}
+
+		return result;
+	}
+
+	public static boolean isNumbersOnly(String str) {
+		if (str == null || str.isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i)))
+				return false;
+		}
+		return true;
+	}
+
+	public static boolean isNumeric(String value) {
+		if (value == null || value.isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < value.length(); i++) {
+			if (!Character.isDigit(value.charAt(i)) && !".".equalsIgnoreCase(Character.toString(value.charAt(i))))
+				return false;
+		}
+		return true;
+	}
 
     public static Set<Integer> parseCommaSeparatedIntegers(String value) {
         return parseCommaSeparated(value, Utility::forceParseInteger);
@@ -287,7 +383,7 @@ public class Utility {
 	        return null;
 	    }
 
-		DateTime now = Util.nowUsingTimeZone(null);
+		DateTime now = nowUsingTimeZone(null);
 
 		DateTime theCorrectDate = new DateTime(date,DateTimeZone.UTC);
 		theCorrectDate = theCorrectDate.plusHours(now.getHourOfDay());
@@ -295,7 +391,24 @@ public class Utility {
 		return theCorrectDate;
 	}
 
+	public static DateTimeZone defaultTimeZone() {
+		return DateTimeZone.forID("EST5EDT");
+	}
 
+	/**
+	 * Returns today based on time zone; defaults timeZone to "EST5EDT" if null passed in.
+	 *
+	 * @param timeZone
+	 *            a valid time zone, if null then defaults to "EST5EDT";
+	 * @return today's date in DateTime for the passed in timeZone
+	 */
+	public static DateTime nowUsingTimeZone(DateTimeZone timeZone) {
+		if (timeZone == null) {
+			timeZone = defaultTimeZone();
+		}
+
+		return new DateTime(timeZone);
+	}
 
 	public static DateTime forceParseStringToDateTime(String dateStr, String dateFormat) {
 		return new DateTime(forceParseStringToDate(dateStr, dateFormat));
@@ -497,6 +610,12 @@ public class Utility {
         });
     }
 
+    public static <T extends QueryEntity, R> void sequentialQueryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+        queryForAll(type, where, fields, (batch) -> {
+            batch.forEach(process);
+        });
+    }
+
     public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
@@ -507,11 +626,31 @@ public class Utility {
         return result;
     }
 
+    public static <T extends QueryEntity, R> List<R> sequentialQueryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+        List<R> result = Lists.newArrayList();
+
+        queryForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().map(map).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
     public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
         queryForAll(type, where, fields, (batch) -> {
             result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends QueryEntity> List<T> sequentialQueryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+        List<T> result = Lists.newArrayList();
+
+        queryForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
         });
 
         return result;
@@ -533,9 +672,31 @@ public class Utility {
         return collect.finisher().apply(result);
     }
 
+    public static <T extends QueryEntity, A, R> R sequentialQueryAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
+
+        queryForAll(type, where, fields, (batch) -> {
+        	A batchResult = collect.supplier().get();
+
+            batch.forEach( entity -> {
+                collect.accumulator().accept(batchResult, entity);
+            });
+
+            collect.combiner().apply(result, batchResult);
+        });
+
+        return collect.finisher().apply(result);
+    }
+
     public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
         searchForAll(type, where, fields, (batch) -> {
             batch.parallelStream().forEach(process);
+        });
+    }
+
+    public static <T extends SearchEntity, R> void sequentialSearchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
+        searchForAll(type, where, fields, (batch) -> {
+            batch.forEach(process);
         });
     }
 
@@ -544,6 +705,16 @@ public class Utility {
 
         searchForAll(type, where, fields, (batch) -> {
             result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
+    public static <T extends SearchEntity, R> List<R> sequentialSearchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
+        List<R> result = Lists.newArrayList();
+
+        searchForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().map(map).collect(Collectors.toList()));
         });
 
         return result;
@@ -559,6 +730,16 @@ public class Utility {
         return result;
     }
 
+    public static <T extends SearchEntity> List<T> sequentialSearchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
+        List<T> result = Lists.newArrayList();
+
+        searchForAll(type, where, fields, (batch) -> {
+            result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
+        });
+
+        return result;
+    }
+
     public static <T extends SearchEntity, A, R> R searchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
         A result = collect.supplier().get();
 
@@ -566,6 +747,22 @@ public class Utility {
 	        A batchResult = collect.supplier().get();
 
 	        batch.parallelStream().forEach( entity -> {
+		        collect.accumulator().accept(batchResult, entity);
+	        });
+
+	        collect.combiner().apply(result, batchResult);
+        });
+
+	    return collect.finisher().apply(result);
+    }
+
+    public static <T extends SearchEntity, A, R> R sequentialSearchAndCollectAll(Class<T> type, String where, Set<String> fields, Collector<T, A, R> collect) {
+        A result = collect.supplier().get();
+
+        searchForAll(type, where, fields, (batch) -> {
+	        A batchResult = collect.supplier().get();
+
+	        batch.forEach( entity -> {
 		        collect.accumulator().accept(batchResult, entity);
 	        });
 
