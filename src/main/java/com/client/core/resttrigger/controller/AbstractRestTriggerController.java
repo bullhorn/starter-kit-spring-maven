@@ -62,20 +62,28 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
      * @return the json parsed validation message
      */
     protected RestTriggerResponse handleRequest(T traverser, Map<String, Object> entity) {
+        return handleRequests(Lists.newArrayList(traverser), entity);
+    }
+
+    protected RestTriggerResponse handleRequests(List<T> traversers, Map<String, Object> entity) {
         try {
-            triggerValidators.stream().forEach( (triggerValidator) -> {
-                triggerValidator.validate(traverser);
+            traversers.forEach(traverser -> {
+                triggerValidators.forEach((triggerValidator) -> {
+                    if (!traverser.hasErrors()) {
+                        triggerValidator.validate(traverser);
+                    }
+                });
             });
         } catch (Exception e) {
-            log.error("Error validating "+type.getSimpleName(), e);
+            log.error("Error validating " + type.getSimpleName(), e);
 
             return prepareErrorReturnValue(entity);
         }
 
-        return prepareReturnValue(traverser, entity);
+        return prepareReturnValue(traversers, entity);
     }
 
-    protected RestTriggerResponse prepareErrorReturnValue(Map<String, Object> fields){
+    protected RestTriggerResponse prepareErrorReturnValue(Map<String, Object> fields) {
         RestTriggerResponse restTriggerResponse = new RestTriggerResponse();
 
         restTriggerResponse.setResult(false);
@@ -85,42 +93,44 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
         return restTriggerResponse;
     }
 
-	protected RestTriggerResponse prepareReturnValue(T validationTraverser, Map<String, Object> entity){
-		RestTriggerResponse restTriggerResponse = new RestTriggerResponse();
+    protected RestTriggerResponse prepareReturnValue(List<T> validationTraversers, Map<String, Object> entity) {
+        RestTriggerResponse restTriggerResponse = new RestTriggerResponse();
 
-		StringBuilder error = new StringBuilder();
+        StringBuilder error = new StringBuilder();
 
-		for (Map.Entry<String, Object> entry : validationTraverser.getFormResponse().entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
+        validationTraversers.forEach(validationTraverser -> {
+            for (Map.Entry<String, Object> entry : validationTraverser.getFormResponse().entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
 
-			// if error
-			if (TriggerUtil.isError(key)) {
-				error.append(value + "</br>");
-			}
-			// if return value
-			if (TriggerUtil.isReturnValue(key)) {
-				key = key.substring(12);
+                // if error
+                if (TriggerUtil.isError(key)) {
+                    error.append(value + "</br>");
+                }
+                // if return value
+                if (TriggerUtil.isReturnValue(key)) {
+                    key = key.substring(12);
 
-				entity.put(key, value);
-			}
-		}
+                    entity.put(key, value);
+                }
+            }
+        });
 
-		if(StringUtils.isEmpty(error.toString())){
-			restTriggerResponse.setResult(true);
-		} else{
-			restTriggerResponse.setResult(false);
-			restTriggerResponse.setError(error.toString());
-		}
+        if (StringUtils.isEmpty(error.toString())) {
+            restTriggerResponse.setResult(true);
+        } else {
+            restTriggerResponse.setResult(false);
+            restTriggerResponse.setError(error.toString());
+        }
 
-		restTriggerResponse.setEntity(entity);
+        restTriggerResponse.setEntity(entity);
 
-		return restTriggerResponse;
-	}
+        return restTriggerResponse;
+    }
 
-	protected <E2 extends BullhornEntity, H2 extends TriggerHelper<E2>, T2 extends TriggerTraverser<E2, H2>> List<TriggerValidator<E2, H2, T2>> sort(Optional<List<TriggerValidator<E2, H2, T2>>> values) {
-		return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
-	}
+    protected <E2 extends BullhornEntity, H2 extends TriggerHelper<E2>, T2 extends TriggerTraverser<E2, H2>> List<TriggerValidator<E2, H2, T2>> sort(Optional<List<TriggerValidator<E2, H2, T2>>> values) {
+        return values.orElseGet(Lists::newArrayList).stream().sorted().collect(Collectors.toList());
+    }
 
     protected Map<? extends BullhornRelatedEntity, Set<String>> getRelatedEntityFields() {
         return relatedEntityFields;
