@@ -3,7 +3,6 @@ package com.client.core.resttrigger.controller.jobsubmission;
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
 import com.bullhornsdk.data.model.entity.core.standard.JobSubmission;
-import com.client.core.AppContext;
 import com.client.core.base.model.relatedentity.JobSubmissionRelatedEntity;
 import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.base.workflow.node.TriggerValidator;
@@ -37,7 +36,7 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
     @Autowired
     public JobSubmissionRestTriggerController(Optional<List<TriggerValidator<JobSubmission, JobSubmissionRestTriggerHelper, JobSubmissionRestTriggerTraverser>>> triggerValidators, JsonConverter jsonConverter) {
         super(JobSubmission.class, triggerValidators, JobSubmissionRelatedEntity.values());
-        this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
+        this.jsonConverter = jsonConverter;
     }
 
     /**
@@ -70,14 +69,14 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
         List<JobOrder> jobOrderList = Arrays.asList(jsonConverter.convertJsonStringToEntity(jobOrdersString, JobOrder[].class));
         List<Candidate> candidateList = Arrays.asList(jsonConverter.convertJsonStringToEntity(candidatesString, Candidate[].class));
 
-        Map<String, Object> new_valuesChanges = valuesChanges.entrySet().stream().filter(entry -> {
+        Map<String, Object> newValueChanges = valuesChanges.entrySet().stream().filter(entry -> {
             return !entry.getKey().equals("jobOrder") && !entry.getKey().equals("candidate");
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 
         List<JobSubmissionRestTriggerTraverser> traversers = jobOrderList.stream().flatMap(jobOrder -> {
             return candidateList.stream().map(candidate -> {
-                JobSubmissionRestTriggerTraverser traverser = new JobSubmissionRestTriggerTraverser(entityID, new_valuesChanges, updatingUserID, false, getRelatedEntityFields());
+                JobSubmissionRestTriggerTraverser traverser = new JobSubmissionRestTriggerTraverser(entityID, newValueChanges, updatingUserID, false, getRelatedEntityFields());
 
                 traverser.getTriggerHelper().getNewEntity().setCandidate(candidate);
                 traverser.getTriggerHelper().getNewEntity().setJobOrder(jobOrder);
