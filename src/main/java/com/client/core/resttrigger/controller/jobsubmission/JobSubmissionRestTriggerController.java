@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/resttrigger/jobsubmission/*")
@@ -75,13 +76,13 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
 
 
         List<JobSubmissionRestTriggerTraverser> traversers = jobOrderList.stream().flatMap(jobOrder -> {
-            return candidateList.stream().map(candidate -> {
+            Stream<JobSubmissionRestTriggerTraverser> stream = candidateList.stream().map(candidate -> {
                 JobSubmissionRestTriggerTraverser traverser = new JobSubmissionRestTriggerTraverser(entityID, newValueChanges, updatingUserID, false, getRelatedEntityFields());
-
                 traverser.getTriggerHelper().getNewEntity().setCandidate(candidate);
                 traverser.getTriggerHelper().getNewEntity().setJobOrder(jobOrder);
                 return traverser;
             });
+            return stream;
         }).collect(Collectors.toList());
 
         return handleRequests(traversers, valuesChanges);
