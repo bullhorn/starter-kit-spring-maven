@@ -107,7 +107,8 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
 
         if (entityID.equals(-1) && valuesChanges.containsKey("ids")) {
 
-            List<Integer> ids = Lists.newArrayList((ArrayList<Integer>) valuesChanges.get("ids"));
+            String idsString = jsonConverter.convertEntityToJsonString(valuesChanges.get("ids"));
+            List<Integer> ids = Arrays.asList(jsonConverter.convertJsonStringToEntity(idsString, Integer[].class));
 
             List<JobSubmissionRestTriggerTraverser> traversers =
                     ids.stream().map(entityId -> new JobSubmissionRestTriggerTraverser(entityId, valuesChanges, updatingUserID, true, getRelatedEntityFields()))
