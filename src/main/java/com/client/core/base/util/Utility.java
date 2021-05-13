@@ -185,8 +185,10 @@ public class Utility {
             String newString = StringUtils.defaultIfBlank((String) newValue, "");
 
             return !oldString.equals(newString);
-        } else if (oldValue instanceof Boolean || oldValue instanceof Integer) {
+        } else if (oldValue instanceof Boolean) {
             return oldValue != newValue;
+        } else if (oldValue instanceof Integer) {
+            return !oldValue.equals(newValue);
         } else if (oldValue instanceof BigDecimal) {
             return ((BigDecimal) oldValue).compareTo((BigDecimal) newValue) != 0;
         } else if (oldValue instanceof DateTime) {
