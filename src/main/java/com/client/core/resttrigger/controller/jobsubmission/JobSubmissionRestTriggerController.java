@@ -11,6 +11,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.JobSubmissionRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.JobSubmissionRestTriggerTraverser;
+import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -107,9 +105,22 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
         Integer entityID = restTriggerRequest.getMeta().getEntityId();
         Integer updatingUserID = restTriggerRequest.getMeta().getUserId();
 
-        JobSubmissionRestTriggerTraverser traverser = new JobSubmissionRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
+        if (entityID.equals(-1) && valuesChanges.containsKey("ids")) {
 
-        return handleRequest(traverser, valuesChanges);
+            String idsString = jsonConverter.convertEntityToJsonString(valuesChanges.get("ids"));
+            List<Integer> ids = Arrays.asList(jsonConverter.convertJsonStringToEntity(idsString, Integer[].class));
+
+            List<JobSubmissionRestTriggerTraverser> traversers =
+                    ids.stream().map(entityId -> new JobSubmissionRestTriggerTraverser(entityId, valuesChanges, updatingUserID, true, getRelatedEntityFields()))
+                            .collect(Collectors.toList());
+
+            return handleRequests(traversers, valuesChanges);
+
+        } else {
+            JobSubmissionRestTriggerTraverser traverser = new JobSubmissionRestTriggerTraverser(entityID, valuesChanges, updatingUserID, true, getRelatedEntityFields());
+
+            return handleRequest(traverser, valuesChanges);
+        }
     }
 
 }
