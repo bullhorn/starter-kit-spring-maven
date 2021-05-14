@@ -785,6 +785,7 @@ public class Utility {
         QueryParams params = ParamFactory.queryParams();
         params.setStart(start);
         params.setCount(BATCH_SIZE);
+        params.setOrderBy("id");
         params.setShowTotalMatched(true);
 
         ListWrapper<T> result = bullhornData.query(type, where, fields, params);
@@ -806,6 +807,7 @@ public class Utility {
         SearchParams params = ParamFactory.searchParams();
         params.setStart(start);
         params.setCount(BATCH_SIZE);
+        params.setSort("id");
 
         ListWrapper<T> result = bullhornData.search(type, where, fields, params);
 
