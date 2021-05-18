@@ -75,7 +75,7 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 
 	public CorporateUser getCandidateOwner() {
 		if (candidateOwner == null) {
-			this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), CandidateRelatedEntity.CANDIDATE_OWNER);
+			this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), PlacementChangeRequestRelatedEntity.CANDIDATE_OWNER);
 		}
 
 		return candidateOwner;
@@ -108,7 +108,7 @@ public class PlacementChangeRequestScheduledTaskHelper extends AbstractScheduled
 	public CorporateUser getJobSubmissionSendingUser() {
 		if (jobSubmissionSendingUser == null) {
 			this.jobSubmissionSendingUser = findCorporateUser(getJobSubmission().getSendingUser().getId(),
-					PlacementCertificationRelatedEntity.JOB_SUBMISSION_SENDING_USER);
+					PlacementChangeRequestRelatedEntity.JOB_SUBMISSION_SENDING_USER);
 		}
 
 		return jobSubmissionSendingUser;

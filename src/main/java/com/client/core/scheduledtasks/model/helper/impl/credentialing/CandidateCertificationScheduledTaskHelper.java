@@ -38,7 +38,7 @@ public class CandidateCertificationScheduledTaskHelper extends AbstractScheduled
 
     public CorporateUser getCandidateOwner() {
         if (candidateOwner == null) {
-            this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), CandidateCertificationRequirementRelatedEntity.CANDIDATE_OWNER);
+            this.candidateOwner = findCorporateUser(getCandidate().getOwner().getId(), CandidateCertificationRelatedEntity.CANDIDATE_OWNER);
         }
 
         return candidateOwner;
