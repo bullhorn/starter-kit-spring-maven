@@ -7,27 +7,29 @@ import java.util.Objects;
  */
 public class ApplicationSettings {
 
-	private String apiUrl;
+    private String apiUrl;
 
-	private String username;
+    private String username;
 
-	private String password;
+    private String password;
 
-	private String apiKey;
+    private String apiKey;
 
-	private int apiUserID;
+    private int apiUserID;
 
     private Integer corporationID;
 
-	private String privateLabelID;
+    private String privateLabelID;
 
     private Integer numEventThreads;
 
+    private Integer numEventListThreads;
+
     private Integer numEventsPerBatch;
 
-	private String standardSubscriptionName;
+    private String standardSubscriptionName;
 
-	private String standardCronExpression;
+    private String standardCronExpression;
 
     private String applicationDateFormat;
 
@@ -37,9 +39,9 @@ public class ApplicationSettings {
 
     private Integer metaCacheMinutes;
 
-	public ApplicationSettings() {
-		super();
-	}
+    public ApplicationSettings() {
+        super();
+    }
 
     public String getApiUrl() {
         return apiUrl;
@@ -103,6 +105,14 @@ public class ApplicationSettings {
 
     public void setNumEventThreads(Integer numEventThreads) {
         this.numEventThreads = numEventThreads;
+    }
+
+    public Integer getNumEventListThreads() {
+        return numEventListThreads;
+    }
+
+    public void setNumEventListThreads(Integer numEventListThreads) {
+        this.numEventListThreads = numEventListThreads;
     }
 
     public Integer getNumEventsPerBatch() {
@@ -174,6 +184,7 @@ public class ApplicationSettings {
                 Objects.equals(corporationID, that.corporationID) &&
                 Objects.equals(privateLabelID, that.privateLabelID) &&
                 Objects.equals(numEventThreads, that.numEventThreads) &&
+                Objects.equals(numEventListThreads, that.numEventListThreads) &&
                 Objects.equals(numEventsPerBatch, that.numEventsPerBatch) &&
                 Objects.equals(standardSubscriptionName, that.standardSubscriptionName) &&
                 Objects.equals(standardCronExpression, that.standardCronExpression) &&
@@ -185,7 +196,7 @@ public class ApplicationSettings {
 
     @Override
     public int hashCode() {
-        return Objects.hash(apiUrl, username, password, apiKey, apiUserID, corporationID, privateLabelID, numEventThreads, numEventsPerBatch, standardSubscriptionName, standardCronExpression, applicationDateFormat, applicationTimeFormat, profileName, metaCacheMinutes);
+        return Objects.hash(apiUrl, username, password, apiKey, apiUserID, corporationID, privateLabelID, numEventThreads, numEventListThreads, numEventsPerBatch, standardSubscriptionName, standardCronExpression, applicationDateFormat, applicationTimeFormat, profileName, metaCacheMinutes);
     }
 
     @Override
@@ -199,6 +210,7 @@ public class ApplicationSettings {
                 ", corporationID=" + corporationID +
                 ", privateLabelID='" + privateLabelID + '\'' +
                 ", numEventThreads=" + numEventThreads +
+                ", numEventListThreads=" + numEventListThreads +
                 ", numEventsPerBatch=" + numEventsPerBatch +
                 ", standardSubscriptionName='" + standardSubscriptionName + '\'' +
                 ", standardCronExpression='" + standardCronExpression + '\'' +

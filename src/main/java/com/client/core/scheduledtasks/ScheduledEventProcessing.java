@@ -25,116 +25,114 @@ import java.util.concurrent.Executors;
  * an instance of {@link com.client.core.scheduledtasks.workers.EventProcessing}.
  */
 public class ScheduledEventProcessing implements Runnable {
-	
-	private final Logger log = Logger.getLogger(getClass());
-	
-	private final String subscriptionName;
-	
-	private final BullhornData bullhornData;
-	private final ApplicationSettings appSettings;
+
+    private final Logger log = Logger.getLogger(getClass());
+
+    private final String subscriptionName;
+
+    private final BullhornData bullhornData;
+    private final ApplicationSettings appSettings;
     private final EventWorkflowFactory eventWorkflowFactory;
 
-	public ScheduledEventProcessing(String subscriptionName) {
-		super();
-		this.subscriptionName = subscriptionName;
-		this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
-		this.appSettings = AppContext.getApplicationContext().getBean("appSettings", ApplicationSettings.class);
-		this.eventWorkflowFactory = AppContext.getApplicationContext().getBean(EventWorkflowFactory.class);
-	}
+    public ScheduledEventProcessing(String subscriptionName) {
+        super();
+        this.subscriptionName = subscriptionName;
+        this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
+        this.appSettings = AppContext.getApplicationContext().getBean("appSettings", ApplicationSettings.class);
+        this.eventWorkflowFactory = AppContext.getApplicationContext().getBean(EventWorkflowFactory.class);
+    }
 
     /**
      * Performs the event handling by making the {@link com.bullhorn.apiservice.ApiService#eventsGetEvents(String, String, int)}
      * call and processing each one individually.  Each event is handed off to an instance of {@link EventProcessing}
      */
-	@Override
-	public void run() {
-		try {
+    @Override
+    public void run() {
+        try {
 
-			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.getNumEventsPerBatch());
+            GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.getNumEventsPerBatch());
 
-			if(eventResponse != null){
-				List<Event> events = eventResponse.getEvents();
-				List<CustomSubscriptionEvent> filteredEvents = removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(events, eventResponse.getRequestId());
+            if (eventResponse != null) {
+                List<Event> events = eventResponse.getEvents();
+                List<CustomSubscriptionEvent> filteredEvents = removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(events, eventResponse.getRequestId());
 
-				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + events.size()
-						+ " filteredEvents = " + filteredEvents.size());
+                log.info("Running " + subscriptionName + " subscription subscriptionEvents = " + events.size()
+                        + " filteredEvents = " + filteredEvents.size());
 
-				handleEvents(filteredEvents);
-			}else{
-				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + 0
-						+ " filteredEvents = " + 0);
-			}
-		} catch(RuntimeException e) {
-			log.error("Unknown error occurred during " + subscriptionName + "event handling.", e);
-		}
-	}
-	
-	private void handleEvents(List<CustomSubscriptionEvent> subscriptionEvents) {
-		if (subscriptionEvents.size() > 0) {
+                handleEvents(filteredEvents);
+            } else {
+                log.info("Running " + subscriptionName + " subscription subscriptionEvents = " + 0
+                        + " filteredEvents = " + 0);
+            }
+        } catch (RuntimeException e) {
+            log.error("Unknown error occurred during " + subscriptionName + " event handling.", e);
+        }
+    }
 
-			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.getNumEventThreads()));
+    private void handleEvents(List<CustomSubscriptionEvent> subscriptionEvents) {
+        if (subscriptionEvents.size() > 0) {
+
+            ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.getNumEventThreads()));
 
 
-			for (CustomSubscriptionEvent event : subscriptionEvents) {
-				EventProcessing processEvent = EventProcessing.instantiateRunnable(event, eventWorkflowFactory);
+            for (CustomSubscriptionEvent event : subscriptionEvents) {
+                EventProcessing processEvent = EventProcessing.instantiateRunnable(event, eventWorkflowFactory);
 
-				try {
-					exec.execute(processEvent);
-				} catch (RuntimeException e) {
-					log.error("Error occurred for entity " + event.getEntityName() + " #" +
-							+event.getEntityId() + " " + event.getEntityEventType(), e);
-				}
-			}
+                try {
+                    exec.execute(processEvent);
+                } catch (RuntimeException e) {
+                    log.error("Error occurred for entity " + event.getEntityName() + " #" +
+                            +event.getEntityId() + " " + event.getEntityEventType(), e);
+                }
+            }
 
-			exec.shutdown();
-			while (!exec.isTerminated()) {
-			}
-			
-			exec = null;
-		}
-	}
+            exec.shutdown();
+            while (!exec.isTerminated()) {
+            }
 
-	private List<CustomSubscriptionEvent> removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(List<Event> subscriptionEvents, Integer requestId) {
+            exec = null;
+        }
+    }
 
-		List<CustomSubscriptionEvent> filteredEvents;
-		String apiUserID = Integer.toString(appSettings.getApiUserID());
-		Map<String, CustomSubscriptionEvent> eventMap = Maps.newHashMap();
+    private List<CustomSubscriptionEvent> removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(List<Event> subscriptionEvents, Integer requestId) {
 
-		for (Event event : subscriptionEvents) {
+        List<CustomSubscriptionEvent> filteredEvents;
+        String apiUserID = Integer.toString(appSettings.getApiUserID());
+        Map<String, CustomSubscriptionEvent> eventMap = Maps.newHashMap();
 
-			CustomSubscriptionEvent customSubscriptionEvent = CustomSubscriptionEvent.instantiateFromEvent(event, subscriptionName, requestId, false);
+        for (Event event : subscriptionEvents) {
 
-			if (customSubscriptionEvent.getUpdatingUserId() != null && !apiUserID.equalsIgnoreCase(customSubscriptionEvent.getUpdatingUserId().toString())) {
+            CustomSubscriptionEvent customSubscriptionEvent = CustomSubscriptionEvent.instantiateFromEvent(event, subscriptionName, requestId, false);
 
-				String eventKey = customSubscriptionEvent.getEntityName() + customSubscriptionEvent.getEntityId() + customSubscriptionEvent.getEntityEventType() + customSubscriptionEvent.getUpdatingUserId();
-				CustomSubscriptionEvent existingEvent = eventMap.get(eventKey);
+            if (customSubscriptionEvent.getUpdatingUserId() != null && !apiUserID.equalsIgnoreCase(customSubscriptionEvent.getUpdatingUserId().toString())) {
 
-				try {
-					if (existingEvent != null){
+                String eventKey = customSubscriptionEvent.getEntityName() + customSubscriptionEvent.getEntityId() + customSubscriptionEvent.getEntityEventType() + customSubscriptionEvent.getUpdatingUserId();
+                CustomSubscriptionEvent existingEvent = eventMap.get(eventKey);
 
-						log.info("Duplicate event found");
-						//event of the same type (Insert/update), for the same entity (placement 123), created by the same corporate user already exists - don't create a new one but merge them)
-						List<String> allUpdatedProperties = Lists.newArrayList();
+                try {
+                    if (existingEvent != null) {
 
-						allUpdatedProperties.addAll(customSubscriptionEvent.getUpdatedProperties());
-						allUpdatedProperties.addAll(existingEvent.getUpdatedProperties());
+                        log.info("Duplicate event found");
+                        //event of the same type (Insert/update), for the same entity (placement 123), created by the same corporate user already exists - don't create a new one but merge them)
+                        List<String> allUpdatedProperties = Lists.newArrayList();
 
-						customSubscriptionEvent.setUpdatedProperties(Sets.newHashSet(allUpdatedProperties));
-						customSubscriptionEvent.setError(existingEvent.isError());
+                        allUpdatedProperties.addAll(customSubscriptionEvent.getUpdatedProperties());
+                        allUpdatedProperties.addAll(existingEvent.getUpdatedProperties());
 
-						eventMap.put(eventKey, customSubscriptionEvent);
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+                        customSubscriptionEvent.setUpdatedProperties(Sets.newHashSet(allUpdatedProperties));
+                        customSubscriptionEvent.setError(existingEvent.isError());
 
-				eventMap.put(eventKey, customSubscriptionEvent);
-			}
-		}
+                        eventMap.put(eventKey, customSubscriptionEvent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-		filteredEvents = Lists.newArrayList(eventMap.values());
-		return filteredEvents;
-	}
+                eventMap.put(eventKey, customSubscriptionEvent);
+            }
+        }
 
+        filteredEvents = Lists.newArrayList(eventMap.values());
+        return filteredEvents;
+    }
 }
