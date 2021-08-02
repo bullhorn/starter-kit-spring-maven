@@ -6,7 +6,7 @@ import java.util.Set;
 
 public enum SendoutRelatedEntity implements BullhornRelatedEntity {
     SENDOUT(
-            "id", "candidate(id,name)", "jobOrder(id,title)", "status", "user(id,name)", "clientContact(id,name)",
+            "id", "candidate(id,name)", "jobOrder(id,title)", "user(id,name)", "clientContact(id,name)",
             "clientCorporation(id,name)", "jobSubmission(id,status)"
     ),
     JOB_ORDER("id", "title", "employmentType", "clientContact(id,name)", "clientCorporation(id,name)", "owner(id,name)"),
@@ -18,8 +18,7 @@ public enum SendoutRelatedEntity implements BullhornRelatedEntity {
     CANDIDATE("id", "name", "email", "phone", "owner(id,name)"),
     CANDIDATE_OWNER("id", "name", "email"),
     USER("id", "name"),
-    JOB_SUBMISSION("id", "candidate(id,name)", "jobOrder(id,title)", "status")
-    ;
+    JOB_SUBMISSION("id", "candidate(id,name)", "jobOrder(id,title)", "status");
 
     private final Set<String> standardFields;
 
