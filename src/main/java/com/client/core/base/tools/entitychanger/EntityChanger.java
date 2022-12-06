@@ -1,6 +1,6 @@
-package com.client.core.base.tools.entitychanger
+package com.client.core.base.tools.entitychanger;
 
-interface EntityChanger {
+public interface EntityChanger {
 
     public <T, V> V retrieveField(T entity, String field, Class<V> type);
 
