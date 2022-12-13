@@ -4,9 +4,9 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.client.core.base.util.Utility;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,10 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
-@Log4j2
 @Service
 public class StandardEntityChanger implements EntityChanger {
+
+    private final Logger log = Logger.getLogger(getClass());
 
     public StandardEntityChanger() {
     }
