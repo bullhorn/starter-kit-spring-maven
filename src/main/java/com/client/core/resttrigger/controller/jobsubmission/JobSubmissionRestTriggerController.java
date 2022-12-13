@@ -11,7 +11,6 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.JobSubmissionRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.JobSubmissionRestTriggerTraverser;
-import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,7 +46,7 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
      * @param body
      * @return the json parsed form response message
      */
-    @RequestMapping(value = {"add"}, method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    @RequestMapping(value = {"add"}, method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public RestTriggerResponse addEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Job Submission Validation Add Process From Rest Trigger ----------------------------------------");
@@ -93,7 +95,7 @@ public class JobSubmissionRestTriggerController extends AbstractRestTriggerContr
      * @param body contains all the relevant data from the call
      * @return the json parsed form response message
      */
-    @RequestMapping(value = {"edit"}, method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+    @RequestMapping(value = {"edit"}, method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public RestTriggerResponse editEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Job Submission Validation Edit Process From Rest Trigger ----------------------------------------");

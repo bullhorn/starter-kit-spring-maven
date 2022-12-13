@@ -6,6 +6,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.util.StringUtils;
 
+/**
+ * Defaults a field to null if we are trying to set a number with a value that is not a number
+ * 
+ * @author Magnus Fiore Palm
+ * 
+ */
 public class MyCustomNumberEditor extends CustomNumberEditor {
 
 	private static Log log = LogFactory.getLog(MyCustomNumberEditor.class);

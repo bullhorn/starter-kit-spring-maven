@@ -1,27 +1,22 @@
 package com.client.core.base.service.concurrency.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
+import com.client.core.base.service.concurrency.ConcurrencyService;
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
-import com.client.core.base.service.concurrency.ConcurrencyService;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Service to handle calling threads asynchronously as well as synchronously.  Provided methods to call
  * a single thread asynchronously or a collection of threads either asynchronously or synchonously.
- * Supports both {@link java.lang.Runnable} and {@link java.util.concurrent.Callable}.
+ * Supports both {@link Runnable} and {@link Callable}.
  * <br><br>
- * Implementation uses {@link java.util.concurrent.Executors} and {@link java.util.concurrent.ExecutorService}
+ * Implementation uses {@link Executors} and {@link ExecutorService}
  */
 @Service
 public class StandardConcurrencyService implements ConcurrencyService {

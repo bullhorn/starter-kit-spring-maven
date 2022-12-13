@@ -29,8 +29,8 @@ public class EventProcessing implements Runnable {
     }
 
     /**
-     * Performs the actual handling of a single event by parsing out the kind of event from the {@link com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent} provided via
-     * the {@link EventProcessing#(Integer, com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent)} constructor and handing the event off
+     * Performs the actual handling of a single event by parsing out the kind of event from the {@link CustomSubscriptionEvent} provided via
+     * the {@link EventProcessing#(Integer, CustomSubscriptionEvent)} constructor and handing the event off
      * to the proper workflow.
      */
     @Override

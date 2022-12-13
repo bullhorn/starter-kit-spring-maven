@@ -1,14 +1,10 @@
 package com.client.core.base.dao.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
+import com.client.core.base.dao.GenericDao;
+import com.client.core.base.model.jpa.JpaEntity;
+import com.client.core.base.tools.data.QueryResult;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory;
@@ -16,12 +12,9 @@ import org.hibernate.hql.spi.ParameterTranslations;
 import org.hibernate.hql.spi.QueryTranslator;
 import org.hibernate.hql.spi.QueryTranslatorFactory;
 
-import com.client.core.AppContext;
-import com.client.core.base.dao.GenericDao;
-import com.client.core.base.model.jpa.JpaEntity;
-import com.client.core.base.tools.data.QueryResult;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Map;
 
 public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T, ID> {
 
@@ -32,13 +25,11 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
 
     private final Class<T> type;
 
-    public StandardJpaDao(Class<T> type) {
+    public StandardJpaDao(Class<T> type, EntityManagerFactory entityManagerFactory, EntityManager entityManager) {
         this.type = type;
 
-        EntityManagerFactory entityManagerFactory = AppContext.getApplicationContext().getBean("entityManagerFactory", EntityManagerFactory.class);
-
         this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
-        this.entityManager = AppContext.getApplicationContext().getBean("entityManager", EntityManager.class);
+        this.entityManager = entityManager;
     }
 
     public StandardJpaDao(EntityManagerFactory entityManagerFactory, EntityManager entityManager, Class<T> type) {
@@ -201,9 +192,9 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
         query.getParameters().stream().forEach( parameter -> {
             String name = parameter.getName();
 
-            for(int position : parameterTranslations.getNamedParameterSqlLocations(name)) {
+            for(int position : parameterTranslations.getPositionalParameterInformationMap().keySet()) { // TODO: Find replacement
                 countQuery.setParameter(position+1, query.getParameterValue(name));
-            };
+            }
         });
 
         return ((Number) countQuery.getSingleResult()).longValue();

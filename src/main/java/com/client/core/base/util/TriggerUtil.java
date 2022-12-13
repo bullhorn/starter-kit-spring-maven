@@ -3,11 +3,11 @@ package com.client.core.base.util;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
-import com.client.core.AppContext;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.Lists;
 import groovy.lang.MissingPropertyException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +16,12 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class TriggerUtil {
+
+	@Autowired
+	private static BullhornData BULLHORN_DATA;
+
+	@Autowired
+	private static EntityChanger ENTITY_CHANGER;
 
 	private static final Logger log = Logger.getLogger(TriggerUtil.class);
 
@@ -42,40 +48,18 @@ public class TriggerUtil {
 		E entity = Optional.of(entityID).filter(id -> {
 			return id != null && id > 0;
 		}).map( id -> {
-			return getBullhornData().findEntity(type, id, fields);
+			return BULLHORN_DATA.findEntity(type, id, fields);
 		}).orElseGet(constructor);
-
-		EntityChanger entityChanger = getEntityChanger();
 
 		values.entrySet().forEach( entry -> {
 			try {
-				entityChanger.setField(entity, entry.getKey(), entry.getValue());
+				ENTITY_CHANGER.setField(entity, entry.getKey(), entry.getValue());
 			} catch(MissingPropertyException e) {
 				log.error(e.getMessage());
 			}
 		});
 
 		return entity;
-	}
-
-	private static BullhornData BULLHORN_DATA;
-
-	private synchronized static BullhornData getBullhornData() {
-		if(TriggerUtil.BULLHORN_DATA == null) {
-			TriggerUtil.BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
-		}
-
-		return BULLHORN_DATA;
-	}
-
-	private static EntityChanger ENTITY_CHANGER;
-
-	private synchronized static EntityChanger getEntityChanger() {
-		if(TriggerUtil.ENTITY_CHANGER == null) {
-			TriggerUtil.ENTITY_CHANGER = AppContext.getApplicationContext().getBean(EntityChanger.class);
-		}
-
-		return ENTITY_CHANGER;
 	}
 
 	public static <E extends BullhornEntity> OneToMany<E> convertIdListToEntityOneToMany(List<Map<String, Integer>> entityIds, Supplier<E> constructor){
@@ -109,4 +93,9 @@ public class TriggerUtil {
 		oneToMany.setTotal(bullhornEntities.size());
 		return oneToMany;
 	}
+
+	public static <E extends BullhornEntity> void setSpecialField(E entity, Map<String,Object> valuesChanged, String sourceField, String targetField){
+		TriggerUtil.ENTITY_CHANGER.setField(entity, targetField, TriggerUtil.ENTITY_CHANGER.retrieveField(valuesChanged, sourceField));
+	}
+
 }

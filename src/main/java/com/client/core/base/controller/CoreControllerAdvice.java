@@ -1,13 +1,12 @@
 package com.client.core.base.controller;
 
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.base.tools.propertyeditors.CustomBigDecimalEditor;
 import com.client.core.base.tools.propertyeditors.CustomDateTimeEditor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -27,18 +26,17 @@ import java.util.Date;
 public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
 
     private static Log log = LogFactory.getLog(CoreControllerAdvice.class);
-    
+
     @Autowired
-    @Qualifier("appSettings")
     private ApplicationSettings appSettings;
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> prepareException(Exception e, WebRequest request) {
+    public ResponseEntity<Object> prepareException(Exception e, WebRequest request) throws Exception {
         log.error("An error occurred, and was caught by the CoreControllerAdvice.", e);
         return handleException(e,request);
     }
-    
+
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         binder.setIgnoreInvalidFields(true);
@@ -53,5 +51,5 @@ public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
         binder.registerCustomEditor(DateTime.class, new CustomDateTimeEditor(applicationDateFormatString, true));
         binder.registerCustomEditor(BigDecimal.class, new CustomBigDecimalEditor(2, true));
     }
-    
+
 }

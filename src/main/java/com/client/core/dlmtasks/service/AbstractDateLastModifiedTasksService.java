@@ -4,7 +4,6 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.base.util.Utility;
 import com.client.core.dlmtasks.model.helper.DateLastModifiedEventTaskHelper;
 import com.client.core.dlmtasks.model.helper.impl.StandardDateLastModifiedEventTaskHelper;
-import com.client.core.dlmtasks.service.DateLastModifiedTasksService;
 import com.client.core.dlmtasks.workflow.node.DateLastModifiedEventTask;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

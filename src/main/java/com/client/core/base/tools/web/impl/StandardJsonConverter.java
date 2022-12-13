@@ -1,13 +1,5 @@
 package com.client.core.base.tools.web.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
-
 import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.base.tools.web.objectmapper.CustomJsonObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +7,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class StandardJsonConverter implements JsonConverter {
@@ -31,10 +30,10 @@ public class StandardJsonConverter implements JsonConverter {
 
 	/**
 	 * Create the ObjectMapper that deserializes entity to json String.
-	 * 
+	 *
 	 * Registers the JodaModule to convert DateTime so-called epoch timestamp (number of milliseconds since January 1st,
 	 * 1970, UTC)
-	 * 
+	 *
 	 * @return
 	 */
 	private ObjectMapper createStandardObjectMapper() {

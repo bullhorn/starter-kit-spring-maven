@@ -3,8 +3,7 @@ package com.client.core.scheduledtasks;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.response.event.Event;
 import com.bullhornsdk.data.model.response.event.GetEventsResponse;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.base.util.Utility;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
@@ -22,28 +21,28 @@ import java.util.concurrent.Executors;
 /**
  * Entry point for scheduled event handling.  Makes API call to BULLHORN to
  * retrieve events for the subscriptionName provided in the constructor, then hands off each event to
- * an instance of {@link com.client.core.scheduledtasks.workers.EventProcessing}.
+ * an instance of {@link EventProcessing}.
  */
 public class ScheduledEventProcessing implements Runnable {
-	
+
 	private final Logger log = Logger.getLogger(getClass());
-	
+
 	private final String subscriptionName;
-	
+
 	private final BullhornData bullhornData;
 	private final ApplicationSettings appSettings;
     private final EventWorkflowFactory eventWorkflowFactory;
 
-	public ScheduledEventProcessing(String subscriptionName) {
+	public ScheduledEventProcessing(String subscriptionName, BullhornData bullhornData, ApplicationSettings appSettings, EventWorkflowFactory eventWorkflowFactory) {
 		super();
 		this.subscriptionName = subscriptionName;
-		this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
-		this.appSettings = AppContext.getApplicationContext().getBean("appSettings", ApplicationSettings.class);
-		this.eventWorkflowFactory = AppContext.getApplicationContext().getBean(EventWorkflowFactory.class);
+		this.bullhornData = bullhornData;
+		this.appSettings = appSettings;
+		this.eventWorkflowFactory = eventWorkflowFactory;
 	}
 
     /**
-     * Performs the event handling by making the {@link com.bullhorn.apiservice.ApiService#eventsGetEvents(String, String, int)}
+     * Performs the event handling by making the {@link com.bullhornsdk.data.api.BullhornData#getEvents(String, Integer)}
      * call and processing each one individually.  Each event is handed off to an instance of {@link EventProcessing}
      */
 	@Override
@@ -68,7 +67,7 @@ public class ScheduledEventProcessing implements Runnable {
 			log.error("Unknown error occurred during " + subscriptionName + "event handling.", e);
 		}
 	}
-	
+
 	private void handleEvents(List<CustomSubscriptionEvent> subscriptionEvents) {
 		if (subscriptionEvents.size() > 0) {
 
@@ -89,7 +88,7 @@ public class ScheduledEventProcessing implements Runnable {
 			exec.shutdown();
 			while (!exec.isTerminated()) {
 			}
-			
+
 			exec = null;
 		}
 	}

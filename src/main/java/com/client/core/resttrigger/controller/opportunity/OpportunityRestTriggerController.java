@@ -39,7 +39,7 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse addEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Opp Add Validation Process From Rest Trigger ----------------------------------------");
@@ -63,7 +63,7 @@ public class OpportunityRestTriggerController extends AbstractRestTriggerControl
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse editEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Opp Edit Validation Process From Rest Trigger ----------------------------------------");

@@ -1,8 +1,7 @@
 package com.client.core.base.workflow.node;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.workflow.traversing.Traverser;
@@ -10,6 +9,7 @@ import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -17,16 +17,21 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+// TODO: This class changed quite a bit getting rid of things. Make sure there's nothing missing from original file
 public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends Traverser> implements WorkflowAction<E, T> {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = Logger.getLogger(getClass());  // TODO: NEW LOGGER??
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
-    private EmailTemplateService emailTemplateService;
+    @Autowired
     private ApplicationSettings appSettings;
-    private MessageSource messageSource;
+
+    @Autowired
     private Emailer emailer;
+
+    @Autowired
+    private MessageSource messageSource;
 
     public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
         this.relatedEntityFields = relatedEntityFields;
@@ -41,39 +46,7 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
     }
 
     protected String getMessageUsingKey(String key, Object[] args) throws NoSuchMessageException {
-        return getMessageSource().getMessage(key, args, Locale.US);
-    }
-
-    protected MessageSource getMessageSource() {
-        if(this.messageSource == null) {
-            this.messageSource = AppContext.getApplicationContext().getBean("messageSource", MessageSource.class);
-        }
-
-        return messageSource;
-    }
-
-    protected EmailTemplateService getEmailTemplateService() {
-        if(this.emailTemplateService == null) {
-            this.emailTemplateService = AppContext.getApplicationContext().getBean(EmailTemplateService.class);
-        }
-
-        return this.emailTemplateService;
-    }
-
-    protected ApplicationSettings getAppSettings() {
-        if(this.appSettings == null) {
-            this.appSettings = AppContext.getApplicationContext().getBean(ApplicationSettings.class);
-        }
-
-        return this.appSettings;
-    }
-
-    protected Emailer getEmailer() {
-        if(this.emailer == null) {
-            this.emailer = AppContext.getApplicationContext().getBean(Emailer.class);
-        }
-
-        return emailer;
+        return messageSource.getMessage(key, args, Locale.US);
     }
 
     @Override

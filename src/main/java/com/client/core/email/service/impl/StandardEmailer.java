@@ -1,35 +1,22 @@
 package com.client.core.email.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.*;
-
+import com.client.core.email.MailSettings;
+import com.client.core.email.model.MailAttachment;
+import com.client.core.email.model.MailInfo;
+import com.client.core.email.service.Emailer;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import com.client.core.email.MailSettings;
-import com.client.core.email.model.MailAttachment;
-import com.client.core.email.model.MailInfo;
-import com.client.core.email.service.Emailer;
-import com.google.common.collect.Lists;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * A standard implementation of {@link Emailer}, using JDK libraries in

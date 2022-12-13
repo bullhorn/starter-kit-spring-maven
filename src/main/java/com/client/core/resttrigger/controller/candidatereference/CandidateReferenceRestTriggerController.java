@@ -29,6 +29,7 @@ public class CandidateReferenceRestTriggerController extends AbstractRestTrigger
 
     @Autowired
     public CandidateReferenceRestTriggerController(Optional<List<TriggerValidator<CandidateReference, CandidateReferenceRestTriggerHelper, CandidateReferenceRestTriggerTraverser>>> triggerValidators) {
+
         super(CandidateReference.class, triggerValidators, CandidateReferenceRelatedEntity.values());
     }
 
@@ -39,7 +40,7 @@ public class CandidateReferenceRestTriggerController extends AbstractRestTrigger
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse addEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Candidate Reference Add Validation Process From Rest Trigger ----------------------------------------");
@@ -63,7 +64,7 @@ public class CandidateReferenceRestTriggerController extends AbstractRestTrigger
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse editEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Candidate Reference Edit Validation Process From Rest Trigger ----------------------------------------");

@@ -1,43 +1,5 @@
 package com.client.core.base.util;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
-import com.client.core.base.model.relatedentity.StandardRelatedEntity;
-import com.client.core.base.workflow.node.WorkflowAction;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-import org.json.JSONArray;
-
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.core.type.QueryEntity;
@@ -47,10 +9,43 @@ import com.bullhornsdk.data.model.parameter.QueryParams;
 import com.bullhornsdk.data.model.parameter.SearchParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
 import com.bullhornsdk.data.model.response.list.ListWrapper;
-import com.client.core.AppContext;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.StandardRelatedEntity;
+import com.client.core.base.workflow.node.WorkflowAction;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Utility {
+
+    private static final int BATCH_SIZE = 200;
+
+    @Autowired
+    private static BullhornData BULLHORN_DATA;
 
     public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
                                                                                        List<? extends WorkflowAction<?, ?>> actions) {
@@ -780,15 +775,13 @@ public class Utility {
     }
 
     private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
-        BullhornData bullhornData = getBullhornData();
-
         QueryParams params = ParamFactory.queryParams();
         params.setStart(start);
         params.setCount(BATCH_SIZE);
         params.setOrderBy("id");
         params.setShowTotalMatched(true);
 
-        ListWrapper<T> result = bullhornData.query(type, where, fields, params);
+        ListWrapper<T> result = BULLHORN_DATA.query(type, where, fields, params);
 
         process.accept(result.getData());
 
@@ -802,14 +795,12 @@ public class Utility {
     }
 
     private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
-        BullhornData bullhornData = getBullhornData();
-
         SearchParams params = ParamFactory.searchParams();
         params.setStart(start);
         params.setCount(BATCH_SIZE);
         params.setSort("id");
 
-        ListWrapper<T> result = bullhornData.search(type, where, fields, params);
+        ListWrapper<T> result = BULLHORN_DATA.search(type, where, fields, params);
 
         process.accept(result.getData());
 
@@ -817,17 +808,4 @@ public class Utility {
             searchForAll(type, where, fields, process, result.getStart() + result.getCount());
         }
     }
-
-    private static final int BATCH_SIZE = 200;
-
-    private static synchronized BullhornData getBullhornData() {
-        if (BULLHORN_DATA == null) {
-            BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
-        }
-
-        return BULLHORN_DATA;
-    }
-
-    private static BullhornData BULLHORN_DATA;
-
 }
