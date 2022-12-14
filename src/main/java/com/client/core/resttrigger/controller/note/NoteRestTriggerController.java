@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/resttrigger/note/*")
+@RequestMapping("${rest.prefix.core}/note/*")
 public class NoteRestTriggerController extends AbstractRestTriggerController<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(NoteRestTriggerController.class);

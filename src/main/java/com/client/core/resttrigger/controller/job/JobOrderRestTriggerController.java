@@ -23,7 +23,7 @@ import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/resttrigger/job/*")
+@RequestMapping("${rest.prefix.core}/job/*")
 public class JobOrderRestTriggerController extends AbstractRestTriggerController<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(JobOrderRestTriggerController.class);

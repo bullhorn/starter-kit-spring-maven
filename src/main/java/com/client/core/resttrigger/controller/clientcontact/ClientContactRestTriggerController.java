@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Controller
 @Slf4j
-@RequestMapping("/resttrigger/clientcontact/*")
+@RequestMapping("${rest.prefix.core}/clientcontact/*")
 public class ClientContactRestTriggerController extends AbstractRestTriggerController<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser> {
 
     @Autowired

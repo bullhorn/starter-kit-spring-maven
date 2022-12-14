@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/resttrigger/lead/*")
+@RequestMapping("${rest.prefix.core}/lead/*")
 public class LeadRestTriggerController extends AbstractRestTriggerController<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(LeadRestTriggerController.class);

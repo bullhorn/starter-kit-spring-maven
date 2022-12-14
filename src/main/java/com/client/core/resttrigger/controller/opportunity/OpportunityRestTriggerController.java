@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/resttrigger/opportunity/*")
+@RequestMapping("${rest.prefix.core}/opportunity/*")
 public class OpportunityRestTriggerController extends AbstractRestTriggerController<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(OpportunityRestTriggerController.class);

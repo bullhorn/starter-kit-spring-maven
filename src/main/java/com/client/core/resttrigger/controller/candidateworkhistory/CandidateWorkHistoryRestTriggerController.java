@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/resttrigger/candidateworkhistory/*")
+@RequestMapping("${rest.prefix.core}/candidateworkhistory/*")
 public class CandidateWorkHistoryRestTriggerController extends AbstractRestTriggerController<CandidateWorkHistory, CandidateWorkHistoryRestTriggerHelper, CandidateWorkHistoryRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(CandidateWorkHistoryRestTriggerController.class);

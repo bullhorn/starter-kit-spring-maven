@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
-@RequestMapping("/resttrigger/jobsubmission/*")
+@RequestMapping("${rest.prefix.core}/jobsubmission/*")
 public class JobSubmissionRestTriggerController extends AbstractRestTriggerController<JobSubmission, JobSubmissionRestTriggerHelper, JobSubmissionRestTriggerTraverser> {
 
     private final Logger log = Logger.getLogger(JobSubmissionRestTriggerController.class);
