@@ -12,25 +12,25 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationSettings {
 
     @Value("${apiurl}")
-	private String apiUrl;
+    private String apiUrl;
 
     @Value("${apiusername}")
-	private String username;
+    private String username;
 
     @Value("${apipassword}")
-	private String password;
+    private String password;
 
     @Value("${apikey}")
-	private String apiKey;
+    private String apiKey;
 
     @Value("${apiUserID}")
-	private int apiUserID; // TODO: Change to String? Errors if empty int
+    private int apiUserID; // TODO: Change to String? Errors if empty int
 
     @Value("${corporationID}")
     private Integer corporationID;
 
     @Value("${privateLabelID}")
-	private String privateLabelID;
+    private String privateLabelID;
 
     @Value("${numEventThreads}")
     private Integer numEventThreads;
@@ -39,10 +39,10 @@ public class ApplicationSettings {
     private Integer numEventsPerBatch;
 
     @Value("${standardSubscriptionName}")
-	private String standardSubscriptionName;
+    private String standardSubscriptionName;
 
     @Value("${standardCronExpression}")
-	private String standardCronExpression;
+    private String standardCronExpression;
 
     @Value("${applicationDateFormat}")
     private String applicationDateFormat;
