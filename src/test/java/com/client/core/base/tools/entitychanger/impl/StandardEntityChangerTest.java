@@ -74,5 +74,22 @@ public class StandardEntityChangerTest {
         // assert BigDecimal
         entityChanger.setField(candidate, "dayRate", 5d);
         assertEquals(BigDecimal.valueOf(5), candidate.getDayRate());
+
+        // assert null values
+        entityChanger.setField(candidate, "firstName", null);
+        entityChanger.setField(candidate, "owner.id", null);
+        entityChanger.setField(candidate, "address.address1", null);
+        entityChanger.setField(candidate, "category", null);
+        entityChanger.setField(candidate, "dateOfBirth", null);
+        entityChanger.setField(candidate, "isDeleted", null);
+        entityChanger.setField(candidate, "dayRate", null);
+
+        assertNull(candidate.getFirstName());
+        assertNull(candidate.getOwner().getId());
+        assertNull(candidate.getAddress().getAddress1());
+        assertNull(candidate.getCategory());
+        assertNull(candidate.getDateOfBirth());
+        assertNull(candidate.getIsDeleted());
+        assertNull(candidate.getDayRate());
     }
 }
