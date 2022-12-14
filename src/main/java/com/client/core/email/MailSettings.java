@@ -1,6 +1,7 @@
 package com.client.core.email;
 
 import com.google.common.collect.Lists;
+import lombok.Data;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -10,112 +11,17 @@ import java.util.List;
  * using a Spring {@link org.springframework.beans.factory.config.PropertyPlaceholderConfigurer}, either in
  * applicationContext.xml or using {@link org.springframework.beans.factory.annotation.Value} annotations
  */
+@Data
 @Configuration
-public class MailSettings { // TODO: REWRITE USING LOMBOK
+public class MailSettings {
     private String host;
     private String port;
     private String username;
     private String password;
-
     private String sender;
     private String senderName;
-
     private Boolean disabled;
     private List<String> routeToWhenDisabled;
-
-    /**
-     * Returns the SMTP host used for email authentication
-     *
-     * @return the SMTP host
-     */
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * Returns the SMTP password used for email authentication
-     *
-     * @return the SMTP password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * Returns the SMTP port used for email authentication
-     *
-     * @return the SMTP port
-     */
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    /**
-     * Returns the email address used as the sender for all emails
-     *
-     * @return the sending user's email address
-     */
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    /**
-     * Returns the name of the sender used for all emails
-     *
-     * @return the sending user's name
-     */
-    public String getSenderName() {
-        return senderName;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
-    }
-
-    /**
-     * Returns the SMTP username used for email authentication
-     *
-     * @return the SMTP username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Boolean getDisabled() {
-        return disabled;
-    }
-
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
-    }
-
-    public List<String> getRouteToWhenDisabled() {
-        return routeToWhenDisabled;
-    }
-
-    public void setRouteToWhenDisabled(String[] routeToWhenDisabled) {
-        this.routeToWhenDisabled = Lists.newArrayList(routeToWhenDisabled);
-    }
 
     @Override
     public boolean equals(Object o) {

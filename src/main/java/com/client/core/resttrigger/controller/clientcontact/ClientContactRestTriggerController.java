@@ -8,6 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.ClientContactRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.ClientContactRestTriggerTraverser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,10 +23,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
+@Slf4j
 @RequestMapping("/resttrigger/clientcontact/*")
 public class ClientContactRestTriggerController extends AbstractRestTriggerController<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(ClientContactRestTriggerController.class);
 
     @Autowired
     public ClientContactRestTriggerController(Optional<List<TriggerValidator<ClientContact, ClientContactRestTriggerHelper, ClientContactRestTriggerTraverser>>> triggerValidators) {
