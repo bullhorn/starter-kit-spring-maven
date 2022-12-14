@@ -1,5 +1,6 @@
 package com.client;
 
+import com.client.StarterKitSpringMaven;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
