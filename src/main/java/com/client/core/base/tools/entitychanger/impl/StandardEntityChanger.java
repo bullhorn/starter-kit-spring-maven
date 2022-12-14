@@ -53,7 +53,7 @@ public class StandardEntityChanger implements EntityChanger {
                 return (T) propertyDescriptor.getReadMethod().invoke(entityOrField);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
                      InstantiationException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error setting property " + nextField, e);
             }
         }, (entity1, entity2) -> entity1);
         try {
