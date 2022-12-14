@@ -53,7 +53,7 @@ public class StandardEntityChanger implements EntityChanger {
                 return (T) propertyDescriptor.getReadMethod().invoke(entityOrField);
             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
                      InstantiationException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error setting property " + nextField, e);
             }
         }, (entity1, entity2) -> entity1);
         try {
@@ -76,7 +76,7 @@ public class StandardEntityChanger implements EntityChanger {
                 try {
                     propertyDescriptor.getWriteMethod().invoke(target, value);
                 } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                    // TODO: In JDK 17 there are match expressions. Maybe this could be refactored into that?
+                    // Note: Java doesn't allow Class<?> variables as switch statements
                     if (DateTime.class.equals(fieldType)) {
                         propertyDescriptor.getWriteMethod().invoke(target, asType(value, DateTime.class));
                     } else if (BullhornEntity.class.isAssignableFrom(fieldType)) {
@@ -119,7 +119,7 @@ public class StandardEntityChanger implements EntityChanger {
     }
 
     private <V> V asType(Object value, Class<V> type) {
-        // TODO: In JDK 17 there are match expressions. Maybe this could be refactored into that?
+        // Note: Java doesn't allow Class<?> variables as switch statements
         if (BigDecimal.class.equals(type)) {
             return (V) Utility.parseBigDecimal(value);
         } else if (Boolean.class.equals(type)) {
