@@ -10,7 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,7 +28,7 @@ import com.client.core.security.tools.RC4;
  */
 public class SessionFilter extends OncePerRequestFilter {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LogManager.getLogger(getClass());
 
 	private final String sessionStoredApiKeyName;
 	private final String encryptionKey;

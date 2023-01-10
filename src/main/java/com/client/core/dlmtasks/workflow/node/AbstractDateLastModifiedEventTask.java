@@ -3,7 +3,8 @@ package com.client.core.dlmtasks.workflow.node;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.dlmtasks.model.DateLastModifiedOption;
 import com.google.common.collect.Sets;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public abstract class AbstractDateLastModifiedEventTask<T extends BullhornEntity
 
     private static final Set<String> ID = Sets.newHashSet("id");
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private final Class<T> type;
     private final Integer intervalMinutes;

@@ -4,14 +4,15 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.dlmtasks.model.DateLastModifiedOption;
 import com.client.core.dlmtasks.model.helper.DateLastModifiedEventTaskHelper;
 import com.client.core.dlmtasks.workflow.node.DateLastModifiedEventTask;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.joda.time.DateTime;
 
 import java.util.Set;
 
 public class StandardDateLastModifiedEventTaskHelper<T extends BullhornEntity> implements DateLastModifiedEventTaskHelper<T> {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private final DateLastModifiedEventTask<T> eventTask;
 

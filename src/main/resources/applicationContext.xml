@@ -7,7 +7,10 @@
 
 	<bean id="applicationContextProvider" class="com.client.core.ApplicationContextProvider"></bean>
 
-	<context:property-placeholder location="classpath*:*-${profile}.properties" />
+	<context:property-placeholder
+			location="classpath*:app-local.properties,file:/usr/local/bullhorn/conf/application.properties"
+			ignore-resource-not-found="true"/>
+
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.client.core" />

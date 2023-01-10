@@ -7,7 +7,8 @@ import com.client.core.AppContext;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.Lists;
 import groovy.lang.MissingPropertyException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.function.Supplier;
 
 public class TriggerUtil {
 
-	private static final Logger log = Logger.getLogger(TriggerUtil.class);
+	private static final Logger log = LogManager.getLogger(TriggerUtil.class);
 
 	public static boolean isError(String key) {
 		key = key.toLowerCase();

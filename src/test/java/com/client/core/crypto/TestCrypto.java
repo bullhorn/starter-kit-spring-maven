@@ -3,7 +3,8 @@ package com.client.core.crypto;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.junit.Test;
 
 import com.client.BaseTest;
@@ -14,7 +15,7 @@ import com.google.common.base.Charsets;
 
 public class TestCrypto extends BaseTest {
 	
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LogManager.getLogger(getClass());
 	
 	private final String testValue = "testValue123+-{}//.,";
 	private final byte[] rawTestValue = testValue.getBytes(Charsets.UTF_8);
