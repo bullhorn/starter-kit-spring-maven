@@ -17,7 +17,7 @@
         <cxf.version>2.7.0</cxf.version>
         <jackson.version>2.10.0</jackson.version>
         <additionalparam>-Xdoclint:none</additionalparam>
-        <log4jTools>2.17.0</log4jTools>
+        <log4jTools>2.17.1</log4jTools>
     </properties>
 
     <dependencies>
