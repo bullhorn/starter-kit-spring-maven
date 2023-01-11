@@ -1,10 +1,10 @@
 package com.client.core.messagesource;
 
-import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -23,7 +23,7 @@ public class TestMessageSources extends WebBaseTest {
     public void testCoreProperties() {
         String message = this.getQueryUsingKey("core.test.property");
 
-        assertTrue("resources/messages_en_US.properties was not read into messageSource", CORE_PROPERTY_VALUE.equals(message));
+        Assertions.assertTrue(CORE_PROPERTY_VALUE.equals(message), "resources/messages_en_US.properties was not read into messageSource");
     }
 
     private String getQueryUsingKey(String key) {

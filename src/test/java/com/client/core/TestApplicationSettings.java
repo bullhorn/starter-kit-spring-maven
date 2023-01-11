@@ -1,15 +1,14 @@
 package com.client.core;
 
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestApplicationSettings {
 
 	@Test
 	public void test() {
 		ApplicationSettings appSettings = new ApplicationSettings();
-		assertNotNull(appSettings.toString());
+		Assertions.assertNotNull(appSettings.toString());
 
 	}
 

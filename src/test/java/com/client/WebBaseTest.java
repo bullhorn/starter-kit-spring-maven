@@ -1,19 +1,18 @@
 package com.client;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -26,7 +25,8 @@ import com.client.core.ApplicationSettings;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.matchers.JsonpPathResultMatchers;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+// TODO: Update 'MockitoExtension.class' to 'SpringExtension.class' once Spring Boot is added
+@ExtendWith(MockitoExtension.class)
 @ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
 		"classpath*:/*-servlet.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
 @WebAppConfiguration
@@ -49,7 +49,7 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	private MockMvc mockMvc;
 
-	@Before
+	@BeforeEach
 	public void refreshTestData() {
 		try {
 			MockBullhornData mockBullhornData = (MockBullhornData) this.bullhornData;
@@ -59,15 +59,15 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 		}
 	}
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
 	@Test
 	public void testWebApplicationContextSetup() {
-		assertNotNull("webapplicationcontext is null", wac);
-		assertNotNull("mockMvc is null", mockMvc);
+		Assertions.assertNotNull(wac,"webapplicationcontext is null");
+		Assertions.assertNotNull(mockMvc,"mockMvc is null");
 	}
 
 	public WebApplicationContext getWac() {
@@ -88,7 +88,7 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	/**
 	 * Returns the container of bullhorn test entities
-	 * 
+	 *
 	 * @return
 	 */
 	public TestEntities getTestEntities() {
@@ -98,9 +98,9 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	/**
 	 * Pass in a list of scripts to execute. This will only run if the app is run with maven profile "testing", since these scripts can
 	 * truncate tables etc.
-	 * 
+	 *
 	 * The format for the path is: classpath:testdata/test-data-exampletable.sql
-	 * 
+	 *
 	 * @param scriptPaths
 	 *            The format for the path is: classpath:testdata/test-data-exampletable.sql
 	 */
@@ -118,7 +118,7 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	/**
 	 * Use this method instead of MockMvcResultMatchers.jsonPath when evaluating jsonp (json with padding). This method will remove the
 	 * callback() from the response and only leave the json for evaluation using the standard jsonPath handling.
-	 * 
+	 *
 	 * @param expression
 	 * @param args
 	 * @return
