@@ -16,7 +16,8 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class AbstractRestTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends AbstractTriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
 
-    private static Logger log = Logger.getLogger(AbstractRestTriggerController.class);
+    private static Logger log = LogManager.getLogger(AbstractRestTriggerController.class);
 
     private final Class<E> type;
     private final List<TriggerValidator<E, H, T>> triggerValidators;

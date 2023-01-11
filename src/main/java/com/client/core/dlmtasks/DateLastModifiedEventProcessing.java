@@ -2,7 +2,8 @@ package com.client.core.dlmtasks;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.dlmtasks.service.DateLastModifiedTasksService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.List;
 @Service
 public class DateLastModifiedEventProcessing implements Runnable {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private final List<DateLastModifiedTasksService<? extends BullhornEntity>> dateLastModifiedTasksServices;
 

@@ -12,7 +12,8 @@ import com.client.core.AppContext;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.util.Utility;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Set;
 
 public abstract class AbstractHelper<T extends BullhornEntity> implements Helper<T> {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private final BullhornData bullhornData;
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;

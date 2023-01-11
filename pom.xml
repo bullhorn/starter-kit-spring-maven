@@ -17,6 +17,7 @@
         <cxf.version>2.7.0</cxf.version>
         <jackson.version>2.10.0</jackson.version>
         <additionalparam>-Xdoclint:none</additionalparam>
+        <log4jTools>2.17.0</log4jTools>
     </properties>
 
     <dependencies>
@@ -253,11 +254,20 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4jTools}</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4jTools}</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -329,7 +339,7 @@
             <version>2.2.5</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>javax.el</artifactId>
@@ -568,49 +578,20 @@
 
     <profiles>
         <profile>
-            <id>prod</id>
+            <id>local</id>
             <activation>
                 <property>
                     <name>environment</name>
-                    <value>prod</value>
-                </property>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <profile>prod</profile>
-            </properties>
-        </profile>
-        <profile>
-            <id>staging</id>
-            <activation>
-                <property>
-                    <name>environment</name>
-                    <value>staging</value>
-                </property>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <profile>staging</profile>
-            </properties>
-        </profile>
-        <profile>
-            <id>testing</id>
-            <activation>
-                <property>
-                    <name>environment</name>
-                    <value>testing</value>
+                    <value>local</value>
                 </property>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <profile>testing</profile>
+                <profile>local</profile>
             </properties>
         </profile>
     </profiles>
     <build>
-        <filters>
-            <filter>src/main/resources/app-${profile}.properties</filter>
-        </filters>
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>

@@ -5,7 +5,8 @@ import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmis
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Handles one subscription event by passing it through the proper workflow for the entity that had an event thrown. Also
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
  * and then reprocessing them the next time we retrieve events (for a maximum of 4 tries)
  */
 public class EventProcessing implements Runnable {
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private final EventWorkflowFactory eventWorkflowFactory;
     private final CustomSubscriptionEvent event;

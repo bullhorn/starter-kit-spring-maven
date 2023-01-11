@@ -345,6 +345,17 @@ public class JpaExampleEntity extends AbstractJpaEntity<Integer> {
 ### jQuery datatables framework
 After the database configuration, we have a table, an object representing it, and an object to perform database actions on the table using our object.  Assuming we want a relatively simple to-many entity, we can utilize the [jQuery](https://jquery.com/) [DataTables](http://datatables.net/) back-end and front-end framework present in the starter-kit.  The [javadocs](http://bullhorn.github.io/starter-kit-spring-maven/) provide detailed information about the different extension points, but the general idea is we extend ``com.client.core.datatables.controller.AbstractDataTablesController<T, ID>``, parameterizing by our domain class and the associated id, and being sure to call ``public void configureTable(TableConfiguration<T, ID> tableConfig)`` in our constructor.  We also extends ``com.client.core.datatables.service.JpaDataTablesService<T, ID>``, and provide our service to the controller.  We provide our service with the Dao we created previously, and we implement two methods that convert between our domain class and an instance of ``com.client.core.datatables.model.configuration.column.ColumnConfiguration``.  Of course, we will also want to make a JSP page under ``src/main/webapp/WEB-INF/jsp/main``, and provide the name of the file to the Controller.  You will most likely want to use a copy of ``src/main/webapp/WEB-INF/jsp/main/dataTables/simpleDataTables.jsp``, which contains the necessary jQuery code to render the table, using the endpoints provided by our Controller implementation.
 
+## Application Context
+Property injection into the applicationContext.xml is done at runtime during the startup process. The properties in the applicationContext.xml file are first injected from the ``src/main/resources/app-local.properties`` file. Bullhorn has also added ``/usr/local/bullhorn/conf/application.properties`` to the ``property-placeholder`` configuration as a result of Bullhorn changing how this application runs from ElasticBeanstalk to Kubernetes. This file is stored locally on the Bullhorn Kubernertes server. If the file exists on your server, the applicationContext.xml will then overwrite the injected properties from ``/usr/local/bullhorn/conf/application.properties``.
+
+The configuration for this looks like:
+
+```
+	<context:property-placeholder
+			location="classpath*:app-local.properties,file:/usr/local/bullhorn/conf/application.properties"
+			ignore-resource-not-found="true"/>
+```
+
 ## Custom overview components (deprecated, S-Release only)
 Custom overview components allow us to customize the overview page of one of the main Bullhorn entities.  Similar to Custom Tabs, configuration involves providing a URL which gets iframed on the overview.  See [the SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for some more information.  Again similar to Custom Tabs, Bullhorn provides some context information in the form of URL parameters appended to the base URL for the component.  They include
   - EntityID - The ID of the entity being saved

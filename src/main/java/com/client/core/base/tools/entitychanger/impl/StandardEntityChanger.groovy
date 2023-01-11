@@ -2,14 +2,14 @@ package com.client.core.base.tools.entitychanger
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity
 import com.client.core.base.util.Utility
-import org.apache.log4j.Logger
+import org.apache.logging.log4j.Logger
 import org.joda.time.DateTime
 import org.springframework.stereotype.Service
 
 @Service
 class StandardEntityChanger implements EntityChanger {
 
-    private final Logger log = Logger.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     public StandardEntityChanger() {
     }

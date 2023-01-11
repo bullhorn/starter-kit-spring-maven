@@ -3,7 +3,8 @@ package com.client.core.base.controller;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -20,7 +21,7 @@ public abstract class AbstractTriggerController<E extends BullhornEntity, H exte
 
     protected final BullhornData bullhornData;
 
-    protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = LogManager.getLogger(getClass());
 
     public AbstractTriggerController() {
         super();
