@@ -176,7 +176,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
     private static final Map<String, Object> EMPTY = Maps.newLinkedHashMap();
 
     private Long getTotal(TypedQuery<T> query) {
-        String hqlQuery = query.unwrap(org.hibernate.Query.class).getQueryString();
+        String hqlQuery = query.unwrap(org.hibernate.Query.class).getQueryString(); // TODO: Deprecated
 
         QueryTranslator translator = translatorFactory.createQueryTranslator(hqlQuery, hqlQuery, EMPTY, sessionFactory, null);
 

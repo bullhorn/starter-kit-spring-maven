@@ -11,10 +11,7 @@ import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.Logger;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +23,7 @@ import java.util.concurrent.Executors;
  * retrieve events for the subscriptionName provided in the constructor, then hands off each event to
  * an instance of {@link EventProcessing}.
  */
-@Slf4j
+@Log4j2
 public class ScheduledEventProcessing implements Runnable {
 
 	private final String subscriptionName;
@@ -59,16 +56,16 @@ public class ScheduledEventProcessing implements Runnable {
 				List<Event> events = eventResponse.getEvents();
 				List<CustomSubscriptionEvent> filteredEvents = removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(events, eventResponse.getRequestId());
 
-				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + events.size()
+				log.info("Running " + subscriptionName + " subscription subscriptionEvents = " + events.size()
 						+ " filteredEvents = " + filteredEvents.size());
 
 				handleEvents(filteredEvents);
-			}else{
-				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + 0
+			} else {
+				log.info("Running " + subscriptionName + " subscription subscriptionEvents = " + 0
 						+ " filteredEvents = " + 0);
 			}
 		} catch(RuntimeException e) {
-			log.error("Unknown error occurred during " + subscriptionName + "event handling.", e);
+			log.error("Unknown error occurred during " + subscriptionName + " event handling.", e);
 		}
 	}
 
