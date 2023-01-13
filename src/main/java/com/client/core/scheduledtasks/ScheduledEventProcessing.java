@@ -11,7 +11,10 @@ import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
 
 import java.util.List;
 import java.util.Map;
@@ -23,14 +26,15 @@ import java.util.concurrent.Executors;
  * retrieve events for the subscriptionName provided in the constructor, then hands off each event to
  * an instance of {@link EventProcessing}.
  */
+@Slf4j
 public class ScheduledEventProcessing implements Runnable {
-
-	private final Logger log = Logger.getLogger(getClass());
 
 	private final String subscriptionName;
 
 	private final BullhornData bullhornData;
+
 	private final ApplicationSettings appSettings;
+
     private final EventWorkflowFactory eventWorkflowFactory;
 
 	public ScheduledEventProcessing(String subscriptionName, BullhornData bullhornData, ApplicationSettings appSettings, EventWorkflowFactory eventWorkflowFactory) {
@@ -136,4 +140,7 @@ public class ScheduledEventProcessing implements Runnable {
 		return filteredEvents;
 	}
 
+	public String getSubscriptionName() {
+		return this.subscriptionName;
+	}
 }
