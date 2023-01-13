@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>starter-kit-spring-maven</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>6.0.0</version>
     <packaging>war</packaging>
     <name>starter-kit-spring-maven</name>
     <description>starter-kit-spring-maven</description>
