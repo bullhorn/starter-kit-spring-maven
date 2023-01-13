@@ -6,15 +6,14 @@ import com.client.core.base.tools.web.JsonConverter;
 import com.client.core.picker.model.view.JsonIdName;
 import com.client.core.picker.model.wrapper.standard.StandardPickerRequestWrapper;
 import com.client.core.picker.service.PickerService;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Log4j2
 public abstract class AbstractPickerController<T extends JsonIdName> {
 	public final static String JSONP = "application/javascript;charset=UTF-8";
-
-    private final Logger log = Logger.getLogger(getClass());
 
 	private final JsonConverter jsonConverter;
 	private final PickerService<T> pickerService;
