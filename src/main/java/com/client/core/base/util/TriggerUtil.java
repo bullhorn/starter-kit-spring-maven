@@ -45,11 +45,10 @@ public class TriggerUtil {
 
 	public static <E extends BullhornEntity> E populateEntity(Integer entityID, Class<E> type, Map<String, Object> values, Supplier<E> constructor,
 															  Set<String> fields) {
-		E entity = Optional.of(entityID).filter(id -> {
-			return id != null && id > 0;
-		}).map( id -> {
-			return BULLHORN_DATA.findEntity(type, id, fields);
-		}).orElseGet(constructor);
+		E entity = Optional.of(entityID)
+				.filter(id -> id != null && id > 0)
+				.map(id -> BULLHORN_DATA.findEntity(type, id, fields))
+				.orElseGet(constructor);
 
 		values.entrySet().forEach( entry -> {
 			try {
@@ -65,7 +64,7 @@ public class TriggerUtil {
 	public static <E extends BullhornEntity> OneToMany<E> convertIdListToEntityOneToMany(List<Map<String, Integer>> entityIds, Supplier<E> constructor){
 		List<E> bullhornEntities = Lists.newArrayList();
 
-		entityIds.stream().forEach(entityId ->{
+		entityIds.stream().forEach(entityId -> {
 			E entity = constructor.get();
 			entity.setId(entityId.get("id"));
 			bullhornEntities.add(entity);
@@ -82,7 +81,7 @@ public class TriggerUtil {
 
 		List<E> bullhornEntities = Lists.newArrayList();
 
-		entityIds.stream().forEach(entityId ->{
+		entityIds.stream().forEach(entityId -> {
 			E entity = constructor.get();
 			entity.setId(entityId);
 			bullhornEntities.add(entity);

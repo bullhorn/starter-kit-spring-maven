@@ -56,7 +56,7 @@ public class ApplicationSettings {
     @Value("${metaCacheMinutes}")
     private Integer metaCacheMinutes;
 
-    // BELOW IS NEW
+    // TODO: BELOW IS NEW. SHOULD REVIEW
     @Value("${rest.clientId}")
     private String restClientId;
 

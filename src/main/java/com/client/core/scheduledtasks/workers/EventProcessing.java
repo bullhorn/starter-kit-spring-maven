@@ -5,6 +5,7 @@ import com.bullhornsdk.data.model.entity.core.certificationrequirement.JobSubmis
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
+import lombok.extern.log4j.Log4j2;
 import org.apache.log4j.Logger;
 
 /**
@@ -12,8 +13,8 @@ import org.apache.log4j.Logger;
  * handles when errors occur during event handling by inserting records into a MySQL cloud database
  * and then reprocessing them the next time we retrieve events (for a maximum of 4 tries)
  */
+@Log4j2
 public class EventProcessing implements Runnable {
-    private final Logger log = Logger.getLogger(getClass());
 
     private final EventWorkflowFactory eventWorkflowFactory;
     private final CustomSubscriptionEvent event;
@@ -42,7 +43,7 @@ public class EventProcessing implements Runnable {
         }
     }
 
-    private void doAction() throws Exception {
+    private void doAction() {
         if (isAppointmentEvent()) {
             eventWorkflowFactory.execute(Appointment.class, event);
         } else if (isCandidateEvent()) {

@@ -3,6 +3,7 @@ package com.client.core.base.controller;
 import com.client.ApplicationSettings;
 import com.client.core.base.tools.propertyeditors.CustomBigDecimalEditor;
 import com.client.core.base.tools.propertyeditors.CustomDateTimeEditor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -22,14 +23,9 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Log4j2
 @ControllerAdvice(value = { "com.client.core" })
 public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
-
-    private static Log log = LogFactory.getLog(CoreControllerAdvice.class);
-
-    @Autowired
-    private ApplicationSettings appSettings;
-
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> prepareException(Exception e, WebRequest request) throws Exception {
@@ -38,7 +34,7 @@ public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request) {
+    public void initBinder(ApplicationSettings appSettings, WebDataBinder binder, WebRequest request) {
         binder.setIgnoreInvalidFields(true);
         binder.setIgnoreUnknownFields(true);
 

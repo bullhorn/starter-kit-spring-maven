@@ -1,10 +1,9 @@
 package com.client;
 
 import com.client.core.security.tools.RC4;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +24,7 @@ import java.io.IOException;
  *     <li>Have an encrypted 'apiKey' in the session.  This essentially means that some previous request had an 'apiKey' url parameter and passed the filter.</li>
  * </ol>
  */
-@Slf4j
+@Log4j2
 @Configuration
 public class SessionFilter extends OncePerRequestFilter { // TODO: Could re-configure to Spring-security context
 	private final String sessionStoredApiKeyName;
