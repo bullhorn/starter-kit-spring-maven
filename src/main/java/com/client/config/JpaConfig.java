@@ -19,24 +19,10 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory")
 public class JpaConfig {
-    // JPA STUFF
-    // TODO: Verify what the type of correct datasource should be.
-    @Bean
-    public DataSource dataSource(ApplicationSettings appSettings) {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName(appSettings.getJdbcDriverClassName()); // TODO: Externalize this
-        dataSourceBuilder.url(appSettings.getJdbcUrl()); // TODO: Externalize this https://www.baeldung.com/spring-boot-configure-data-source-programmatic
-        dataSourceBuilder.username(appSettings.getJdbcUser());
-        dataSourceBuilder.password(appSettings.getJdbcPassword());
-        return dataSourceBuilder.build();
-    }
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(ApplicationSettings appSettings, DataSource dataSource) {
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
-        hibernateJpaVendorAdapter.setShowSql(false); // TODO: fix vars
-        hibernateJpaVendorAdapter.setGenerateDdl(true); // TODO: fix vars
 
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource);

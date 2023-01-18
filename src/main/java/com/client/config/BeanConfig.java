@@ -8,15 +8,10 @@ import com.client.ApplicationSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
 public class BeanConfig {
-
-    @Bean
-    public ApplicationSettings appSettings(ApplicationSettings applicationSettings) {
-        return new ApplicationSettings();
-    }
-
     @Bean
     public BullhornRestCredentials bullhornRestCredentials(ApplicationSettings appSettings) {
         BullhornRestCredentials bullhornRestCredentials = new BullhornRestCredentials();
@@ -34,8 +29,22 @@ public class BeanConfig {
     }
 
     @Bean
-    public TemplateEngine templateEngine() {
-        // TODO: Not correct engine config, but we might separate this to a module anyways
-        return new TemplateEngine();
+    public ClassLoaderTemplateResolver templateResolver() {
+        ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
+        classLoaderTemplateResolver.setPrefix("templates/");
+        classLoaderTemplateResolver.setSuffix(".html");
+        classLoaderTemplateResolver.setTemplateMode("HTML");
+        classLoaderTemplateResolver.setCharacterEncoding("UTF-8");
+        classLoaderTemplateResolver.setOrder(1);
+
+        return classLoaderTemplateResolver;
+    }
+
+    @Bean
+    public TemplateEngine templateEngine(ClassLoaderTemplateResolver classLoaderTemplateResolver) {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(classLoaderTemplateResolver);
+
+        return templateEngine;
     }
 }

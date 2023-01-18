@@ -24,7 +24,7 @@ public class ApplicationSettings {
     private String apiKey;
 
     @Value("${apiUserID}")
-    private int apiUserID; // TODO: Change to String? Errors if empty int
+    private int apiUserID;
 
     @Value("${corporationID}")
     private Integer corporationID;
@@ -65,17 +65,4 @@ public class ApplicationSettings {
 
     @Value("${rest.sessionMinutesToLive}")
     private String restSessionMinutesToLive;
-
-    // Database
-    @Value("${jdbc.driverClassName}")
-    private String jdbcDriverClassName;
-
-    @Value("${jdbc.url}")
-    private String jdbcUrl;
-
-    @Value("${jdbc.user}")
-    private String jdbcUser;
-
-    @Value("${jdbc.password}")
-    private String jdbcPassword;
 }
