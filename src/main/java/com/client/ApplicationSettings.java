@@ -65,4 +65,10 @@ public class ApplicationSettings {
 
     @Value("${rest.sessionMinutesToLive}")
     private String restSessionMinutesToLive;
+
+    @Value("${hibernate.showSql}")
+    private boolean showSql;
+
+    @Value("${hibernate.generateDdl}")
+    private boolean generateDdl;
 }
