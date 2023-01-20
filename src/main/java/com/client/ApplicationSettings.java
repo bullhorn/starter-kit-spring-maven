@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Contains application wide settings. These are specified in the pom.xml
+ * Contains application wide settings.
  */
 @Data
 @Configuration
@@ -56,7 +56,6 @@ public class ApplicationSettings {
     @Value("${metaCacheMinutes}")
     private Integer metaCacheMinutes;
 
-    // TODO: BELOW IS NEW. SHOULD REVIEW
     @Value("${rest.clientId}")
     private String restClientId;
 

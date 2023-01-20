@@ -28,7 +28,7 @@ public class JpaConfig {
         entityManagerFactory.setJpaVendorAdapter(hibernateJpaVendorAdapter);
         entityManagerFactory.setPackagesToScan();
 
-        entityManagerFactory.setPersistenceUnitName("mainPersistenceUnit"); // TODO: Not sure what this means
+        entityManagerFactory.setPersistenceUnitName("mainPersistenceUnit");
         return entityManagerFactory;
     }
 

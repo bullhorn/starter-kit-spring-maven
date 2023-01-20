@@ -15,9 +15,6 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import java.text.ParseException;
 import java.util.List;
 
-/**
- * TODO: The scheduled action configured will fail on first startup
- */
 @Configuration
 public class ScheduledEventConfig {
 

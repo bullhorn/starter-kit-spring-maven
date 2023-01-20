@@ -176,7 +176,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
     private static final Map<String, Object> EMPTY = Maps.newLinkedHashMap();
 
     private Long getTotal(TypedQuery<T> query) {
-        String hqlQuery = query.unwrap(org.hibernate.Query.class).getQueryString(); // TODO: Deprecated
+        String hqlQuery = query.unwrap(org.hibernate.query.Query.class).getQueryString();
 
         QueryTranslator translator = translatorFactory.createQueryTranslator(hqlQuery, hqlQuery, EMPTY, sessionFactory, null);
 
@@ -192,7 +192,7 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
         query.getParameters().stream().forEach( parameter -> {
             String name = parameter.getName();
 
-            for(int position : parameterTranslations.getPositionalParameterInformationMap().keySet()) { // TODO: Find replacement
+            for(int position : parameterTranslations.getPositionalParameterInformationMap().keySet()) { // TODO: Find replacement (This could work, but needs testing)
                 countQuery.setParameter(position+1, query.getParameterValue(name));
             }
         });
