@@ -6,7 +6,6 @@ import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.client.core.base.util.Utility;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -14,13 +13,13 @@ import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
 @Log4j2
 @Service
+@SuppressWarnings("unchecked")
 public class StandardEntityChanger implements EntityChanger {
 
     public StandardEntityChanger() {
@@ -45,19 +44,30 @@ public class StandardEntityChanger implements EntityChanger {
         Object target = Arrays.stream(fields, 0, fields.length - 1).reduce(entity, (entityOrField, nextField) -> {
             try {
                 PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(entityOrField.getClass(), nextField);
+                if (propertyDescriptor == null) {
+                    throw new RuntimeException("Could not find property descriptor for " + nextField);
+                }
                 Class<?> fieldType = propertyDescriptor.getPropertyType();
+                if (propertyDescriptor.getReadMethod() == null) {
+                    throw new RuntimeException("Could not keep traversing - property has no read method: " + nextField);
+                }
                 Object maybeValue = propertyDescriptor.getReadMethod().invoke(entityOrField);
                 if (maybeValue == null) {
                     propertyDescriptor.getWriteMethod().invoke(entityOrField, fieldType.getDeclaredConstructor().newInstance());
                 }
                 return (T) propertyDescriptor.getReadMethod().invoke(entityOrField);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+            } catch (IllegalAccessException |
+                     InvocationTargetException |
+                     NoSuchMethodException |
                      InstantiationException e) {
                 throw new RuntimeException("Error setting property " + nextField, e);
             }
         }, (entity1, entity2) -> entity1);
         try {
             PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(target.getClass(), finalField);
+            if (propertyDescriptor == null) {
+                throw new RuntimeException("Could not find property descriptor for " + finalField);
+            }
             Class<?> fieldType = propertyDescriptor.getPropertyType();
             if (value instanceof Map) {
                 if (propertyDescriptor.getReadMethod().invoke(target) == null) {
@@ -93,7 +103,10 @@ public class StandardEntityChanger implements EntityChanger {
                     }
                 }
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException |
+        } catch (NoSuchMethodException |
+                 IllegalAccessException |
+                 InvocationTargetException |
+                 ClassCastException |
                  InstantiationException e) {
             log.error("Error setting field " + finalField + " to value " + value + ", no property " + finalField + " on " + target.getClass().getSimpleName(), e);
         }
@@ -104,6 +117,13 @@ public class StandardEntityChanger implements EntityChanger {
         return Arrays.stream(field.split("\\.")).reduce(entity, (entityOrField, nextField) -> {
             try {
                 PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(entityOrField.getClass(), nextField);
+                if (propertyDescriptor == null || propertyDescriptor.getReadMethod() == null) {
+                    String message = propertyDescriptor == null
+                            ? "Could not find a property descriptor for " + nextField
+                            : "Could not find read method for property descriptor for " + nextField;
+                    log.error(message);
+                    return null;
+                }
                 return propertyDescriptor.getReadMethod().invoke(ObjectUtils.defaultIfNull(entityOrField, entityOrField.getClass().getDeclaredConstructor().newInstance()));
             } catch (InvocationTargetException | IllegalAccessException | InstantiationException |
                      NoSuchMethodException e) {
@@ -113,15 +133,11 @@ public class StandardEntityChanger implements EntityChanger {
         }, (entity1, entity2) -> entity1);
     }
 
-    private String getterMethodName(String fieldName) {
-        return "get" + StringUtils.capitalize(fieldName);
-    }
-
     private <V> V asType(Object value, Class<V> type) {
         if (BigDecimal.class.equals(type)) {
             return (V) Utility.parseBigDecimal(value);
         } else if (Boolean.class.equals(type)) {
-            return (V) Utility.parseBoolean((String) value);
+            return (V) Utility.parseBoolean(value.toString());
         } else if (String.class.equals(type)) {
             return (V) Utility.parseString(value);
         } else if (Integer.class.equals(type)) {
