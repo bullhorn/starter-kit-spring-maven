@@ -50,6 +50,7 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
         this.relatedEntityFields = Utility.getRequestedFields(relatedEntities, this.triggerValidators);
     }
 
+    // TODO: We can change call to the different version of convertJsonStringToEntity to get rid of the type parameter
     protected RestTriggerRequest<E> convertToObject(String value) {
         return jsonConverter.convertJsonStringToEntity(value, RestTriggerRequest.class, type);
     }

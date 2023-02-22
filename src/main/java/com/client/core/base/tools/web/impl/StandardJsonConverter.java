@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class StandardJsonConverter implements JsonConverter {
 
-	private static Log log = LogFactory.getLog(StandardJsonConverter.class);
+	private static final Log log = LogFactory.getLog(StandardJsonConverter.class);
 
 	private final ObjectMapper objectMapperStandard;
 
@@ -34,11 +34,10 @@ public class StandardJsonConverter implements JsonConverter {
 	 * Registers the JodaModule to convert DateTime so-called epoch timestamp (number of milliseconds since January 1st,
 	 * 1970, UTC)
 	 *
-	 * @return
+	 * @return ObjectMapper
 	 */
 	private ObjectMapper createStandardObjectMapper() {
-		ObjectMapper objectMapper = new CustomJsonObjectMapper();
-		return objectMapper;
+		return new CustomJsonObjectMapper();
 	}
 
 	@Override
@@ -59,22 +58,25 @@ public class StandardJsonConverter implements JsonConverter {
 		try {
 			entity = objectMapperStandard.readValue(jsonString, type);
 		} catch (IOException e) {
-			log.error("Error coverting jsonString to entity of type" + type + " from jsonString: ", e);
+			log.error("Error converting jsonString to entity of type" + type + " from jsonString: ", e);
 		}
 
 		return entity;
 	}
 
+	// TODO: We could convert this to the above function {@link #convertJsonStringToEntity}. Data is simply converted to a null value here
     @Override
     public <T, E> T convertJsonStringToEntity(String jsonString, Class<T> parameterizedType, Class<E> parameterType) {
         T entity = null;
 
         try {
+			// TODO: CAN use constructParametricType(Class<?> parametrized, Class<?>... parameterClasses) instead,
+			// TODO: but I don't even think we need this whole function anymore.
             JavaType type = objectMapperStandard.getTypeFactory().constructParametrizedType(parameterizedType, parameterizedType, parameterType);
 
             entity = objectMapperStandard.readValue(jsonString, type);
         } catch (IOException e) {
-            log.error("Error coverting jsonString to entity of type" + parameterizedType.toString() + " from jsonString: ", e);
+            log.error("Error converting jsonString to entity of type" + parameterizedType.toString() + " from jsonString: ", e);
         }
 
         return entity;
@@ -82,14 +84,13 @@ public class StandardJsonConverter implements JsonConverter {
 
     @Override
     public Map<String, Object> convertJsonStringToMap(String jsonString) {
-        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
-        };
+        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<>() {};
 
         Map<String, Object> returnValues = Maps.newLinkedHashMap();
         try {
             returnValues = objectMapperStandard.readValue(jsonString, typeRef);
         } catch (IOException e) {
-            log.error("Error coverting jsonString to map from jsonString: "+jsonString, e);
+            log.error("Error converting jsonString to map from jsonString: "+jsonString, e);
         }
 
         return returnValues;
