@@ -30,6 +30,7 @@ public class BeanConfig {
 
     @Bean
     public ClassLoaderTemplateResolver templateResolver() {
+        // TODO: Search for new template resolver to have template as a string
         ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
         classLoaderTemplateResolver.setPrefix("templates/");
         classLoaderTemplateResolver.setSuffix(".html");

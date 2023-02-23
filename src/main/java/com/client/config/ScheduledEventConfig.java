@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.Map;
 import java.util.Objects;
 
+// TODO: Maybe make scheduled tasks in multiple different folders
 @Configuration
 public class ScheduledEventConfig {
 
