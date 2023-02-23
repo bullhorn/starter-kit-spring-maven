@@ -30,7 +30,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
-<!--            <exclusions> TODO: Includes Spring-starter-logging. Uncomment to use log4j2-->
+<!--            TODO: Includes Spring-starter-logging. Uncomment to use log4j2-->
+<!--            <exclusions> -->
 <!--                <exclusion>-->
 <!--                    <groupId>org.springframework.boot</groupId>-->
 <!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
@@ -117,18 +118,7 @@
             <artifactId>bcprov-jdk18on</artifactId>
             <version>1.72</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-actuator</artifactId>-->
-<!--        </dependency>-->
-
-<!--        http://localhost:8080/swagger-ui/index.html?apiKey={APIKEY}-->
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-ui</artifactId>-->
-<!--            <version>1.6.14</version>-->
-<!--        </dependency>-->
+<!--        TODO: What to do about cs-starter-template stuff? Like Artifactory-->
     </dependencies>
     <!-- DONE ADDING DEPENDENCIES -->
 

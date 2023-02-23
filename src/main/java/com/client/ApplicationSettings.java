@@ -12,62 +12,62 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationSettings {
 
     @Value("${apiurl}")
-    private String apiUrl;
+    private final String apiUrl;
 
     @Value("${apiusername}")
-    private String username;
+    private final String username;
 
     @Value("${apipassword}")
-    private String password;
+    private final String password;
 
     @Value("${apikey}")
-    private String apiKey;
+    private final String apiKey;
 
     @Value("${apiUserID}")
-    private int apiUserID;
+    private final int apiUserID;
 
     @Value("${corporationID}")
-    private Integer corporationID;
+    private final Integer corporationID;
 
-    @Value("${privateLabelID}")
-    private String privateLabelID;
+    @Value("${private final LabelID}")
+    private final String LabelID;
 
     @Value("${numEventThreads}")
-    private Integer numEventThreads;
+    private final Integer numEventThreads;
 
     @Value("${numEventsPerBatch}")
-    private Integer numEventsPerBatch;
+    private final Integer numEventsPerBatch;
 
     @Value("${standardSubscriptionName}")
-    private String standardSubscriptionName;
+    private final String standardSubscriptionName;
 
     @Value("${standardCronExpression}")
-    private String standardCronExpression;
+    private final String standardCronExpression;
 
     @Value("${applicationDateFormat}")
-    private String applicationDateFormat;
+    private final String applicationDateFormat;
 
     @Value("${applicationDateFormat}")
-    private String applicationTimeFormat;
+    private final String applicationTimeFormat;
 
     @Value("${profilename}")
-    private String profileName;
+    private final String profileName;
 
     @Value("${metaCacheMinutes}")
-    private Integer metaCacheMinutes;
+    private final Integer metaCacheMinutes;
 
     @Value("${rest.clientId}")
-    private String restClientId;
+    private final String restClientId;
 
     @Value("${rest.clientSecret}")
-    private String restClientSecret;
+    private final String restClientSecret;
 
     @Value("${rest.sessionMinutesToLive}")
-    private String restSessionMinutesToLive;
+    private final String restSessionMinutesToLive;
 
     @Value("${hibernate.showSql}")
-    private boolean showSql;
+    private final boolean showSql;
 
     @Value("${hibernate.generateDdl}")
-    private boolean generateDdl;
+    private final boolean generateDdl;
 }

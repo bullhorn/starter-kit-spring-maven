@@ -15,6 +15,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import java.text.ParseException;
 import java.util.List;
 
+// TODO: Maybe make scheduled tasks in multiple different folders
 @Configuration
 public class ScheduledEventConfig {
 
