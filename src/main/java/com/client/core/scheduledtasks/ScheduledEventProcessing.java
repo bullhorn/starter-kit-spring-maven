@@ -50,7 +50,7 @@ public class ScheduledEventProcessing implements Runnable {
 	public void run() {
 		try {
 
-			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.getNumEventsPerBatch());
+			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.numEventsPerBatch());
 
 			if(eventResponse != null){
 				List<Event> events = eventResponse.getEvents();
@@ -72,7 +72,7 @@ public class ScheduledEventProcessing implements Runnable {
 	private void handleEvents(List<CustomSubscriptionEvent> subscriptionEvents) {
 		if (subscriptionEvents.size() > 0) {
 
-			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.getNumEventThreads()));
+			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.numEventThreads()));
 
 
 			for (CustomSubscriptionEvent event : subscriptionEvents) {
@@ -97,7 +97,7 @@ public class ScheduledEventProcessing implements Runnable {
 	private List<CustomSubscriptionEvent> removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(List<Event> subscriptionEvents, Integer requestId) {
 
 		List<CustomSubscriptionEvent> filteredEvents;
-		String apiUserID = Integer.toString(appSettings.getApiUserID());
+		String apiUserID = Integer.toString(appSettings.apiUserID());
 		Map<String, CustomSubscriptionEvent> eventMap = Maps.newHashMap();
 
 		for (Event event : subscriptionEvents) {

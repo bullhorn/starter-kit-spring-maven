@@ -43,7 +43,7 @@ public class CoreControllerAdvice extends ResponseEntityExceptionHandler {
         binder.setIgnoreInvalidFields(true);
         binder.setIgnoreUnknownFields(true);
 
-        String applicationDateFormatString = this.appSettings.getApplicationDateFormat();
+        String applicationDateFormatString = this.appSettings.applicationDateFormat();
         SimpleDateFormat dateFormat = new SimpleDateFormat(applicationDateFormatString);
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));

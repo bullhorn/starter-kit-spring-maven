@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @Log4j2
 @Configuration
-public class SessionFilter extends OncePerRequestFilter { // TODO: Could re-configure to Spring-security context
+public class SessionFilter extends OncePerRequestFilter {
 	private final String sessionStoredApiKeyName;
 	private final String encryptionKey;
     private final String apiKey;
@@ -35,7 +35,7 @@ public class SessionFilter extends OncePerRequestFilter { // TODO: Could re-conf
 		super();
 		this.sessionStoredApiKeyName = RandomStringUtils.randomAlphanumeric(32);
 		this.encryptionKey = RandomStringUtils.randomAlphanumeric(16);
-        this.apiKey = appSettings.getApiKey();
+        this.apiKey = appSettings.apiKey();
 	}
 
     @Override

@@ -19,8 +19,8 @@ public class JpaConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(ApplicationSettings appSettings, DataSource dataSource) {
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
         hibernateJpaVendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
-        hibernateJpaVendorAdapter.setShowSql(appSettings.isShowSql());
-        hibernateJpaVendorAdapter.setGenerateDdl(appSettings.isGenerateDdl());
+        hibernateJpaVendorAdapter.setShowSql(appSettings.hibernate().showSql());
+        hibernateJpaVendorAdapter.setGenerateDdl(appSettings.hibernate().generateDdl());
 
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource);
