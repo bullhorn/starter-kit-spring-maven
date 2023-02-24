@@ -15,15 +15,19 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import java.text.ParseException;
 import java.util.List;
 
-// TODO: Maybe make scheduled tasks in multiple different folders
+/**
+ * Configuration for creating scheduled event tasks.
+ *
+ * TODO: Maybe make scheduled tasks in multiple different folders
+ */
 @Configuration
 public class ScheduledEventConfig {
 
-    private BullhornData bullhornData;
+    private final BullhornData bullhornData;
 
-    private ApplicationSettings appSettings;
+    private final ApplicationSettings appSettings;
 
-    private EventWorkflowFactory eventWorkflowFactory;
+    private final EventWorkflowFactory eventWorkflowFactory;
 
     ScheduledEventConfig(BullhornData bullhornData,
                          ApplicationSettings appSettings,
@@ -60,6 +64,8 @@ public class ScheduledEventConfig {
     @Bean
     public MethodInvokingJobDetailFactoryBean standardFactoryBean() {
         MethodInvokingJobDetailFactoryBean factoryBean = new MethodInvokingJobDetailFactoryBean();
+
+        // this.applicationContext.getBean() TODO: Idea with easily creating scheduled task beans
 
         factoryBean.setTargetBeanName("standardSubscriptionScheduledEventProcessing");
         factoryBean.setTargetMethod("run");

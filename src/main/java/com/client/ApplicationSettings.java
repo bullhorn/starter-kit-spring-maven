@@ -11,63 +11,85 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationSettings {
 
-    @Value("${apiurl}")
     private final String apiUrl;
 
-    @Value("${apiusername}")
     private final String username;
 
-    @Value("${apipassword}")
     private final String password;
 
-    @Value("${apikey}")
     private final String apiKey;
 
-    @Value("${apiUserID}")
     private final int apiUserID;
 
-    @Value("${corporationID}")
     private final Integer corporationID;
 
-    @Value("${private final LabelID}")
-    private final String LabelID;
+    private final String privateLabelID;
 
-    @Value("${numEventThreads}")
     private final Integer numEventThreads;
 
-    @Value("${numEventsPerBatch}")
     private final Integer numEventsPerBatch;
 
-    @Value("${standardSubscriptionName}")
     private final String standardSubscriptionName;
 
-    @Value("${standardCronExpression}")
     private final String standardCronExpression;
 
-    @Value("${applicationDateFormat}")
     private final String applicationDateFormat;
 
-    @Value("${applicationDateFormat}")
     private final String applicationTimeFormat;
 
-    @Value("${profilename}")
     private final String profileName;
 
-    @Value("${metaCacheMinutes}")
     private final Integer metaCacheMinutes;
 
-    @Value("${rest.clientId}")
     private final String restClientId;
 
-    @Value("${rest.clientSecret}")
     private final String restClientSecret;
 
-    @Value("${rest.sessionMinutesToLive}")
     private final String restSessionMinutesToLive;
 
-    @Value("${hibernate.showSql}")
     private final boolean showSql;
 
-    @Value("${hibernate.generateDdl}")
     private final boolean generateDdl;
+
+    public ApplicationSettings(@Value("${apiurl}") String apiUrl,
+                               @Value("${apiusername}")String username,
+                               @Value("${apipassword}") String password,
+                               @Value("${apikey}") String apiKey,
+                               @Value("${apiUserID}") int apiUserID,
+                               @Value("${corporationID}") Integer corporationID,
+                               @Value("${privateLabelID}") String privateLabelID,
+                               @Value("${numEventThreads}") Integer numEventThreads,
+                               @Value("${numEventsPerBatch}") Integer numEventsPerBatch,
+                               @Value("${standardSubscriptionName}") String standardSubscriptionName,
+                               @Value("${standardCronExpression}") String standardCronExpression,
+                               @Value("${applicationDateFormat}") String applicationDateFormat,
+                               @Value("${applicationDateFormat}") String applicationTimeFormat,
+                               @Value("${profilename}") String profileName,
+                               @Value("${metaCacheMinutes}") Integer metaCacheMinutes,
+                               @Value("${rest.clientId}") String restClientId,
+                               @Value("${rest.clientSecret}") String restClientSecret,
+                               @Value("${rest.sessionMinutesToLive}") String restSessionMinutesToLive,
+                               @Value("${hibernate.showSql}") boolean showSql,
+                               @Value("${hibernate.generateDdl}") boolean generateDdl) {
+        this.apiUrl = apiUrl;
+        this.username = username;
+        this.password = password;
+        this.apiKey = apiKey;
+        this.apiUserID = apiUserID;
+        this.corporationID = corporationID;
+        this.privateLabelID = privateLabelID;
+        this.numEventThreads = numEventThreads;
+        this.numEventsPerBatch = numEventsPerBatch;
+        this.standardSubscriptionName = standardSubscriptionName;
+        this.standardCronExpression = standardCronExpression;
+        this.applicationDateFormat = applicationDateFormat;
+        this.applicationTimeFormat = applicationTimeFormat;
+        this.profileName = profileName;
+        this.metaCacheMinutes = metaCacheMinutes;
+        this.restClientId = restClientId;
+        this.restClientSecret = restClientSecret;
+        this.restSessionMinutesToLive = restSessionMinutesToLive;
+        this.showSql = showSql;
+        this.generateDdl = generateDdl;
+    }
 }

@@ -7,9 +7,10 @@ import com.client.ApplicationSettings;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+/**
+ * Configuration for creating Standard Bullhorn Beans.
+ */
 @Configuration
 public class BeanConfig {
     @Bean
@@ -26,26 +27,5 @@ public class BeanConfig {
     @Bean
     public BullhornData bullhornData(BullhornRestCredentials bullhornRestCredentials) {
         return new StandardBullhornData(bullhornRestCredentials);
-    }
-
-    @Bean
-    public ClassLoaderTemplateResolver templateResolver() {
-        // TODO: Search for new template resolver to have template as a string
-        ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
-        classLoaderTemplateResolver.setPrefix("templates/");
-        classLoaderTemplateResolver.setSuffix(".html");
-        classLoaderTemplateResolver.setTemplateMode("HTML");
-        classLoaderTemplateResolver.setCharacterEncoding("UTF-8");
-        classLoaderTemplateResolver.setOrder(1);
-
-        return classLoaderTemplateResolver;
-    }
-
-    @Bean
-    public TemplateEngine templateEngine(ClassLoaderTemplateResolver classLoaderTemplateResolver) {
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(classLoaderTemplateResolver);
-
-        return templateEngine;
     }
 }
