@@ -93,7 +93,7 @@ public class TriggerUtil {
 	}
 
 	public static <E extends BullhornEntity> void setSpecialField(E entity, Map<String,Object> valuesChanged, String sourceField, String targetField){
-		TriggerUtil.ENTITY_CHANGER.setField(entity, targetField, TriggerUtil.ENTITY_CHANGER.retrieveField(valuesChanged, sourceField));
+		ENTITY_CHANGER.setField(entity, targetField, ENTITY_CHANGER.retrieveField(valuesChanged, sourceField));
 	}
 
 }

@@ -5,10 +5,10 @@ import com.client.ApplicationSettings;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.workflow.traversing.Traverser;
+import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Maps;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -17,7 +17,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-// TODO: This class changed quite a bit getting rid of things. Make sure there's nothing missing from original file
 @Log4j2
 public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends Traverser> implements WorkflowAction<E, T> {
 
@@ -28,6 +27,9 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
 
     @Autowired
     private Emailer emailer;
+
+    @Autowired
+    private EmailTemplateService emailTemplateService;
 
     @Autowired
     private MessageSource messageSource;
@@ -45,7 +47,23 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
     }
 
     protected String getMessageUsingKey(String key, Object[] args) throws NoSuchMessageException {
-        return messageSource.getMessage(key, args, Locale.US);
+        return getMessageSource().getMessage(key, args, Locale.US);
+    }
+
+    protected MessageSource getMessageSource() {
+        return this.messageSource;
+    }
+
+    protected EmailTemplateService getEmailTemplateService() {
+        return this.emailTemplateService;
+    }
+
+    protected ApplicationSettings getAppSettings() {
+        return this.appSettings;
+    }
+
+    protected Emailer getEmailer() {
+        return this.emailer;
     }
 
     @Override
