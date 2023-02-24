@@ -20,8 +20,6 @@ public class CustomDateTimeEditor extends PropertyEditorSupport {
 
     private final DateTimeFormatter iso8601DateTimeFormatter;
 
-    private final static String iso8601Format = "yyyy-mm-dd'T'HH:MM:SS.SSS";
-
     private final boolean allowEmpty;
 
     /**

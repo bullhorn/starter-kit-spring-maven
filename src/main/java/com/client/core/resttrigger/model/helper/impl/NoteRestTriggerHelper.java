@@ -8,12 +8,14 @@ import com.client.core.base.model.relatedentity.NoteRelatedEntity;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.resttrigger.model.enums.NoteReferenceFields;
 import com.client.core.resttrigger.model.helper.RestTriggerHelper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public class NoteRestTriggerHelper extends NoteTriggerHelper implements RestTriggerHelper<Note> {
 
 	private final Integer entityID;
@@ -64,8 +66,8 @@ public class NoteRestTriggerHelper extends NoteTriggerHelper implements RestTrig
 
 					referenceField.getSetReference().accept(note, references);
 				}
-			} catch(Exception e){
-				getLog().error("Error applying special field rules for note.  Error on field '" + referenceField.getFieldName() + "', data was: \n" + valuesChanged.get(referenceField.getFieldName()));
+			} catch(Exception e) {
+				log.error("Error applying special field rules for note.  Error on field '" + referenceField.getFieldName() + "', data was: \n" + valuesChanged.get(referenceField.getFieldName()));
 			}
 		});
 	}

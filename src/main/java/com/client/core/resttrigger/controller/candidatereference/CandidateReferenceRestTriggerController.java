@@ -8,6 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.CandidateReferenceRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.CandidateReferenceRestTriggerTraverser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,11 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 @RequestMapping("${rest.prefix.core}/candidatereference/*")
 public class CandidateReferenceRestTriggerController extends AbstractRestTriggerController<CandidateReference, CandidateReferenceRestTriggerHelper, CandidateReferenceRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(CandidateReferenceRestTriggerController.class);
 
     @Autowired
     public CandidateReferenceRestTriggerController(Optional<List<TriggerValidator<CandidateReference, CandidateReferenceRestTriggerHelper, CandidateReferenceRestTriggerTraverser>>> triggerValidators) {

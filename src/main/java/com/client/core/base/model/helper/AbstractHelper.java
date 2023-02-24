@@ -11,16 +11,16 @@ import com.bullhornsdk.data.model.response.crud.CrudResponse;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.util.Utility;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public abstract class AbstractHelper<T extends BullhornEntity> implements Helper<T> {
-
-    private final Logger log = Logger.getLogger(getClass());
 
     @Autowired
     private BullhornData bullhornData;
@@ -67,11 +67,11 @@ public abstract class AbstractHelper<T extends BullhornEntity> implements Helper
             CrudResponse response = getBullhornData().updateEntity(entity);
 
             if (response.isError() || response.hasValidationErrors() || response.hasWarnings()) {
-                getLog().error("Error saving entity: " + entity.getClass().getSimpleName() + " #" + entity.getId());
-                response.getMessages().parallelStream().forEach(getLog()::error);
+                log.error("Error saving entity: " + entity.getClass().getSimpleName() + " #" + entity.getId());
+                response.getMessages().parallelStream().forEach(message -> log.error(message.toString()));
             }
         } else {
-            getLog().error("Not saving entity because it was null.");
+            log.error("Not saving entity because it was null.");
         }
     }
 
@@ -232,10 +232,6 @@ public abstract class AbstractHelper<T extends BullhornEntity> implements Helper
 
     protected <E extends BullhornEntity> boolean isPopulated(E entity) {
         return entity != null && Utility.isPositive(entity.getId());
-    }
-
-    protected Logger getLog() {
-        return log;
     }
 
 }

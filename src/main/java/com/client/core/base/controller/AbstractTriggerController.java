@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import java.math.BigDecimal;
 
-public abstract class AbstractTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>>{
+public abstract class AbstractTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> {
 
     @Autowired
     public AbstractTriggerController() {
