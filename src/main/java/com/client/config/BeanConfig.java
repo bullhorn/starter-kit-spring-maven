@@ -16,11 +16,11 @@ public class BeanConfig {
     @Bean
     public BullhornRestCredentials bullhornRestCredentials(ApplicationSettings appSettings) {
         BullhornRestCredentials bullhornRestCredentials = new BullhornRestCredentials();
-        bullhornRestCredentials.setUsername(appSettings.getUsername());
-        bullhornRestCredentials.setPassword(appSettings.getPassword());
-        bullhornRestCredentials.setRestClientId(appSettings.getRestClientId());
-        bullhornRestCredentials.setRestClientSecret(appSettings.getRestClientSecret());
-        bullhornRestCredentials.setRestSessionMinutesToLive(appSettings.getRestSessionMinutesToLive());
+        bullhornRestCredentials.setUsername(appSettings.apiusername());
+        bullhornRestCredentials.setPassword(appSettings.apipassword());
+        bullhornRestCredentials.setRestClientId(appSettings.rest().clientId());
+        bullhornRestCredentials.setRestClientSecret(appSettings.rest().clientSecret());
+        bullhornRestCredentials.setRestSessionMinutesToLive(appSettings.rest().sessionMinutesToLive());
         return bullhornRestCredentials;
     }
 
