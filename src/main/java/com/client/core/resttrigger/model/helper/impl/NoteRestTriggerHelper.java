@@ -8,14 +8,14 @@ import com.client.core.base.model.relatedentity.NoteRelatedEntity;
 import com.client.core.base.util.TriggerUtil;
 import com.client.core.resttrigger.model.enums.NoteReferenceFields;
 import com.client.core.resttrigger.model.helper.RestTriggerHelper;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Slf4j
+@Log4j2
 public class NoteRestTriggerHelper extends NoteTriggerHelper implements RestTriggerHelper<Note> {
 
 	private final Integer entityID;

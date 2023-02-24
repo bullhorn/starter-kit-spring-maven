@@ -8,7 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.OpportunityRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.OpportunityRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 @Controller
 @RequestMapping("${rest.prefix.core}/opportunity/*")
 public class OpportunityRestTriggerController extends AbstractRestTriggerController<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(OpportunityRestTriggerController.class);
 
     @Autowired
     public OpportunityRestTriggerController(Optional<List<TriggerValidator<Opportunity, OpportunityRestTriggerHelper, OpportunityRestTriggerTraverser>>> triggerValidators) {

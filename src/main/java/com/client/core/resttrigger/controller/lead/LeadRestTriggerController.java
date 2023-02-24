@@ -8,7 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.LeadRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.LeadRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 @Controller
 @RequestMapping("${rest.prefix.core}/lead/*")
 public class LeadRestTriggerController extends AbstractRestTriggerController<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(LeadRestTriggerController.class);
 
     @Autowired
     public LeadRestTriggerController(Optional<List<TriggerValidator<Lead, LeadRestTriggerHelper, LeadRestTriggerTraverser>>> triggerValidators) {

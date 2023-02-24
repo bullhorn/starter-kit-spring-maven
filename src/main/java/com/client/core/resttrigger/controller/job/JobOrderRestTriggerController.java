@@ -8,7 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.JobOrderRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.JobOrderRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,12 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
+@Log4j2
 @Controller
 @RequestMapping("${rest.prefix.core}/job/*")
 public class JobOrderRestTriggerController extends AbstractRestTriggerController<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(JobOrderRestTriggerController.class);
 
     @Autowired
     public JobOrderRestTriggerController(Optional<List<TriggerValidator<JobOrder, JobOrderRestTriggerHelper, JobOrderRestTriggerTraverser>>> triggerValidators) {

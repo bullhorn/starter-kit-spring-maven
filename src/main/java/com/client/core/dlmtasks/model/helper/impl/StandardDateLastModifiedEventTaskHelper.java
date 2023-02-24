@@ -5,7 +5,6 @@ import com.client.core.dlmtasks.model.DateLastModifiedOption;
 import com.client.core.dlmtasks.model.helper.DateLastModifiedEventTaskHelper;
 import com.client.core.dlmtasks.workflow.node.DateLastModifiedEventTask;
 import lombok.extern.log4j.Log4j2;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import java.util.Set;

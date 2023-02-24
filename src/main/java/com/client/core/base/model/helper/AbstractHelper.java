@@ -11,15 +11,14 @@ import com.bullhornsdk.data.model.response.crud.CrudResponse;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.util.Utility;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Slf4j
+@Log4j2
 public abstract class AbstractHelper<T extends BullhornEntity> implements Helper<T> {
 
     @Autowired

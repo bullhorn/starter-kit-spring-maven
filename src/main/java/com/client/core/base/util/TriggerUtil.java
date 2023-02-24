@@ -6,7 +6,7 @@ import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.Lists;
 import groovy.lang.MissingPropertyException;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+@Log4j2
 public class TriggerUtil {
 
 	@Autowired
@@ -22,8 +23,6 @@ public class TriggerUtil {
 
 	@Autowired
 	private static EntityChanger ENTITY_CHANGER;
-
-	private static final Logger log = Logger.getLogger(TriggerUtil.class);
 
 	public static boolean isError(String key) {
 		key = key.toLowerCase();

@@ -5,8 +5,8 @@ import com.client.core.email.model.MailAttachment;
 import com.client.core.email.model.MailInfo;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Lists;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,9 @@ import java.util.*;
  * A standard implementation of {@link Emailer}, using JDK libraries in
  * {@link javax.mail}
  */
+@Log4j2
 @Service
 public class StandardEmailer implements Emailer {
-
-    private final Logger log = Logger.getLogger(StandardEmailer.class);
 
     private final MailSettings mailSettings;
 

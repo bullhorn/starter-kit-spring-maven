@@ -8,7 +8,8 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.PlacementRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.PlacementRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,11 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 @Controller
 @RequestMapping("${rest.prefix.core}/placement/*")
 public class PlacementRestTriggerController extends AbstractRestTriggerController<Placement, PlacementRestTriggerHelper, PlacementRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(PlacementRestTriggerController.class);
 
     @Autowired
     public PlacementRestTriggerController(Optional<List<TriggerValidator<Placement, PlacementRestTriggerHelper, PlacementRestTriggerTraverser>>> triggerValidators) {

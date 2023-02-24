@@ -11,7 +11,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.JobSubmissionRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.JobSubmissionRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -27,11 +27,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Log4j2
 @Controller
 @RequestMapping("${rest.prefix.core}/jobsubmission/*")
 public class JobSubmissionRestTriggerController extends AbstractRestTriggerController<JobSubmission, JobSubmissionRestTriggerHelper, JobSubmissionRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(JobSubmissionRestTriggerController.class);
     private final JsonConverter jsonConverter;
 
     @Autowired
