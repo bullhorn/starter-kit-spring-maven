@@ -5,6 +5,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.beans.PropertyEditorSupport;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class CustomBigDecimalEditor extends PropertyEditorSupport {
 
@@ -25,7 +26,7 @@ public class CustomBigDecimalEditor extends PropertyEditorSupport {
 		}
 
 		text = StringUtils.remove(text, ",");
-		if (!NumberUtils.isNumber(text)) {
+		if (!NumberUtils.isCreatable(text)) {
 			setValue(null);
 			return;
 		}
@@ -46,7 +47,7 @@ public class CustomBigDecimalEditor extends PropertyEditorSupport {
 			return "";
 		}
 
-		return value.setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+		return value.setScale(scale, RoundingMode.HALF_UP).toString();
 	}
 
 }

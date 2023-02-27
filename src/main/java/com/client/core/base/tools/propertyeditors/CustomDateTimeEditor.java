@@ -28,7 +28,7 @@ public class CustomDateTimeEditor extends PropertyEditorSupport {
      * The "allowEmpty" parameter states if an empty String should be allowed for parsing, i.e. get interpreted as null value.
      * Otherwise, an IllegalArgumentException gets thrown in that case.
      *
-     * @param dateFormat
+     * @param formatPattern
      *            DateFormat to use for parsing and rendering
      * @param allowEmpty
      *            if empty strings should be allowed
