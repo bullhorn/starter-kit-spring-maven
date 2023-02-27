@@ -45,46 +45,15 @@ public class ScheduledEventConfig {
     }
 
     @Bean
-    SchedulerFactoryBean mainScheduler(CronTrigger standardCronTriggerBean) {
+    SchedulerFactoryBean mainScheduler() {
         SchedulerFactoryBean mainScheduler = new SchedulerFactoryBean();
         mainScheduler.setOverwriteExistingJobs(true);
         mainScheduler.setAutoStartup(true);
 
-        CronTrigger[] customCronTriggers = getCustomCronTriggers();
-        CronTrigger[] cronTriggers = Arrays.copyOf(customCronTriggers, customCronTriggers.length + 1);
-        cronTriggers[customCronTriggers.length] = standardCronTriggerBean;
+        CronTrigger[] cronTriggers = getCustomCronTriggers();
         mainScheduler.setTriggers(cronTriggers);
 
         return mainScheduler;
-    }
-
-    @Bean
-    public CronTrigger standardCronTriggerBean(
-            MethodInvokingJobDetailFactoryBean standardFactoryBean,
-            @Value("${standardCronExpression}") String cronExpression) throws ParseException {
-
-        CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
-        cronTriggerFactoryBean.setCronExpression(cronExpression);
-        cronTriggerFactoryBean.setJobDetail(standardFactoryBean.getObject());
-        cronTriggerFactoryBean.afterPropertiesSet();
-
-        return cronTriggerFactoryBean.getObject();
-    }
-
-    @Bean
-    public MethodInvokingJobDetailFactoryBean standardFactoryBean() {
-        MethodInvokingJobDetailFactoryBean factoryBean = new MethodInvokingJobDetailFactoryBean();
-
-        factoryBean.setTargetBeanName("standardSubscriptionScheduledEventProcessing");
-        factoryBean.setTargetMethod("run");
-        factoryBean.setConcurrent(true);
-
-        return factoryBean;
-    }
-
-    @Bean
-    ScheduledEventProcessing standardSubscriptionScheduledEventProcessing(@Value("${standardSubscriptionName}") String subName) {
-        return new ScheduledEventProcessing(subName, bullhornData, appSettings, eventWorkflowFactory);
     }
 
     private CronTrigger[] getCustomCronTriggers() {
