@@ -621,9 +621,7 @@ public class Utility {
     public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) ->
-                result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()))
-        );
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().map(map).toList()));
 
         return result;
     }
@@ -631,9 +629,7 @@ public class Utility {
     public static <T extends QueryEntity, R> List<R> sequentialQueryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) ->
-                result.addAll(batch.stream().map(map).collect(Collectors.toList()))
-        );
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.stream().map(map).toList()));
 
         return result;
     }
@@ -641,9 +637,7 @@ public class Utility {
     public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) ->
-                result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()))
-        );
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().filter(filter).toList()));
 
         return result;
     }
@@ -651,9 +645,7 @@ public class Utility {
     public static <T extends QueryEntity> List<T> sequentialQueryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) ->
-                result.addAll(batch.stream().filter(filter).collect(Collectors.toList()))
-        );
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.stream().filter(filter).toList()));
 
         return result;
     }
@@ -699,7 +691,7 @@ public class Utility {
     public static <T extends SearchEntity, R> List<R> searchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().map(map).collect(Collectors.toList())));
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().map(map).toList()));
 
         return result;
     }
@@ -707,7 +699,7 @@ public class Utility {
     public static <T extends SearchEntity, R> List<R> sequentialSearchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> result.addAll(batch.stream().map(map).collect(Collectors.toList())));
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.stream().map(map).toList()));
 
         return result;
     }
@@ -715,7 +707,7 @@ public class Utility {
     public static <T extends SearchEntity> List<T> searchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList())));
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().filter(filter).toList()));
 
         return result;
     }
@@ -723,7 +715,7 @@ public class Utility {
     public static <T extends SearchEntity> List<T> sequentialSearchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> result.addAll(batch.stream().filter(filter).collect(Collectors.toList())));
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.stream().filter(filter).toList()));
 
         return result;
     }
