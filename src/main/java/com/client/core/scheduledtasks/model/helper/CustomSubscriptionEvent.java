@@ -50,7 +50,7 @@ public class CustomSubscriptionEvent{
             }
         }
 
-        if(event.getEventMetadata().containsKey("TRANSACTION_ID")){
+        if(event.getEventMetadata().containsKey("TRANSACTION_ID")) {
             customSubscriptionEvent.setTransactionId(event.getEventMetadata().get("TRANSACTION_ID"));
         }
 
