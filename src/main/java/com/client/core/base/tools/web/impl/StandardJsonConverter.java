@@ -49,6 +49,14 @@ public class StandardJsonConverter implements JsonConverter {
 		return jsonString;
 	}
 
+	/**
+	 * Used to convert json into a new object specified by the type.
+	 *
+	 * @param jsonString json input
+	 * @param type the object that will be created from the json
+	 * @return Object representation of json string
+	 * @param <T>
+	 */
 	@Override
 	public <T> T convertJsonStringToEntity(String jsonString, Class<T> type) {
 		T entity = null;
@@ -61,24 +69,6 @@ public class StandardJsonConverter implements JsonConverter {
 
 		return entity;
 	}
-
-	// TODO: We could convert this to the above function {@link #convertJsonStringToEntity}. Data is simply converted to a null value here
-    @Override
-    public <T, E> T convertJsonStringToEntity(String jsonString, Class<T> parameterizedType, Class<E> parameterType) {
-        T entity = null;
-
-        try {
-			// TODO: CAN use constructParametricType(Class<?> parametrized, Class<?>... parameterClasses) instead,
-			// TODO: but I don't even think we need this whole function anymore.
-            JavaType type = objectMapperStandard.getTypeFactory().constructParametrizedType(parameterizedType, parameterizedType, parameterType);
-
-            entity = objectMapperStandard.readValue(jsonString, type);
-        } catch (IOException e) {
-            log.error("Error converting jsonString to entity of type" + parameterizedType.toString() + " from jsonString: ", e);
-        }
-
-        return entity;
-    }
 
     @Override
     public Map<String, Object> convertJsonStringToMap(String jsonString) {

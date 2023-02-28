@@ -112,6 +112,16 @@
             <artifactId>bcprov-jdk18on</artifactId>
             <version>1.72</version>
         </dependency>
+
+        <!--File upload for multipart resolver-->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+<!--        TODO: What should we do about all of the additional libraries imported? Do they belong? Or case by case?-->
 <!--        TODO: What to do about cs-starter-template stuff? Like Artifactory-->
     </dependencies>
     <!-- DONE ADDING DEPENDENCIES -->
