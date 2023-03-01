@@ -66,8 +66,8 @@ public class StandardEmailer implements Emailer {
         mailInfo.setSubject(subject);
         mailInfo.setTo(mailTo);
 
-        mailInfo.setSender(mailSettings.getSender());
-        mailInfo.setSenderName(mailSettings.getSenderName());
+        mailInfo.setSender(mailSettings.sender());
+        mailInfo.setSenderName(mailSettings.senderName());
 
         sendEmail(mailInfo);
     }
@@ -81,9 +81,9 @@ public class StandardEmailer implements Emailer {
     }
 
     public void send(MailInfo mail) throws MessagingException {
-        if(mailSettings.getDisabled()) {
-            if(mailSettings.getRouteToWhenDisabled() != null && !mailSettings.getRouteToWhenDisabled().isEmpty()) {
-                mail.setTo(mailSettings.getRouteToWhenDisabled());
+        if(mailSettings.disabled()) {
+            if(mailSettings.routeToWhenDisabled() != null && !mailSettings.routeToWhenDisabled().isEmpty()) {
+                mail.setTo(mailSettings.routeToWhenDisabled());
                 mail.setCc(Collections.emptyList());
                 mail.setBcc(Collections.emptyList());
             } else {
@@ -96,11 +96,11 @@ public class StandardEmailer implements Emailer {
         message.setSentDate(new Date());
 
         if(StringUtils.isEmpty(mail.getSender())) {
-            mail.setSender(mailSettings.getSender());
+            mail.setSender(mailSettings.sender());
         }
 
         if(StringUtils.isEmpty(mail.getSenderName())) {
-            mail.setSenderName(mailSettings.getSenderName());
+            mail.setSenderName(mailSettings.senderName());
         }
 
         String sender = mail.getSender();
@@ -186,16 +186,16 @@ public class StandardEmailer implements Emailer {
     }
 
     private Session getSession() {
-        Authenticator authenticator = new Authenticator(mailSettings.getUsername(), mailSettings.getPassword());
+        Authenticator authenticator = new Authenticator(mailSettings.username(), mailSettings.password());
 
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.submitter", authenticator.getPasswordAuthentication().getUserName());
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
-        properties.setProperty("mail.smtp.host", mailSettings.getHost());
-        properties.setProperty("mail.smtp.port", mailSettings.getPort());
+        properties.setProperty("mail.smtp.host", mailSettings.host());
+        properties.setProperty("mail.smtp.port", mailSettings.port());
 
-        properties.put("mail.smtp.socketFactory.port", mailSettings.getPort());
+        properties.put("mail.smtp.socketFactory.port", mailSettings.port());
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.put("mail.smtp.socketFactory.fallback", "false");
 

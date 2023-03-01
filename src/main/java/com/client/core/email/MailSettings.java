@@ -12,18 +12,16 @@ import java.util.List;
  * using a Spring {@link org.springframework.beans.factory.config.PropertyPlaceholderConfigurer}, either in
  * applicationContext.xml or using {@link org.springframework.beans.factory.annotation.Value} annotations
  */
-@Data
-@Configuration
 @ConfigurationProperties(prefix = "mail")
-public class MailSettings {
-    private String host;
-    private String port;
-    private String username;
-    private String password;
-    private String sender;
-    private String senderName;
-    private Boolean disabled;
-    private List<String> routeToWhenDisabled;
+public record MailSettings(
+        String host,
+        String port,
+        String username,
+        String password,
+        String sender,
+        String senderName,
+        Boolean disabled,
+        List<String> routeToWhenDisabled) {
 
     @Override
     public String toString() {
