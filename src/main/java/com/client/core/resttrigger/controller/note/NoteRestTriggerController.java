@@ -8,7 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.NoteRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.NoteRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 @Controller
-@RequestMapping("/resttrigger/note/*")
+@RequestMapping("${rest.prefix.core}/note/*")
 public class NoteRestTriggerController extends AbstractRestTriggerController<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(NoteRestTriggerController.class);
 
     @Autowired
     public NoteRestTriggerController(Optional<List<TriggerValidator<Note, NoteRestTriggerHelper, NoteRestTriggerTraverser>>> triggerValidators) {
@@ -39,7 +38,7 @@ public class NoteRestTriggerController extends AbstractRestTriggerController<Not
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse addEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Note Add Validation Process From Rest Trigger ----------------------------------------");
@@ -63,7 +62,7 @@ public class NoteRestTriggerController extends AbstractRestTriggerController<Not
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse editEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Note Edit Validation Process From Rest Trigger ----------------------------------------");

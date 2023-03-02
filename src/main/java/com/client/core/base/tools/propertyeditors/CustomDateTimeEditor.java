@@ -8,6 +8,12 @@ import org.springframework.util.StringUtils;
 
 import java.beans.PropertyEditorSupport;
 
+/**
+ * Custom property editor for joda DateTime. Used for converting DateTime values for spring MVC
+ *
+ * @author magnus.palm
+ *
+ */
 public class CustomDateTimeEditor extends PropertyEditorSupport {
 
     private final DateTimeFormatter customDateTimeFormatter;
@@ -21,7 +27,7 @@ public class CustomDateTimeEditor extends PropertyEditorSupport {
      * <p>
      * The "allowEmpty" parameter states if an empty String should be allowed for parsing, i.e. get interpreted as null value.
      * Otherwise, an IllegalArgumentException gets thrown in that case.
-     * 
+     *
      * @param formatPattern
      *            DateFormat to use for parsing and rendering
      * @param allowEmpty

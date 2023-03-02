@@ -1,28 +1,28 @@
 # Bullhorn Starter Kit (Spring/Maven)
 
 The Bullhorn Starter Kit is a collection of Java code that lets you integrate custom business logic with the Bullhorn CRM application. The code itself is 100% boilerplate and should require no modification, but rather is designed for plugging in your own classes or extending existing ones. The following technologies are required:
- 1. [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
- 2. [Maven 3](https://maven.apache.org/download.cgi)
+1. [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+2. [Maven 3](https://maven.apache.org/download.cgi)
 
 Run ``mvn clean install -P{mavenProfile}`` to generate a deployable WAR file in the target folder. You can also deploy to a local Tomcat 7 container provided by Maven by running ``mvn clean tomcat7:run -P${mavenProfile}``, effectively running your application locally. If you want to skip unit tests, pass the flag ``-DskipTests``. See the [javadoc](http://bullhorn.github.io/starter-kit-spring-maven/) for class and method-level documentation.
 
 The application uses [Spring Framework](http://projects.spring.io/spring-framework/) extensively,  but Maven handles all dependencies. These are some other useful links around Bullhorn APIs:
-  - [Bullhorn Developer](http://developer.bullhorn.com/) General developer documentation
-  - [SOAP Documentation](http://developer.bullhorn.com/doc/version_2-0/) We should be using REST almost exclusively, but this has some nice information on the various entities and on customizing Bullhorn.
-  - [REST Login](http://developer.bullhorn.com/articles/getting_started) Information about getting started with Bullhorn REST APIs
-  - [REST Documentation](http://developer.bullhorn.com/sites/default/files/BullhornRESTAPI_0.pdf) Extensive documentation on the REST APIs
+- [Bullhorn Developer](http://developer.bullhorn.com/) General developer documentation
+- [SOAP Documentation](http://developer.bullhorn.com/doc/version_2-0/) We should be using REST almost exclusively, but this has some nice information on the various entities and on customizing Bullhorn.
+- [REST Login](http://developer.bullhorn.com/articles/getting_started) Information about getting started with Bullhorn REST APIs
+- [REST Documentation](http://developer.bullhorn.com/sites/default/files/BullhornRESTAPI_0.pdf) Extensive documentation on the REST APIs
 
 There are several ways to customize Bullhorn through this repository, including:
-   - REST triggers
-   - Subscription-based scheduled tasks (asynchronous event handling)
-   - Date Last Modified-based scheduled tasks
+- REST triggers
+- Subscription-based scheduled tasks (asynchronous event handling)
+- Date Last Modified-based scheduled tasks
 
 There are also several other ways to customize Bullhorn, but that are specific to the older UI/UX called 'S-Release'.  This functionality within the starter-kit-spring-maven is considered deprecated, and is subject to be removed with future releases:
-   - Custom tabs/cards/menu actions (recommendation is to use the [extension-starter](https://github.com/bullhorn/extension-starter) for Bullhorn Novo)
-   - Form scripts (starter-kit-spring-maven functionality removed, S-Release only)
-   - Form triggers (deprecated, S-Release only)
-   - Custom overview components (deprecated, S-Release only)
-   - Custom edit components (deprecated, S-Release only)
+- Custom tabs/cards/menu actions (recommendation is to use the [extension-starter](https://github.com/bullhorn/extension-starter) for Bullhorn Novo)
+- Form scripts (starter-kit-spring-maven functionality removed, S-Release only)
+- Form triggers (deprecated, S-Release only)
+- Custom overview components (deprecated, S-Release only)
+- Custom edit components (deprecated, S-Release only)
 
 The Starter Kit includes code for dealing with most of these methods of customization. Each of these is discussed below. One of the main concepts used for form triggers, REST triggers, and subscription-based scheduled tasks is the workflow, which is described first.
 
@@ -64,30 +64,30 @@ Of the two main types of Traversers, there will be an implementation for each en
 
 ## REST Triggers
 REST Triggers are similar to form triggers in that they allow you to customize how a record gets saved, but from various different places in the application as opposed to just on the standard edit/add pages for an entity.  Specifically, a REST Trigger gets called whenever a consumer of the REST API makes an add or update call and passes a URL parameter ``executeFormTriggers=true``.  At the time of this writing the only places in the application that will definitely call REST triggers are inline edits on list views as well as add/edits done in the mobile application.  Similar to Form Triggers, REST Triggers allow you to either stop the add/update being performed with a custom validation method, or you can change the value of a field or fields on the entity being saved.  Again similar to Form Triggers, the configuration of a REST Trigger involves providing a URL to BULLHORN which get's called when the corresponding action is performed.  The following REST Triggers are available for configuration:
-   - Candidate (Add/Edit)
-   - Client Contact (Add/Edit)
-   - Client Corporation (Add/Edit)
-   - Job Order (Add/Edit)
-   - Placement (Add/Edit)
-   - Note (Add/Edit)
-   - Opportunity (Add/Edit)
-   - Lead (Add/Edit)
+- Candidate (Add/Edit)
+- Client Contact (Add/Edit)
+- Client Corporation (Add/Edit)
+- Job Order (Add/Edit)
+- Placement (Add/Edit)
+- Note (Add/Edit)
+- Opportunity (Add/Edit)
+- Lead (Add/Edit)
 
 The Starter Kit handles all REST Triggers in the same way...the controllers all live in `com.client.core.resttrigger.controller` and all work the same way.  Again, none of the code in this package should need to be modified.  The endpoints for each REST trigger are always the same, with the exception of your application's host name: `${host}/main/resttrigger/${entity}/${action}?apiKey=${apiKey}` where
-  - ${host} is the domain host of your application
-  - ${apiKey} is your Bullhorn API Key
-  - ${action} is one of
-    - add
-    - edit
-  - ${entity} is one of
-    - candidate
-    - clientcontact
-    - clientcorporation
-    - job
-    - placement
-    - note
-    - lead
-    - opportunity
+- ${host} is the domain host of your application
+- ${apiKey} is your Bullhorn API Key
+- ${action} is one of
+  - add
+  - edit
+- ${entity} is one of
+  - candidate
+  - clientcontact
+  - clientcorporation
+  - job
+  - placement
+  - note
+  - lead
+  - opportunity
 
 To implement custom logic, you extends one of the `RestTriggerValidator` classes (a subclass of `WorkflowAction`), described above.  There is one abstract `RestTriggerValidator` class for each kind of entity (e.g. `PlacementRestTriggerValidator`).  Below are some specific details about the differences between RestTriggerTraversers and FormTriggerTraversers.
 
@@ -125,12 +125,12 @@ Most of the functionality provided by the ScheduledTasksTraversers and associate
 That should be used to perform updates on entities in a scheduled tasks workflow.  You pass in the entity  you are about to make modifications to, which the helper object then makes a deep copy of using [Kryo](https://github.com/EsotericSoftware/kryo) and holds onto in a Map, returning the deep copy.  Then, at the end of every scheduled tasks workflow, the code that executes each of your `EventTask`s will  loop through this map and perform an update call on each entity in it.  This allows you to make modifications to the same entity in different classes without making multiple API calls.  After calling ``getOneEntityToSave``, any modifications made to the object returned will in turn be made to the copy being held by the helper object.
 
 ## Date Last Modified-based scheduled tasks
-In some cases it may make more sense to write a scheduled task that operates off of a Bullhorn record's `dateLastModified` property, as opposed to writing a subscription-based scheduled task.  An example of such a task would be one that runs every 5 minutes, and queries for JobOrder records that were added or updated in the last 5 minutes (i.e. where `dateLastModified > now() - 5 minutes`), and then performs some kind of business logic on them, perhaps updating an associated record such as the ClientContact.  In such cases the starter-kit provides a framework that handles the interactions with the REST APIs required to retrieve such records, as well as managing the scheduling of the tasks themselves.  
+In some cases it may make more sense to write a scheduled task that operates off of a Bullhorn record's `dateLastModified` property, as opposed to writing a subscription-based scheduled task.  An example of such a task would be one that runs every 5 minutes, and queries for JobOrder records that were added or updated in the last 5 minutes (i.e. where `dateLastModified > now() - 5 minutes`), and then performs some kind of business logic on them, perhaps updating an associated record such as the ClientContact.  In such cases the starter-kit provides a framework that handles the interactions with the REST APIs required to retrieve such records, as well as managing the scheduling of the tasks themselves.
 
 In order to write such a task, you would create a class (typically in `com.client.custom`, and annotated with `@Service`, so that it lives in the Spring Application Context) that extends the appropriate `${entityName}DateLastModifiedEventTask` (e.g. `JobOrderDateLastModifiedEventTask`).  Doing so will force you to implement a constructor that takes a few parameters:
-   - `Integer intervalMinutes` - the number of minutes the task should look back to find new records, as well as how often it runs.  Required
-   - `Set<String> fields` - the fields that should be returned/passed to the REST APIs.  Optional, defaults to "id"
-   - `IncludeDateAdded includeDateAdded` - whether to also include dateAdded in the query the is constructed to pull records (i.e. the where clause gains an `OR dateAdded > now() - intervalMinutesAgo` term).  Optional, defaults to YES
+- `Integer intervalMinutes` - the number of minutes the task should look back to find new records, as well as how often it runs.  Required
+- `Set<String> fields` - the fields that should be returned/passed to the REST APIs.  Optional, defaults to "id"
+- `IncludeDateAdded includeDateAdded` - whether to also include dateAdded in the query the is constructed to pull records (i.e. the where clause gains an `OR dateAdded > now() - intervalMinutesAgo` term).  Optional, defaults to YES
 
 Finally you will need to implement the method to execute your business logic.  This method is called `process` and takes one parameter, an instance of the entity that was modified (e.g. in our example above, it would take a `JobOrder` object), which will be populated with the fields passed in the `Set<String> fields` constructor parameter.
 
@@ -138,33 +138,33 @@ The framework itself runs every minute by default (controlled by the `date.last.
 
 ## Form triggers (deprecated, S-Release only)
 Form triggers are a way for you to customize how a record is saved in the Bullhorn CRM.  For each of the main entities, there is both an 'add' form trigger and an 'edit' form trigger. During the configuration of a given trigger, you provide a URL to Bullhorn that is called upon saving the form. Bullhorn passes all information on the form to the URL in the form of an HTTP POST request. The code receiving the request can reply in one of two ways, either stopping the save with a provided error message, or modifying the data that is about to be saved. The following form triggers are available for customization:
-   - Candidate (Add/Edit)
-   - Client Contact (Add/Edit)
-   - Client Corporation (Add/Edit)
-   - Job Order (Add/Edit)
-   - Placement (Add/Edit)
-   - Job Submission (Add/Edit)
-   - Placement Change Request (Add AND Edit, only one trigger for both cases)
-   - Note (Add)
-   - Opportunity (Add/Edit)
-   - Lead (Add/Edit)
+- Candidate (Add/Edit)
+- Client Contact (Add/Edit)
+- Client Corporation (Add/Edit)
+- Job Order (Add/Edit)
+- Placement (Add/Edit)
+- Job Submission (Add/Edit)
+- Placement Change Request (Add AND Edit, only one trigger for both cases)
+- Note (Add)
+- Opportunity (Add/Edit)
+- Lead (Add/Edit)
 
 The Starter Kit handles all form triggers in the same way. The endpoint controllers are all in the ``com.client.core.formtrigger.controller`` package and are all designed the same way. None of the code in this package requires modification. The endpoints for each form trigger are always the same, with the exception of your application's host name.  The endpoints are of the form: `` ${host}/main/formtrigger/${entity}/${action}?apiKey=${apiKey} ``, where
-  - ${host} is the domain host of your application
-  - ${apiKey} is your Bullhorn API Key
-  - ${action} is one of
-    - add
-    - edit
-  - ${entity} is one of
-    - candidate (only for add, i.e. /candidate/add)
-    - clientcontact (only for add, i.e. /clientcontact/add)
-    - clientcontactcandidate (for edit, i.e. /clientcontactcandidate/edit)
-    - clientcorporation
-    - job
-    - placement
-    - jobsubmission
-    - note (only for add, i.e. /note/add)
-    - placementchangerequest (/placementchangerequest/add runs for both add and edit)
+- ${host} is the domain host of your application
+- ${apiKey} is your Bullhorn API Key
+- ${action} is one of
+  - add
+  - edit
+- ${entity} is one of
+  - candidate (only for add, i.e. /candidate/add)
+  - clientcontact (only for add, i.e. /clientcontact/add)
+  - clientcontactcandidate (for edit, i.e. /clientcontactcandidate/edit)
+  - clientcorporation
+  - job
+  - placement
+  - jobsubmission
+  - note (only for add, i.e. /note/add)
+  - placementchangerequest (/placementchangerequest/add runs for both add and edit)
 
 To implement custom logic, you must extend one of the various `FormTriggerValidator` classes (a subclass of `WorkflowAction`), generally described above.  There is one abstract `FormTriggerValidator` class for each kind of entity (e.g. `PlacementFormTriggerValidator`).  Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Form Triggers.
 
@@ -190,12 +190,12 @@ The functionality supporting Form Scripts in the starter-kit-spring-maven has be
 
 ## Custom tabs (starter-kit-spring-maven functionality deprecated, use the [extension-starter](https://github.com/bullhorn/extension-starter))
 In Bullhorn, Custom Tabs are what they sound like...they allow you to add custom content onto a tab of any of the main types of entities.  Configuration typically only consists of providing a URL endpoint that you wish to be iframed in the aforementioned tab, and consequently this allows for essentially any type of customization.  An additional parameter with the name ``displayHeight`` can be appended to the configured URL to determine the height of the iframe in the tab (see [SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for more information).  Of note are the context variables provided by Bullhorn, always appended to the request URL as form-encoded parameters (case-sensitive):
-  - EntityID - The ID of the entity being saved
-  - EntityType - The type of entity being saved (i.e. Placement, Candidate)
-  - UserID - The ID of the logged in internal CorporateUser saving the entity
-  - CorporationID - The ID of the corporation the user is logged in with
-  - PrivateLabelID - The ID of the private label the user is logged in with
-  - currentBullhornUrl - The current URL of the Bullhorn window which contains our iframe
+- EntityID - The ID of the entity being saved
+- EntityType - The type of entity being saved (i.e. Placement, Candidate)
+- UserID - The ID of the logged in internal CorporateUser saving the entity
+- CorporationID - The ID of the corporation the user is logged in with
+- PrivateLabelID - The ID of the private label the user is logged in with
+- currentBullhornUrl - The current URL of the Bullhorn window which contains our iframe
 
 Due to the extremely large variety of possibilities with custom tabs, there is very little generic/boilerplate code in the starter-kit for them. However, one of the most common requirements is for a relatively simple to-many entity...essentially a table on a custom tab that acts as a UI for data attached to the main entity.  Typically the data for this table is stored in a cloud MySQL database, then when we hit the tab we query for the records specific to the one we're on using the passed EntityID parameter.
 
@@ -347,21 +347,21 @@ After the database configuration, we have a table, an object representing it, an
 
 ## Custom overview components (deprecated, S-Release only)
 Custom overview components allow us to customize the overview page of one of the main Bullhorn entities.  Similar to Custom Tabs, configuration involves providing a URL which gets iframed on the overview.  See [the SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Understanding_Custom_Components.htm%3FTocPath%3DUser%20Interface%20Customization%7CCustom%20Components%2C%20Tabs%2C%20and%20Menu%20Actions%7C_____1) for some more information.  Again similar to Custom Tabs, Bullhorn provides some context information in the form of URL parameters appended to the base URL for the component.  They include
-  - EntityID - The ID of the entity being saved
-  - EntityType - The type of entity being saved (i.e. Placement, Candidate)
-  - UserID - The ID of the logged in internal CorporateUser saving the entity
-  - CorporationID - The ID of the corporation the user is logged in with
-  - PrivateLabelID - The ID of the private label the user is logged in with
-  
+- EntityID - The ID of the entity being saved
+- EntityType - The type of entity being saved (i.e. Placement, Candidate)
+- UserID - The ID of the logged in internal CorporateUser saving the entity
+- CorporationID - The ID of the corporation the user is logged in with
+- PrivateLabelID - The ID of the private label the user is logged in with
+
 Custom components are available on the following entities:
-  - Candidate
-  - ClientCorporation
-  - ClientContact
-  - JobOrder
-  - Lead
-   
+- Candidate
+- ClientCorporation
+- ClientContact
+- JobOrder
+- Lead
+
 ## Custom edit components (deprecated, S-Release only)
-Custom Edit Components are again relatively similar to both Custom Tabs and Custom Components...Bullhorn allows us to provide an iframe URL which essentially acts as the Edit Type for a particular field (only certain fields can be used with Edit Components, the general rule-of-thumb is any customXXXXN field can be used).  Additionally, we can provide a height and a width in pixels that Bullhorn will use when creating the iframe.  The URL will be iframed on the edit tab for the entity which we configure it for, and we can pass a message to the edit tab from the iframe telling Bullhorn what value we want to set the field to.  The following function ``setValue(value)`` can be used from within the iframe to send the message to Bullhorn, which will set the field on the entity with the value passed in, and once the user saves will persist it to the database.  
+Custom Edit Components are again relatively similar to both Custom Tabs and Custom Components...Bullhorn allows us to provide an iframe URL which essentially acts as the Edit Type for a particular field (only certain fields can be used with Edit Components, the general rule-of-thumb is any customXXXXN field can be used).  Additionally, we can provide a height and a width in pixels that Bullhorn will use when creating the iframe.  The URL will be iframed on the edit tab for the entity which we configure it for, and we can pass a message to the edit tab from the iframe telling Bullhorn what value we want to set the field to.  The following function ``setValue(value)`` can be used from within the iframe to send the message to Bullhorn, which will set the field on the entity with the value passed in, and once the user saves will persist it to the database.
 ```javascript
 function getQueryStringParameter(href, paramName){
 	var regexS = "[\\?&]"+ paramName +"=([^&#]*)";
@@ -382,11 +382,11 @@ function setValue(value) {
 } 
 ```
 Again, Bullhorn appends some URL parameters onto the iframe URL to provide some context:
-  - EntityID - The ID of the entity being saved
-  - EntityType - The type of entity being saved (i.e. Placement, Candidate)
-  - UserID - The ID of the logged in internal CorporateUser saving the entity
-  - CorporationID - The ID of the corporation the user is logged in with
-  - PrivateLabelID - The ID of the private label the user is logged in with
-  - baseControlName - The name of the field which the edit control is on.  Actually provides the 'name' property of the HTML input on the page, so it may not exactly match the field name (sometimes the fields are prefixed, like `candidate_customText1`)
-  - value - The current value of the field
-  - currentBullhornUrl - The current URL of the Bullhorn window which contains our iframe
+- EntityID - The ID of the entity being saved
+- EntityType - The type of entity being saved (i.e. Placement, Candidate)
+- UserID - The ID of the logged in internal CorporateUser saving the entity
+- CorporationID - The ID of the corporation the user is logged in with
+- PrivateLabelID - The ID of the private label the user is logged in with
+- baseControlName - The name of the field which the edit control is on.  Actually provides the 'name' property of the HTML input on the page, so it may not exactly match the field name (sometimes the fields are prefixed, like `candidate_customText1`)
+- value - The current value of the field
+- currentBullhornUrl - The current URL of the Bullhorn window which contains our iframe
