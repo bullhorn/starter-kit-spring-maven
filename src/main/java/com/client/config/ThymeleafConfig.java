@@ -30,7 +30,7 @@ public class ThymeleafConfig {
     @Bean
     public ITemplateResolver stringTemplateResolver() {
         StringTemplateResolver stringTemplateResolver = new StringTemplateResolver();
-        stringTemplateResolver.setTemplateMode("HTML5");
+        stringTemplateResolver.setTemplateMode("HTML");
         stringTemplateResolver.setOrder(2);
 
         return stringTemplateResolver;
