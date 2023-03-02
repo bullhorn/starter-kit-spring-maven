@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -33,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -420,10 +418,6 @@ public class Utility {
         return new DateTime(forceParseStringToDate(dateStr, dateFormat));
     }
 
-    public static XMLGregorianCalendar forceParseStringToXMLGregorianCalendar(String dateStr, String dateFormat) {
-        return dateToXMLGregorianCal(forceParseStringToDate(dateStr, dateFormat));
-    }
-
     public static String formatDate(Date date, String format) {
         if (date == null) {
             return "";
@@ -443,42 +437,6 @@ public class Utility {
         }
 
         return formatDate(date.toDate(), format);
-    }
-
-    public static XMLGregorianCalendar dateToXMLGregorianCal(Date date) {
-        if (date == null) {
-            return null;
-        }
-
-        TimeZone timeZone = TimeZone.getTimeZone("America/Detroit");
-
-        GregorianCalendar gregorianCal = new GregorianCalendar(timeZone);
-        gregorianCal.setTime(date);
-
-        try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCal);
-        } catch (DatatypeConfigurationException e) {
-            return null;
-        }
-    }
-
-    public static XMLGregorianCalendar dateToXMLGregorianCalWithTimezone(Date date, TimeZone timezone) {
-        if (date == null) {
-            return null;
-        }
-
-        DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(timezone);
-
-        DateTime datetime = new DateTime(date.getTime(), dateTimeZone);
-
-        return dateTimeToXmlGregorianCalendar(datetime);
-    }
-
-    public static Date xmlGregorianCalToDate(XMLGregorianCalendar xmlGregCal) {
-        if (xmlGregCal == null) {
-            return null;
-        }
-        return xmlGregCal.toGregorianCalendar().getTime();
     }
 
     public static Boolean stringContains(String toCheckIn, String toCheckFor) {
@@ -539,33 +497,6 @@ public class Utility {
 
     public static String parseString(Object value) {
         return value == null ? "" : value.toString();
-    }
-
-    public static DateTime xmlGregorianCalendarToDateTime(XMLGregorianCalendar calendar) {
-        if (calendar == null) {
-            return null;
-        }
-
-        DateTimeZone timeZone = DateTimeZone.forTimeZone(calendar.getTimeZone(0));
-
-        DateTime dateTime = new DateTime(calendar.toGregorianCalendar().getTime(), timeZone);
-
-        return dateTime;
-    }
-
-    public static XMLGregorianCalendar dateTimeToXmlGregorianCalendar(DateTime dateTime) {
-        if (dateTime == null) {
-            return null;
-        }
-
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTimeInMillis(dateTime.toLocalDateTime().toDate().getTime());
-
-        try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
-        } catch (DatatypeConfigurationException e) {
-            return null;
-        }
     }
 
     public static String createEntireInStatement(Collection<String> values) {
