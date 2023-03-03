@@ -21,9 +21,7 @@ public interface JsonConverter {
      */
     <T> T convertJsonStringToEntity(String jsonString, Class<T> type);
 
-    <T, E> T convertJsonStringToEntity(String jsonString, Class<T> parameterizedType, Class<E> parameterType);
-
 
     Map<String, Object> convertJsonStringToMap(String jsonString);
-	
+
 }

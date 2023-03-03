@@ -4,11 +4,10 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.base.util.Utility;
 import com.client.core.dlmtasks.model.helper.DateLastModifiedEventTaskHelper;
 import com.client.core.dlmtasks.model.helper.impl.StandardDateLastModifiedEventTaskHelper;
-import com.client.core.dlmtasks.service.DateLastModifiedTasksService;
 import com.client.core.dlmtasks.workflow.node.DateLastModifiedEventTask;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -18,11 +17,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@Log4j2
 public abstract class AbstractDateLastModifiedTasksService<T extends BullhornEntity> implements DateLastModifiedTasksService<T> {
 
     private static final Set<String> ID = Sets.newHashSet("id");
-
-    private final Logger log = Logger.getLogger(getClass());
 
     private final List<DateLastModifiedEventTaskHelper<T>> helpers;
     private final Class<T> type;

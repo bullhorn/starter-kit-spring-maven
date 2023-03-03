@@ -1,14 +1,13 @@
 package com.client.core.base.model.jpa;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import java.util.Date;
 
 /**
  * An abstract implementation of a JpaEntity, providing dateAdded and dateUpdated functionality.
@@ -73,7 +72,7 @@ public abstract class AbstractJpaEntity<ID> implements JpaEntity<ID> {
             this.dateUpdated = dateUpdated;
         }
     }
-    
+
     /**
      * Always set the dateUpdate to now when updating a record
      */
@@ -81,8 +80,8 @@ public abstract class AbstractJpaEntity<ID> implements JpaEntity<ID> {
     public void updateDateUpdated(){
         this.setDateUpdated(now());
     }
-    
-    
+
+
     /**
      * Always set both dateAdded and dateUpdated to now when inserting a record
      */
@@ -91,8 +90,8 @@ public abstract class AbstractJpaEntity<ID> implements JpaEntity<ID> {
         this.setDateAdded(now());
         this.setDateUpdated(now());
     }
-    
-    
+
+
     /**
      * Returns the current date
      * @return

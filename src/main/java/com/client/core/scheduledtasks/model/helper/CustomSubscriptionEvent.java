@@ -1,12 +1,11 @@
 package com.client.core.scheduledtasks.model.helper;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.joda.time.DateTime;
-
 import com.bullhornsdk.data.model.response.event.Event;
 import com.google.common.collect.Sets;
+import org.joda.time.DateTime;
+
+import java.util.Map;
+import java.util.Set;
 
 public class CustomSubscriptionEvent{
 
@@ -22,6 +21,7 @@ public class CustomSubscriptionEvent{
     private Integer requestId;
     private boolean isError;
     private Integer updatingUserId;
+    private String transactionId;
 
     public static CustomSubscriptionEvent instantiateFromEvent(Event event, String subscriptionName, Integer requestId, boolean isError){
 
@@ -48,6 +48,10 @@ public class CustomSubscriptionEvent{
             if (event.getEventMetadata().containsKey("PERSON_ID")) {
                 customSubscriptionEvent.setUpdatingUserId(Integer.parseInt(event.getEventMetadata().get("PERSON_ID")));
             }
+        }
+
+        if(event.getEventMetadata().containsKey("TRANSACTION_ID")) {
+            customSubscriptionEvent.setTransactionId(event.getEventMetadata().get("TRANSACTION_ID"));
         }
 
         return customSubscriptionEvent;
@@ -147,5 +151,13 @@ public class CustomSubscriptionEvent{
 
     public void setUpdatingUserId(Integer updatingUserId) {
         this.updatingUserId = updatingUserId;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

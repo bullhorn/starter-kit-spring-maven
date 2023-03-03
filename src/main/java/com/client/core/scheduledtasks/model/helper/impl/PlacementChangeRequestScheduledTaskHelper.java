@@ -2,9 +2,7 @@ package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
-import com.client.core.base.model.relatedentity.CandidateRelatedEntity;
 import com.client.core.base.model.relatedentity.PlacementChangeRequestRelatedEntity;
-import com.client.core.base.model.relatedentity.credentialing.PlacementCertificationRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
