@@ -1,20 +1,19 @@
-package com.client.core;
+package com.client;
 
-import java.io.IOException;
+import com.client.core.security.tools.RC4;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.client.core.security.tools.RC4;
+import java.io.IOException;
 
 /**
  * Filter used to authentication all calls to the web application.
@@ -25,20 +24,18 @@ import com.client.core.security.tools.RC4;
  *     <li>Have an encrypted 'apiKey' in the session.  This essentially means that some previous request had an 'apiKey' url parameter and passed the filter.</li>
  * </ol>
  */
+@Log4j2
+@Configuration
 public class SessionFilter extends OncePerRequestFilter {
-
-	private final Logger log = Logger.getLogger(getClass());
-
 	private final String sessionStoredApiKeyName;
 	private final String encryptionKey;
-
     private final String apiKey;
 
 	public SessionFilter(ApplicationSettings appSettings) {
 		super();
 		this.sessionStoredApiKeyName = RandomStringUtils.randomAlphanumeric(32);
 		this.encryptionKey = RandomStringUtils.randomAlphanumeric(16);
-        this.apiKey = appSettings.getApiKey();
+        this.apiKey = appSettings.apiKey();
 	}
 
     @Override

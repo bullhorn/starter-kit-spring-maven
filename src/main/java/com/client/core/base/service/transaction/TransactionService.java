@@ -1,12 +1,11 @@
 package com.client.core.base.service.transaction;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityNotFoundException;
-
 import com.client.core.base.model.jpa.JpaEntity;
 import com.client.core.base.tools.data.QueryResult;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Service used to wrap DAO calls with transaction-specific code
@@ -21,14 +20,14 @@ public interface TransactionService<T extends JpaEntity<ID>, ID> {
 
 	/**
 	 * Adds an object of type T.
-	 * 
+	 *
 	 * @param transientObject The object to be added
 	 */
 	void add(T transientObject);
-	
+
 	/**
 	 * Adds or updates an object of type T
-	 * 
+	 *
 	 * @param transientObject The object to be added/updated
 	 * @return the object just added/updated
 	 */
@@ -44,14 +43,14 @@ public interface TransactionService<T extends JpaEntity<ID>, ID> {
 
 	/**
 	 * Gets a List<T> of all entities in table
-	 * 
+	 *
 	 * @return a List<T>. If no entities exists an empty List<T> will be returned.
 	 */
 	List<T> findAll();
 
 	/**
 	 * Deletes entity T from table.
-	 * 
+	 *
 	 * @param persistentObject Entity to delete
 	 * @throws EntityNotFoundException if the instance is not an entity or is a detached entity
 	 */
@@ -64,8 +63,8 @@ public interface TransactionService<T extends JpaEntity<ID>, ID> {
      * @throws EntityNotFoundException if the instance is not an entity or is a detached entity
      */
     void remove(ID id) throws EntityNotFoundException;
-	
-	
+
+
 	/**
 	 * Queries the current table using the passed in where clause
 	 * @param queryString a query string
@@ -126,7 +125,7 @@ public interface TransactionService<T extends JpaEntity<ID>, ID> {
 	/**
 	 * Updates all entities passed in and returns a list of the updated objects
 	 * @param transientObjects List<T> of objects to update
-	 * 
+	 *
 	 * @return a List<T> of all updated entities
 	 */
 	List<T> batchUpdate(List<T> transientObjects);

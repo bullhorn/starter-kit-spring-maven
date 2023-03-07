@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -21,8 +21,8 @@ import com.client.core.ApplicationSettings;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.core.base.tools.test.TestUtil;
 
-// TODO: Update 'MockitoExtension.class' to 'SpringExtension.class' once Spring Boot is added
-@ExtendWith(MockitoExtension.class)
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
 		"classpath*:/*-scheduledtasks.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {

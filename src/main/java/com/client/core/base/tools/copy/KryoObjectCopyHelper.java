@@ -1,10 +1,8 @@
 package com.client.core.base.tools.copy;
 
-import org.joda.time.DateTime;
-
 import com.esotericsoftware.kryo.Kryo;
-
 import de.javakaffee.kryoserializers.jodatime.JodaDateTimeSerializer;
+import org.joda.time.DateTime;
 
 public class KryoObjectCopyHelper {
 

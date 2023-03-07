@@ -1,8 +1,10 @@
 package com.client.core.crypto;
 
-import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.client.BaseTest;
 import com.client.core.security.tools.Base64;
@@ -12,7 +14,7 @@ import com.google.common.base.Charsets;
 
 public class TestCrypto extends BaseTest {
 
-	private final Logger log = Logger.getLogger(getClass());
+	private final Logger log = LogManager.getLogger(getClass());
 
 	private final String testValue = "testValue123+-{}//.,";
 	private final byte[] rawTestValue = testValue.getBytes(Charsets.UTF_8);
@@ -42,6 +44,7 @@ public class TestCrypto extends BaseTest {
 			}
 
 			Assertions.assertEquals(testValueDecoded, testValue, "Test string value did not properly Base64 encode/decode, or String was not created from bytes properly");
+
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit Base64 test", e);
 			Assertions.fail("Error occurred during Base64 test");
@@ -56,6 +59,7 @@ public class TestCrypto extends BaseTest {
 			String decrypted = RC4.decodeAndDecrypt(encrypted, rc4Key);
 
 			Assertions.assertEquals("RC4 encryption/decryption failed; decrypted result did not match initial value to encrypt", decrypted, testValue);
+
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit RC4 test", e);
 			Assertions.fail("Error occurred during RC4 test");
@@ -70,6 +74,7 @@ public class TestCrypto extends BaseTest {
 			String decrypted = TripleDES.decodeAndDecrypt(encrypted, tripleDESKey);
 
 			Assertions.assertEquals(decrypted, testValue, "TripleDES encryption/decryption failed; decrypted result did not match initial value to encrypt");
+
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit TripleDES test", e);
 			Assertions.fail("Error occurred during TripleDES test");

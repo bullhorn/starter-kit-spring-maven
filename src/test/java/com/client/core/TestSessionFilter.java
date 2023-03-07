@@ -42,7 +42,7 @@ public class TestSessionFilter extends BaseTest {
 		this.req.setServletPath("/main/files/getFiles");
 		this.req.setMethod("GET");
 		this.sessionFilter.doFilter(req, rsp, mockChain);
-		Assertions.assertTrue(rsp.getStatus() == HttpStatus.UNAUTHORIZED.value(),
+		Assertions.assertEquals(rsp.getStatus(), HttpStatus.UNAUTHORIZED.value(),
 				"The SessionFilter is not setup correctly. Security is compromised. Please make sure the web.xml has the SessionFilter setup for all relevant urls."
 		);
 	}

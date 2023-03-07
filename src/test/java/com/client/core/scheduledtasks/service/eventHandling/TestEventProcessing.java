@@ -122,7 +122,7 @@ public class TestEventProcessing extends BaseTest {
 	@Test
 	public void testSetup() {
 
-		Assertions.assertTrue(48 == subscriptionEvents.size(), "Not set up correctly" + subscriptionEvents.size());
+		Assertions.assertEquals(48, subscriptionEvents.size(), "Not set up correctly" + subscriptionEvents.size());
 	}
 
 	@Test
