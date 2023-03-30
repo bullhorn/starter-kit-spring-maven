@@ -13,22 +13,20 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.annotation.Commit;
 
 import com.client.BaseTest;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Sets;
 
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+@Commit
 public class TestEventProcessing extends BaseTest {
 
 	@Autowired
-	@Qualifier("appSettings")
 	private ApplicationSettings appSettings;
 
 	@Autowired
@@ -130,7 +128,7 @@ public class TestEventProcessing extends BaseTest {
 		boolean error = false;
 		// configurable based on # threads to process concurrently
 		// set to 1 in stax-web numEventThreads if single threaded processing is required
-		ExecutorService exec = Executors.newFixedThreadPool(appSettings.getNumEventThreads());
+		ExecutorService exec = Executors.newFixedThreadPool(appSettings.numEventThreads());
 		// loop through each event
 		for (CustomSubscriptionEvent event : subscriptionEvents) {
 			error = false;

@@ -4,12 +4,16 @@ package com.client.core.base.tools.propertyeditors;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
@@ -18,11 +22,12 @@ public class TestCustomBigDecimalEditor {
 
 	private CustomBigDecimalEditor editor;
 
-	private String validValue;
-
-	public TestCustomBigDecimalEditor(String validValue) {
+	public TestCustomBigDecimalEditor() {
 		super();
-		this.validValue = validValue;
+	}
+
+	static Stream<String> validData() {
+		return Stream.of("23,000.00", "23.00", "0.00", "123.00");
 	}
 
 	@BeforeEach
@@ -30,8 +35,10 @@ public class TestCustomBigDecimalEditor {
 		this.editor = new CustomBigDecimalEditor(2, true);
 	}
 
-	@Test
-	public void testSetAsTextString() {
+	@ParameterizedTest
+	@MethodSource("validData")
+	public void testSetAsTextString(String validValue) {
+
 		editor.setAsText(validValue);
 
 		BigDecimal value = (BigDecimal) editor.getValue();
@@ -39,8 +46,9 @@ public class TestCustomBigDecimalEditor {
 		Assertions.assertTrue(value.compareTo(new BigDecimal(removeComma(validValue))) == 0);
 	}
 
-	@Test
-	public void testGetAsText() {
+	@ParameterizedTest
+	@MethodSource("validData")
+	public void testGetAsText(String validValue) {
 
 		editor.setAsText(validValue);
 

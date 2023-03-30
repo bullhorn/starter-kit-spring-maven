@@ -2,15 +2,18 @@ package com.client;
 
 import java.util.List;
 
+import com.client.config.GeneralConfig;
+import com.client.config.TestConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,15 +24,15 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.api.mock.MockBullhornData;
-import com.client.core.ApplicationSettings;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.matchers.JsonpPathResultMatchers;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
-		"classpath*:/*-servlet.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
+@ContextConfiguration(classes = {GeneralConfig.class, TestConfig.class})
+@ConfigurationPropertiesScan
 @WebAppConfiguration
+@SpringBootTest
 public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	private final static Log log = LogFactory.getLog(WebBaseTest.class);
@@ -41,8 +44,7 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	private TestEntities testEntities;
 
 	@Autowired
-	@Qualifier("appSettings")
-	private ApplicationSettings appSettings;
+	private ApplicationSettings applicationSettings;
 
 	@Autowired
 	public BullhornData bullhornData;
@@ -105,7 +107,7 @@ public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	 *            The format for the path is: classpath:testdata/test-data-exampletable.sql
 	 */
 	public void runScripts(List<String> scriptPaths) {
-		if ("testing".equals(appSettings.getProfileName())) {
+		if ("testing".equals(applicationSettings.profileName())) {
 			for (String script : scriptPaths) {
 				this.executeSqlScript(script, false);
 			}

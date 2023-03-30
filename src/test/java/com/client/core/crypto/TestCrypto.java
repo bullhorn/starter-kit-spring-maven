@@ -58,7 +58,7 @@ public class TestCrypto extends BaseTest {
 
 			String decrypted = RC4.decodeAndDecrypt(encrypted, rc4Key);
 
-			Assertions.assertEquals("RC4 encryption/decryption failed; decrypted result did not match initial value to encrypt", decrypted, testValue);
+			Assertions.assertEquals(testValue, decrypted, "RC4 encryption/decryption failed; decrypted result did not match initial value to encrypt");
 
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit RC4 test", e);

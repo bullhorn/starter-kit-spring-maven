@@ -2,29 +2,34 @@ package com.client;
 
 import java.util.List;
 
+import com.client.config.GeneralConfig;
+import com.client.config.ScheduledEventConfig;
+import com.client.config.TestConfig;
+import com.client.core.scheduledtasks.service.impl.StandardEventWorkflowFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.api.mock.MockBullhornData;
-import com.client.core.ApplicationSettings;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.core.base.tools.test.TestUtil;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
-		"classpath*:/*-scheduledtasks.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
+@ConfigurationPropertiesScan
+@ContextConfiguration(classes = { GeneralConfig.class, TestConfig.class, ScheduledEventConfig.class, StandardEventWorkflowFactory.class})
+@SpringBootTest
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	private final static Log log = LogFactory.getLog(BaseTest.class);
@@ -39,7 +44,6 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	public TestUtil testUtil;
 
 	@Autowired
-	@Qualifier("appSettings")
 	public ApplicationSettings appSettings;
 
 	@Autowired
@@ -79,7 +83,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	 *            The format for the path is: classpath:testdata/test-data-exampletable.sql
 	 */
 	public void runScripts(List<String> scriptPaths) {
-		if ("testing".equals(appSettings.getProfileName())) {
+		if ("testing".equals(appSettings.profileName())) {
 			if (this.jdbcTemplate != null) {
 				for (String script : scriptPaths) {
 					this.executeSqlScript(script, false);

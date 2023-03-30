@@ -23,11 +23,10 @@ public class TestMessageSources extends WebBaseTest {
     public void testCoreProperties() {
         String message = this.getQueryUsingKey("core.test.property");
 
-        Assertions.assertTrue(CORE_PROPERTY_VALUE.equals(message), "resources/messages_en_US.properties was not read into messageSource");
+        Assertions.assertEquals(CORE_PROPERTY_VALUE, message, "resources/messages_en_US.properties was not read into messageSource");
     }
 
     private String getQueryUsingKey(String key) {
-
         String property = messageSource.getMessage(key, null, Locale.US);
         return property;
     }

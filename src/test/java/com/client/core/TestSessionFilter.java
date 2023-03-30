@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.client.ApplicationSettings;
+import com.client.SessionFilter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -19,7 +20,6 @@ import com.client.BaseTest;
 public class TestSessionFilter extends BaseTest {
 
 	@Autowired
-	@Qualifier("appSettings")
 	private ApplicationSettings applicationSettings;
 
 	private SessionFilter sessionFilter;
@@ -51,7 +51,7 @@ public class TestSessionFilter extends BaseTest {
 	public void testDoFilterAllowInCore() throws IOException, ServletException {
 		this.req.setServletPath("/main/files/getFiles");
 		this.req.setMethod("GET");
-		this.req.setParameter("apiKey", applicationSettings.getApiKey());
+		this.req.setParameter("apiKey", applicationSettings.apiKey());
 		this.sessionFilter.doFilter(req, rsp, mockChain);
 		Assertions.assertTrue(
 				rsp.getStatus() == HttpStatus.OK.value(),
@@ -64,7 +64,7 @@ public class TestSessionFilter extends BaseTest {
 		this.req.setServletPath("/main/files/getFiles");
 		this.req.setMethod("GET");
 		this.req.getSession().setAttribute(sessionFilter.getSessionStoredApiKeyName(),
-				sessionFilter.encryptApiKey(applicationSettings.getApiKey()));
+				sessionFilter.encryptApiKey(applicationSettings.apiKey()));
 		this.sessionFilter.doFilter(req, rsp, mockChain);
 		Assertions.assertTrue(
 				rsp.getStatus() == HttpStatus.OK.value(),
