@@ -3,7 +3,6 @@ package com.client;
 import java.util.List;
 
 import com.client.config.GeneralConfig;
-import com.client.config.ScheduledEventConfig;
 import com.client.config.TestConfig;
 import com.client.core.scheduledtasks.service.impl.StandardEventWorkflowFactory;
 import org.apache.commons.logging.Log;
@@ -28,7 +27,7 @@ import com.client.core.base.tools.test.TestUtil;
 
 @ExtendWith(SpringExtension.class)
 @ConfigurationPropertiesScan
-@ContextConfiguration(classes = { GeneralConfig.class, TestConfig.class, ScheduledEventConfig.class, StandardEventWorkflowFactory.class})
+@ContextConfiguration(classes = { GeneralConfig.class, TestConfig.class, StandardEventWorkflowFactory.class})
 @SpringBootTest
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
@@ -55,7 +54,7 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 			MockBullhornData mockBullhornData = (MockBullhornData) this.bullhornData;
 			mockBullhornData.refreshTestData();
 		} catch (ClassCastException e) {
-			log.error("This test is not running with the MockBullhornData. Please review what Spring profile the test is running in.");
+			log.error("This test is not running with the MockBullhornData. Please review what Spring profile the test is running in.", e);
 		}
 	}
 
