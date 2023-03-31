@@ -1,21 +1,21 @@
 package com.client.config;
 
-import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.api.mock.MockBullhornData;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.core.base.tools.test.TestUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.SharedEntityManagerBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import javax.sql.DataSource;
 import java.util.Properties;
 
+@Configuration
 public class TestConfig {
 
     @Bean
@@ -58,13 +58,18 @@ public class TestConfig {
         return new TestUtil();
     }
 
-    @Bean
-    EmbeddedDatabase dataSource() {
-        return new EmbeddedDatabaseBuilder().build();
+    @Bean("dataSource")
+    DataSource dataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.hsqldb.jdbc.JDBCDriver");
+        dataSourceBuilder.url("jdbc:hsqldb:mem:myDb");
+        dataSourceBuilder.username("SA");
+        dataSourceBuilder.password("");
+        return dataSourceBuilder.build();
     }
 
     @Bean("entityManagerFactory")
-    LocalContainerEntityManagerFactoryBean entityManagerFactory(EmbeddedDatabase db, HibernateJpaVendorAdapter jpaVendorAdapter) {
+    LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, HibernateJpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setJpaVendorAdapter(jpaVendorAdapter);
         Properties properties = new Properties();
@@ -74,7 +79,7 @@ public class TestConfig {
         factoryBean.setJpaProperties(properties);
 
         factoryBean.setPackagesToScan();
-        factoryBean.setDataSource(db);
+        factoryBean.setDataSource(dataSource);
         return factoryBean;
     }
 
@@ -93,19 +98,6 @@ public class TestConfig {
         jpaVendorAdapter.setGenerateDdl(false);
         jpaVendorAdapter.setDatabase(Database.HSQL);
         return jpaVendorAdapter;
-    }
-
-    @Bean("abstractEntityFactory")
-    LocalContainerEntityManagerFactoryBean abstractEntityFactory(HibernateJpaVendorAdapter jpaVendorAdapter) {
-        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setJpaVendorAdapter(jpaVendorAdapter);
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
-        factoryBean.setJpaProperties(properties);
-        factoryBean.setPackagesToScan();
-        return factoryBean;
     }
 
     @Bean
