@@ -1,15 +1,15 @@
 package com.client.core.base.workflow.node;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.workflow.traversing.Traverser;
 import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -17,16 +17,22 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+@Log4j2
 public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends Traverser> implements WorkflowAction<E, T> {
-
-    private final Logger log = Logger.getLogger(getClass());
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
-    private EmailTemplateService emailTemplateService;
+    @Autowired
     private ApplicationSettings appSettings;
-    private MessageSource messageSource;
+
+    @Autowired
     private Emailer emailer;
+
+    @Autowired
+    private EmailTemplateService emailTemplateService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
         this.relatedEntityFields = relatedEntityFields;
@@ -45,35 +51,19 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
     }
 
     protected MessageSource getMessageSource() {
-        if(this.messageSource == null) {
-            this.messageSource = AppContext.getApplicationContext().getBean("messageSource", MessageSource.class);
-        }
-
-        return messageSource;
+        return this.messageSource;
     }
 
     protected EmailTemplateService getEmailTemplateService() {
-        if(this.emailTemplateService == null) {
-            this.emailTemplateService = AppContext.getApplicationContext().getBean(EmailTemplateService.class);
-        }
-
         return this.emailTemplateService;
     }
 
     protected ApplicationSettings getAppSettings() {
-        if(this.appSettings == null) {
-            this.appSettings = AppContext.getApplicationContext().getBean(ApplicationSettings.class);
-        }
-
         return this.appSettings;
     }
 
     protected Emailer getEmailer() {
-        if(this.emailer == null) {
-            this.emailer = AppContext.getApplicationContext().getBean(Emailer.class);
-        }
-
-        return emailer;
+        return this.emailer;
     }
 
     @Override
@@ -85,9 +75,4 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
 
         return allFields;
     }
-
-    protected Logger getLog() {
-        return log;
-    }
-
 }

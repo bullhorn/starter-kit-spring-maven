@@ -2,9 +2,7 @@ package com.client.core.scheduledtasks.model.helper.impl;
 
 import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
-import com.client.core.base.model.relatedentity.CandidateRelatedEntity;
 import com.client.core.base.model.relatedentity.PlacementCommissionRelatedEntity;
-import com.client.core.base.model.relatedentity.credentialing.PlacementCertificationRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
@@ -12,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class PlacementCommissionScheduledTaskHelper extends AbstractScheduledTaskHelper<PlacementCommission> {
-	
+
 	private Placement placement;
 	private CorporateUser user;
 	private ClientContact clientContact;
@@ -112,5 +110,5 @@ public class PlacementCommissionScheduledTaskHelper extends AbstractScheduledTas
 
 		return jobSubmissionSendingUser;
 	}
-	
+
 }

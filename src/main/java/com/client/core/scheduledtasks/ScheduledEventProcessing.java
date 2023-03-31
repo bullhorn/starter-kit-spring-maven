@@ -3,8 +3,7 @@ package com.client.core.scheduledtasks;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.response.event.Event;
 import com.bullhornsdk.data.model.response.event.GetEventsResponse;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.base.util.Utility;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
@@ -12,7 +11,7 @@ import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 import java.util.Map;
@@ -22,57 +21,58 @@ import java.util.concurrent.Executors;
 /**
  * Entry point for scheduled event handling.  Makes API call to BULLHORN to
  * retrieve events for the subscriptionName provided in the constructor, then hands off each event to
- * an instance of {@link com.client.core.scheduledtasks.workers.EventProcessing}.
+ * an instance of {@link EventProcessing}.
  */
+@Log4j2
 public class ScheduledEventProcessing implements Runnable {
-	
-	private final Logger log = Logger.getLogger(getClass());
-	
+
 	private final String subscriptionName;
-	
+
 	private final BullhornData bullhornData;
+
 	private final ApplicationSettings appSettings;
+
     private final EventWorkflowFactory eventWorkflowFactory;
 
-	public ScheduledEventProcessing(String subscriptionName) {
+	public ScheduledEventProcessing(String subscriptionName, BullhornData bullhornData, ApplicationSettings appSettings, EventWorkflowFactory eventWorkflowFactory) {
 		super();
 		this.subscriptionName = subscriptionName;
-		this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
-		this.appSettings = AppContext.getApplicationContext().getBean("appSettings", ApplicationSettings.class);
-		this.eventWorkflowFactory = AppContext.getApplicationContext().getBean(EventWorkflowFactory.class);
+		this.bullhornData = bullhornData;
+		this.appSettings = appSettings;
+		this.eventWorkflowFactory = eventWorkflowFactory;
 	}
 
     /**
-     * Performs the event handling by making the {@link com.bullhorn.apiservice.ApiService#eventsGetEvents(String, String, int)}
+     * Performs the event handling by making the {@link com.bullhornsdk.data.api.BullhornData#getEvents(String, Integer)}
      * call and processing each one individually.  Each event is handed off to an instance of {@link EventProcessing}
      */
 	@Override
 	public void run() {
 		try {
 
-			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.getNumEventsPerBatch());
+			GetEventsResponse eventResponse = bullhornData.getEvents(subscriptionName, appSettings.numEventsPerBatch());
 
 			if(eventResponse != null){
 				List<Event> events = eventResponse.getEvents();
 				List<CustomSubscriptionEvent> filteredEvents = removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(events, eventResponse.getRequestId());
 
-				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + events.size()
+				log.info("Running " + subscriptionName + " subscription subscriptionEvents = " + events.size()
 						+ " filteredEvents = " + filteredEvents.size());
 
 				handleEvents(filteredEvents);
-			}else{
-				log.info("Running " + subscriptionName + "subscription subscriptionEvents = " + 0
+			} else {
+				log.info("Running " + subscriptionName + " subscription subscriptionEvents = " + 0
 						+ " filteredEvents = " + 0);
 			}
 		} catch(RuntimeException e) {
-			log.error("Unknown error occurred during " + subscriptionName + "event handling.", e);
+			log.error("Unknown error occurred during " + subscriptionName + " event handling.", e);
 		}
 	}
-	
+
 	private void handleEvents(List<CustomSubscriptionEvent> subscriptionEvents) {
 		if (subscriptionEvents.size() > 0) {
 
-			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.getNumEventThreads()));
+			ExecutorService exec = Executors.newFixedThreadPool(Utility.parseInteger(appSettings.numEventThreads()));
 
 
 			for (CustomSubscriptionEvent event : subscriptionEvents) {
@@ -89,7 +89,7 @@ public class ScheduledEventProcessing implements Runnable {
 			exec.shutdown();
 			while (!exec.isTerminated()) {
 			}
-			
+
 			exec = null;
 		}
 	}
@@ -97,7 +97,7 @@ public class ScheduledEventProcessing implements Runnable {
 	private List<CustomSubscriptionEvent> removeEventsThrownByApiUserAndMergeDuplicateEventsAsStandardEvents(List<Event> subscriptionEvents, Integer requestId) {
 
 		List<CustomSubscriptionEvent> filteredEvents;
-		String apiUserID = Integer.toString(appSettings.getApiUserID());
+		String apiUserID = Integer.toString(appSettings.apiUserID());
 		Map<String, CustomSubscriptionEvent> eventMap = Maps.newHashMap();
 
 		for (Event event : subscriptionEvents) {
@@ -137,4 +137,7 @@ public class ScheduledEventProcessing implements Runnable {
 		return filteredEvents;
 	}
 
+	public String getSubscriptionName() {
+		return this.subscriptionName;
+	}
 }

@@ -8,7 +8,7 @@ import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.client.core.resttrigger.model.helper.impl.CandidateReferenceRestTriggerHelper;
 import com.client.core.resttrigger.workflow.traversing.CandidateReferenceRestTriggerTraverser;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,14 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Log4j2
 @Controller
-@RequestMapping("/resttrigger/candidatereference/*")
+@RequestMapping("${rest.prefix.core}/candidatereference/*")
 public class CandidateReferenceRestTriggerController extends AbstractRestTriggerController<CandidateReference, CandidateReferenceRestTriggerHelper, CandidateReferenceRestTriggerTraverser> {
-
-    private final Logger log = Logger.getLogger(CandidateReferenceRestTriggerController.class);
 
     @Autowired
     public CandidateReferenceRestTriggerController(Optional<List<TriggerValidator<CandidateReference, CandidateReferenceRestTriggerHelper, CandidateReferenceRestTriggerTraverser>>> triggerValidators) {
+
         super(CandidateReference.class, triggerValidators, CandidateReferenceRelatedEntity.values());
     }
 
@@ -39,7 +39,7 @@ public class CandidateReferenceRestTriggerController extends AbstractRestTrigger
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "add" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse addEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Candidate Reference Add Validation Process From Rest Trigger ----------------------------------------");
@@ -63,7 +63,7 @@ public class CandidateReferenceRestTriggerController extends AbstractRestTrigger
      *
      * @return the json parsed form response message
      */
-    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE })
+    @RequestMapping(value = { "edit" }, method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public RestTriggerResponse editEntity(@RequestBody String body) {
         log.info("---------------------------- Starting Candidate Reference Edit Validation Process From Rest Trigger ----------------------------------------");

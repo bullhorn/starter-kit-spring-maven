@@ -6,7 +6,6 @@ import com.bullhornsdk.data.model.entity.core.standard.Certification;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.credentialing.CandidateCertificationRelatedEntity;
-import com.client.core.base.model.relatedentity.credentialing.CandidateCertificationRequirementRelatedEntity;
 import com.client.core.scheduledtasks.model.helper.AbstractScheduledTaskHelper;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 
