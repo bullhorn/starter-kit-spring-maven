@@ -123,6 +123,14 @@
         </dependency>
 <!--        TODO: What should we do about all of the additional libraries imported? Do they belong? Or case by case?-->
 <!--        TODO: What to do about cs-starter-template stuff? Like Artifactory-->
+
+        <!-- Used for unit tests. Embedded database -->
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.7.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <!-- DONE ADDING DEPENDENCIES -->
 

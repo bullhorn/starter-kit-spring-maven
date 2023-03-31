@@ -6,6 +6,7 @@ import com.bullhornsdk.data.api.StandardBullhornData;
 import com.bullhornsdk.data.exception.CustomResponseErrorHandler;
 import com.client.ApplicationSettings;
 
+import com.client.core.base.tools.context.CustomReloadableResourceBundleMessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -71,5 +72,15 @@ public class GeneralConfig {
         commonsMultipartResolver.setMaxUploadSize(1048576L);
         commonsMultipartResolver.setMaxInMemorySize(2097152);
         return commonsMultipartResolver;
+    }
+
+    @Bean
+    public CustomReloadableResourceBundleMessageSource messageSource() {
+        CustomReloadableResourceBundleMessageSource messageSource = new CustomReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath*:messages*");
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setCacheSeconds(-1);
+        return messageSource;
     }
 }

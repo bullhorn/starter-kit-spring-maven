@@ -1,11 +1,10 @@
 package com.client.core.crypto;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.junit.Test;
 
 import com.client.BaseTest;
 import com.client.core.security.tools.Base64;
@@ -37,17 +36,18 @@ public class TestCrypto extends BaseTest {
 
 			String testValueDecoded = new String(base64Decoded, Charsets.UTF_8);
 
-			assertEquals("Raw byte data did not properly Base64 encode/decode; different lengths.", base64Decoded.length, rawTestValue.length);
+			Assertions.assertEquals(base64Decoded.length, rawTestValue.length,"Raw byte data did not properly Base64 encode/decode; different lengths.");
 
 			int index = 0;
 			for(byte valueToTest : base64Decoded) {
-				assertEquals("Raw byte data did not properly Base64 encoded/decode; individual byte didn't match", valueToTest, rawTestValue[index++]);
+				Assertions.assertEquals(valueToTest, rawTestValue[index++], "Raw byte data did not properly Base64 encoded/decode; individual byte didn't match");
 			}
 
-			assertEquals("Test string value did not properly Base64 encode/decode, or String was not created from bytes properly", testValueDecoded, testValue);
+			Assertions.assertEquals(testValueDecoded, testValue, "Test string value did not properly Base64 encode/decode, or String was not created from bytes properly");
+
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit Base64 test", e);
-			fail("Error occurred during Base64 test");
+			Assertions.fail("Error occurred during Base64 test");
 		}
 	}
 
@@ -58,10 +58,11 @@ public class TestCrypto extends BaseTest {
 
 			String decrypted = RC4.decodeAndDecrypt(encrypted, rc4Key);
 
-			assertEquals("RC4 encryption/decryption failed; decrypted result did not match initial value to encrypt", decrypted, testValue);
+			Assertions.assertEquals(testValue, decrypted, "RC4 encryption/decryption failed; decrypted result did not match initial value to encrypt");
+
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit RC4 test", e);
-			fail("Error occurred during RC4 test");
+			Assertions.fail("Error occurred during RC4 test");
 		}
 	}
 
@@ -72,10 +73,11 @@ public class TestCrypto extends BaseTest {
 
 			String decrypted = TripleDES.decodeAndDecrypt(encrypted, tripleDESKey);
 
-			assertEquals("TripleDES encryption/decryption failed; decrypted result did not match initial value to encrypt", decrypted, testValue);
+			Assertions.assertEquals(decrypted, testValue, "TripleDES encryption/decryption failed; decrypted result did not match initial value to encrypt");
+
 		} catch(Exception e) {
 			log.error("Error occurred during JUnit TripleDES test", e);
-			fail("Error occurred during TripleDES test");
+			Assertions.fail("Error occurred during TripleDES test");
 		}
 	}
 
