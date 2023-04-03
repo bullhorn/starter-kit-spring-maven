@@ -2,6 +2,7 @@ package com.client.config;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.ApplicationSettings;
+import com.client.core.dlmtasks.DateLastModifiedEventProcessing;
 import com.client.core.scheduledtasks.ScheduledEventProcessing;
 import com.client.core.scheduledtasks.config.CustomSubscriptionSettings;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
@@ -13,6 +14,8 @@ import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,32 +41,58 @@ public class ScheduledEventConfig {
     }
 
     @Bean
-    public SchedulerFactoryBean mainScheduler() {
+    public SchedulerFactoryBean mainScheduler(DateLastModifiedEventProcessing dateLastModifiedEventProcessing) {
         SchedulerFactoryBean mainScheduler = new SchedulerFactoryBean();
         mainScheduler.setOverwriteExistingJobs(true);
         mainScheduler.setAutoStartup(true);
 
-        CronTrigger[] cronTriggers = createCustomCronTriggers();
-        mainScheduler.setTriggers(cronTriggers);
+        List<CronTrigger> cronTriggers = new ArrayList<>();
+        cronTriggers.addAll(this.createCustomCronTriggers());
+        cronTriggers.addAll(this.createDateLastModifiedCronTriggers(dateLastModifiedEventProcessing));
+        mainScheduler.setTriggers(cronTriggers.toArray(CronTrigger[]::new));
 
         return mainScheduler;
     }
 
-    private CronTrigger[] createCustomCronTriggers() {
+    private List<CronTrigger> createDateLastModifiedCronTriggers(DateLastModifiedEventProcessing dateLastModifiedEventProcessing) {
+        Map<String, String> dlmSubscriptions = customSubscriptionSettings.dateLastModifiedSubscriptions();
+
+        return dlmSubscriptions.entrySet().stream().map((subscription) -> {
+            String subscriptionName = subscription.getKey();
+            String cronExpression = subscription.getValue();
+            MethodInvokingJobDetailFactoryBean jobDetailFactoryBean;
+
+            try {
+                jobDetailFactoryBean = this.configureJobDetailFactory(dateLastModifiedEventProcessing);
+                CronTriggerFactoryBean cronTriggerFactoryBean = this.configureCronTriggerFactoryBean(jobDetailFactoryBean, subscriptionName, cronExpression);
+                return cronTriggerFactoryBean.getObject();
+            } catch (RuntimeException e) {
+                throw new RuntimeException("Could not create Job for Date Last Modified subscription", e);
+            }
+        }).toList();
+    }
+
+    private List<CronTrigger> createCustomCronTriggers() {
         Map<String, String> customSubscriptions = customSubscriptionSettings.customSubscriptions();
+
         return customSubscriptions.entrySet().stream().map((subscription) -> {
             String subscriptionName = subscription.getKey();
             String cronExpression = subscription.getValue();
+            MethodInvokingJobDetailFactoryBean jobDetailFactoryBean;
 
-            ScheduledEventProcessing eventProcessing = new ScheduledEventProcessing(subscriptionName, bullhornData, appSettings, eventWorkflowFactory);
-            MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = this.configureJobDetailFactory(eventProcessing);
-            CronTriggerFactoryBean cronTriggerFactoryBean = this.configureCronTriggerFactoryBean(jobDetailFactoryBean, subscriptionName, cronExpression);
+            try {
+                ScheduledEventProcessing eventProcessing = new ScheduledEventProcessing(subscriptionName, bullhornData, appSettings, eventWorkflowFactory);
+                jobDetailFactoryBean = this.configureJobDetailFactory(eventProcessing);
+                CronTriggerFactoryBean cronTriggerFactoryBean = this.configureCronTriggerFactoryBean(jobDetailFactoryBean, subscriptionName, cronExpression);
 
-            return cronTriggerFactoryBean.getObject();
-        }).toArray(CronTrigger[]::new);
+                return cronTriggerFactoryBean.getObject();
+            } catch (RuntimeException ex) {
+                throw new RuntimeException("Could not create Job for subscription " + subscriptionName, ex);
+            }
+        }).toList();
     }
 
-    private MethodInvokingJobDetailFactoryBean configureJobDetailFactory(ScheduledEventProcessing eventProcessing) {
+    private MethodInvokingJobDetailFactoryBean configureJobDetailFactory(Runnable eventProcessing) {
         MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
 
         jobDetailFactoryBean.setTargetObject(eventProcessing);
@@ -71,8 +100,8 @@ public class ScheduledEventConfig {
         jobDetailFactoryBean.setConcurrent(true);
         try {
             jobDetailFactoryBean.afterPropertiesSet();
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            throw new RuntimeException("Could not create Job for subscription " + eventProcessing.getSubscriptionName(), e);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
         }
 
         return jobDetailFactoryBean;
