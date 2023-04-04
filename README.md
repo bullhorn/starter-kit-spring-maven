@@ -26,7 +26,7 @@ The Starter Kit includes code for dealing with most of these methods of customiz
 The concept of a workflow is based around the idea of implementing large amounts of custom business logic while maintaining readability and encapsulation.  The starter-kit's design for workflows has recently changed; this documentation describes the newer framework.  Workflows are no longer stored in separate XML files, but instead are entirely configured via JAVA code, as is common in more modern JAVA/Spring applications.  The general idea is to add Spring beans to the starter-kit's Application Context, and they will automatically be inserted into the correct workflow.  This is done by extending standard abstract classes and annotating them with `@Service`.  The classes one would extend are specific to the kind of workflow you want to add your business logic to, and themselves all extend from a common base, the `WorkflowAction` class; for instance to add logic to the Placement REST Trigger, you would extend the `PlacementRestTriggerValidator` as below:
 ```java
 @Service
-public class ValidateSalary extends PlacementFormTriggerValidator {
+public class ValidateSalary extends PlacementRestTriggerValidator {
     private final static Map<PlacementRelatedEntity, Set<String>> FIELDS = ImmutableMap.<PlacementRelatedEntity, Set<String>>builderr()
             .build();
 
@@ -35,7 +35,7 @@ public class ValidateSalary extends PlacementFormTriggerValidator {
     }
   
 	@Override
-	public void validate(PlacementFormTriggerTraverser traverser) {
+	public void validate(PlacementRestTriggerTraverser traverser) {
 		//business logic
 	}
 	
@@ -67,7 +67,7 @@ public class ValidateSalary extends PlacementRestTriggerValidator {
 ```
 See the `com.client.core.base.model.relatedentity` package for details on the default fields per entity, as well as related entity's fields.  
 Additionally, there is an optional constructor parameter present on all of these abstract classes that allows you to set a specific order to your business logic; the construtor accepts an `Integer`, with `-1` being the default (which would imply the code would get executed first).  If you always want a certain piece of logic to go last, simply provide a large number in the constructor and ensure you don't create other `WorkflowAction`s that have a larger order.
-Note that the fields are only queried when queried through the helper, so for example, the following will not work:
+Note that the fields are only queried when queried through the helper, so for example, the following will **NOT** work:
 ```java
 @Service
 public class ValidateSalary extends PlacementRestTriggerValidator {
@@ -160,7 +160,7 @@ To implement custom logic, you extend one of the `RestTriggerValidator` classes 
 Below are some specific details about RestTriggerTraversers.
 
 #### ${entityName}RestTriggerTraverser
-The REST trigger implementations of `com.client.core.base.workflow.traversing.TriggerTraverser` are all essentially the same, the only differences being determined by the type of entity being passed through the workflow. These differences are described in the general [Traversers](#traversers) section. The functionality provided by Bullhorn for REST triggers is all handled in the `com.client.core.base.workflow.traversing.AbstractTriggerTraverser` and will always be the same. There are two different types of responses we can provide to a REST trigger, either an error response or a return values response, and both are handled using the `Map<String, String> formResponse` present in all `TriggerTraverser`s. Such `Traverser`s provide utility methods to send back a response, either with `public Map<String, String> getFormResponse()` (and a subsequent put call) or `public void addFormResponse(String key, String message)`. The `Map<String, String>` is maintained throughout the workflow by the `TriggerTraverser`, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.
+The REST trigger implementations of `com.client.core.base.workflow.traversing.TriggerTraverser` are all essentially the same with the only differences being determined by the type of entity being passed through the workflow. These differences are described in the general [Traversers](#traversers) section. The functionality provided by Bullhorn for REST triggers is all handled in the `com.client.core.base.workflow.traversing.AbstractTriggerTraverser` and will always be the same. There are two different types of responses we can provide to a REST trigger, either an error response or a return values response, and both are handled using the `Map<String, String> formResponse` present in all `TriggerTraverser`s. Such `Traverser`s provide utility methods to send back a response, either with `public Map<String, String> getFormResponse()` (and a subsequent put call) or `public void addFormResponse(String key, String message)`. The `Map<String, String>` is maintained throughout the workflow by the `TriggerTraverser`, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.
 
 In order to add an error to the ``formResponse``, we add a Map Entry consisting of a key in the  form ``error:${someKey}`` and a value consisting of the error message itself, i.e.
 
