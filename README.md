@@ -194,6 +194,14 @@ Alternatively, you can use [Postman](https://www.postman.com/downloads/) or the 
 
 Once you have successfully created a subscription you should have a name for it which you provided in the ``event/subscription`` call.  In the app, we want to open up ``src/main/resources/application.properties``, and scroll down to the section where you will find a section with properties of prefix `scheduledtasks.customSubscriptions`. Here you will add a new property with the prefix `scheduledtasks.customSubscriptions`, and the name of the property will be the subscription name you created, and the value will be the cron expression which you can generate based on your requirements at [cronmaker.com](http://www.cronmaker.com/).
 
+#### Example
+Say you created a subscription called `my_test_subscription` that listens to Candidate UPDATED and INSERTED events, and want to poll events every 5 minutes.
+After you create your EventTask, all you need to do to tell the application to poll for your newly created subscription every 5 minutes is to add the following line to your application.properties:
+```properties
+scheduledtasks.customSubscriptions.my_test_subscription=0 0/5 * 1/1 * ? *
+```
+And you're set. The application on startup will read every property under the scheduledtasks.customSubscriptions prefix and create the necessary triggers for the Quartz scheduler to invoke when the provided cron expression triggers.
+
 Having completed these steps, you are now ready to run your app and consume Bullhorn events.  Every time the Cron Expression we provided triggers, our application will ping Bullhorn asking for any new events for the subscription we created.  If it finds any, it will loop over them, sending each one through it's appropriate scheduled tasks workflow on a different thread.  All scheduled tasks are defined by extending the various `EventTask` classes (again a subclass of `WorkflowAction`).  There is one abstract `EventTask` class for each kind of entity (e.g. `PlacementEventTask`).  Similarly as with REST Triggers, any `EventTask` added to the Application Context for which the app receives an event will be called.  For instance, if we receive a 'Candidate UPDATE' event, the application will call all classes extending `CandidateEventTask`.
 
 Below are some details about the particular implementations of ``com.client.core.base.workflow.traversing.Traverser`` used for Subscription-Based Scheduled Tasks.
