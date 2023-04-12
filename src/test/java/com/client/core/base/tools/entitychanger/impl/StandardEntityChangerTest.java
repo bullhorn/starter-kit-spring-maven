@@ -7,6 +7,7 @@ import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.ImmutableMap;
 import org.joda.time.DateTime;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class StandardEntityChangerTest {
     private Candidate candidate;

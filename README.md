@@ -27,6 +27,7 @@ The concept of a workflow is based around the idea of implementing large amounts
 ```java
 @Service
 public class ValidateSalary extends PlacementRestTriggerValidator {
+
     private final static Map<PlacementRelatedEntity, Set<String>> FIELDS = ImmutableMap.<PlacementRelatedEntity, Set<String>>builderr()
             .build();
 
@@ -68,6 +69,7 @@ public class ValidateSalary extends PlacementRestTriggerValidator {
 See the `com.client.core.base.model.relatedentity` package for details on the default fields per entity, as well as related entity's fields.  
 Additionally, there is an optional constructor parameter present on all of these abstract classes that allows you to set a specific order to your business logic; the construtor accepts an `Integer`, with `-1` being the default (which would imply the code would get executed first).  If you always want a certain piece of logic to go last, simply provide a large number in the constructor and ensure you don't create other `WorkflowAction`s that have a larger order.
 Note that the fields are only queried when queried through the helper, so for example, the following will **NOT** work:
+
 ```java
 @Service
 public class ValidateSalary extends PlacementRestTriggerValidator {
@@ -191,8 +193,15 @@ Subscription events are one of the most powerful concepts available with the Bul
 
 The first step in creating a subscription-based task is to subscribe to the types of events you want to consume.  The easiest way to do this is by using [SOAPUI](http://www.soapui.org/) along with the [SOAP documentation](http://developer.bullhorn.com/doc/version_2-0/#Operations/operation-eventsSubscribe.htm%3FTocPath%3DReference%7CCore%20Operations%7C_____12).  You essentially load the [WSDL](https://api.bullhornstaffing.com/webservices-2.5/?wsdl) into SOAP UI and then make a ``eventSubscribe`` call, passing the entity types and event types you wish to consume.  
 Alternatively, you can use [Postman](https://www.postman.com/downloads/) or the HTTP client of your choice along with the [REST documentation](http://bullhorn.github.io/rest-api-docs/index.html#put-event-subscription) to subscribe using the `/event/subscription` endpoint.
-
 Once you have successfully created a subscription you should have a name for it which you provided in the ``event/subscription`` call.  In the app, we want to open up ``src/main/resources/application.properties``, and scroll down to the section where you will find a section with properties of prefix `scheduledtasks.customSubscriptions`. Here you will add a new property with the prefix `scheduledtasks.customSubscriptions`, and the name of the property will be the subscription name you created, and the value will be the cron expression which you can generate based on your requirements at [cronmaker.com](http://www.cronmaker.com/).
+
+#### Example
+Say you created a subscription called `my_test_subscription` that listens to Candidate UPDATED and INSERTED events, and want to poll events every 5 minutes.
+After you create your EventTask, all you need to do to tell the application to poll for your newly created subscription every 5 minutes is to add the following line to your application.properties:
+```properties
+scheduledtasks.customSubscriptions.my_test_subscription=0 0/5 * 1/1 * ? *
+```
+And you're set. The application on startup will read every property under the scheduledtasks.customSubscriptions prefix and create the necessary triggers for the Quartz scheduler to invoke when the provided cron expression triggers.
 
 Having completed these steps, you are now ready to run your app and consume Bullhorn events.  Every time the Cron Expression we provided triggers, our application will ping Bullhorn asking for any new events for the subscription we created.  If it finds any, it will loop over them, sending each one through it's appropriate scheduled tasks workflow on a different thread.  All scheduled tasks are defined by extending the various `EventTask` classes (again a subclass of `WorkflowAction`).  There is one abstract `EventTask` class for each kind of entity (e.g. `PlacementEventTask`).  Similarly as with REST Triggers, any `EventTask` added to the Application Context for which the app receives an event will be called.  For instance, if we receive a 'Candidate UPDATE' event, the application will call all classes extending `CandidateEventTask`.
 
