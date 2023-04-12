@@ -7,20 +7,26 @@ import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.ImmutableMap;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class StandardEntityChangerTest {
     private Candidate candidate;
     private Candidate emptyCandidate;
     private TestBullhornEntity testBullhornEntity;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         candidate = new Candidate(1);
         candidate.setAddress(makeAddress());
@@ -91,10 +97,12 @@ public class StandardEntityChangerTest {
         assertEquals(1999, dateOfBirth.getYear());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void failsToRetrieveIfTypeIsUnsupported() {
         EntityChanger entityChanger = new StandardEntityChanger();
-        entityChanger.retrieveField(candidate, "address", Map.class);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                entityChanger.retrieveField(candidate, "address", Map.class)
+        );
     }
 
     @Test
@@ -217,22 +225,28 @@ public class StandardEntityChangerTest {
         assertNull(prop);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void setValueFailsIfPropertyDoesNotExist() {
         EntityChanger entityChanger = new StandardEntityChanger();
-        entityChanger.setField(candidate, "thisPropertyDoesNotExist", "customValue");
+        Assertions.assertThrows(RuntimeException.class, () ->
+                entityChanger.setField(candidate, "thisPropertyDoesNotExist", "customValue")
+        );
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void setValueFailsIfPropertyHasNoWriteMethod() {
         EntityChanger entityChanger = new StandardEntityChanger();
-        entityChanger.setField(testBullhornEntity, "fieldWithNoSetter", "customValue");
+        Assertions.assertThrows(RuntimeException.class, () ->
+                entityChanger.setField(testBullhornEntity, "fieldWithNoSetter", "customValue")
+        );
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void setValueFailsIfIntermediaryPropertyDoesntExist() {
         EntityChanger entityChanger = new StandardEntityChanger();
-        entityChanger.setField(testBullhornEntity, "fieldWithNoGetter.length", 50);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                entityChanger.setField(testBullhornEntity, "fieldWithNoGetter.length", 50)
+        );
     }
 
     @SuppressWarnings("ALL")
