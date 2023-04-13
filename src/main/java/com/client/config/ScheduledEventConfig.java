@@ -2,9 +2,8 @@ package com.client.config;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.ApplicationSettings;
-import com.client.core.dlmtasks.DateLastModifiedEventProcessing;
 import com.client.core.scheduledtasks.ScheduledEventProcessing;
-import com.client.core.scheduledtasks.config.CustomSubscriptionSettings;
+import com.client.core.scheduledtasks.config.ScheduledTasksSettings;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import org.quartz.CronTrigger;
 import org.springframework.context.annotation.Bean;
@@ -28,52 +27,32 @@ public class ScheduledEventConfig {
 
     private final EventWorkflowFactory eventWorkflowFactory;
 
-    private final CustomSubscriptionSettings customSubscriptionSettings;
+    private final ScheduledTasksSettings scheduledTasksSettings;
 
     ScheduledEventConfig(BullhornData bullhornData,
                          ApplicationSettings appSettings,
                          EventWorkflowFactory eventWorkflowFactory,
-                         CustomSubscriptionSettings customSubscriptionSettings) {
+                         ScheduledTasksSettings scheduledTasksSettings) {
         this.bullhornData = bullhornData;
         this.appSettings = appSettings;
         this.eventWorkflowFactory = eventWorkflowFactory;
-        this.customSubscriptionSettings = customSubscriptionSettings;
+        this.scheduledTasksSettings = scheduledTasksSettings;
     }
 
     @Bean
-    public SchedulerFactoryBean mainScheduler(DateLastModifiedEventProcessing dateLastModifiedEventProcessing) {
+    public SchedulerFactoryBean mainScheduler() {
         SchedulerFactoryBean mainScheduler = new SchedulerFactoryBean();
         mainScheduler.setOverwriteExistingJobs(true);
         mainScheduler.setAutoStartup(true);
 
-        List<CronTrigger> cronTriggers = new ArrayList<>();
-        cronTriggers.addAll(this.createCustomCronTriggers());
-        cronTriggers.addAll(this.createDateLastModifiedCronTriggers(dateLastModifiedEventProcessing));
+        List<CronTrigger> cronTriggers = new ArrayList<>(this.createCustomCronTriggers());
         mainScheduler.setTriggers(cronTriggers.toArray(CronTrigger[]::new));
 
         return mainScheduler;
     }
 
-    private List<CronTrigger> createDateLastModifiedCronTriggers(DateLastModifiedEventProcessing dateLastModifiedEventProcessing) {
-        Map<String, String> dlmSubscriptions = customSubscriptionSettings.dateLastModifiedSubscriptions();
-
-        return dlmSubscriptions.entrySet().stream().map((subscription) -> {
-            String subscriptionName = subscription.getKey();
-            String cronExpression = subscription.getValue();
-            MethodInvokingJobDetailFactoryBean jobDetailFactoryBean;
-
-            try {
-                jobDetailFactoryBean = this.configureJobDetailFactory(dateLastModifiedEventProcessing);
-                CronTriggerFactoryBean cronTriggerFactoryBean = this.configureCronTriggerFactoryBean(jobDetailFactoryBean, subscriptionName, cronExpression);
-                return cronTriggerFactoryBean.getObject();
-            } catch (RuntimeException e) {
-                throw new RuntimeException("Could not create Job for Date Last Modified subscription", e);
-            }
-        }).toList();
-    }
-
     private List<CronTrigger> createCustomCronTriggers() {
-        Map<String, String> customSubscriptions = customSubscriptionSettings.customSubscriptions();
+        Map<String, String> customSubscriptions = scheduledTasksSettings.customSubscriptions();
 
         return customSubscriptions.entrySet().stream().map((subscription) -> {
             String subscriptionName = subscription.getKey();
