@@ -1,9 +1,8 @@
 package com.client.core.base.tools.test;
 
 import com.bullhornsdk.data.api.BullhornData;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 public class TestUtil {
 
@@ -14,8 +13,7 @@ public class TestUtil {
 	private BullhornData bullhornData;
 
 	@Autowired
-	@Qualifier("appSettings")
-	private ApplicationSettings appSettings;
+	private ApplicationSettings applicationSettings;
 
 	public TestUtil() {
 		super();

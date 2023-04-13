@@ -1,30 +1,34 @@
 package com.client;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.List;
 
+import com.client.config.GeneralConfig;
+import com.client.config.TestConfig;
+import com.client.core.scheduledtasks.service.impl.StandardEventWorkflowFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.api.mock.MockBullhornData;
-import com.client.core.ApplicationSettings;
 import com.client.core.base.tools.test.TestEntities;
 import com.client.core.base.tools.test.TestUtil;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/applicationContext.xml", "classpath*:/*-workflow.xml", "classpath*:/*-config.xml",
-		"classpath*:/*-scheduledtasks.xml", "classpath*:/*-applicationContext.xml", "/*-test.xml" })
+
+@ExtendWith(SpringExtension.class)
+@ConfigurationPropertiesScan
+@ContextConfiguration(classes = { GeneralConfig.class, TestConfig.class, StandardEventWorkflowFactory.class})
+@SpringBootTest
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	private final static Log log = LogFactory.getLog(BaseTest.class);
@@ -39,30 +43,29 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	public TestUtil testUtil;
 
 	@Autowired
-	@Qualifier("appSettings")
 	public ApplicationSettings appSettings;
 
 	@Autowired
 	public BullhornData bullhornData;
 
-	@Before
+	@BeforeEach
 	public void refreshTestData() {
 		try {
 			MockBullhornData mockBullhornData = (MockBullhornData) this.bullhornData;
 			mockBullhornData.refreshTestData();
 		} catch (ClassCastException e) {
-			log.error("This test is not running with the MockBullhornData. Please review what Spring profile the test is running in.");
+			log.error("This test is not running with the MockBullhornData. Please review what Spring profile the test is running in.", e);
 		}
 	}
 
 	@Test
 	public void testApplicationContextSetup() {
-		assertNotNull(applicationContext);
+		Assertions.assertNotNull(applicationContext);
 	}
 
 	/**
 	 * Returns the container of bullhorn test entities
-	 * 
+	 *
 	 * @return
 	 */
 	public TestEntities getTestEntities() {
@@ -72,14 +75,14 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 	/**
 	 * Pass in a list of scripts to execute. This will only run if the app is run with maven profile "testing", since these scripts can
 	 * truncate tables etc.
-	 * 
+	 *
 	 * The format for the path is: classpath:testdata/test-data-exampletable.sql
-	 * 
+	 *
 	 * @param scriptPaths
 	 *            The format for the path is: classpath:testdata/test-data-exampletable.sql
 	 */
 	public void runScripts(List<String> scriptPaths) {
-		if ("testing".equals(appSettings.getProfileName())) {
+		if ("testing".equals(appSettings.profileName())) {
 			if (this.jdbcTemplate != null) {
 				for (String script : scriptPaths) {
 					this.executeSqlScript(script, false);

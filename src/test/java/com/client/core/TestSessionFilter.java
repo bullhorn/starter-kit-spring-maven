@@ -1,15 +1,15 @@
 package com.client.core;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import org.junit.Before;
-import org.junit.Test;
+import com.client.ApplicationSettings;
+import com.client.SessionFilter;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -20,7 +20,6 @@ import com.client.BaseTest;
 public class TestSessionFilter extends BaseTest {
 
 	@Autowired
-	@Qualifier("appSettings")
 	private ApplicationSettings applicationSettings;
 
 	private SessionFilter sessionFilter;
@@ -29,7 +28,7 @@ public class TestSessionFilter extends BaseTest {
 	private MockHttpServletResponse rsp;
 	private MockFilterChain mockChain;
 
-	@Before
+	@BeforeEach
 	public void setup() throws IOException, ServletException {
 		this.sessionFilter = new SessionFilter(applicationSettings);
 		this.mockChain = new MockFilterChain();
@@ -43,19 +42,21 @@ public class TestSessionFilter extends BaseTest {
 		this.req.setServletPath("/main/files/getFiles");
 		this.req.setMethod("GET");
 		this.sessionFilter.doFilter(req, rsp, mockChain);
-		assertTrue(
-				"The SessionFilter is not setup correctly. Security is compromised. Please make sure the web.xml has the SessionFilter setup for all relevant urls.",
-				rsp.getStatus() == HttpStatus.UNAUTHORIZED.value());
+		Assertions.assertEquals(rsp.getStatus(), HttpStatus.UNAUTHORIZED.value(),
+				"The SessionFilter is not setup correctly. Security is compromised. Please make sure the web.xml has the SessionFilter setup for all relevant urls."
+		);
 	}
 
 	@Test
 	public void testDoFilterAllowInCore() throws IOException, ServletException {
 		this.req.setServletPath("/main/files/getFiles");
 		this.req.setMethod("GET");
-		this.req.setParameter("apiKey", applicationSettings.getApiKey());
+		this.req.setParameter("apiKey", applicationSettings.apiKey());
 		this.sessionFilter.doFilter(req, rsp, mockChain);
-		assertTrue("Issue with session filter. The apiKey is provided but still not being let in.",
-				rsp.getStatus() == HttpStatus.OK.value());
+		Assertions.assertTrue(
+				rsp.getStatus() == HttpStatus.OK.value(),
+				"Issue with session filter. The apiKey is provided but still not being let in."
+		);
 	}
 
 	@Test
@@ -63,10 +64,11 @@ public class TestSessionFilter extends BaseTest {
 		this.req.setServletPath("/main/files/getFiles");
 		this.req.setMethod("GET");
 		this.req.getSession().setAttribute(sessionFilter.getSessionStoredApiKeyName(),
-				sessionFilter.encryptApiKey(applicationSettings.getApiKey()));
+				sessionFilter.encryptApiKey(applicationSettings.apiKey()));
 		this.sessionFilter.doFilter(req, rsp, mockChain);
-		assertTrue("Issue with session filter. The apiKey is provided but still not being let in.",
-				rsp.getStatus() == HttpStatus.OK.value());
+		Assertions.assertTrue(
+				rsp.getStatus() == HttpStatus.OK.value(),
+				"Issue with session filter. The apiKey is provided but still not being let in.");
 	}
 
 	@Test

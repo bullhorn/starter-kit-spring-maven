@@ -1,7 +1,5 @@
 package com.client.core.scheduledtasks.service.eventHandling;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,29 +9,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.annotation.Commit;
 
 import com.client.BaseTest;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationSettings;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import com.client.core.scheduledtasks.tools.enumeration.EventType;
 import com.client.core.scheduledtasks.workers.EventProcessing;
 import com.google.common.collect.Sets;
 
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
+@Commit
 public class TestEventProcessing extends BaseTest {
 
-    @Autowired
-    @Qualifier("appSettings")
-    private ApplicationSettings appSettings;
+	@Autowired
+	private ApplicationSettings appSettings;
 
 	@Autowired
-    private EventWorkflowFactory eventWorkflowFactory;
+	private EventWorkflowFactory eventWorkflowFactory;
 
 	private List<CustomSubscriptionEvent> subscriptionEvents;
 	private String subscriptionName;
@@ -44,7 +41,7 @@ public class TestEventProcessing extends BaseTest {
 		super();
 	}
 
-	@Before
+	@BeforeEach
 	public void populateEvents() {
 
 		subscriptionName = "TestSubscription";
@@ -93,9 +90,9 @@ public class TestEventProcessing extends BaseTest {
 
 	private List<String> createEventTypes() {
 		List<String> eventTypes = new ArrayList<String>();
-        eventTypes.add(EventType.DELETED.value());
-        eventTypes.add(EventType.INSERTED.value());
-        eventTypes.add(EventType.UPDATED.value());
+		eventTypes.add(EventType.DELETED.value());
+		eventTypes.add(EventType.INSERTED.value());
+		eventTypes.add(EventType.UPDATED.value());
 		return eventTypes;
 	}
 
@@ -123,7 +120,7 @@ public class TestEventProcessing extends BaseTest {
 	@Test
 	public void testSetup() {
 
-		assertTrue("Not set up correctly" + subscriptionEvents.size(), 48 == subscriptionEvents.size());
+		Assertions.assertEquals(48, subscriptionEvents.size(), "Not set up correctly" + subscriptionEvents.size());
 	}
 
 	@Test
@@ -131,11 +128,11 @@ public class TestEventProcessing extends BaseTest {
 		boolean error = false;
 		// configurable based on # threads to process concurrently
 		// set to 1 in stax-web numEventThreads if single threaded processing is required
-		ExecutorService exec = Executors.newFixedThreadPool(appSettings.getNumEventThreads());
+		ExecutorService exec = Executors.newFixedThreadPool(appSettings.numEventThreads());
 		// loop through each event
 		for (CustomSubscriptionEvent event : subscriptionEvents) {
 			error = false;
-            EventProcessing processEvent = EventProcessing.instantiateRunnable(event, eventWorkflowFactory);
+			EventProcessing processEvent = EventProcessing.instantiateRunnable(event, eventWorkflowFactory);
 			// send to exec service
 			try {
 				exec.execute(processEvent);
@@ -144,7 +141,7 @@ public class TestEventProcessing extends BaseTest {
 
 			}
 
-			assertFalse("Error with entity: " + event.getEntityName() + ", event type: " + event.getEntityEventType(), error);
+			Assertions.assertFalse(error,"Error with entity: " + event.getEntityName() + ", event type: " + event.getEntityEventType());
 		}
 
 		// shutdown pool, wait until it's done
