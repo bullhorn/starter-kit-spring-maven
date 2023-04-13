@@ -227,7 +227,28 @@ Finally, you will need to implement the method to execute your business logic.  
 
 The framework itself runs every minute by default (controlled by the `date.last.modified.cron.expression` app parameter).  The `com.client.core.dlmtasks.DateLastModifiedEventProcessing` class and other related ones @Autowired all instances of any `${entityName}DateLastModifiedEventTask`s in the Spring Application Context at app startup.  Every minute it checks to see if any of those tasks should execute, and if so generates a `/query/` or `/search/` REST call using the properties passed in the class's constructor, and for each object returned it runs the `process` method.  It minimizes REST calls made by making them in batches whenever it can...if there are two `JobOrderDateLastModifiedEventTask`s that both run every 5 minutes, it will only make the REST calls needed once.  The first run of every task is determined by it's `intervalMinutes` property, and should occur at `intervalMinutes` past the hour, or any multiple of the value thereafter (e.g. in our example it would run at :05, :10, :15, whichever comes next after the app starts up)...specifically it runs when `now().getMinutesOfHours() % intervalMinutesAgo === 0`.  Subsequently the framework keeps track of the last time each task ran and uses that value to determine when each task should be executed.
 
-### Database Tables
+## Nightly Tasks (Cron Jobs)
+Cron Jobs are arbitrary code you want to be executed in an interval or at specific times. These differ from a Scheduled Task in the sense that Scheduled Tasks execute in an interval to query a subscription.
+In fact, DLM tasks are a cron job under the hood, that queries some records and processes them according to the workflow.
+
+Cron Jobs allow you to have any kind of cleanup task you require to do. In previous version, the standard was to declare cron triggers in the main-scheduledtasks.xml file.
+Now, given that XML based configurations are discouraged and the file has been removed, the recommended option is to simply annotate the method in your class you want executed in the interval with the `org.springframework.scheduling.annotation.Scheduled` annotation.
+The method that's annotated should be simple, accepting no arguments and returning void. You can create a cron expression in cronmaker.com, too.
+Example:
+```java
+import org.springframework.scheduling.annotation.Scheduled;
+
+public class MyCronJob {
+
+    @Scheduled(cron = "0 0/5 * 1/1 * ? *")
+    public void execute() {
+        // This code will execute very 5 minutes on the minute
+    }
+
+}
+```
+
+## Database Tables
 To configure a cloud MySQL table, we use [Hibernate](http://hibernate.org/) and [JPA](http://www.oracle.com/technetwork/java/javaee/tech/persistence-jsp-140049.html), both provided by Maven.  Spring has some nice integration which we utilize, an example of which lives in ``src\main\java\com\client\config\JpaConfig.java``.  The idea is that we provide standard JDBC connection parameters, typically via application properties.  Next steps include creating the Hibernate EntityManager bean which references the datasource and handles serialization between the database and JAVA.  Finally we create a JPA TransactionManager that handles the actual database transactions.  To use a domain class to represent a database table, we just let the EntityManager know what package(s) our domain classes live in (which should extends ``com.client.core.base.model.jpa.AbstractJpaEntity<ID>``), and Hibernate can even generate the tables for us.  Typically, we also add an instance of both ``com.client.core.base.dao.impl.StandardJpaDao`` and ``com.client.core.base.service.transaction.impl.StandardTransactionService`` to the applicationContext as well.  We provide the Dao with the type of domain object we want to perform database transactions on, and it gives us methods like ``add(T)`` and ``merge(T)`` to do those.  The transaction service is the same but also handles opening and closing transactions for each of the call, using Spring's JPA Integration `@Transactional` annotation.  An example domain class is below, although it by no means utilizes Hibernates/JPAs full potential.
 ```java
 @Entity
