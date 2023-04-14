@@ -6,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "scheduledtasks")
-public record CustomSubscriptionSettings(Map<String, String> customSubscriptions) {
-    public CustomSubscriptionSettings {
+public record ScheduledTasksSettings(Map<String, String> customSubscriptions) {
+    public ScheduledTasksSettings {
         if (customSubscriptions == null) {
             customSubscriptions = Maps.newHashMap();
         }

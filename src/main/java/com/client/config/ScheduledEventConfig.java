@@ -3,7 +3,7 @@ package com.client.config;
 import com.bullhornsdk.data.api.BullhornData;
 import com.client.ApplicationSettings;
 import com.client.core.scheduledtasks.ScheduledEventProcessing;
-import com.client.core.scheduledtasks.config.CustomSubscriptionSettings;
+import com.client.core.scheduledtasks.config.ScheduledTasksSettings;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import org.quartz.CronTrigger;
 import org.springframework.context.annotation.Bean;
@@ -25,16 +25,16 @@ public class ScheduledEventConfig {
 
     private final EventWorkflowFactory eventWorkflowFactory;
 
-    private final CustomSubscriptionSettings customSubscriptionSettings;
+    private final ScheduledTasksSettings scheduledTasksSettings;
 
     ScheduledEventConfig(BullhornData bullhornData,
                          ApplicationSettings appSettings,
                          EventWorkflowFactory eventWorkflowFactory,
-                         CustomSubscriptionSettings customSubscriptionSettings) {
+                         ScheduledTasksSettings scheduledTasksSettings) {
         this.bullhornData = bullhornData;
         this.appSettings = appSettings;
         this.eventWorkflowFactory = eventWorkflowFactory;
-        this.customSubscriptionSettings = customSubscriptionSettings;
+        this.scheduledTasksSettings = scheduledTasksSettings;
     }
 
     @Bean
@@ -43,23 +43,29 @@ public class ScheduledEventConfig {
         mainScheduler.setOverwriteExistingJobs(true);
         mainScheduler.setAutoStartup(true);
 
-        CronTrigger[] cronTriggers = createCustomCronTriggers();
+        CronTrigger[] cronTriggers = this.createCustomCronTriggers();
         mainScheduler.setTriggers(cronTriggers);
 
         return mainScheduler;
     }
 
     private CronTrigger[] createCustomCronTriggers() {
-        Map<String, String> customSubscriptions = customSubscriptionSettings.customSubscriptions();
+        Map<String, String> customSubscriptions = scheduledTasksSettings.customSubscriptions();
+
         return customSubscriptions.entrySet().stream().map((subscription) -> {
             String subscriptionName = subscription.getKey();
             String cronExpression = subscription.getValue();
+            MethodInvokingJobDetailFactoryBean jobDetailFactoryBean;
 
-            ScheduledEventProcessing eventProcessing = new ScheduledEventProcessing(subscriptionName, bullhornData, appSettings, eventWorkflowFactory);
-            MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = this.configureJobDetailFactory(eventProcessing);
-            CronTriggerFactoryBean cronTriggerFactoryBean = this.configureCronTriggerFactoryBean(jobDetailFactoryBean, subscriptionName, cronExpression);
+            try {
+                ScheduledEventProcessing eventProcessing = new ScheduledEventProcessing(subscriptionName, bullhornData, appSettings, eventWorkflowFactory);
+                jobDetailFactoryBean = this.configureJobDetailFactory(eventProcessing);
+                CronTriggerFactoryBean cronTriggerFactoryBean = this.configureCronTriggerFactoryBean(jobDetailFactoryBean, subscriptionName, cronExpression);
 
-            return cronTriggerFactoryBean.getObject();
+                return cronTriggerFactoryBean.getObject();
+            } catch (RuntimeException ex) {
+                throw new RuntimeException("Could not create Job for subscription " + subscriptionName, ex);
+            }
         }).toArray(CronTrigger[]::new);
     }
 
@@ -71,8 +77,8 @@ public class ScheduledEventConfig {
         jobDetailFactoryBean.setConcurrent(true);
         try {
             jobDetailFactoryBean.afterPropertiesSet();
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            throw new RuntimeException("Could not create Job for subscription " + eventProcessing.getSubscriptionName(), e);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            throw new RuntimeException("Could not create Job for subscription " + eventProcessing.getSubscriptionName(), ex);
         }
 
         return jobDetailFactoryBean;
