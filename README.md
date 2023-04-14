@@ -234,14 +234,15 @@ In fact, DLM tasks are a cron job under the hood, that queries some records and 
 
 Cron Jobs allow you to have any kind of cleanup task you require to do. In previous version, the standard was to declare cron triggers in the main-scheduledtasks.xml file.
 Now, given that XML based configurations are discouraged and the file has been removed, the recommended option is to simply annotate the method in your class you want executed in the interval with the `org.springframework.scheduling.annotation.Scheduled` annotation.
-The method that's annotated should be simple, accepting no arguments and returning void. You can create a cron expression in cronmaker.com, too.
+The method that's annotated should be simple, accepting no arguments and returning void. You can create a cron expression in cronmaker.com, too, **but given this cron expression has to be UNIX compliant, you need to delete the last (i.e the righter-most) component of the cron expression**.
+Of course, you can use other tools that generate UNIX compliant cron expressions.
 Example:
 ```java
 import org.springframework.scheduling.annotation.Scheduled;
 
 public class MyCronJob {
 
-    @Scheduled(cron = "0 0/5 * 1/1 * ? *")
+    @Scheduled(cron = "0 0/5 * 1/1 * ?")
     public void execute() {
         // This code will execute very 5 minutes on the minute
     }
