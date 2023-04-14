@@ -13,8 +13,6 @@ import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -45,13 +43,13 @@ public class ScheduledEventConfig {
         mainScheduler.setOverwriteExistingJobs(true);
         mainScheduler.setAutoStartup(true);
 
-        List<CronTrigger> cronTriggers = new ArrayList<>(this.createCustomCronTriggers());
-        mainScheduler.setTriggers(cronTriggers.toArray(CronTrigger[]::new));
+        CronTrigger[] cronTriggers = this.createCustomCronTriggers();
+        mainScheduler.setTriggers(cronTriggers);
 
         return mainScheduler;
     }
 
-    private List<CronTrigger> createCustomCronTriggers() {
+    private CronTrigger[] createCustomCronTriggers() {
         Map<String, String> customSubscriptions = scheduledTasksSettings.customSubscriptions();
 
         return customSubscriptions.entrySet().stream().map((subscription) -> {
@@ -68,10 +66,10 @@ public class ScheduledEventConfig {
             } catch (RuntimeException ex) {
                 throw new RuntimeException("Could not create Job for subscription " + subscriptionName, ex);
             }
-        }).toList();
+        }).toArray(CronTrigger[]::new);
     }
 
-    private MethodInvokingJobDetailFactoryBean configureJobDetailFactory(Runnable eventProcessing) {
+    private MethodInvokingJobDetailFactoryBean configureJobDetailFactory(ScheduledEventProcessing eventProcessing) {
         MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
 
         jobDetailFactoryBean.setTargetObject(eventProcessing);
@@ -80,7 +78,7 @@ public class ScheduledEventConfig {
         try {
             jobDetailFactoryBean.afterPropertiesSet();
         } catch (ClassNotFoundException | NoSuchMethodException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("Could not create Job for subscription " + eventProcessing.getSubscriptionName(), ex);
         }
 
         return jobDetailFactoryBean;
