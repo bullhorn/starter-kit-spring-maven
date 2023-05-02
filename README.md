@@ -164,11 +164,40 @@ Below are some specific details about RestTriggerTraversers.
 #### ${entityName}RestTriggerTraverser
 The REST trigger implementations of `com.client.core.base.workflow.traversing.TriggerTraverser` are all essentially the same with the only differences being determined by the type of entity being passed through the workflow. These differences are described in the general [Traversers](#traversers) section. The functionality provided by Bullhorn for REST triggers is all handled in the `com.client.core.base.workflow.traversing.AbstractTriggerTraverser` and will always be the same. There are two different types of responses we can provide to a REST trigger, either an error response or a return values response, and both are handled using the `Map<String, String> formResponse` present in all `TriggerTraverser`s. Such `Traverser`s provide utility methods to send back a response, either with `public Map<String, String> getFormResponse()` (and a subsequent put call) or `public void addFormResponse(String key, String message)`. The `Map<String, String>` is maintained throughout the workflow by the `TriggerTraverser`, and all entries added to it will be processed and sent back to Bullhorn by default, once all workflow logic is completed.
 
+#### Validation messages
 In order to add an error to the ``formResponse``, we add a Map Entry consisting of a key in the  form ``error:${someKey}`` and a value consisting of the error message itself, i.e.
 
 ```java
  traverser.addFormResponse("error:clientCorporationStatus", "Client Corporation cannot be saved in this status");
 ```
+For the message parameter, it's recommended to add a key-value pair to `main/resources/messages_en_US.properties` which 
+then will be available for use by using the `getMessageUsingKey` method available in `AbstractWorkflowAction`. So the above could be rewritten to:
+```java
+ traverser.addFormResponse("error:clientCorporationStatus", getMessageUsingKey("validation.client_status"));
+```
+And in the messages_en_US.properties file:
+```properties
+validation.client_status="Client Corporation cannot be saved in this status"
+```
+This behavior can be extended to other locales, too. We provide a messages_es_ES.properties file out of the box, but feel free to add more files according to locales you require.
+To target different locales, you can pass a `java.util.Locale` argument to `getMessagesUsingKey` by either using one of the constants or building an instance using the [IETF language tag](https://en.m.wikipedia.org/wiki/IETF_language_tag), for example:
+```java
+ traverser.addFormResponse("error:clientCorporationStatus", getMessageUsingKey("validation.client_status", Locale.forLanguageTag("es-ES")));
+```
+And in the messages_es_ES.properties file:
+```properties
+validation.client_status="Esta Compañía no puede ser guardada con este estatus"
+```
+Lastly, you can provide indexed argument to your validation messages using curly braces in your messages:
+```properties
+validation.client_status="Client Corporation cannot be saved in this status: {0}"
+```
+And in your Workflow Action:
+```java
+ traverser.addFormResponse("error:clientCorporationStatus", new Object[] { clientCorporation.getStatus() }, getMessageUsingKey("validation.client_status"));
+```
+This would return a response with the current status interpolated.
+
 Note that each key provided to the response must be unique, since we use a ``java.util.Map`` to store our response.
 
 In order to add a return value to the ``formResponse`` (i.e., to set a value on the entity being saved before persisting to the database), we add a Map Entry consisting of a key in the form ``returnvalue:${fieldToChange}`` and a value consisting of the value you which to set on the field. That is, the following code

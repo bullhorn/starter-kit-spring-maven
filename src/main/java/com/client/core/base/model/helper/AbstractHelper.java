@@ -8,6 +8,7 @@ import com.bullhornsdk.data.model.entity.embedded.UserType;
 import com.bullhornsdk.data.model.parameter.QueryParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
 import com.bullhornsdk.data.model.response.crud.CrudResponse;
+import com.client.ApplicationContextProvider;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.util.Utility;
@@ -21,8 +22,7 @@ import java.util.Set;
 @Log4j2
 public abstract class AbstractHelper<T extends BullhornEntity> implements Helper<T> {
 
-    @Autowired
-    private BullhornData bullhornData;
+    private final BullhornData bullhornData;
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
     private final Integer updatingUserID;
@@ -33,6 +33,7 @@ public abstract class AbstractHelper<T extends BullhornEntity> implements Helper
         super();
         this.updatingUserID = updatingUserID;
         this.relatedEntityFields = relatedEntityFields;
+        bullhornData = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
     }
 
     @Override

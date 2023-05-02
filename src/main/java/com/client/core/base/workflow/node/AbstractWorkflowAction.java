@@ -46,8 +46,16 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
         return getMessageUsingKey(key, new Object[] {});
     }
 
-    protected String getMessageUsingKey(String key, Object[] args) throws NoSuchMessageException {
-        return getMessageSource().getMessage(key, args, Locale.US);
+    protected String getMessageUsingKey(String key, Object[] args) {
+        return getMessageUsingKey(key, args, Locale.US);
+    }
+
+    protected String getMessageUsingKey(String key, Object[] args, Locale locale) throws NoSuchMessageException {
+        return getMessageSource().getMessage(key, args, locale);
+    }
+
+    protected String getMessageUsingKey(String key, Locale locale) {
+        return getMessageUsingKey(key, new Object[]{}, locale);
     }
 
     protected MessageSource getMessageSource() {
