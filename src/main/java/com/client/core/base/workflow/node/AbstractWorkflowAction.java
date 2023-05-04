@@ -1,6 +1,7 @@
 package com.client.core.base.workflow.node;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.ApplicationContextProvider;
 import com.client.ApplicationSettings;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
@@ -9,7 +10,7 @@ import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Maps;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -22,20 +23,21 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
-    @Autowired
-    private ApplicationSettings appSettings;
+    private final ApplicationSettings appSettings;
 
-    @Autowired
-    private Emailer emailer;
+    private final Emailer emailer;
 
-    @Autowired
-    private EmailTemplateService emailTemplateService;
+    private final EmailTemplateService emailTemplateService;
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
         this.relatedEntityFields = relatedEntityFields;
+        ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+        appSettings = applicationContext.getBean(ApplicationSettings.class);
+        emailer = applicationContext.getBean(Emailer.class);
+        emailTemplateService = applicationContext.getBean(EmailTemplateService.class);
+        messageSource = applicationContext.getBean(MessageSource.class);
     }
 
     protected Map<StandardRelatedEntity, Set<String>> getStandardEntityFields() {

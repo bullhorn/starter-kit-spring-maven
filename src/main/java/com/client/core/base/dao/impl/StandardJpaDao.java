@@ -5,7 +5,6 @@ import com.client.core.base.model.jpa.JpaEntity;
 import com.client.core.base.tools.data.QueryResult;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory;
 import org.hibernate.hql.spi.ParameterTranslations;
@@ -17,6 +16,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.Parameter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,16 +32,10 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
 
     public StandardJpaDao(Class<T> type, EntityManagerFactory entityManagerFactory, EntityManager entityManager) {
         this.type = type;
-
-        this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
+        this.sessionFactory = entityManagerFactory.unwrap(SessionFactoryImplementor.class);
         this.entityManager = entityManager;
     }
 
-    public StandardJpaDao(EntityManagerFactory entityManagerFactory, EntityManager entityManager, Class<T> type) {
-        this.type = type;
-        this.sessionFactory = (SessionFactoryImplementor) entityManagerFactory.unwrap(SessionFactory.class);
-        this.entityManager = entityManager;
-    }
 
     /**
      * {@inheritDoc}
@@ -193,13 +188,15 @@ public class StandardJpaDao<T extends JpaEntity<ID>, ID> implements GenericDao<T
 
         ParameterTranslations parameterTranslations = translator.getParameterTranslations();
 
-        query.getParameters().stream().forEach( parameter -> {
-            String name = parameter.getName();
-
-            for(int position : parameterTranslations.getPositionalParameterInformationMap().keySet()) { // TODO: Find replacement (This could work, but needs testing)
-                countQuery.setParameter(position+1, query.getParameterValue(name));
-            }
-        });
+        // All parameters are named. As such, getPosition() returns null
+        query.getParameters().stream()
+                .map(Parameter::getName)
+                .map(parameterTranslations::getNamedParameterInformation)
+                .forEach(namedParameterInformation -> {
+                    Object value = query.getParameterValue(namedParameterInformation.getSourceName());
+                    Arrays.stream(namedParameterInformation.getSourceLocations())
+                            .forEachOrdered(location -> countQuery.setParameter(location + 1, value));
+                });
 
         return ((Number) countQuery.getSingleResult()).longValue();
     }
