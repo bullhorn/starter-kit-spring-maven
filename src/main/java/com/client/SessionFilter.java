@@ -1,11 +1,13 @@
 package com.client;
 
 import com.client.core.security.tools.RC4;
+import com.google.common.collect.ImmutableSet;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Filter used to authentication all calls to the web application.
@@ -25,11 +28,12 @@ import java.io.IOException;
  * </ol>
  */
 @Log4j2
-@Configuration
+@Component
 public class SessionFilter extends OncePerRequestFilter {
 	private final String sessionStoredApiKeyName;
 	private final String encryptionKey;
     private final String apiKey;
+	private static final Set<String> EXCLUDED_URL_PATHS = ImmutableSet.of("/crossdomain.xml");
 
 	public SessionFilter(ApplicationSettings appSettings) {
 		super();
@@ -40,6 +44,9 @@ public class SessionFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+		if (EXCLUDED_URL_PATHS.contains(request.getServletPath())) {
+			filterChain.doFilter(request, response);
+		}
 		final HttpSession session = getSession(request);
 		final String apiKey = getApiKeyFromRequest(request);
 
