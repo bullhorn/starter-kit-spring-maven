@@ -17,7 +17,6 @@ import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.google.common.collect.Lists;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
-    @Autowired
     public AbstractRestTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators,
                                          BullhornRelatedEntity[] relatedEntities) {
         super();

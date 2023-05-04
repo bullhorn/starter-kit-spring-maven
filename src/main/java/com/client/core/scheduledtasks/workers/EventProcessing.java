@@ -6,7 +6,6 @@ import com.bullhornsdk.data.model.entity.core.standard.*;
 import com.client.core.scheduledtasks.model.helper.CustomSubscriptionEvent;
 import com.client.core.scheduledtasks.service.EventWorkflowFactory;
 import lombok.extern.log4j.Log4j2;
-import org.apache.log4j.Logger;
 
 /**
  * Handles one subscription event by passing it through the proper workflow for the entity that had an event thrown. Also

@@ -6,7 +6,6 @@ import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.tools.propertyeditors.CustomObjectEditor;
 import com.client.core.base.tools.propertyeditors.MyCustomNumberEditor;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -15,7 +14,6 @@ import java.math.BigDecimal;
 
 public abstract class AbstractTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> {
 
-    @Autowired
     public AbstractTriggerController() {
         super();
     }
