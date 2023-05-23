@@ -2,6 +2,7 @@ package com.client.core.resttrigger.controller;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.client.ApplicationContextProvider;
 import com.client.core.base.controller.AbstractTriggerController;
 import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
@@ -16,7 +17,6 @@ import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.google.common.collect.Lists;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -30,21 +30,19 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
     private final Class<E> type;
     private final List<TriggerValidator<E, H, T>> triggerValidators;
 
-    @Autowired
-    protected BullhornData bullhornData;
-
-    @Autowired
-    private JsonConverter jsonConverter;
+    protected final BullhornData bullhornData;
+    private final JsonConverter jsonConverter;
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
-    @Autowired
     public AbstractRestTriggerController(Class<E> type, Optional<List<TriggerValidator<E, H, T>>> triggerValidators,
                                          BullhornRelatedEntity[] relatedEntities) {
         super();
         this.type = type;
         this.triggerValidators = sort(triggerValidators);
         this.relatedEntityFields = Utility.getRequestedFields(relatedEntities, this.triggerValidators);
+        jsonConverter = ApplicationContextProvider.getApplicationContext().getBean(JsonConverter.class);
+        bullhornData = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
     }
 
     protected RestTriggerRequest<E> convertToObject(String value) {

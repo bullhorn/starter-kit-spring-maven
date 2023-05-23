@@ -3,11 +3,11 @@ package com.client.core.base.util;
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
+import com.client.ApplicationContextProvider;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.Lists;
 import groovy.lang.MissingPropertyException;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +18,7 @@ import java.util.function.Supplier;
 @Log4j2
 public class TriggerUtil {
 
-	@Autowired
 	private static BullhornData BULLHORN_DATA;
-
-	@Autowired
 	private static EntityChanger ENTITY_CHANGER;
 
 	public static boolean isError(String key) {
@@ -46,12 +43,12 @@ public class TriggerUtil {
 															  Set<String> fields) {
 		E entity = Optional.of(entityID)
 				.filter(id -> id != null && id > 0)
-				.map(id -> BULLHORN_DATA.findEntity(type, id, fields))
+				.map(id -> getBullhornData().findEntity(type, id, fields))
 				.orElseGet(constructor);
 
 		values.entrySet().forEach( entry -> {
 			try {
-				ENTITY_CHANGER.setField(entity, entry.getKey(), entry.getValue());
+				getEntityChanger().setField(entity, entry.getKey(), entry.getValue());
 			} catch(MissingPropertyException e) {
 				log.error(e.getMessage());
 			}
@@ -93,7 +90,23 @@ public class TriggerUtil {
 	}
 
 	public static <E extends BullhornEntity> void setSpecialField(E entity, Map<String,Object> valuesChanged, String sourceField, String targetField){
-		ENTITY_CHANGER.setField(entity, targetField, ENTITY_CHANGER.retrieveField(valuesChanged, sourceField));
+		getEntityChanger().setField(entity, targetField, getEntityChanger().retrieveField(valuesChanged, sourceField));
+	}
+
+	private synchronized static BullhornData getBullhornData() {
+		if(TriggerUtil.BULLHORN_DATA == null) {
+			TriggerUtil.BULLHORN_DATA = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
+		}
+
+		return BULLHORN_DATA;
+	}
+
+	private synchronized static EntityChanger getEntityChanger() {
+		if(TriggerUtil.ENTITY_CHANGER == null) {
+			TriggerUtil.ENTITY_CHANGER = ApplicationContextProvider.getApplicationContext().getBean(EntityChanger.class);
+		}
+
+		return ENTITY_CHANGER;
 	}
 
 }

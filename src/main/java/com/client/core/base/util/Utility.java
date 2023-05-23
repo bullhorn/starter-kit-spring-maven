@@ -9,6 +9,7 @@ import com.bullhornsdk.data.model.parameter.QueryParams;
 import com.bullhornsdk.data.model.parameter.SearchParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
 import com.bullhornsdk.data.model.response.list.ListWrapper;
+import com.client.ApplicationContextProvider;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.workflow.node.WorkflowAction;
@@ -20,10 +21,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -47,11 +45,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Utility {
+    private static BullhornData BULLHORN_DATA;
 
     private static final int BATCH_SIZE = 200;
 
-    @Autowired
-    private static BullhornData BULLHORN_DATA;
 
     public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
                                                                                        List<? extends WorkflowAction<?, ?>> actions) {
@@ -200,8 +197,8 @@ public class Utility {
 
         return !oldValue.equals(newValue);
     }
-
     private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
+
 
     public static String formatDateForSearch(DateTime value) {
         return value.toString(SEARCH_DATE_FORMAT);
@@ -690,7 +687,7 @@ public class Utility {
         params.setOrderBy("id");
         params.setShowTotalMatched(true);
 
-        ListWrapper<T> result = BULLHORN_DATA.query(type, where, fields, params);
+        ListWrapper<T> result = getBullhornData().query(type, where, fields, params);
 
         process.accept(result.getData());
 
@@ -709,12 +706,20 @@ public class Utility {
         params.setCount(BATCH_SIZE);
         params.setSort("id");
 
-        ListWrapper<T> result = BULLHORN_DATA.search(type, where, fields, params);
+        ListWrapper<T> result = getBullhornData().search(type, where, fields, params);
 
         process.accept(result.getData());
 
         if (result.getStart() + result.getCount() < result.getTotal()) {
             searchForAll(type, where, fields, process, result.getStart() + result.getCount());
         }
+    }
+
+    private static synchronized BullhornData getBullhornData() {
+        if (BULLHORN_DATA == null) {
+            BULLHORN_DATA = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
+        }
+
+        return BULLHORN_DATA;
     }
 }
