@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @ConfigurationPropertiesScan(value = "com.client")
 @EnableScheduling
-public class StarterKitSpringMaven {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(StarterKitSpringMaven.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }
