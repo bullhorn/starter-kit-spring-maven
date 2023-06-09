@@ -47,15 +47,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Spring-specific {@link org.springframework.context.MessageSource} implementation that accesses resource bundles using specified
  * basenames, participating in the Spring {@link org.springframework.context.ApplicationContext}'s resource loading.
  *
  * <p>
- * In contrast to the JDK-based {@link org.springframework.context.support.ResourceBundleMessageSource}, this class uses {@link java.util.Properties} instances as its
- * custom data structure for messages, loading them via a {@link org.springframework.util.PropertiesPersister} strategy from
+ * In contrast to the JDK-based {@link org.springframework.context.support.ResourceBundleMessageSource}, this class uses {@link Properties} instances as its
+ * custom data structure for messages, loading them via a {@link PropertiesPersister} strategy from
  * Spring {@link Resource} handles. This strategy is not only capable of reloading files based on timestamp changes, but also of
  * loading properties files with a specific character encoding. It will detect XML property files as well.
  *
@@ -75,13 +81,13 @@ import java.util.*;
  *
  * <p>
  * This MessageSource implementation is usually slightly faster than {@link org.springframework.context.support.ResourceBundleMessageSource}, which builds on
- * {@link java.util.ResourceBundle} - in the default mode, i.e. when caching forever. With "cacheSeconds" set to 1, message lookup
+ * {@link ResourceBundle} - in the default mode, i.e. when caching forever. With "cacheSeconds" set to 1, message lookup
  * takes about twice as long - with the benefit that changes in individual properties files are detected with a maximum delay of 1
  * second. Higher "cacheSeconds" values usually <i>do not</i> make a significant difference.
  *
  * <p>
  * This MessageSource can easily be used outside of an {@link org.springframework.context.ApplicationContext}: It will use a
- * {@link org.springframework.core.io.DefaultResourceLoader} as default, simply getting overridden with the ApplicationContext's
+ * {@link DefaultResourceLoader} as default, simply getting overridden with the ApplicationContext's
  * resource loader if running in a context. It does not have any other specific dependencies.
  *
  * <p>
@@ -100,10 +106,10 @@ import java.util.*;
  * @see #setFileEncodings
  * @see #setPropertiesPersister
  * @see #setResourceLoader
- * @see org.springframework.util.DefaultPropertiesPersister
- * @see org.springframework.core.io.DefaultResourceLoader
+ * @see DefaultPropertiesPersister
+ * @see DefaultResourceLoader
  * @see org.springframework.context.support.ResourceBundleMessageSource
- * @see java.util.ResourceBundle
+ * @see ResourceBundle
  */
 public class CustomReloadableResourceBundleMessageSource extends AbstractMessageSource implements ResourceLoaderAware {
 
@@ -146,7 +152,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      *            the single basename
      * @see #setBasenames
      * @see org.springframework.core.io.ResourceEditor
-     * @see java.util.ResourceBundle
+     * @see ResourceBundle
      */
     public void setBasename(String basename) {
         setBasenames(basename);
@@ -166,7 +172,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * @param basenames
      *            an array of basenames
      * @see #setBasename
-     * @see java.util.ResourceBundle
+     * @see ResourceBundle
      */
     public void setBasenames(String... basenames) {
         if (basenames != null) {
@@ -191,7 +197,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * @param defaultEncoding
      *            the default charset
      * @see #setFileEncodings
-     * @see org.springframework.util.PropertiesPersister#load
+     * @see PropertiesPersister#load
      */
     public void setDefaultEncoding(String defaultEncoding) {
         this.defaultEncoding = defaultEncoding;
@@ -206,7 +212,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      *            Properties with filenames as keys and charset names as values. Filenames have to match the basename syntax, with
      *            optional locale-specific appendices: e.g. "WEB-INF/messages" or "WEB-INF/messages_en".
      * @see #setBasenames
-     * @see org.springframework.util.PropertiesPersister#load
+     * @see PropertiesPersister#load
      */
     public void setFileEncodings(Properties fileEncodings) {
         this.fileEncodings = fileEncodings;
@@ -245,7 +251,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * <p>
      * The default is a DefaultPropertiesPersister.
      *
-     * @see org.springframework.util.DefaultPropertiesPersister
+     * @see DefaultPropertiesPersister
      */
     public void setPropertiesPersister(PropertiesPersister propertiesPersister) {
         this.propertiesPersister = (propertiesPersister != null ? propertiesPersister : new DefaultPropertiesPersister());
@@ -257,8 +263,8 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * The default is a DefaultResourceLoader. Will get overridden by the ApplicationContext if running in a context, as it
      * implements the ResourceLoaderAware interface. Can be manually overridden when running outside of an ApplicationContext.
      *
-     * @see org.springframework.core.io.DefaultResourceLoader
-     * @see org.springframework.context.ResourceLoaderAware
+     * @see DefaultResourceLoader
+     * @see ResourceLoaderAware
      */
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = (resourceLoader != null ? resourceLoader : new DefaultResourceLoader());
@@ -396,7 +402,7 @@ public class CustomReloadableResourceBundleMessageSource extends AbstractMessage
      * Calculate the filenames for the given bundle basename and Locale, appending language code, country code, and variant code.
      * E.g.: basename "messages", Locale "de_AT_oo" -> "messages_de_AT_OO", "messages_de_AT", "messages_de".
      * <p>
-     * Follows the rules defined by {@link java.util.Locale#toString()}.
+     * Follows the rules defined by {@link Locale#toString()}.
      *
      * @param basename
      *            the basename of the bundle

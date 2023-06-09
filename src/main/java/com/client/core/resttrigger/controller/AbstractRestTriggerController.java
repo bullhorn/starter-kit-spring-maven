@@ -2,7 +2,7 @@ package com.client.core.resttrigger.controller;
 
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
+import com.client.ApplicationContextProvider;
 import com.client.core.base.controller.AbstractTriggerController;
 import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
@@ -15,9 +15,8 @@ import com.client.core.base.workflow.traversing.TriggerTraverser;
 import com.client.core.resttrigger.model.api.RestTriggerRequest;
 import com.client.core.resttrigger.model.api.RestTriggerResponse;
 import com.google.common.collect.Lists;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 import java.util.Map;
@@ -25,15 +24,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Log4j2
 public class AbstractRestTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends AbstractTriggerTraverser<E, H>> extends AbstractTriggerController<E, H, T> {
-
-    private static Logger log = LogManager.getLogger(AbstractRestTriggerController.class);
 
     private final Class<E> type;
     private final List<TriggerValidator<E, H, T>> triggerValidators;
 
     protected final BullhornData bullhornData;
-
     private final JsonConverter jsonConverter;
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
@@ -43,13 +40,13 @@ public class AbstractRestTriggerController<E extends BullhornEntity, H extends T
         super();
         this.type = type;
         this.triggerValidators = sort(triggerValidators);
-        this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
-        this.jsonConverter = AppContext.getApplicationContext().getBean(JsonConverter.class);
         this.relatedEntityFields = Utility.getRequestedFields(relatedEntities, this.triggerValidators);
+        jsonConverter = ApplicationContextProvider.getApplicationContext().getBean(JsonConverter.class);
+        bullhornData = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
     }
 
     protected RestTriggerRequest<E> convertToObject(String value) {
-        return jsonConverter.convertJsonStringToEntity(value, RestTriggerRequest.class, type);
+        return jsonConverter.convertJsonStringToEntity(value, RestTriggerRequest.class);
     }
 
     protected Map<String, Object> convertToMap(String value) {

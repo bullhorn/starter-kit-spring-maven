@@ -1,22 +1,20 @@
 package com.client.core.base.service.transaction.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityNotFoundException;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import com.client.core.base.dao.GenericDao;
 import com.client.core.base.model.jpa.JpaEntity;
 import com.client.core.base.service.transaction.TransactionService;
 import com.client.core.base.tools.data.QueryResult;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Service used to wrap DAO calls with @{@link org.springframework.transaction.annotation.Transactional} annotations
+ * Service used to wrap DAO calls with @{@link Transactional} annotations
  * so as to handle the transaction in a generic way.  Do NOT wrap any call to a TransactionService in
- * a @{@link org.springframework.transaction.annotation.Transactional} annotation.  The passed in DAO
+ * a @{@link Transactional} annotation.  The passed in DAO
  * is used for all database calls and defines what type of entity can be retrieved/inserted into
  * the database.
  *
@@ -26,7 +24,7 @@ import com.client.core.base.tools.data.QueryResult;
 public class StandardTransactionService<T extends JpaEntity<ID>, ID> implements TransactionService<T, ID> {
 
 	private final GenericDao<T, ID> genericDao;
-	
+
 	public StandardTransactionService(GenericDao<T, ID> genericDao) {
 		super();
 		this.genericDao=genericDao;
@@ -127,11 +125,11 @@ public class StandardTransactionService<T extends JpaEntity<ID>, ID> implements 
 	@Transactional(readOnly=false)
 	public List<T> batchUpdate(List<T> transientObjects) {
 		List<T> updatedEntities = new ArrayList<T>();
-		
+
 		for(T transientObject : transientObjects) {
 			updatedEntities.add(genericDao.merge(transientObject));
 		}
-		
+
 		return updatedEntities;
 	}
 

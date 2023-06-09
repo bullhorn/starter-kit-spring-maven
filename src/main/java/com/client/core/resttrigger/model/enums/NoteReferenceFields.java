@@ -1,16 +1,10 @@
 package com.client.core.resttrigger.model.enums;
 
+import com.bullhornsdk.data.model.entity.core.standard.*;
+import com.bullhornsdk.data.model.entity.embedded.OneToMany;
+
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
-
-import com.bullhornsdk.data.model.entity.core.standard.Candidate;
-import com.bullhornsdk.data.model.entity.core.standard.ClientContact;
-import com.bullhornsdk.data.model.entity.core.standard.JobOrder;
-import com.bullhornsdk.data.model.entity.core.standard.Lead;
-import com.bullhornsdk.data.model.entity.core.standard.Note;
-import com.bullhornsdk.data.model.entity.core.standard.Opportunity;
-import com.bullhornsdk.data.model.entity.core.standard.Placement;
-import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 
 public enum NoteReferenceFields {
 

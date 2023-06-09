@@ -1,35 +1,25 @@
 package com.client.core.base.controller;
 
-import java.math.BigDecimal;
-import java.util.Locale;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.propertyeditors.CustomBooleanEditor;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-
 import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
 import com.client.core.base.model.helper.TriggerHelper;
 import com.client.core.base.tools.propertyeditors.CustomObjectEditor;
 import com.client.core.base.tools.propertyeditors.MyCustomNumberEditor;
 import com.client.core.base.workflow.traversing.TriggerTraverser;
+import org.springframework.beans.propertyeditors.CustomBooleanEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
-public abstract class AbstractTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>>{
+import java.math.BigDecimal;
 
-    protected final BullhornData bullhornData;
-
-    protected final Logger log = LogManager.getLogger(getClass());
+public abstract class AbstractTriggerController<E extends BullhornEntity, H extends TriggerHelper<E>, T extends TriggerTraverser<E, H>> {
 
     public AbstractTriggerController() {
         super();
-        this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
     }
 
     @InitBinder
-    public void initBinder(WebDataBinder binder, Locale locale) {
+    public void initBinder(WebDataBinder binder) {
         binder.setIgnoreInvalidFields(true);
         binder.setIgnoreUnknownFields(true);
 

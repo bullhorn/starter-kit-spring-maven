@@ -1,11 +1,11 @@
 package com.client.core.base.tools.enums;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum YesNo {
     NO(0, "0", "No", false, "N"),

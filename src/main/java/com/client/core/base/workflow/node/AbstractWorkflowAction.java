@@ -1,16 +1,16 @@
 package com.client.core.base.workflow.node;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.client.core.AppContext;
-import com.client.core.ApplicationSettings;
+import com.client.ApplicationContextProvider;
+import com.client.ApplicationSettings;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.workflow.traversing.Traverser;
 import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Maps;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -18,19 +18,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+@Log4j2
 public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends Traverser> implements WorkflowAction<E, T> {
-
-    private final Logger log = LogManager.getLogger(getClass());
 
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
 
-    private EmailTemplateService emailTemplateService;
-    private ApplicationSettings appSettings;
-    private MessageSource messageSource;
-    private Emailer emailer;
+    private final ApplicationSettings appSettings;
+
+    private final Emailer emailer;
+
+    private final EmailTemplateService emailTemplateService;
+
+    private final MessageSource messageSource;
 
     public AbstractWorkflowAction(Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
         this.relatedEntityFields = relatedEntityFields;
+        ApplicationContext applicationContext = ApplicationContextProvider.getApplicationContext();
+        appSettings = applicationContext.getBean(ApplicationSettings.class);
+        emailer = applicationContext.getBean(Emailer.class);
+        emailTemplateService = applicationContext.getBean(EmailTemplateService.class);
+        messageSource = applicationContext.getBean(MessageSource.class);
     }
 
     protected Map<StandardRelatedEntity, Set<String>> getStandardEntityFields() {
@@ -41,40 +48,32 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
         return getMessageUsingKey(key, new Object[] {});
     }
 
-    protected String getMessageUsingKey(String key, Object[] args) throws NoSuchMessageException {
-        return getMessageSource().getMessage(key, args, Locale.US);
+    protected String getMessageUsingKey(String key, Object[] args) {
+        return getMessageUsingKey(key, args, Locale.US);
+    }
+
+    protected String getMessageUsingKey(String key, Object[] args, Locale locale) throws NoSuchMessageException {
+        return getMessageSource().getMessage(key, args, locale);
+    }
+
+    protected String getMessageUsingKey(String key, Locale locale) {
+        return getMessageUsingKey(key, new Object[]{}, locale);
     }
 
     protected MessageSource getMessageSource() {
-        if(this.messageSource == null) {
-            this.messageSource = AppContext.getApplicationContext().getBean("messageSource", MessageSource.class);
-        }
-
-        return messageSource;
+        return this.messageSource;
     }
 
     protected EmailTemplateService getEmailTemplateService() {
-        if(this.emailTemplateService == null) {
-            this.emailTemplateService = AppContext.getApplicationContext().getBean(EmailTemplateService.class);
-        }
-
         return this.emailTemplateService;
     }
 
     protected ApplicationSettings getAppSettings() {
-        if(this.appSettings == null) {
-            this.appSettings = AppContext.getApplicationContext().getBean(ApplicationSettings.class);
-        }
-
         return this.appSettings;
     }
 
     protected Emailer getEmailer() {
-        if(this.emailer == null) {
-            this.emailer = AppContext.getApplicationContext().getBean(Emailer.class);
-        }
-
-        return emailer;
+        return this.emailer;
     }
 
     @Override
@@ -86,9 +85,4 @@ public abstract class AbstractWorkflowAction<E extends BullhornEntity, T extends
 
         return allFields;
     }
-
-    protected Logger getLog() {
-        return log;
-    }
-
 }

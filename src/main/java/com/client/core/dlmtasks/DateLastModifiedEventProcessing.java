@@ -2,18 +2,17 @@ package com.client.core.dlmtasks;
 
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.client.core.dlmtasks.service.DateLastModifiedTasksService;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.log4j.Log4j2;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Log4j2
 @Service
 public class DateLastModifiedEventProcessing implements Runnable {
-
-    private final Logger log = LogManager.getLogger(getClass());
 
     private final List<DateLastModifiedTasksService<? extends BullhornEntity>> dateLastModifiedTasksServices;
 
@@ -23,6 +22,7 @@ public class DateLastModifiedEventProcessing implements Runnable {
     }
 
     @Override
+    @Scheduled(cron = "${date.last.modified.cron.expression}")
     public void run() {
         DateTime start = new DateTime().withSecondOfMinute(0).withMillisOfSecond(0);
 

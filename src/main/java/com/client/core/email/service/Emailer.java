@@ -1,10 +1,9 @@
 package com.client.core.email.service;
 
-import java.util.Collection;
+import com.client.core.email.model.MailInfo;
 
 import javax.mail.MessagingException;
-
-import com.client.core.email.model.MailInfo;
+import java.util.Collection;
 
 /**
  * Interface used to send email messages.
@@ -43,5 +42,5 @@ public interface Emailer {
      * @throws MessagingException when the email is malformed or SMTP setup is not correct.
      */
     void sendEmail(MailInfo mailInfo) throws MessagingException;
-	
+
 }

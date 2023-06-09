@@ -1,12 +1,15 @@
 package com.client.core.email.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import com.client.core.email.MailSettings;
+import com.client.core.email.model.MailAttachment;
+import com.client.core.email.model.MailInfo;
+import com.client.core.email.service.Emailer;
+import com.google.common.collect.Lists;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -17,29 +20,26 @@ import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.*;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-
-import com.client.core.email.MailSettings;
-import com.client.core.email.model.MailAttachment;
-import com.client.core.email.model.MailInfo;
-import com.client.core.email.service.Emailer;
-import com.google.common.collect.Lists;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * A standard implementation of {@link Emailer}, using JDK libraries in
  * {@link javax.mail}
  */
+@Log4j2
 @Service
 public class StandardEmailer implements Emailer {
-
-    private final Logger log = LogManager.getLogger(StandardEmailer.class);
 
     private final MailSettings mailSettings;
 
@@ -66,8 +66,8 @@ public class StandardEmailer implements Emailer {
         mailInfo.setSubject(subject);
         mailInfo.setTo(mailTo);
 
-        mailInfo.setSender(mailSettings.getSender());
-        mailInfo.setSenderName(mailSettings.getSenderName());
+        mailInfo.setSender(mailSettings.sender());
+        mailInfo.setSenderName(mailSettings.senderName());
 
         sendEmail(mailInfo);
     }
@@ -81,9 +81,9 @@ public class StandardEmailer implements Emailer {
     }
 
     public void send(MailInfo mail) throws MessagingException {
-        if(mailSettings.getDisabled()) {
-            if(mailSettings.getRouteToWhenDisabled() != null && !mailSettings.getRouteToWhenDisabled().isEmpty()) {
-                mail.setTo(mailSettings.getRouteToWhenDisabled());
+        if(mailSettings.disabled()) {
+            if(mailSettings.routeToWhenDisabled() != null && !mailSettings.routeToWhenDisabled().isEmpty()) {
+                mail.setTo(mailSettings.routeToWhenDisabled());
                 mail.setCc(Collections.emptyList());
                 mail.setBcc(Collections.emptyList());
             } else {
@@ -96,11 +96,11 @@ public class StandardEmailer implements Emailer {
         message.setSentDate(new Date());
 
         if(StringUtils.isEmpty(mail.getSender())) {
-            mail.setSender(mailSettings.getSender());
+            mail.setSender(mailSettings.sender());
         }
 
         if(StringUtils.isEmpty(mail.getSenderName())) {
-            mail.setSenderName(mailSettings.getSenderName());
+            mail.setSenderName(mailSettings.senderName());
         }
 
         String sender = mail.getSender();
@@ -186,16 +186,16 @@ public class StandardEmailer implements Emailer {
     }
 
     private Session getSession() {
-        Authenticator authenticator = new Authenticator(mailSettings.getUsername(), mailSettings.getPassword());
+        Authenticator authenticator = new Authenticator(mailSettings.username(), mailSettings.password());
 
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.submitter", authenticator.getPasswordAuthentication().getUserName());
         properties.setProperty("mail.smtp.auth", "true");
         properties.setProperty("mail.smtp.starttls.enable", "true");
-        properties.setProperty("mail.smtp.host", mailSettings.getHost());
-        properties.setProperty("mail.smtp.port", mailSettings.getPort());
+        properties.setProperty("mail.smtp.host", mailSettings.host());
+        properties.setProperty("mail.smtp.port", mailSettings.port());
 
-        properties.put("mail.smtp.socketFactory.port", mailSettings.getPort());
+        properties.put("mail.smtp.socketFactory.port", mailSettings.port());
         properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         properties.put("mail.smtp.socketFactory.fallback", "false");
 

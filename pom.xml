@@ -1,724 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.8</version>
+        <relativePath/>
+    </parent>
     <groupId>com.client</groupId>
     <artifactId>starter-kit-spring-maven</artifactId>
+    <version>6.0.0</version>
     <packaging>war</packaging>
-    <version>5.0.1</version>
-    <name>BULLHORN Spring-Maven Starter Kit</name>
-    <url>http://maven.apache.org</url>
+    <name>Bullhorn Spring Boot Starter Kit</name>
+    <description>Starter kit for Bullhorn Professional Services</description>
     <properties>
-        <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
-        <org.springframework.security.version>4.1.3.RELEASE</org.springframework.security.version>
-        <org.springframework.integration.version>2.2.3.RELEASE</org.springframework.integration.version>
-        <hibernate.version>5.1.0.Final</hibernate.version>
-        <org.slf4j.version>1.7.19</org.slf4j.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cxf.version>2.7.0</cxf.version>
-        <jackson.version>2.10.0</jackson.version>
-        <additionalparam>-Xdoclint:none</additionalparam>
-        <log4jTools>2.17.0</log4jTools>
+        <java.version>17</java.version>
     </properties>
-
     <dependencies>
-        <!-- Spring MVC for Servlet Environments (depends on spring-core, spring-beans,
-            spring-context, spring-web) Define this if you use Spring MVC with a Servlet
-            Container such as Apache Tomcat (org.springframework.web.servlet.*) -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>com.bullhorn</groupId>
+            <artifactId>sdk-rest</artifactId>
+            <version>2.0.1</version>
         </dependency>
-
-        <!-- Web application development utilities applicable to both Servlet and
-            Portlet Environments (depends on spring-core, spring-beans, spring-context)
-            Define this if you use Spring MVC, or wish to use Struts, JSF, or another
-            web framework with Spring (org.springframework.web.*) -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <!-- JDBC Data Access Library (depends on spring-core, spring-beans, spring-context,
-            spring-tx) Define this if you use Spring's JdbcTemplate API (org.springframework.jdbc.*) -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Expression Language (depends on spring-core) Define this if you use
-            Spring Expression APIs (org.springframework.expression.*) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-expression</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Bean Factory and JavaBeans utilities (depends on spring-core) Define
-            this if you use Spring Bean APIs (org.springframework.beans.*) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Aspect Oriented Programming (AOP) Framework (depends on spring-core,
-            spring-beans) Define this if you use Spring AOP APIs (org.springframework.aop.*) -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>${org.springframework.version}</version>
-        </dependency>
-
-        <!-- Application Context (depends on spring-core, spring-expression, spring-aop,
-            spring-beans) This is the central artifact for Spring's Dependency Injection
-            Container and is generally always defined -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
             <exclusions>
-                <!-- Exclude Commons Logging in favor of SLF4j -->
                 <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Various Application Context utilities, including EhCache, JavaMail,
-            Quartz, and Freemarker integration Define this if you need any of these integrations -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Transaction Management Abstraction (depends on spring-core, spring-beans,
-            spring-aop, spring-context) Define this if you use Spring Transactions or
-            DAO Exception Hierarchy (org.springframework.transaction.*/org.springframework.dao.*) -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
-        <!-- Object-to-Relation-Mapping (ORM) integration with Hibernate, JPA,
-            and iBatis. (depends on spring-core, spring-beans, spring-context, spring-tx)
-            Define this if you need ORM (org.springframework.orm.*) -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
-        <!-- Object-to-XML Mapping (OXM) abstraction and integration with JAXB,
-            JiBX, Castor, XStream, and XML Beans. (depends on spring-core, spring-beans,
-            spring-context) Define this if you need OXM (org.springframework.oxm.*) -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Support for testing Spring applications with tools such as JUnit and
-            TestNG This artifact is generally always defined with a 'test' scope for
-            the integration testing framework and unit testing stubs -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${org.springframework.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Security -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${org.springframework.security.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-ldap</artifactId>
-            <version>${org.springframework.security.version}</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.0</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${org.springframework.security.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${org.springframework.security.version}</version>
+            <groupId>com.logentries</groupId>
+            <artifactId>logentries-appender</artifactId>
+            <version>1.1.38</version>
+        </dependency>
+
+        <dependency> <!--com.client.core.email.service.impl.StandardEmailer-->
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>1.2.1</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
-            <version>${org.springframework.security.version}</version>
-        </dependency>
-
-        <!-- SPRING INTEGRATION -->
-        <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-core</artifactId>
-            <version>${org.springframework.integration.version}</version>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-ftp</artifactId>
-            <version>${org.springframework.integration.version}</version>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
         </dependency>
 
-        <!-- Unit Testing -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>3.1.0.RELEASE</version>
         </dependency>
 
-        <!-- Hamcrest for testing -->
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.72</version>
         </dependency>
 
-        <!-- Used for unit tests to inspect JSON content -->
+        <!--File upload for multipart resolver-->
         <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.2.0</version>
-            <scope>test</scope>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.5</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Used for unit tests. Embedded database -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.3.3</version>
-        </dependency>
-
-        <!-- Joda Time -->
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.9.2</version>
-        </dependency>
-
-        <!-- MYSQL -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.38</version>
-        </dependency>
-
-        <!-- Logging -->
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4jTools}</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4jTools}</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-validator</groupId>
-            <artifactId>commons-validator</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <!-- JSR 303 with Hibernate Validator -->
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.1.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.2.4.Final</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
-            <version>2.2.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>2.2.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-clean-plugin</artifactId>
-            <version>2.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <!-- JSON -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20160212</version>
-        </dependency>
-
-        <!-- Jackson -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-joda</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <!-- oauth -->
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth</artifactId>
-            <version>20100527</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- File upload -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3.1</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- PAM integration -->
-
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.9</version>
-        </dependency>
-
-        <!-- For DataExport -->
-        <dependency>
-            <groupId>commons-discovery</groupId>
-            <artifactId>commons-discovery</artifactId>
-            <version>0.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <!-- Hibernate -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
-        <!-- Hibernate entity manager for using hibernate as engine for JPA -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
-        <!-- Encryption -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk16</artifactId>
-            <version>1.46</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>19.0</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.xml</groupId>
-            <artifactId>jaxrpc-api</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>javax.persistence</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-
-        <!-- classes needed to make merge doc -->
-        <dependency>
-            <groupId>com.itextpdf</groupId>
-            <artifactId>itextpdf</artifactId>
-            <version>5.5.9</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.lowagie</groupId>
-            <artifactId>itext-rtf</artifactId>
-            <version>2.1.7</version>
-            <type>jar</type>
-        </dependency>
-
-        <!-- Amazon Web Services -->
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.10.61</version>
-        </dependency>
-
-
-        <!-- kryo used for object deep clone -->
-        <dependency>
-            <groupId>com.esotericsoftware.kryo</groupId>
-            <artifactId>kryo</artifactId>
-            <version>2.24.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.javakaffee</groupId>
-            <artifactId>kryo-serializers</artifactId>
-            <version>0.37</version>
-        </dependency>
-
-        <!-- AOP dependency -->
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-
-        <!-- Web Services -->
-
-        <!-- Axis -->
-        <dependency>
-            <groupId>org.apache.axis</groupId>
-            <artifactId>axis</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <!-- Dozer to map objects -->
-        <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>5.5.1</version>
-        </dependency>
-
-        <!-- Apache velocity -->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Groovy -->
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.bullhorn</groupId>
-            <artifactId>sdk-rest</artifactId>
-            <version>1.4.21</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
-            <version>3.0.6.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring4</artifactId>
-            <version>3.0.6.RELEASE</version>
+            <version>2.7.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>local</id>
-            <activation>
-                <property>
-                    <name>environment</name>
-                    <value>local</value>
-                </property>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <profile>local</profile>
-            </properties>
-        </profile>
-    </profiles>
     <build>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>true</filtering>
-            </testResource>
-        </testResources>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/webapp/WEB-INF</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav</artifactId>
-                <version>1.0-beta-2</version>
-            </extension>
-        </extensions>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>net.sf.xradar</groupId>
-                    <artifactId>maven-xradar-plugin</artifactId>
-                    <version>1.2.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                    <configuration>
-                        <compilerId>groovy-eclipse-compiler</compilerId>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>groovy-eclipse-compiler</artifactId>
-                            <version>2.9.0-01</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>groovy-eclipse-batch</artifactId>
-                            <version>2.3.4-01</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.18.1</version>
-                    <configuration>
-                        <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
-                        <excludes>
-                            <exclude>**/Test*closure*.java</exclude>
-                            <exclude>**/EmbeddedBullhornAPISoap.java</exclude>
-                            <exclude>**/TestUtil.java</exclude>
-                            <exclude>**/TestEntities.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <configuration>
-                        <path>/</path>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <id>resources</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <copy todir="${project.build.directory}/classes" flatten="true">
-                                    <fileset dir="${basedir}/src/main/java/com/client">
-                                        <include name="**/*.properties"/>
-                                        <include name="**/*.xml"/>
-                                    </fileset>
-                                </copy>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>test-resources</id>
-                        <phase>process-test-classes</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <copy todir="${project.build.directory}/test-classes" flatten="true">
-                                    <fileset dir="${basedir}/src/test/java/com/client">
-                                        <include name="**/*.properties"/>
-                                        <include name="**/*.xml"/>
-                                    </fileset>
-                                </copy>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>net.sf.xradar</groupId>
-                <artifactId>maven-xradar-plugin</artifactId>
-                <version>1.2.2</version>
-            </plugin>
-        </plugins>
-    </reporting>
+
 </project>

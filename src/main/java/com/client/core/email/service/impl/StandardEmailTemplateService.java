@@ -1,21 +1,19 @@
 package com.client.core.email.service.impl;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-
 import com.client.core.email.model.MailTemplate;
 import com.client.core.email.model.MailTemplateInfo;
 import com.client.core.email.service.EmailTemplateService;
 import com.client.core.email.service.Emailer;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import javax.mail.MessagingException;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class StandardEmailTemplateService implements EmailTemplateService {

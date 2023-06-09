@@ -1,7 +1,6 @@
 package com.client.core.base.tools.web;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -9,9 +8,8 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Log4j2
 public class CustomExceptionResolver extends SimpleMappingExceptionResolver {
-
-    private final Logger log = Logger .getLogger(getClass());
 
 	@Override
 	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {

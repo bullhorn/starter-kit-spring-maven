@@ -1,5 +1,27 @@
 package com.client.core.base.util;
 
+import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
+import com.bullhornsdk.data.model.entity.core.type.QueryEntity;
+import com.bullhornsdk.data.model.entity.core.type.SearchEntity;
+import com.bullhornsdk.data.model.entity.embedded.Address;
+import com.bullhornsdk.data.model.parameter.QueryParams;
+import com.bullhornsdk.data.model.parameter.SearchParams;
+import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
+import com.bullhornsdk.data.model.response.list.ListWrapper;
+import com.client.ApplicationContextProvider;
+import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
+import com.client.core.base.model.relatedentity.StandardRelatedEntity;
+import com.client.core.base.workflow.node.WorkflowAction;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.json.JSONArray;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -8,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,34 +44,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
-import com.client.core.base.model.relatedentity.StandardRelatedEntity;
-import com.client.core.base.workflow.node.WorkflowAction;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-import org.json.JSONArray;
-
-import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
-import com.bullhornsdk.data.model.entity.core.type.QueryEntity;
-import com.bullhornsdk.data.model.entity.core.type.SearchEntity;
-import com.bullhornsdk.data.model.entity.embedded.Address;
-import com.bullhornsdk.data.model.parameter.QueryParams;
-import com.bullhornsdk.data.model.parameter.SearchParams;
-import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
-import com.bullhornsdk.data.model.response.list.ListWrapper;
-import com.client.core.AppContext;
-import com.google.common.collect.Lists;
-
 public class Utility {
+    private static BullhornData BULLHORN_DATA;
+
+    private static final int BATCH_SIZE = 200;
+
 
     public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
                                                                                        List<? extends WorkflowAction<?, ?>> actions) {
@@ -199,8 +197,8 @@ public class Utility {
 
         return !oldValue.equals(newValue);
     }
-
     private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
+
 
     public static String formatDateForSearch(DateTime value) {
         return value.toString(SEARCH_DATE_FORMAT);
@@ -417,10 +415,6 @@ public class Utility {
         return new DateTime(forceParseStringToDate(dateStr, dateFormat));
     }
 
-    public static XMLGregorianCalendar forceParseStringToXMLGregorianCalendar(String dateStr, String dateFormat) {
-        return dateToXMLGregorianCal(forceParseStringToDate(dateStr, dateFormat));
-    }
-
     public static String formatDate(Date date, String format) {
         if (date == null) {
             return "";
@@ -440,42 +434,6 @@ public class Utility {
         }
 
         return formatDate(date.toDate(), format);
-    }
-
-    public static XMLGregorianCalendar dateToXMLGregorianCal(Date date) {
-        if (date == null) {
-            return null;
-        }
-
-        TimeZone timeZone = TimeZone.getTimeZone("America/Detroit");
-
-        GregorianCalendar gregorianCal = new GregorianCalendar(timeZone);
-        gregorianCal.setTime(date);
-
-        try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCal);
-        } catch (DatatypeConfigurationException e) {
-            return null;
-        }
-    }
-
-    public static XMLGregorianCalendar dateToXMLGregorianCalWithTimezone(Date date, TimeZone timezone) {
-        if (date == null) {
-            return null;
-        }
-
-        DateTimeZone dateTimeZone = DateTimeZone.forTimeZone(timezone);
-
-        DateTime datetime = new DateTime(date.getTime(), dateTimeZone);
-
-        return dateTimeToXmlGregorianCalendar(datetime);
-    }
-
-    public static Date xmlGregorianCalToDate(XMLGregorianCalendar xmlGregCal) {
-        if (xmlGregCal == null) {
-            return null;
-        }
-        return xmlGregCal.toGregorianCalendar().getTime();
     }
 
     public static Boolean stringContains(String toCheckIn, String toCheckFor) {
@@ -538,33 +496,6 @@ public class Utility {
         return value == null ? "" : value.toString();
     }
 
-    public static DateTime xmlGregorianCalendarToDateTime(XMLGregorianCalendar calendar) {
-        if (calendar == null) {
-            return null;
-        }
-
-        DateTimeZone timeZone = DateTimeZone.forTimeZone(calendar.getTimeZone(0));
-
-        DateTime dateTime = new DateTime(calendar.toGregorianCalendar().getTime(), timeZone);
-
-        return dateTime;
-    }
-
-    public static XMLGregorianCalendar dateTimeToXmlGregorianCalendar(DateTime dateTime) {
-        if (dateTime == null) {
-            return null;
-        }
-
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTimeInMillis(dateTime.toLocalDateTime().toDate().getTime());
-
-        try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
-        } catch (DatatypeConfigurationException e) {
-            return null;
-        }
-    }
-
     public static String createEntireInStatement(Collection<String> values) {
         return createEntireInStatement("", values);
     }
@@ -608,23 +539,17 @@ public class Utility {
     }
 
     public static <T extends QueryEntity, R> void queryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
-        queryForAll(type, where, fields, (batch) -> {
-            batch.parallelStream().forEach(process);
-        });
+        queryForAll(type, where, fields, (batch) -> batch.parallelStream().forEach(process));
     }
 
     public static <T extends QueryEntity, R> void sequentialQueryAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
-        queryForAll(type, where, fields, (batch) -> {
-            batch.forEach(process);
-        });
+        queryForAll(type, where, fields, (batch) -> batch.forEach(process));
     }
 
     public static <T extends QueryEntity, R> List<R> queryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
-        });
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().map(map).toList()));
 
         return result;
     }
@@ -632,9 +557,7 @@ public class Utility {
     public static <T extends QueryEntity, R> List<R> sequentialQueryAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.stream().map(map).collect(Collectors.toList()));
-        });
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.stream().map(map).toList()));
 
         return result;
     }
@@ -642,9 +565,7 @@ public class Utility {
     public static <T extends QueryEntity> List<T> queryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
-        });
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().filter(filter).toList()));
 
         return result;
     }
@@ -652,9 +573,7 @@ public class Utility {
     public static <T extends QueryEntity> List<T> sequentialQueryAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        queryForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
-        });
+        queryForAll(type, where, fields, (batch) -> result.addAll(batch.stream().filter(filter).toList()));
 
         return result;
     }
@@ -681,9 +600,7 @@ public class Utility {
         queryForAll(type, where, fields, (batch) -> {
             A batchResult = collect.supplier().get();
 
-            batch.forEach(entity -> {
-                collect.accumulator().accept(batchResult, entity);
-            });
+            batch.forEach(entity -> collect.accumulator().accept(batchResult, entity));
 
             collect.combiner().apply(result, batchResult);
         });
@@ -692,23 +609,17 @@ public class Utility {
     }
 
     public static <T extends SearchEntity, R> void searchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
-        searchForAll(type, where, fields, (batch) -> {
-            batch.parallelStream().forEach(process);
-        });
+        searchForAll(type, where, fields, (batch) -> batch.parallelStream().forEach(process));
     }
 
     public static <T extends SearchEntity, R> void sequentialSearchAndProcessAll(Class<T> type, String where, Set<String> fields, Consumer<T> process) {
-        searchForAll(type, where, fields, (batch) -> {
-            batch.forEach(process);
-        });
+        searchForAll(type, where, fields, (batch) -> batch.forEach(process));
     }
 
     public static <T extends SearchEntity, R> List<R> searchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().map(map).collect(Collectors.toList()));
-        });
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().map(map).toList()));
 
         return result;
     }
@@ -716,9 +627,7 @@ public class Utility {
     public static <T extends SearchEntity, R> List<R> sequentialSearchAndMapAll(Class<T> type, String where, Set<String> fields, Function<T, R> map) {
         List<R> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.stream().map(map).collect(Collectors.toList()));
-        });
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.stream().map(map).toList()));
 
         return result;
     }
@@ -726,9 +635,7 @@ public class Utility {
     public static <T extends SearchEntity> List<T> searchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.parallelStream().filter(filter).collect(Collectors.toList()));
-        });
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.parallelStream().filter(filter).toList()));
 
         return result;
     }
@@ -736,9 +643,7 @@ public class Utility {
     public static <T extends SearchEntity> List<T> sequentialSearchAndFilterAll(Class<T> type, String where, Set<String> fields, Predicate<T> filter) {
         List<T> result = Lists.newArrayList();
 
-        searchForAll(type, where, fields, (batch) -> {
-            result.addAll(batch.stream().filter(filter).collect(Collectors.toList()));
-        });
+        searchForAll(type, where, fields, (batch) -> result.addAll(batch.stream().filter(filter).toList()));
 
         return result;
     }
@@ -749,9 +654,7 @@ public class Utility {
         searchForAll(type, where, fields, (batch) -> {
             A batchResult = collect.supplier().get();
 
-            batch.parallelStream().forEach(entity -> {
-                collect.accumulator().accept(batchResult, entity);
-            });
+            batch.parallelStream().forEach(entity -> collect.accumulator().accept(batchResult, entity));
 
             collect.combiner().apply(result, batchResult);
         });
@@ -765,9 +668,7 @@ public class Utility {
         searchForAll(type, where, fields, (batch) -> {
             A batchResult = collect.supplier().get();
 
-            batch.forEach(entity -> {
-                collect.accumulator().accept(batchResult, entity);
-            });
+            batch.forEach(entity -> collect.accumulator().accept(batchResult, entity));
 
             collect.combiner().apply(result, batchResult);
         });
@@ -780,15 +681,13 @@ public class Utility {
     }
 
     private static <T extends QueryEntity> void queryForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
-        BullhornData bullhornData = getBullhornData();
-
         QueryParams params = ParamFactory.queryParams();
         params.setStart(start);
         params.setCount(BATCH_SIZE);
         params.setOrderBy("id");
         params.setShowTotalMatched(true);
 
-        ListWrapper<T> result = bullhornData.query(type, where, fields, params);
+        ListWrapper<T> result = getBullhornData().query(type, where, fields, params);
 
         process.accept(result.getData());
 
@@ -802,14 +701,12 @@ public class Utility {
     }
 
     private static <T extends SearchEntity> void searchForAll(Class<T> type, String where, Set<String> fields, Consumer<List<T>> process, Integer start) {
-        BullhornData bullhornData = getBullhornData();
-
         SearchParams params = ParamFactory.searchParams();
         params.setStart(start);
         params.setCount(BATCH_SIZE);
         params.setSort("id");
 
-        ListWrapper<T> result = bullhornData.search(type, where, fields, params);
+        ListWrapper<T> result = getBullhornData().search(type, where, fields, params);
 
         process.accept(result.getData());
 
@@ -818,16 +715,11 @@ public class Utility {
         }
     }
 
-    private static final int BATCH_SIZE = 200;
-
     private static synchronized BullhornData getBullhornData() {
         if (BULLHORN_DATA == null) {
-            BULLHORN_DATA = AppContext.getApplicationContext().getBean(BullhornData.class);
+            BULLHORN_DATA = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
         }
 
         return BULLHORN_DATA;
     }
-
-    private static BullhornData BULLHORN_DATA;
-
 }

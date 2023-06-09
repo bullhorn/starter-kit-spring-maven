@@ -1,9 +1,9 @@
 package com.client.core.base.tools.data;
 
-import java.util.List;
-
 import com.client.core.base.model.Entity;
 import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class QueryResult<T extends Entity> {
 

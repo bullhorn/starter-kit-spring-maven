@@ -8,20 +8,18 @@ import com.bullhornsdk.data.model.entity.embedded.UserType;
 import com.bullhornsdk.data.model.parameter.QueryParams;
 import com.bullhornsdk.data.model.parameter.standard.ParamFactory;
 import com.bullhornsdk.data.model.response.crud.CrudResponse;
-import com.client.core.AppContext;
+import com.client.ApplicationContextProvider;
 import com.client.core.base.model.relatedentity.BullhornRelatedEntity;
 import com.client.core.base.model.relatedentity.StandardRelatedEntity;
 import com.client.core.base.util.Utility;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Log4j2
 public abstract class AbstractHelper<T extends BullhornEntity> implements Helper<T> {
-
-    private final Logger log = LogManager.getLogger(getClass());
 
     private final BullhornData bullhornData;
     private final Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields;
@@ -32,9 +30,9 @@ public abstract class AbstractHelper<T extends BullhornEntity> implements Helper
 
     public AbstractHelper(Integer updatingUserID, Map<? extends BullhornRelatedEntity, Set<String>> relatedEntityFields) {
         super();
-        this.bullhornData = AppContext.getApplicationContext().getBean(BullhornData.class);
         this.updatingUserID = updatingUserID;
         this.relatedEntityFields = relatedEntityFields;
+        bullhornData = ApplicationContextProvider.getApplicationContext().getBean(BullhornData.class);
     }
 
     @Override
@@ -68,11 +66,11 @@ public abstract class AbstractHelper<T extends BullhornEntity> implements Helper
             CrudResponse response = getBullhornData().updateEntity(entity);
 
             if (response.isError() || response.hasValidationErrors() || response.hasWarnings()) {
-                getLog().error("Error saving entity: " + entity.getClass().getSimpleName() + " #" + entity.getId());
-                response.getMessages().parallelStream().forEach(getLog()::error);
+                log.error("Error saving entity: " + entity.getClass().getSimpleName() + " #" + entity.getId());
+                response.getMessages().parallelStream().forEach(message -> log.error(message.toString()));
             }
         } else {
-            getLog().error("Not saving entity because it was null.");
+            log.error("Not saving entity because it was null.");
         }
     }
 
@@ -233,10 +231,6 @@ public abstract class AbstractHelper<T extends BullhornEntity> implements Helper
 
     protected <E extends BullhornEntity> boolean isPopulated(E entity) {
         return entity != null && Utility.isPositive(entity.getId());
-    }
-
-    protected Logger getLog() {
-        return log;
     }
 
 }
