@@ -6,7 +6,6 @@ import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.client.core.base.util.Utility;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
