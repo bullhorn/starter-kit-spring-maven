@@ -1,6 +1,9 @@
 package com.client.core.base.util;
 
 import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.model.entity.association.AssociationFactory;
+import com.bullhornsdk.data.model.entity.association.AssociationField;
+import com.bullhornsdk.data.model.entity.core.type.AssociationEntity;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.OneToMany;
 import com.client.ApplicationContextProvider;
@@ -14,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class TriggerUtil {
@@ -42,13 +46,22 @@ public class TriggerUtil {
 	public static <E extends BullhornEntity> E populateEntity(Integer entityID, Class<E> type, Map<String, Object> values, Supplier<E> constructor,
 															  Set<String> fields) {
 		E entity = Optional.of(entityID)
-				.filter(id -> id != null && id > 0)
+				.filter(id -> id > 0)
 				.map(id -> getBullhornData().findEntity(type, id, fields))
 				.orElseGet(constructor);
 
 		values.entrySet().forEach( entry -> {
 			try {
-				getEntityChanger().setField(entity, entry.getKey(), entry.getValue());
+				if (entry.getValue() instanceof Map<?,?> && ((Map<?, ?>) entry.getValue()).containsKey("replaceAll") && AssociationEntity.class.isAssignableFrom(type)) {
+                    AssociationField<? extends AssociationEntity, ? extends BullhornEntity> associationField = AssociationFactory.getAssociationField((Class<? extends AssociationEntity>) type, entry.getKey());
+                    getEntityChanger().setField(entity, entry.getKey(),
+							convertReplaceAllToEntityOneToMany((Map<String, List<Integer>>) entry.getValue(),
+									associationField,
+									Utility.extractAssociationFieldsFromParent(fields, associationField.getAssociationFieldName()))
+					);
+                } else {
+					getEntityChanger().setField(entity, entry.getKey(), entry.getValue());
+				}
 			} catch(MissingPropertyException e) {
 				log.error(e.getMessage());
 			}
@@ -57,7 +70,21 @@ public class TriggerUtil {
 		return entity;
 	}
 
-	public static <E extends BullhornEntity> OneToMany<E> convertIdListToEntityOneToMany(List<Map<String, Integer>> entityIds, Supplier<E> constructor){
+    private static <E extends BullhornEntity> OneToMany<E> convertReplaceAllToEntityOneToMany(Map<String, List<Integer>> replaceAllIds,
+																							  AssociationField<? extends AssociationEntity, E> associationField,
+																							  Set<String> associationFields) {
+        List<Integer> entityIds = replaceAllIds.get("replaceAll");
+        List<E> bullhornEntities = entityIds.stream().map(entityId -> {
+            return getBullhornData().findEntity(associationField.getAssociationType(), entityId, associationFields);
+        }).collect(Collectors.toList());
+        OneToMany<E> oneToMany = new OneToMany<>();
+        oneToMany.setData(bullhornEntities);
+        oneToMany.setTotal(bullhornEntities.size());
+        return oneToMany;
+
+    }
+
+    public static <E extends BullhornEntity> OneToMany<E> convertIdListToEntityOneToMany(List<Map<String, Integer>> entityIds, Supplier<E> constructor){
 		List<E> bullhornEntities = Lists.newArrayList();
 
 		entityIds.stream().forEach(entityId -> {
