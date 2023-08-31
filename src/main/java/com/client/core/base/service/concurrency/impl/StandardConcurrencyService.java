@@ -2,8 +2,8 @@ package com.client.core.base.service.concurrency.impl;
 
 import com.client.core.base.service.concurrency.ConcurrencyService;
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.concurrent.Future;
 @Service
 public class StandardConcurrencyService implements ConcurrencyService {
 
-    private static Log log = LogFactory.getLog(StandardConcurrencyService.class);
+    private final Logger log = LogManager.getLogger(getClass());
 
     /**
      * {@inheritDoc}
