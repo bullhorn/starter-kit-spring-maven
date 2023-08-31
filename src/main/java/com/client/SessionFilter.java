@@ -45,10 +45,11 @@ public class SessionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		if (EXCLUDED_URL_PATHS.contains(request.getServletPath())) {
 			filterChain.doFilter(request, response);
+			return;
 		}
+
 		final HttpSession session = getSession(request);
 		final String apiKey = getApiKeyFromRequest(request);
-
 		final String previouslyAuthorizedApiKeyEncrypted = getApiKeyFromSession(session);
 		final String url = request.getRequestURL().toString();
 
@@ -64,7 +65,7 @@ public class SessionFilter extends OncePerRequestFilter {
 			encryptApiKeyAndAddToSession(session, apiKey);
 		}
 
-		if (allowIn == false) {
+		if (!allowIn) {
 			log.info("Attempt to get to page: " + url + " was blocked in the SessionFilter. Returning 401 unauthorized response.");
 
 			response.sendError(HttpStatus.UNAUTHORIZED.value());
@@ -126,11 +127,7 @@ public class SessionFilter extends OncePerRequestFilter {
 			apiKey = "";
 		}
 
-		if (apiKey.equals(this.apiKey)) {
-			return true;
-		}
-
-		return false;
+		return apiKey.equals(this.apiKey);
 	}
 
     public String getSessionStoredApiKeyName() {
