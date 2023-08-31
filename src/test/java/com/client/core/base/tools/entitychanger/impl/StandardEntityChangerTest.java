@@ -226,10 +226,10 @@ public class StandardEntityChangerTest {
     }
 
     @Test
-    public void setValueFailsIfPropertyDoesNotExist() {
+    public void setValueFailsIfPropertyDoesNotExistAndEntityDoesntHaveAdditionalProperties() {
         EntityChanger entityChanger = new StandardEntityChanger();
         Assertions.assertThrows(RuntimeException.class, () ->
-                entityChanger.setField(candidate, "thisPropertyDoesNotExist", "customValue")
+                entityChanger.setField(testBullhornEntity, "thisPropertyDoesNotExist", "customValue")
         );
     }
 
@@ -247,6 +247,16 @@ public class StandardEntityChangerTest {
         Assertions.assertThrows(RuntimeException.class, () ->
                 entityChanger.setField(testBullhornEntity, "fieldWithNoGetter.length", 50)
         );
+    }
+
+    @Test
+    public void setValueAddsUnknownPropertiesToAdditionalPropertiesIfPossible() {
+        EntityChanger entityChanger = new StandardEntityChanger();
+        entityChanger.setField(candidate, "candidateMissingField", "Test Value");
+        assertEquals("Test Value", candidate.getAdditionalProperties().get("candidateMissingField"));
+        // Simulating assigning a missing relationship as a map
+        entityChanger.setField(candidate, "missingRelation", Map.of("id", 10));
+        assertEquals(10, ((Map) candidate.getAdditionalProperties().get("missingRelation")).get("id"));
     }
 
     @SuppressWarnings("ALL")

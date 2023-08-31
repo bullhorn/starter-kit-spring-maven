@@ -27,14 +27,7 @@ import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -49,6 +42,33 @@ public class Utility {
 
     private static final int BATCH_SIZE = 200;
 
+    /**
+     * <p>Extracts the fields of a nested association field in a set of fields. If the field is not found in the association
+     * or the association doesn't have any nested fields, it returns a singleton set with just the "id" field</p>
+     * <pre>
+     * Utility.extractAssociationFieldsFromParent(Sets.newHashSet("id", "categories"), "categories")  = ("id")
+     * Utility.extractAssociationFieldsFromParent(Sets.newHashSet("id", "categories(specialties(id,name),id,name)"), "categories") = ("specialties(id,name)", "id", "name")
+     * Utility.extractAssociationFieldsFromParent(Sets.newHashSet("id", "categories"), "specialties")   = ("id")
+     * </pre>
+     *
+     * @param parentFields    The complete set of fields of the parent entity that's being requested
+     * @param associationName The name of the association whose fields should be extracted. It should exist in {@code parentFields}
+     * @return The set of fields inside the association field
+     */
+    public static Set<String> extractAssociationFieldsFromParent(Set<String> parentFields, String associationName) {
+        return parentFields.stream().filter(field -> field.startsWith(associationName))
+                .findFirst()
+                .map(field -> {
+                    if (!field.contains("(")) {
+                        return Collections.singleton("id");
+                    }
+                    return splitOutsideParentheses(field.substring(
+                            field.indexOf("(") + 1,
+                            field.length() - 1
+                    ));
+                })
+                .orElseGet(() -> Collections.singleton("id"));
+    }
 
     public static Map<? extends BullhornRelatedEntity, Set<String>> getRequestedFields(BullhornRelatedEntity[] relatedEntities,
                                                                                        List<? extends WorkflowAction<?, ?>> actions) {
@@ -197,6 +217,7 @@ public class Utility {
 
         return !oldValue.equals(newValue);
     }
+
     private static final String SEARCH_DATE_FORMAT = "yyyyMMddHHmmss";
 
 

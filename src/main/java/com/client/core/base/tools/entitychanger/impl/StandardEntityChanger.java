@@ -1,5 +1,6 @@
 package com.client.core.base.tools.entitychanger.impl;
 
+import com.bullhornsdk.data.model.entity.core.type.AbstractEntity;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.tools.entitychanger.EntityChanger;
@@ -65,6 +66,11 @@ public class StandardEntityChanger implements EntityChanger {
         try {
             PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(target.getClass(), finalField);
             if (propertyDescriptor == null) {
+                if (entity instanceof AbstractEntity) {
+                    ((AbstractEntity) entity).getAdditionalProperties().put(finalField, value);
+                    return entity;
+                }
+
                 throw new RuntimeException("Could not find property descriptor for " + finalField);
             }
             Class<?> fieldType = propertyDescriptor.getPropertyType();
