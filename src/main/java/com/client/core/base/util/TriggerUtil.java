@@ -52,13 +52,14 @@ public class TriggerUtil {
 
 		values.entrySet().forEach( entry -> {
 			try {
-				if (entry.getValue() instanceof Map<?,?> && ((Map<?, ?>) entry.getValue()).containsKey("replaceAll") && AssociationEntity.class.isAssignableFrom(type)) {
+				if (isReplaceAllInAssociation(type, entry)) {
                     AssociationField<? extends AssociationEntity, ? extends BullhornEntity> associationField = AssociationFactory.getAssociationField((Class<? extends AssociationEntity>) type, entry.getKey());
-                    getEntityChanger().setField(entity, entry.getKey(),
-							convertReplaceAllToEntityOneToMany((Map<String, List<Integer>>) entry.getValue(),
-									associationField,
-									Utility.extractAssociationFieldsFromParent(fields, associationField.getAssociationFieldName()))
+					OneToMany<? extends BullhornEntity> oneToMany = convertReplaceAllToEntityOneToMany(
+							(Map<String, List<Integer>>) entry.getValue(),
+							associationField,
+							Utility.extractAssociationFieldsFromParent(fields, associationField.getAssociationFieldName())
 					);
+					getEntityChanger().setField(entity, entry.getKey(), oneToMany);
                 } else {
 					getEntityChanger().setField(entity, entry.getKey(), entry.getValue());
 				}
@@ -70,9 +71,13 @@ public class TriggerUtil {
 		return entity;
 	}
 
-    private static <E extends BullhornEntity> OneToMany<E> convertReplaceAllToEntityOneToMany(Map<String, List<Integer>> replaceAllIds,
-																							  AssociationField<? extends AssociationEntity, E> associationField,
-																							  Set<String> associationFields) {
+	private static <E extends BullhornEntity> boolean isReplaceAllInAssociation(Class<E> type, Map.Entry<String, Object> entry) {
+		return entry.getValue() instanceof Map && ((Map<String, List<Integer>>) entry.getValue()).containsKey("replaceAll") && AssociationEntity.class.isAssignableFrom(type);
+	}
+
+	public static <E extends BullhornEntity> OneToMany<E> convertReplaceAllToEntityOneToMany(Map<String, List<Integer>> replaceAllIds,
+																							AssociationField<? extends AssociationEntity, E> associationField,
+																							Set<String> associationFields) {
         List<Integer> entityIds = replaceAllIds.get("replaceAll");
         List<E> bullhornEntities = entityIds.stream().map(entityId -> {
             return getBullhornData().findEntity(associationField.getAssociationType(), entityId, associationFields);
