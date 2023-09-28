@@ -91,12 +91,23 @@ public class StandardEntityChanger implements EntityChanger {
                 try {
                     propertyDescriptor.getWriteMethod().invoke(target, value);
                 } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                    if (BullhornEntity.class.isAssignableFrom(fieldType)) {
-                        BullhornEntity bullhornEntity = (BullhornEntity) fieldType.getDeclaredConstructor().newInstance();
-                        bullhornEntity.setId((Integer) value);
-                        propertyDescriptor.getWriteMethod().invoke(target, bullhornEntity);
-                    } else {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, fieldType));
+                    try {
+                        if (BullhornEntity.class.isAssignableFrom(fieldType)) {
+                            BullhornEntity bullhornEntity = (BullhornEntity) fieldType.getDeclaredConstructor().newInstance();
+                            bullhornEntity.setId((Integer) value);
+                            propertyDescriptor.getWriteMethod().invoke(target, bullhornEntity);
+                        } else {
+                            propertyDescriptor.getWriteMethod().invoke(target, asType(value, fieldType));
+                        }
+                    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+                             InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                        log.warn("Failed to cast value to type {} for field {}", fieldType.getName(), propertyDescriptor.getName(), ex);
+                        if (entity instanceof AbstractEntity) {
+                            ((AbstractEntity) entity).getAdditionalProperties().put(finalField, value);
+                            log.warn("Saved {} to entity's additionalProperties", finalField);
+                        } else {
+                            log.warn("Entity does not support additionalProperties so couldn't save {}", finalField);
+                        }
                     }
                 }
             }

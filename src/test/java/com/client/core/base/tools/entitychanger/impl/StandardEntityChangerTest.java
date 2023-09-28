@@ -2,6 +2,7 @@ package com.client.core.base.tools.entitychanger.impl;
 
 import com.bullhornsdk.data.model.entity.core.standard.Candidate;
 import com.bullhornsdk.data.model.entity.core.standard.CorporateUser;
+import com.bullhornsdk.data.model.entity.core.type.AbstractEntity;
 import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.tools.entitychanger.EntityChanger;
@@ -273,14 +274,21 @@ public class StandardEntityChangerTest {
         assertEquals(candidate.getCustomText1(), "10.5");
     }
 
+    @Test
+    public void setFieldSavesFailedCastsToAdditionalPropertiesIfAvailable() {
+        EntityChanger entityChanger = new StandardEntityChanger();
+        entityChanger.setField(testBullhornEntity, "simpleStringContainer", "Test");
+        assertEquals("Test", testBullhornEntity.getAdditionalProperties().get("simpleStringContainer"));
+    }
+
     @SuppressWarnings("ALL")
-    static class TestBullhornEntity implements BullhornEntity {
+    static class TestBullhornEntity extends AbstractEntity implements BullhornEntity {
         private Integer id;
         private String fieldWithNoGetter;
         private String fieldWithNoSetter = "value";
 
         private String invisibleProperty;
-
+        private SimpleStringContainer simpleStringContainer;
         @Override
         public Integer getId() {
             return this.id;
@@ -306,5 +314,15 @@ public class StandardEntityChangerTest {
         private void setInvisibleProperty(String invisibleProperty) {
             this.invisibleProperty = invisibleProperty;
         }
+
+        public SimpleStringContainer getSimpleStringContainer() {
+            return simpleStringContainer;
+        }
+
+        public void setSimpleStringContainer(SimpleStringContainer simpleStringContainer) {
+            this.simpleStringContainer = simpleStringContainer;
+        }
     }
+
+    record SimpleStringContainer(String string) {}
 }
