@@ -97,16 +97,8 @@ public class StandardEntityChanger implements EntityChanger {
                         BullhornEntity bullhornEntity = (BullhornEntity) fieldType.getDeclaredConstructor().newInstance();
                         bullhornEntity.setId((Integer) value);
                         propertyDescriptor.getWriteMethod().invoke(target, bullhornEntity);
-                    } else if (Integer.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, Integer.class));
-                    } else if (BigDecimal.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, BigDecimal.class));
-                    } else if (Boolean.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, Boolean.class));
-                    } else if (String.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, String.class));
                     } else {
-                        log.error("Error setting field " + finalField + " to value " + value, e);
+                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, fieldType));
                     }
                 }
             }
