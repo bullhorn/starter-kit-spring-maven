@@ -91,9 +91,7 @@ public class StandardEntityChanger implements EntityChanger {
                 try {
                     propertyDescriptor.getWriteMethod().invoke(target, value);
                 } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                    if (DateTime.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, DateTime.class));
-                    } else if (BullhornEntity.class.isAssignableFrom(fieldType)) {
+                    if (BullhornEntity.class.isAssignableFrom(fieldType)) {
                         BullhornEntity bullhornEntity = (BullhornEntity) fieldType.getDeclaredConstructor().newInstance();
                         bullhornEntity.setId((Integer) value);
                         propertyDescriptor.getWriteMethod().invoke(target, bullhornEntity);
