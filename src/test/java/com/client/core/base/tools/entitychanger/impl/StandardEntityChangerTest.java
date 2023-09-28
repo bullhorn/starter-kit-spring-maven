@@ -259,6 +259,20 @@ public class StandardEntityChangerTest {
         assertEquals(10, ((Map) candidate.getAdditionalProperties().get("missingRelation")).get("id"));
     }
 
+    @Test
+    public void setFieldCastsIntegerToString() {
+        EntityChanger entityChanger = new StandardEntityChanger();
+        entityChanger.setField(candidate, "customText1", 10);
+        assertEquals(candidate.getCustomText1(), "10");
+    }
+
+    @Test
+    public void setFieldCastsDoubleToString() {
+        EntityChanger entityChanger = new StandardEntityChanger();
+        entityChanger.setField(candidate, "customText1", 10.5d);
+        assertEquals(candidate.getCustomText1(), "10.5");
+    }
+
     @SuppressWarnings("ALL")
     static class TestBullhornEntity implements BullhornEntity {
         private Integer id;

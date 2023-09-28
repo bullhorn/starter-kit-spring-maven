@@ -103,6 +103,8 @@ public class StandardEntityChanger implements EntityChanger {
                         propertyDescriptor.getWriteMethod().invoke(target, asType(value, BigDecimal.class));
                     } else if (Boolean.class.equals(fieldType)) {
                         propertyDescriptor.getWriteMethod().invoke(target, asType(value, Boolean.class));
+                    } else if (String.class.equals(fieldType)) {
+                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, String.class));
                     } else {
                         log.error("Error setting field " + finalField + " to value " + value, e);
                     }
