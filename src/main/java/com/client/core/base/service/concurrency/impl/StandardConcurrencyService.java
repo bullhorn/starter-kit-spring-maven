@@ -2,8 +2,7 @@ package com.client.core.base.service.concurrency.impl;
 
 import com.client.core.base.service.concurrency.ConcurrencyService;
 import com.google.common.collect.Lists;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Service to handle calling threads asynchronously as well as synchronously.  Provided methods to call
@@ -22,10 +22,24 @@ import java.util.concurrent.Future;
  * <br><br>
  * Implementation uses {@link Executors} and {@link ExecutorService}
  */
+@Log4j2
 @Service
 public class StandardConcurrencyService implements ConcurrencyService {
 
-    private final Logger log = LogManager.getLogger(getClass());
+    Thread.UncaughtExceptionHandler uncaughtExceptionHandler = new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            synchronized(this) {
+                log.error("Uncaught exception in thread {}", t.getId(), e);
+            }
+        }
+    };
+
+    ThreadFactory threadFactory = r -> {
+        final Thread thread = new Thread(r);
+        thread.setUncaughtExceptionHandler(uncaughtExceptionHandler);
+        return thread;
+    };
 
     /**
      * {@inheritDoc}
@@ -116,10 +130,10 @@ public class StandardConcurrencyService implements ConcurrencyService {
             return;
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), threadFactory);
 
         for(R task : taskList) {
-            executor.submit(task);
+            executor.execute(task);
         }
 
         executor.shutdown();
