@@ -106,7 +106,7 @@ public class StandardEntityChanger implements EntityChanger {
                             ((AbstractEntity) entity).getAdditionalProperties().put(finalField, value);
                             log.warn("Saved {} to entity's additionalProperties", finalField);
                         } else {
-                            log.warn("Entity does not support additionalProperties so couldn't save {}", finalField);
+                            log.error("Entity does not support additionalProperties so couldn't save {}", finalField);
                         }
                     }
                 }
