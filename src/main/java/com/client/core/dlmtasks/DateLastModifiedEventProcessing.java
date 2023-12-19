@@ -13,7 +13,6 @@ import java.util.List;
 
 @Log4j2
 @Service
-@ConditionalOnProperty("date.last.modified.cron.expression")
 public class DateLastModifiedEventProcessing implements Runnable {
 
     private final List<DateLastModifiedTasksService<? extends BullhornEntity>> dateLastModifiedTasksServices;
