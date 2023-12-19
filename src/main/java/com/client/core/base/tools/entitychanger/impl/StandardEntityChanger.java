@@ -66,8 +66,8 @@ public class StandardEntityChanger implements EntityChanger {
         try {
             PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(target.getClass(), finalField);
             if (propertyDescriptor == null) {
-                if (entity instanceof AbstractEntity) {
-                    ((AbstractEntity) entity).getAdditionalProperties().put(finalField, value);
+                if (target instanceof AbstractEntity) {
+                    ((AbstractEntity) target).getAdditionalProperties().put(finalField, value);
                     return entity;
                 }
 
@@ -91,20 +91,23 @@ public class StandardEntityChanger implements EntityChanger {
                 try {
                     propertyDescriptor.getWriteMethod().invoke(target, value);
                 } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                    if (DateTime.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, DateTime.class));
-                    } else if (BullhornEntity.class.isAssignableFrom(fieldType)) {
-                        BullhornEntity bullhornEntity = (BullhornEntity) fieldType.getDeclaredConstructor().newInstance();
-                        bullhornEntity.setId((Integer) value);
-                        propertyDescriptor.getWriteMethod().invoke(target, bullhornEntity);
-                    } else if (Integer.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, Integer.class));
-                    } else if (BigDecimal.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, BigDecimal.class));
-                    } else if (Boolean.class.equals(fieldType)) {
-                        propertyDescriptor.getWriteMethod().invoke(target, asType(value, Boolean.class));
-                    } else {
-                        log.error("Error setting field " + finalField + " to value " + value, e);
+                    try {
+                        if (BullhornEntity.class.isAssignableFrom(fieldType)) {
+                            BullhornEntity bullhornEntity = (BullhornEntity) fieldType.getDeclaredConstructor().newInstance();
+                            bullhornEntity.setId((Integer) value);
+                            propertyDescriptor.getWriteMethod().invoke(target, bullhornEntity);
+                        } else {
+                            propertyDescriptor.getWriteMethod().invoke(target, asType(value, fieldType));
+                        }
+                    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException |
+                             InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                        log.warn("Failed to cast value to type {} for field {}", fieldType.getName(), propertyDescriptor.getName(), ex);
+                        if (entity instanceof AbstractEntity) {
+                            ((AbstractEntity) entity).getAdditionalProperties().put(finalField, value);
+                            log.warn("Saved {} to entity's additionalProperties", finalField);
+                        } else {
+                            log.error("Entity does not support additionalProperties so couldn't save {}", finalField);
+                        }
                     }
                 }
             }
