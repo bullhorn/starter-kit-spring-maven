@@ -7,8 +7,10 @@ import com.bullhornsdk.data.model.entity.core.type.BullhornEntity;
 import com.bullhornsdk.data.model.entity.embedded.Address;
 import com.client.core.base.tools.entitychanger.EntityChanger;
 import com.google.common.collect.ImmutableMap;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,16 +18,14 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class StandardEntityChangerTest {
     private Candidate candidate;
     private Candidate emptyCandidate;
     private TestBullhornEntity testBullhornEntity;
+    private NoAdditionalProperties noAdditionalProperties;
 
     @BeforeEach
     public void setUp() {
@@ -40,6 +40,7 @@ public class StandardEntityChangerTest {
         emptyCandidate = new Candidate();
 
         testBullhornEntity = new TestBullhornEntity();
+        noAdditionalProperties = new NoAdditionalProperties();
     }
 
     private Address makeAddress() {
@@ -230,7 +231,7 @@ public class StandardEntityChangerTest {
     public void setValueFailsIfPropertyDoesNotExistAndEntityDoesntHaveAdditionalProperties() {
         EntityChanger entityChanger = new StandardEntityChanger();
         Assertions.assertThrows(RuntimeException.class, () ->
-                entityChanger.setField(testBullhornEntity, "thisPropertyDoesNotExist", "customValue")
+                entityChanger.setField(noAdditionalProperties, "thisPropertyDoesNotExist", "customValue")
         );
     }
 
@@ -251,11 +252,15 @@ public class StandardEntityChangerTest {
     }
 
     @Test
-    public void setValueAddsUnknownPropertiesToAdditionalPropertiesIfPossible() {
+    public void setFieldAddsUnknownPropertiesToAdditionalPropertiesIfPossible() {
         EntityChanger entityChanger = new StandardEntityChanger();
         entityChanger.setField(candidate, "candidateMissingField", "Test Value");
         assertEquals("Test Value", candidate.getAdditionalProperties().get("candidateMissingField"));
-        // Simulating assigning a missing relationship as a map
+    }
+
+    @Test
+    public void setFieldAddsUnknownRelationshipToAdditionalPropertiesIfPossible() {
+        EntityChanger entityChanger = new StandardEntityChanger();
         entityChanger.setField(candidate, "missingRelation", Map.of("id", 10));
         assertEquals(10, ((Map) candidate.getAdditionalProperties().get("missingRelation")).get("id"));
     }
@@ -279,6 +284,24 @@ public class StandardEntityChangerTest {
         EntityChanger entityChanger = new StandardEntityChanger();
         entityChanger.setField(testBullhornEntity, "simpleStringContainer", "Test");
         assertEquals("Test", testBullhornEntity.getAdditionalProperties().get("simpleStringContainer"));
+    }
+
+    @Test
+    public void setFieldSavesUnknownPropertiesOfNestedEntitiesToAdditionalPropertiesIfAvailable() {
+        EntityChanger entityChanger = new StandardEntityChanger();
+        ImmutableMap<Object, Object> map = ImmutableMap.builder()
+                .put("id", "Test").build();
+        entityChanger.setField(testBullhornEntity, "simpleStringContainer", map);
+        assertNotNull(testBullhornEntity.getSimpleStringContainer());
+        assertEquals("Test", testBullhornEntity.getSimpleStringContainer().getAdditionalProperties().get("id"));
+    }
+
+    @Test
+    public void setFieldSavesUnknownNestedEntityPropertiesToAdditionalPropertiesIfAvailable() {
+        EntityChanger entityChanger = new StandardEntityChanger();
+        entityChanger.setField(testBullhornEntity, "simpleStringContainer.unknown", "Test");
+        assertNotNull(testBullhornEntity.getSimpleStringContainer());
+        assertEquals("Test", testBullhornEntity.getSimpleStringContainer().getAdditionalProperties().get("unknown"));
     }
 
     @SuppressWarnings("ALL")
@@ -324,5 +347,14 @@ public class StandardEntityChangerTest {
         }
     }
 
-    record SimpleStringContainer(String string) {}
+    @Data
+    static class NoAdditionalProperties {
+        String property;
+    }
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    static class SimpleStringContainer extends AbstractEntity {
+        String string;
+    }
 }

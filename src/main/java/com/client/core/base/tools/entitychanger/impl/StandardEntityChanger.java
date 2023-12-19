@@ -66,8 +66,8 @@ public class StandardEntityChanger implements EntityChanger {
         try {
             PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(target.getClass(), finalField);
             if (propertyDescriptor == null) {
-                if (entity instanceof AbstractEntity) {
-                    ((AbstractEntity) entity).getAdditionalProperties().put(finalField, value);
+                if (target instanceof AbstractEntity) {
+                    ((AbstractEntity) target).getAdditionalProperties().put(finalField, value);
                     return entity;
                 }
 
