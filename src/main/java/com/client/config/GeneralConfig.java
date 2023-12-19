@@ -4,10 +4,12 @@ import com.bullhornsdk.data.api.BullhornData;
 import com.bullhornsdk.data.api.BullhornRestCredentials;
 import com.bullhornsdk.data.api.StandardBullhornData;
 import com.client.ApplicationSettings;
-
 import com.client.core.base.tools.context.CustomReloadableResourceBundleMessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
@@ -36,6 +38,19 @@ public class GeneralConfig {
     public BullhornData bullhornData(BullhornRestCredentials bullhornRestCredentials) {
         return new StandardBullhornData(bullhornRestCredentials);
     }
+
+    @Bean
+    public RestTemplate restTemplate(ResponseErrorHandler responseErrorHandler) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(responseErrorHandler);
+        return restTemplate;
+    }
+
+    @Bean
+    public ResponseErrorHandler customResponseErrorHandler() {
+        return new DefaultResponseErrorHandler();
+    }
+
 
     @Bean
     public HandlerInterceptor localeChangeInterceptor() {

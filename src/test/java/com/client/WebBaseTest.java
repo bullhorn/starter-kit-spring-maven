@@ -1,20 +1,22 @@
 package com.client;
 
-import java.util.List;
-
+import com.bullhornsdk.data.api.BullhornData;
+import com.bullhornsdk.data.api.mock.MockBullhornData;
 import com.client.config.GeneralConfig;
 import com.client.config.TestConfig;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.client.core.base.tools.test.TestEntities;
+import com.client.matchers.JsonpPathResultMatchers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,10 +24,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.bullhornsdk.data.api.BullhornData;
-import com.bullhornsdk.data.api.mock.MockBullhornData;
-import com.client.core.base.tools.test.TestEntities;
-import com.client.matchers.JsonpPathResultMatchers;
+import java.util.List;
 
 
 @ExtendWith(SpringExtension.class)
@@ -35,7 +34,7 @@ import com.client.matchers.JsonpPathResultMatchers;
 @SpringBootTest
 public class WebBaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
-	private final static Log log = LogFactory.getLog(WebBaseTest.class);
+	private final Logger log = LogManager.getLogger(getClass());
 
 	@Autowired
 	private WebApplicationContext wac;

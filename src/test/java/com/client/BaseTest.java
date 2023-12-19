@@ -5,8 +5,8 @@ import java.util.List;
 import com.client.config.GeneralConfig;
 import com.client.config.TestConfig;
 import com.client.core.scheduledtasks.service.impl.StandardEventWorkflowFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ import com.client.core.base.tools.test.TestUtil;
 @SpringBootTest
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
-	private final static Log log = LogFactory.getLog(BaseTest.class);
+	private final Logger log = LogManager.getLogger(getClass());
 
 	@Autowired
 	private ApplicationContext applicationContext;
