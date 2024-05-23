@@ -124,7 +124,7 @@ public class StandardEntityChangerTest {
     @Test
     public void setsIntegerFieldFromString() {
         EntityChanger entityChanger = new StandardEntityChanger();
-        entityChanger.setField(emptyCandidate, "id", 1);
+        entityChanger.setField(emptyCandidate, "id", "1");
         assertEquals((Integer) 1, emptyCandidate.getId());
     }
 
