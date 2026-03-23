@@ -33,6 +33,7 @@ public record ApplicationSettings(
 
     public record Hibernate(
         boolean showSql,
-        boolean generateDdl
+        boolean generateDdl,
+        String dialect
     ) {}
 }
