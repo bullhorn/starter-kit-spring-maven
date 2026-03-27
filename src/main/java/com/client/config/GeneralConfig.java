@@ -5,6 +5,7 @@ import com.bullhornsdk.data.api.BullhornRestCredentials;
 import com.bullhornsdk.data.api.StandardBullhornData;
 import com.client.ApplicationSettings;
 import com.client.core.base.tools.context.CustomReloadableResourceBundleMessageSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.DefaultResponseErrorHandler;
@@ -35,8 +36,8 @@ public class GeneralConfig {
     }
 
     @Bean
-    public BullhornData bullhornData(BullhornRestCredentials bullhornRestCredentials) {
-        return new StandardBullhornData(bullhornRestCredentials);
+    public BullhornData bullhornData(BullhornRestCredentials bullhornRestCredentials, @Value("${appPrefix}") String appPrefix) {
+        return new StandardBullhornData(bullhornRestCredentials, appPrefix);
     }
 
     @Bean
