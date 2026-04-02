@@ -1,6 +1,7 @@
 package com.client.config;
 
 import com.client.ApplicationSettings;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableJpaRepositories(basePackages = {"com.client.custom.jpa.repositories"})
+@ConditionalOnProperty(value = "spring.autoconfigure.exclude", havingValue = "*", matchIfMissing = true)
 public class JpaConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(ApplicationSettings appSettings, DataSource dataSource) {
